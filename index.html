@@ -213,7 +213,7 @@ footer a { color:var(--accent); text-decoration:none; }
 <!-- NAV -->
 <nav>
   <a class="logo" href="#">
-    <div class="logo-icon">💰</div>
+    <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,0.8)"/><rect x="7" y="7" width="4" height="10" rx="1" fill="rgba(255,255,255,0.9)"/><rect x="13" y="3" width="4" height="14" rx="1" fill="white"/></svg></div>
     <span class="logo-name">Ontario Pay Hub</span>
     <span class="logo-badge">2026</span>
   </a>
@@ -261,9 +261,20 @@ footer a { color:var(--accent); text-decoration:none; }
           <option value="">All Roles</option>
           <option>Software Engineer</option>
           <option>Data Analyst</option>
+          <option>Financial Analyst</option>
           <option>HR Manager</option>
           <option>Product Manager</option>
           <option>Marketing Manager</option>
+          <option>Civil Engineer</option>
+          <option>Electrical Engineer</option>
+          <option>Mechanical Engineer</option>
+          <option>Network Engineer</option>
+          <option>Business Analyst</option>
+          <option>Policy Analyst</option>
+          <option>IT Project Manager</option>
+          <option>Program Manager</option>
+          <option>Clinical Project Manager</option>
+          <option>Research Analyst</option>
         </select>
         <select class="filter-select" id="sortSelect" onchange="applyFilters()">
           <option value="mid-desc">↓ Highest Salary</option>
@@ -297,12 +308,12 @@ footer a { color:var(--accent); text-decoration:none; }
 <!-- FOOTER -->
 <footer>
   <div>
-    <p>Data sourced from publicly disclosed Ontario job postings under the <strong>Pay Transparency for Pay Equity Act, 2025</strong> (effective Jan 1, 2026).</p>
-    <p style="margin-top:4px">Figures are illustrative for demo — verify at original source. <a href="https://www.ontario.ca/laws" target="_blank">ontario.ca/laws ↗</a></p>
+    <p>Salary data aggregated from publicly advertised Ontario job postings under the <strong><a href="https://www.ontario.ca/laws/statute/24p31" target="_blank" rel="noopener" style="color:inherit">Pay Transparency for Pay Equity Act, 2024</a></strong> (in force Jan 1, 2026).</p>
+    <p style="margin-top:4px">Always verify compensation directly with the employer. · <a href="https://www.ontario.ca/page/pay-transparency" target="_blank" rel="noopener">Ontario Pay Transparency ↗</a></p>
   </div>
   <div class="footer-right">
-    <span class="update-tag"><span class="dot"></span>Updated Mar 5, 2026</span>
-    <span class="law-tag">⚖️ ON Pay Transparency Act</span>
+    <span class="update-tag" id="updateTag"><span class="dot"></span>Updated daily</span>
+    <a href="https://www.ontario.ca/laws/statute/24p31" target="_blank" rel="noopener" class="law-tag" style="text-decoration:none">⚖️ ON Pay Transparency Act ↗</a>
   </div>
 </footer>
 
@@ -349,7 +360,11 @@ footer a { color:var(--accent); text-decoration:none; }
 // ===== DATA (loaded from data/jobs.json, fallback inline) =====
 const TAG_MAP = {
   "Software Engineer":"eng","Data Analyst":"data","HR Manager":"hr",
-  "Product Manager":"pm","Marketing Manager":"mktg"
+  "Product Manager":"pm","Marketing Manager":"mktg",
+  "Financial Analyst":"data","Business Analyst":"data","Research Analyst":"data",
+  "Civil Engineer":"eng","Electrical Engineer":"eng","Mechanical Engineer":"eng","Network Engineer":"eng",
+  "IT Project Manager":"pm","Program Manager":"pm","Clinical Project Manager":"pm",
+  "Policy Analyst":"hr"
 };
 const FALLBACK_JOBS = [
   {id:1,role:"Software Engineer",tag:"eng",company:"Shopify",min:110000,max:160000,src:"shopify.com/careers",date:"2026-03-04"},
@@ -383,19 +398,19 @@ function normalizeJob(j, i) {
 }
 
 async function loadData() {
+  // Normalize fallback data first (ensures .domain field exists)
+  JOBS = FALLBACK_JOBS.map(normalizeJob);
   try {
     const r = await fetch("./data/jobs.json?_=" + Date.now());
     if (!r.ok) throw new Error("fetch failed");
     const d = await r.json();
     if (d.jobs && d.jobs.length) {
       JOBS = d.jobs.map(normalizeJob);
-      // update "Last updated" in footer
       if (d.meta && d.meta.updated) {
         const dt = new Date(d.meta.updated);
         const label = dt.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:"numeric"});
-        document.querySelectorAll(".update-tag").forEach(el => {
-          el.innerHTML = '<span class="dot"></span>Updated ' + label;
-        });
+        const utag = document.getElementById("updateTag");
+        if (utag) utag.innerHTML = '<span class="dot"></span>Updated ' + label;
       }
     }
   } catch(e) {
@@ -645,51 +660,84 @@ function drawChart(){
   const ctx=canvas.getContext("2d");
   const isDark=S.theme==="dark";
   const dpr=window.devicePixelRatio||1;
-  const W=canvas.parentElement.clientWidth-40;
-  const H=window.innerWidth<480?160:180;
+  const isMobile=window.innerWidth<600;
+  const W=canvas.parentElement.clientWidth-(isMobile?16:40);
+  const H=isMobile?210:210;
   canvas.style.width=W+"px"; canvas.style.height=H+"px";
   canvas.width=W*dpr; canvas.height=H*dpr;
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
 
-  const roles=["Software Eng","Data Analyst","HR Manager","Product Mgr","Marketing Mgr"];
+  // Role labels on LEFT side to avoid overlap
+  const roleLabels=isMobile
+    ?["SW Eng","Data Analyst","HR Mgr","Prod Mgr","Mktg Mgr"]
+    :["Software Eng","Data Analyst","HR Manager","Product Mgr","Marketing Mgr"];
   const roleKeys=["Software Engineer","Data Analyst","HR Manager","Product Manager","Marketing Manager"];
   const colors=["#6366f1","#22d3ee","#10b981","#f59e0b","#ef4444"];
   const data=roleKeys.map(r=>{
     const jobs=JOBS.filter(j=>j.role===r);
+    if(!jobs.length) return{avgMin:0,avgMax:0};
     return{avgMin:Math.round(jobs.reduce((a,j)=>a+j.min,0)/jobs.length),avgMax:Math.round(jobs.reduce((a,j)=>a+j.max,0)/jobs.length)};
   });
-  const PL=window.innerWidth<480?8:10, PR=80, PT=8, PB=36;
+
+  const PL=isMobile?76:112; // left margin for role label text
+  const PR=8, PT=8, PB=26;
   const CW=W-PL-PR, CH=H-PT-PB;
-  const maxVal=200000, BH=Math.floor(CH/roles.length*0.55), GAP=(CH-BH*roles.length)/(roles.length+1);
+  const maxVal=220000;
+  const BH=Math.floor(CH/roleKeys.length*0.62);
+  const GAP=(CH-BH*roleKeys.length)/(roleKeys.length+1);
   const gridColor=isDark?"rgba(42,47,74,0.8)":"rgba(203,213,225,0.8)";
   const textColor=isDark?"rgba(100,116,139,0.9)":"rgba(100,116,139,1)";
+  const labelColor=isDark?"rgba(148,163,184,0.92)":"rgba(71,85,105,1)";
 
-  // grid
+  // Vertical grid lines + x-axis labels
   ctx.strokeStyle=gridColor; ctx.lineWidth=1;
-  for(let v=0;v<=200000;v+=50000){
+  [0,50000,100000,150000,200000].forEach(v=>{
     const x=PL+(v/maxVal)*CW;
     ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PT+CH);ctx.stroke();
-    ctx.fillStyle=textColor;ctx.font=`${10}px -apple-system,sans-serif`;ctx.textAlign="center";
-    ctx.fillText("$"+(v/1000)+"k",x,PT+CH+20);
-  }
+    ctx.fillStyle=textColor;
+    ctx.font=`${isMobile?8:9}px -apple-system,sans-serif`;
+    ctx.textAlign="center";
+    ctx.fillText("$"+(v/1000)+"k",x,PT+CH+16);
+  });
+
   data.forEach((d,i)=>{
+    if(!d.avgMin&&!d.avgMax) return;
     const y=PT+GAP*(i+1)+BH*i;
-    const xMin=PL+(d.avgMin/maxVal)*CW, xMax=PL+(d.avgMax/maxVal)*CW;
-    // bg track
+    const xMin=PL+(d.avgMin/maxVal)*CW;
+    const xMax=PL+(d.avgMax/maxVal)*CW;
+
+    // Role label on LEFT (right-aligned into left margin)
+    ctx.fillStyle=labelColor;
+    ctx.font=`600 ${isMobile?8:10}px -apple-system,sans-serif`;
+    ctx.textAlign="right";
+    ctx.fillText(roleLabels[i],PL-5,y+BH/2+3);
+
+    // Background track
     ctx.fillStyle=isDark?"rgba(38,43,74,0.5)":"rgba(226,232,240,0.7)";
-    ctx.beginPath();if(ctx.roundRect) ctx.roundRect(PL,y,(d.avgMax/maxVal)*CW,BH,3);else ctx.rect(PL,y,(d.avgMax/maxVal)*CW,BH);ctx.fill();
-    // range fill
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(PL,y,(d.avgMax/maxVal)*CW,BH,3);
+    else ctx.rect(PL,y,(d.avgMax/maxVal)*CW,BH);
+    ctx.fill();
+
+    // Range fill
     const g=ctx.createLinearGradient(xMin,0,xMax,0);
     g.addColorStop(0,colors[i]+"88");g.addColorStop(1,colors[i]);
     ctx.fillStyle=g;
-    ctx.beginPath();if(ctx.roundRect) ctx.roundRect(xMin,y,xMax-xMin,BH,3);else ctx.rect(xMin,y,xMax-xMin,BH);ctx.fill();
-    // labels
-    ctx.fillStyle=isDark?"rgba(148,163,184,0.85)":"rgba(71,85,105,0.9)";
-    ctx.font=`600 10px -apple-system,sans-serif`;ctx.textAlign="right";
-    ctx.fillText(roles[i],W-PR+6,y+BH/2+4);
-    ctx.fillStyle=colors[i];ctx.textAlign="left";
-    ctx.fillText("$"+(d.avgMin/1000).toFixed(0)+"k–$"+(d.avgMax/1000).toFixed(0)+"k",xMax+5,y+BH/2+4);
+    ctx.beginPath();
+    if(ctx.roundRect) ctx.roundRect(xMin,y,Math.max(xMax-xMin,4),BH,3);
+    else ctx.rect(xMin,y,Math.max(xMax-xMin,4),BH);
+    ctx.fill();
+
+    // Salary text INSIDE bar, centered — no overflow risk
+    const midX=(xMin+xMax)/2;
+    const salaryText=isMobile
+      ?"$"+Math.round((d.avgMin+d.avgMax)/2/1000)+"k"  // midpoint only on mobile
+      :"$"+(d.avgMin/1000).toFixed(0)+"k–$"+(d.avgMax/1000).toFixed(0)+"k";
+    ctx.fillStyle="rgba(255,255,255,0.95)";
+    ctx.font=`700 ${isMobile?8:10}px -apple-system,monospace`;
+    ctx.textAlign="center";
+    ctx.fillText(salaryText,midX,y+BH/2+3);
   });
 }
 
