@@ -92,7 +92,19 @@ with open(raw_file) as f:
             continue
 
         # Validate salary range is reasonable (CAD, Ontario)
-        if not (20000 <= j["min"] <= 500000) or not (j["min"] < j["max"]):
+        if not (30000 <= j["min"] <= 700000) or not (j["min"] < j["max"]):
+            errors += 1
+            continue
+
+        # Validate source_url is a specific job posting page (not a career homepage)
+        import re
+        url = j.get("source_url", "")
+        # Reject if URL is a bare career/jobs homepage (no job-specific path)
+        generic_pattern = re.compile(
+            r'^https?://[^/]+/(careers?|jobs?|en/careers?|en/jobs?)/?$',
+            re.IGNORECASE
+        )
+        if not url or generic_pattern.match(url):
             errors += 1
             continue
 
@@ -111,10 +123,29 @@ with open(raw_file) as f:
             "location": j.get("location", "Ontario, ON"),
             "source_url": j.get("source_url", ""),
             "posted": j.get("posted", today),
-            "scraped": today
+            "scraped": today,
+            "status": "active",
+            "last_seen": today
         }
         new_jobs.append(new_entry)
         existing_keys.add(key)
+
+# Mark existing active jobs as archived if posted > 90 days ago
+from datetime import date, datetime
+today_date = date.fromisoformat(today)
+for job in existing:
+    posted_str = job.get("posted", "")
+    if posted_str:
+        try:
+            posted_date = date.fromisoformat(posted_str)
+            age_days = (today_date - posted_date).days
+            if age_days > 90 and job.get("status") != "archived":
+                job["status"] = "archived"
+        except ValueError:
+            pass
+    # Ensure status field exists on old entries
+    if "status" not in job:
+        job["status"] = "active"
 
 # Merge
 all_jobs = existing + new_jobs

@@ -51,6 +51,12 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 .logo-name { font-size:.95rem; font-weight:700; color:var(--text); letter-spacing:-.02em; }
 .logo-badge { font-size:.65rem; background:var(--accent-dim); border:1px solid var(--accent-border); color:var(--accent); padding:2px 7px; border-radius:20px; font-weight:600; margin-left:4px; display:none; }
 @media(min-width:480px){ .logo-badge { display:inline; } }
+/* Mobile nav: hide search bar (use filter section instead), compact buttons */
+@media(max-width:540px){
+  .nav-search { display:none; }
+  #userBtn { padding:6px 10px; font-size:.75rem; }
+  .logo-name { font-size:.85rem; }
+}
 .nav-search { flex:1; max-width:340px; margin-left:auto; position:relative; }
 .nav-search input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 12px 8px 34px; color:var(--text); font-size:.85rem; outline:none; transition:border-color var(--transition); }
 .nav-search input:focus { border-color:var(--accent); }
@@ -68,6 +74,7 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 
 /* ===== HERO ===== */
 .hero { background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%); border-bottom:1px solid var(--border); padding:28px 24px 24px; }
+@media(max-width:480px){ .hero { padding:20px 12px 16px; } }
 .hero-inner { max-width:1300px; margin:0 auto; }
 .hero h2 { font-size:1.5rem; font-weight:700; letter-spacing:-.03em; margin-bottom:4px; }
 @media(min-width:600px){ .hero h2 { font-size:2rem; } }
@@ -83,6 +90,7 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 
 /* ===== MAIN LAYOUT ===== */
 .main { max-width:1300px; margin:0 auto; padding:24px; }
+@media(max-width:480px){ .main { padding:12px; } }
 
 /* ===== CHART ===== */
 .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; }
@@ -96,6 +104,10 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 .filter-select { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:9px 12px; color:var(--text); font-size:.82rem; outline:none; cursor:pointer; transition:border-color var(--transition); min-width:130px; }
 .filter-select:focus { border-color:var(--accent); }
 .result-info { margin-left:auto; font-size:.75rem; color:var(--text3); white-space:nowrap; }
+@media(max-width:500px){
+  .filter-select { flex:1; min-width:0; }
+  .result-info { width:100%; margin-left:0; margin-top:2px; }
+}
 
 /* ===== TABLE (desktop) ===== */
 .table-wrap { overflow-x:auto; }
@@ -351,9 +363,10 @@ const FALLBACK_JOBS = [
 let JOBS = FALLBACK_JOBS;
 
 function normalizeJob(j, i) {
-  const url = j.source_url || "";
-  const domain = url.replace(/^https?:\/\//,"").split("/")[0] || j.src || "";
-  const path = url.includes("careers") ? domain+"/careers" : domain+"/jobs";
+  // Preserve the full specific job posting URL
+  const rawSrc = j.src || "";
+  const fullUrl = j.source_url || (rawSrc.startsWith("http") ? rawSrc : (rawSrc ? "https://"+rawSrc : ""));
+  const domain = fullUrl.replace(/^https?:\/\//,"").split("/")[0] || "—";
   return {
     id: parseInt(j.id) || i+1,
     role: j.role,
@@ -362,7 +375,9 @@ function normalizeJob(j, i) {
     min: j.min,
     max: j.max,
     location: j.location || "Ontario, ON",
-    src: path,
+    src: fullUrl,      // full URL for <a href>
+    domain: domain,    // domain only for display label
+    status: j.status || "active",
     date: j.posted || j.date || "2026-01-01"
   };
 }
@@ -406,11 +421,16 @@ const S = {
 function fmt(n){ return "$"+(n/1000).toFixed(0)+"k"; }
 function mid(j){ return Math.round((j.min+j.max)/2); }
 function relDate(s){
-  const d=new Date(s), now=new Date("2026-03-05");
+  const d=new Date(s), now=new Date();
   const diff=Math.round((now-d)/86400000);
   if(diff===0)return"Today";if(diff===1)return"Yesterday";
   if(diff<7)return diff+"d ago";if(diff<30)return Math.round(diff/7)+"w ago";
+  if(diff<365)return Math.round(diff/30)+"mo ago";
   return s;
+}
+function isArchived(j){
+  const posted=new Date(j.date), now=new Date();
+  return j.status==="archived"||(Math.round((now-posted)/86400000)>90);
 }
 function tagClass(t){ return{eng:"tag-eng",data:"tag-data",hr:"tag-hr",pm:"tag-pm",mktg:"tag-mktg"}[t]||""; }
 function topCo(){
@@ -510,7 +530,7 @@ function renderSaved(){
         <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
       </div>
       <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
-      <div style="font-size:.72rem;color:var(--text3);margin-top:4px"><a href="https://${j.src}" target="_blank" style="color:var(--accent)">${j.src.split("/")[0]} ↗</a> · ${relDate(j.date)}</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:4px"><a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}</div>
     </div>`).join("");
   foot.innerHTML=`<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="if(confirm('Clear all saved?')){S.saved=[];localStorage.setItem('saved','[]');updateSaveBadge();renderSaved();}">Clear all</button>`;
 }
@@ -561,10 +581,14 @@ function renderTable(){
     document.getElementById("tableBody").innerHTML=data.map(j=>{
       const isSaved=S.saved.includes(j.id);
       const barW=Math.round((j.max/mxMax)*100);
+      const archived=isArchived(j);
       return `<tr>
         <td colspan="7" style="padding:0">
           <div class="card-row-top">
-            <span class="tag ${tagClass(j.tag)}">${j.role}</span>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <span class="tag ${tagClass(j.tag)}">${j.role}</span>
+              ${archived?'<span style="font-size:.62rem;color:var(--text3);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1px 6px;">📁 Archived</span>':""}
+            </div>
             <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
           </div>
           <div style="font-weight:700;margin-bottom:2px">${j.company}</div>
@@ -573,8 +597,8 @@ function renderTable(){
             <span style="margin-left:8px;color:var(--cyan);font-weight:800">${fmt(mid(j))}</span>
           </div>
           <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.72rem;">
-            <a href="https://${j.src}" target="_blank" class="src-link">${j.src.split("/")[0]} ↗</a>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:.72rem;">
+            <a href="${j.src}" target="_blank" rel="noopener" class="src-link">${j.domain} ↗</a>
             <span class="date-rel">${relDate(j.date)}</span>
           </div>
         </td></tr>`;
@@ -584,7 +608,8 @@ function renderTable(){
     document.getElementById("tableBody").innerHTML=data.map(j=>{
       const isSaved=S.saved.includes(j.id);
       const barW=Math.round((j.max/mxMax)*100);
-      return `<tr>
+      const archived=isArchived(j);
+      return `<tr${archived?' style="opacity:.7"':''}>
         <td><span class="tag ${tagClass(j.tag)}">${j.role}</span></td>
         <td class="company-name">${j.company}</td>
         <td>
@@ -592,8 +617,11 @@ function renderTable(){
           <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
         </td>
         <td class="midpoint">${fmt(mid(j))}</td>
-        <td><a href="https://${j.src}" target="_blank" class="src-link">${j.src.split("/")[0]} ↗</a></td>
-        <td class="date-cell"><span class="date-rel">${relDate(j.date)}</span><br>${j.date}</td>
+        <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link">${j.domain} ↗</a></td>
+        <td class="date-cell">
+          ${archived?'<span style="font-size:.65rem;color:var(--text3)">📁 Archived</span><br>':""}
+          <span class="date-rel">${relDate(j.date)}</span><br>${j.date}
+        </td>
         <td><button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id})" title="Save job">${isSaved?"★":"☆"}</button></td>
       </tr>`;
     }).join("");
