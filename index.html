@@ -3,7 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ontario Pay Transparency Hub</title>
+<title>Ontario Pay Transparency Hub — Real Salary Ranges for Ontario Jobs 2026</title>
+<meta name="description" content="Browse real salary ranges from Ontario job postings under the Pay Transparency for Pay Equity Act 2026. Updated daily. Research compensation across tech, finance, healthcare, government and more.">
+<meta name="keywords" content="Ontario salary range, pay transparency Ontario, Ontario jobs salary 2026, compensation Ontario, Pay Transparency Act, Toronto salary data">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ontario-pay-hub.pages.dev/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ontario Pay Transparency Hub — Real Salary Ranges 2026">
+<meta property="og:description" content="Real salary ranges from Ontario employers under the Pay Transparency Act. Updated daily by AI agents.">
+<meta property="og:url" content="https://ontario-pay-hub.pages.dev/">
+<meta property="og:image" content="https://ontario-pay-hub.pages.dev/og-preview.png">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ontario Pay Transparency Hub">
+<meta name="twitter:description" content="Real salary ranges from Ontario employers under the Pay Transparency Act 2026. Free, updated daily.">
+<!-- JSON-LD structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Ontario Pay Transparency Salary Dataset",
+  "description": "Aggregated salary ranges from publicly advertised Ontario job postings under the Pay Transparency for Pay Equity Act, 2024 (effective January 1, 2026).",
+  "url": "https://ontario-pay-hub.pages.dev/",
+  "license": "https://opensource.org/licenses/MIT",
+  "creator": { "@type": "Organization", "name": "Ontario Pay Hub" },
+  "temporalCoverage": "2026-01-01/..",
+  "spatialCoverage": { "@type": "Place", "name": "Ontario, Canada" },
+  "keywords": ["salary range", "pay transparency", "Ontario", "compensation", "job postings", "2026"],
+  "distribution": [{
+    "@type": "DataDownload",
+    "encodingFormat": "application/json",
+    "contentUrl": "https://ontario-pay-hub.pages.dev/data/jobs.json"
+  }]
+}
+</script>
 <style>
 /* ===== DESIGN TOKENS ===== */
 :root {
@@ -309,9 +343,10 @@ footer a { color:var(--accent); text-decoration:none; }
 <footer>
   <div>
     <p>Salary data aggregated from publicly advertised Ontario job postings under the <strong><a href="https://www.ontario.ca/laws/statute/24p31" target="_blank" rel="noopener" style="color:inherit">Pay Transparency for Pay Equity Act, 2024</a></strong> (in force Jan 1, 2026).</p>
-    <p style="margin-top:4px">Always verify compensation directly with the employer. · <a href="https://www.ontario.ca/page/pay-transparency" target="_blank" rel="noopener">Ontario Pay Transparency ↗</a></p>
+    <p style="margin-top:4px">Always verify compensation directly with the employer. · <a href="https://www.ontario.ca/page/pay-transparency" target="_blank" rel="noopener">Ontario Pay Transparency ↗</a> · <a href="https://github.com/ethan-m25/ontario-pay-hub" target="_blank" rel="noopener">Open Source (MIT) ↗</a></p>
   </div>
   <div class="footer-right">
+    <button onclick="exportCSV()" class="law-tag" style="cursor:pointer;border:none;background:var(--green-dim);border:1px solid rgba(16,185,129,.25);color:var(--green)">⬇ Export CSV</button>
     <span class="update-tag" id="updateTag"><span class="dot"></span>Updated daily</span>
     <a href="https://www.ontario.ca/laws/statute/24p31" target="_blank" rel="noopener" class="law-tag" style="text-decoration:none">⚖️ ON Pay Transparency Act ↗</a>
   </div>
@@ -739,6 +774,22 @@ function drawChart(){
     ctx.textAlign="center";
     ctx.fillText(salaryText,midX,y+BH/2+3);
   });
+}
+
+// ===== CSV EXPORT =====
+function exportCSV(){
+  const headers=["ID","Role","Company","Location","Min (CAD)","Max (CAD)","Midpoint (CAD)","Posted","Source URL","Status"];
+  const rows=JOBS.map(j=>[
+    j.id, `"${j.role}"`, `"${j.company}"`, `"${j.location||''}"`,
+    j.min, j.max, mid(j),
+    j.date, `"${j.src||''}"`, j.status||"active"
+  ]);
+  const csv=[headers.join(","), ...rows.map(r=>r.join(","))].join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="ontario-salary-data-"+new Date().toISOString().slice(0,10)+".csv";
+  a.click(); URL.revokeObjectURL(url);
 }
 
 // ===== INIT =====
