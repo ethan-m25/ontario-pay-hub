@@ -330,8 +330,24 @@ footer a { color:var(--accent); text-decoration:none; }
   <div class="card">
     <div style="padding:16px 20px 0;">
       <div class="filters">
-        <select class="filter-select" id="roleFilter" onchange="applyFilters()">
-          <option value="">All Roles</option>
+        <select class="filter-select" id="catFilter" onchange="applyFilters()">
+          <option value="">All Categories</option>
+          <option value="eng">Engineering</option>
+          <option value="data">Data & Analytics</option>
+          <option value="fin">Finance & Risk</option>
+          <option value="pm">Product & Project</option>
+          <option value="mktg">Marketing & Sales</option>
+          <option value="hr">People & HR</option>
+        </select>
+        <select class="filter-select" id="regionFilter" onchange="applyFilters()">
+          <option value="">All Regions</option>
+        </select>
+        <select class="filter-select" id="salaryFilter" onchange="applyFilters()">
+          <option value="0">Any Salary</option>
+          <option value="80000">$80K+ midpoint</option>
+          <option value="100000">$100K+ midpoint</option>
+          <option value="120000">$120K+ midpoint</option>
+          <option value="150000">$150K+ midpoint</option>
         </select>
         <select class="filter-select" id="sortSelect" onchange="applyFilters()">
           <option value="mid-desc">↓ Highest Salary</option>
@@ -499,7 +515,7 @@ async function loadData() {
   }
   applyTheme();
   updateStats();
-  populateRoleFilter();
+  populateFilters();
   applyFilters();
   updateUserUI();
 }
@@ -510,7 +526,9 @@ const S = {
   user: JSON.parse(localStorage.getItem("user") || "null"),
   saved: JSON.parse(localStorage.getItem("saved") || "[]"),
   sort: "mid-desc",
-  role: "",
+  cat: "",
+  region: "",
+  salMin: 0,
   q: "",
 };
 
@@ -641,23 +659,31 @@ function setSort(k){
   sel.value=S.sort;
   applyFilters();
 }
-function populateRoleFilter(){
-  const sel=document.getElementById("roleFilter");
+function populateFilters(){
+  // Region: extract city from "City, ON" → unique sorted list
+  const sel=document.getElementById("regionFilter");
   const cur=sel.value;
-  const roles=[...new Set(JOBS.map(j=>j.role))].sort();
-  sel.innerHTML='<option value="">All Roles</option>'+roles.map(r=>`<option${r===cur?' selected':''}>${r}</option>`).join('');
+  const cities=[...new Set(
+    JOBS.map(j=>(j.location||"").split(",")[0].trim()).filter(c=>c&&c!=="Ontario")
+  )].sort();
+  sel.innerHTML='<option value="">All Regions</option>'+
+    cities.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
 }
 function applyFilters(){
   S.q=document.getElementById("searchInput").value.toLowerCase();
-  S.role=document.getElementById("roleFilter").value;
+  S.cat=document.getElementById("catFilter").value;
+  S.region=document.getElementById("regionFilter").value;
+  S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
   S.sort=document.getElementById("sortSelect").value;
   renderTable();
 }
 function renderTable(){
   let data=JOBS.filter(j=>{
     const mq=!S.q||j.role.toLowerCase().includes(S.q)||j.company.toLowerCase().includes(S.q);
-    const mr=!S.role||j.role===S.role;
-    return mq&&mr;
+    const mc=!S.cat||j.tag===S.cat;
+    const mr=!S.region||(j.location||"").startsWith(S.region);
+    const ms=!S.salMin||mid(j)>=S.salMin;
+    return mq&&mc&&mr&&ms;
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
@@ -669,7 +695,7 @@ function renderTable(){
     else v=0;
     return sd==="desc"?-v:v;
   });
-  const isFiltered=!!(S.q||S.role);
+  const isFiltered=!!(S.q||S.cat||S.region||S.salMin);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
