@@ -9,6 +9,9 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://ontariopayhub.fyi/">
 <meta name="google-site-verification" content="Lnk75E9wdO33G-ytiEJ3AFIoMTtn5IDbqH1hXDZwZR4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap" rel="stylesheet">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ontario Pay Transparency Hub — Real Salary Ranges 2026">
@@ -60,6 +63,7 @@
   --nav-bg: rgba(13,15,26,.92);
   --modal-overlay: rgba(0,0,0,.7);
   --input-bg: #1f2340;
+  --dot-color: rgba(255,255,255,.045);
 }
 [data-theme="light"] {
   --bg: #f1f5f9; --bg2: #e8edf5; --surface: #ffffff; --surface2: #f8fafc;
@@ -74,15 +78,16 @@
   --nav-bg: rgba(255,255,255,.92);
   --modal-overlay: rgba(15,23,42,.5);
   --input-bg: #f8fafc;
+  --dot-color: rgba(79,70,229,.09);
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { scroll-behavior:smooth; }
-body { font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; transition:background var(--transition),color var(--transition); }
+body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-feature-settings:'cv02','cv03','cv04','cv11'; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; transition:background var(--transition),color var(--transition); }
 
 /* ===== NAV ===== */
-nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bottom:1px solid var(--border); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding:0 24px; height:60px; display:flex; align-items:center; gap:16px; }
+nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bottom:1px solid var(--border); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); padding:0 24px; height:58px; display:flex; align-items:center; gap:16px; box-shadow:0 1px 0 var(--border); }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
-.logo-icon { width:34px; height:34px; background:linear-gradient(135deg,#6366f1,#22d3ee); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; }
+.logo-icon { width:34px; height:34px; background:linear-gradient(135deg,#6366f1 0%,#22d3ee 100%); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; box-shadow:0 0 16px rgba(99,102,241,.35); }
 .logo-name { font-size:.95rem; font-weight:700; color:var(--text); letter-spacing:-.02em; }
 .logo-badge { font-size:.65rem; background:var(--accent-dim); border:1px solid var(--accent-border); color:var(--accent); padding:2px 7px; border-radius:20px; font-weight:600; margin-left:4px; display:none; }
 @media(min-width:480px){ .logo-badge { display:inline; } }
@@ -108,19 +113,24 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 #userBtn { font-size:.8rem; padding:6px 14px; white-space:nowrap; }
 
 /* ===== HERO ===== */
-.hero { background:linear-gradient(135deg,var(--bg2) 0%,var(--bg) 100%); border-bottom:1px solid var(--border); padding:28px 24px 24px; }
-@media(max-width:480px){ .hero { padding:20px 12px 16px; } }
-.hero-inner { max-width:1300px; margin:0 auto; }
-.hero h2 { font-size:1.5rem; font-weight:700; letter-spacing:-.03em; margin-bottom:4px; }
-@media(min-width:600px){ .hero h2 { font-size:2rem; } }
-.hero p { color:var(--text2); font-size:.875rem; margin-bottom:22px; }
-.stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-@media(min-width:640px){ .stats-grid { grid-template-columns:repeat(4,1fr); } }
-.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; transition:transform var(--transition),border-color var(--transition); }
-.stat-card:hover { transform:translateY(-2px); border-color:var(--border2); }
-.stat-label { font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text3); font-weight:600; margin-bottom:6px; }
-.stat-num { font-size:1.6rem; font-weight:800; letter-spacing:-.04em; }
-.stat-sub { font-size:.7rem; color:var(--text3); margin-top:3px; }
+.hero { background:var(--bg2); background-image:radial-gradient(var(--dot-color) 1.5px, transparent 1.5px); background-size:24px 24px; border-bottom:1px solid var(--border); padding:40px 0 30px; position:relative; }
+.hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, var(--bg2) 100%); pointer-events:none; z-index:0; }
+@media(max-width:480px){ .hero { padding:26px 0 22px; } }
+.hero-inner { max-width:1300px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+.hero-eyebrow { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--accent); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.hero-eyebrow::before { content:''; display:inline-block; width:16px; height:1.5px; background:var(--accent); }
+.hero h2 { font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; letter-spacing:-.04em; line-height:1.15; margin-bottom:8px; }
+.hero p { color:var(--text2); font-size:.875rem; margin-bottom:28px; }
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+@media(max-width:639px){ .stats-grid { grid-template-columns:repeat(2,1fr); } }
+.stat-card { background:transparent; border:none; border-right:1px solid var(--border); border-radius:0; padding:18px 22px; transition:background var(--transition); position:relative; overflow:hidden; }
+.stat-card:last-child { border-right:none; }
+.stat-card:hover { background:rgba(99,102,241,.06); }
+.stat-card.featured::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--green),var(--cyan)); }
+@media(max-width:639px){ .stat-card:nth-child(2){ border-right:none; } .stat-card:nth-child(3){ border-top:1px solid var(--border); } .stat-card:nth-child(4){ border-top:1px solid var(--border); border-right:none; } }
+.stat-label { font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text3); font-weight:600; margin-bottom:8px; }
+.stat-num { font-size:1.65rem; font-weight:800; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+.stat-sub { font-size:.7rem; color:var(--text3); margin-top:4px; }
 .c-green { color:var(--green); } .c-cyan { color:var(--cyan); } .c-purple { color:var(--purple); } .c-amber { color:var(--amber); }
 
 /* ===== MAIN LAYOUT ===== */
@@ -129,20 +139,21 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 
 /* ===== CHART ===== */
 .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; }
+#chartCard { background:linear-gradient(165deg,var(--surface2) 0%,var(--surface) 55%); }
 .card-header { padding:16px 20px 0; display:flex; align-items:center; gap:8px; }
 .card-title { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text2); }
-.card-title::before { content:''; display:inline-block; width:3px; height:14px; background:var(--accent); border-radius:2px; vertical-align:middle; margin-right:8px; }
+.card-title::before { content:''; display:inline-block; width:3px; height:14px; background:linear-gradient(180deg,var(--accent),var(--cyan)); border-radius:2px; vertical-align:middle; margin-right:8px; }
 #chartCanvas { display:block; width:100%; padding:16px 20px 20px; }
 
 /* ===== FILTERS ===== */
 .filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
 .filter-select { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:9px 12px; color:var(--text); font-size:.82rem; outline:none; cursor:pointer; transition:border-color var(--transition); min-width:130px; }
 .filter-select:focus { border-color:var(--accent); }
-.age-filter { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:0 20px 14px; }
-.age-label { font-size:.73rem; color:var(--text3); margin-right:2px; white-space:nowrap; }
-.age-btn { font-size:.75rem; font-weight:600; padding:5px 13px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; }
-.age-btn:hover { border-color:var(--accent); color:var(--accent); }
-.age-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+.age-filter { display:flex; align-items:center; gap:5px; flex-wrap:wrap; padding:0 20px 16px; }
+.age-label { font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text3); margin-right:4px; white-space:nowrap; }
+.age-btn { font-size:.73rem; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; letter-spacing:.01em; }
+.age-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+.age-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(99,102,241,.3); }
 .result-info { margin-left:auto; font-size:.75rem; color:var(--text3); white-space:nowrap; }
 @media(max-width:500px){
   .filter-select { flex:1; min-width:0; }
@@ -152,7 +163,7 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 /* ===== TABLE (desktop) ===== */
 .table-wrap { overflow-x:auto; }
 table { width:100%; border-collapse:collapse; font-size:.845rem; }
-thead th { background:var(--surface2); padding:11px 14px; text-align:left; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text3); white-space:nowrap; border-bottom:1px solid var(--border); cursor:pointer; user-select:none; }
+thead th { background:transparent; padding:10px 14px; text-align:left; font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--text3); white-space:nowrap; border-bottom:2px solid var(--border2); cursor:pointer; user-select:none; }
 thead th:hover { color:var(--text2); }
 thead th.active-sort { color:var(--accent); }
 tbody tr { border-bottom:1px solid var(--border); transition:background var(--transition); }
@@ -282,7 +293,7 @@ tr.top-row { border-left:3px solid var(--amber) !important; }
 .role-link { cursor:pointer; transition:opacity var(--transition); }
 .role-link:hover { opacity:.75; }
 /* ===== FOOTER ===== */
-footer { border-top:1px solid var(--border); padding:24px; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+footer { border-top:1px solid var(--border); padding:28px 24px; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; }
 footer p { font-size:.75rem; color:var(--text3); }
 footer a { color:var(--accent); text-decoration:none; }
 .footer-right { display:flex; align-items:center; gap:10px; }
@@ -317,11 +328,12 @@ footer a { color:var(--accent); text-decoration:none; }
 <!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
+    <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
     <h2>Ontario Pay Transparency Hub</h2>
     <p>Real compensation ranges from Ontario job postings · <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">ESA Pay Transparency Rules ↗</a> · Updated daily</p>
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-label">Total Postings</div><div class="stat-num c-cyan" id="statTotal">—</div><div class="stat-sub">Ontario, 2026</div></div>
-      <div class="stat-card"><div class="stat-label">Median Compensation</div><div class="stat-num c-green" id="statMedian">—</div><div class="stat-sub">CAD midpoint</div></div>
+      <div class="stat-card featured"><div class="stat-label">Median Compensation</div><div class="stat-num c-green" id="statMedian">—</div><div class="stat-sub">CAD midpoint</div></div>
       <div class="stat-card"><div class="stat-label">Top Employer</div><div class="stat-num c-purple" id="statTop" style="font-size:1rem;padding-top:4px">—</div><div class="stat-sub">Most postings</div></div>
       <div class="stat-card"><div class="stat-label">Avg Range Width</div><div class="stat-num c-amber" id="statSpread">—</div><div class="stat-sub">max − min</div></div>
     </div>
@@ -332,7 +344,7 @@ footer a { color:var(--accent); text-decoration:none; }
 <div class="main">
 
   <!-- CHART -->
-  <div class="card">
+  <div class="card" id="chartCard">
     <div class="card-header"><span class="card-title">Average Range by Role</span></div>
     <canvas id="chartCanvas"></canvas>
   </div>
