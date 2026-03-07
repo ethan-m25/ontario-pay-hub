@@ -159,7 +159,7 @@ _CLASSIFY_PROMPT = """Classify this Ontario, Canada job posting.
 Role: {role}
 Company: {company}
 Location: {location}
-Salary: ${min_s} - ${max_s} CAD/year
+Salary: \${min_s} - \${max_s} CAD/year
 URL: {url}
 
 Return ONLY JSON, no other text:
