@@ -238,6 +238,36 @@ tr.top-row { border-left:3px solid var(--amber) !important; }
 .login-prompt { text-align:center; padding:40px 20px; }
 .login-prompt p { color:var(--text2); font-size:.875rem; margin-bottom:16px; }
 
+/* ===== JOB DETAIL PANEL ===== */
+.job-detail-panel { position:fixed; right:0; top:0; bottom:0; width:100%; max-width:440px; background:var(--surface); border-left:1px solid var(--border); z-index:310; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s ease; display:flex; flex-direction:column; overflow:hidden; }
+.job-detail-panel.open { transform:translateX(0); }
+.jd-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:10px; }
+.jd-header-left { display:flex; align-items:center; gap:8px; min-width:0; }
+.jd-body { flex:1; overflow-y:auto; padding:20px; }
+.jd-footer { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:10px; flex-shrink:0; }
+.jd-role { font-size:1.1rem; font-weight:800; letter-spacing:-.02em; margin:10px 0 3px; line-height:1.3; }
+.jd-company { font-size:.9rem; font-weight:600; color:var(--text); margin-bottom:3px; }
+.jd-meta { font-size:.72rem; color:var(--text3); margin-bottom:18px; }
+.jd-section { margin-bottom:20px; }
+.jd-section-title { font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.jd-range-row { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+.jd-range-min { font-size:1rem; font-family:'SF Mono','Fira Code',monospace; color:var(--text2); }
+.jd-range-sep { color:var(--text3); font-size:.9rem; }
+.jd-range-max { font-size:1.35rem; font-weight:800; font-family:'SF Mono','Fira Code',monospace; color:var(--green); }
+.jd-mid { font-size:.82rem; color:var(--cyan); font-weight:700; margin-bottom:12px; }
+.jd-pos-wrap { margin-top:4px; }
+.jd-pos-bar-bg { background:var(--border); border-radius:6px; height:10px; position:relative; margin:8px 0 5px; }
+.jd-pos-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent-dim),var(--accent)); border-radius:6px; }
+.jd-pos-dot { position:absolute; top:50%; width:16px; height:16px; border-radius:50%; background:var(--green); border:2px solid var(--surface); transform:translate(-50%,-50%); box-shadow:0 0 8px rgba(16,185,129,.5); }
+.jd-pos-labels { display:flex; justify-content:space-between; font-size:.65rem; color:var(--text3); }
+.jd-pct-label { font-size:.78rem; font-weight:700; margin-top:8px; color:var(--text); }
+.jd-similar-item { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:8px; cursor:pointer; transition:border-color var(--transition),background var(--transition); }
+.jd-similar-item:hover { border-color:var(--accent); background:var(--accent-dim); }
+.jd-similar-role { font-size:.8rem; font-weight:600; color:var(--text); line-height:1.3; }
+.jd-similar-co { font-size:.7rem; color:var(--text3); margin-top:1px; }
+.jd-similar-range { font-size:.78rem; font-weight:700; color:var(--green); white-space:nowrap; margin-left:10px; }
+.role-link { cursor:pointer; transition:opacity var(--transition); }
+.role-link:hover { opacity:.75; }
 /* ===== FOOTER ===== */
 footer { border-top:1px solid var(--border); padding:24px; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
 footer p { font-size:.75rem; color:var(--text3); }
@@ -386,6 +416,19 @@ footer a { color:var(--accent); text-decoration:none; }
   </div>
   <div class="saved-body" id="savedBody"></div>
   <div class="saved-footer" id="savedFooter"></div>
+</div>
+
+<!-- JOB DETAIL PANEL -->
+<div class="job-detail-panel" id="jobDetailPanel">
+  <div class="jd-header">
+    <div class="jd-header-left">
+      <button onclick="closeJobDetail()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text3);line-height:1;padding:2px 4px;flex-shrink:0">←</button>
+      <span id="jdCatTag"></span>
+    </div>
+    <button id="jdSaveBtn" class="btn-save" onclick="jdToggleSave()" style="font-size:16px">☆</button>
+  </div>
+  <div class="jd-body" id="jdBody"></div>
+  <div class="jd-footer" id="jdFooter"></div>
 </div>
 
 <script>
@@ -649,7 +692,7 @@ function renderTable(){
         <td colspan="7" style="padding:0">
           <div class="card-row-top">
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-              <span class="tag ${tagClass(j.tag)}">${j.role}</span>
+              <span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="Click for salary comparison">${j.role}</span>
               ${isTop?'<span class="top-badge">🏆 Top Pay</span>':""}
               ${archived?'<span style="font-size:.62rem;color:var(--text3);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1px 6px;">📁 Archived</span>':""}
             </div>
@@ -675,7 +718,7 @@ function renderTable(){
       const archived=isArchived(j);
       const isTop=top3Ids.has(j.id);
       return `<tr class="${isTop?'top-row':''}"${archived?' style="opacity:.7"':''}>
-        <td><span class="tag ${tagClass(j.tag)}">${j.role}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
+        <td><span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="Click for salary comparison">${j.role}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
         <td class="company-name">${j.company}</td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
@@ -839,9 +882,123 @@ function exportCSV(){
   a.click(); URL.revokeObjectURL(url);
 }
 
+// ===== JOB DETAIL PANEL =====
+const CAT_LABELS = {eng:"Engineering",data:"Data & Analytics",fin:"Finance & Risk",pm:"Product & Project Mgmt",mktg:"Marketing & Sales",hr:"People & HR"};
+const CAT_COLORS = {eng:"#6366f1",data:"#22d3ee",fin:"#10b981",pm:"#f59e0b",mktg:"#ef4444",hr:"#a78bfa"};
+
+let _jdCurrentId = null;
+
+function openJobDetail(id){
+  const j = JOBS.find(x=>x.id===id);
+  if(!j) return;
+  _jdCurrentId = id;
+
+  // Close saved panel if open
+  document.getElementById("savedPanel").classList.remove("open");
+
+  const archived = isArchived(j);
+  const isSaved = S.saved.includes(j.id);
+  const color = CAT_COLORS[j.tag]||"#6366f1";
+  const catLabel = CAT_LABELS[j.tag]||j.tag;
+
+  // Category peers (same tag)
+  const allInCat = JOBS.filter(x=>x.tag===j.tag);
+  const peers = allInCat.filter(x=>x.id!==j.id);
+  const myMid = mid(j);
+  const peerMids = allInCat.map(mid).sort((a,b)=>a-b);
+  const catFloor = Math.min(...allInCat.map(x=>x.min));
+  const catCeil  = Math.max(...allInCat.map(x=>x.max));
+  const pctile   = Math.round(peerMids.filter(m=>m<=myMid).length/peerMids.length*100);
+  const posPos   = Math.min(Math.round((myMid-catFloor)/(catCeil-catFloor||1)*100),100);
+
+  let pctLabel;
+  if(pctile>=75)      pctLabel="Top 25% in "+catLabel;
+  else if(pctile>=50) pctLabel="Above median for "+catLabel;
+  else if(pctile>=25) pctLabel="Below median for "+catLabel;
+  else                pctLabel="Bottom 25% in "+catLabel;
+
+  // Similar jobs: same tag, different id, sorted by midpoint desc, top 5
+  const similar = [...peers].sort((a,b)=>mid(b)-mid(a)).slice(0,5);
+
+  // Header tag
+  document.getElementById("jdCatTag").innerHTML=
+    `<span class="tag ${tagClass(j.tag)}" style="font-size:.72rem">${catLabel}</span>`;
+
+  // Save button
+  const saveBtn = document.getElementById("jdSaveBtn");
+  saveBtn.className = "btn-save"+(isSaved?" saved":"");
+  saveBtn.textContent = isSaved?"★":"☆";
+  saveBtn.setAttribute("data-save", j.id);
+
+  // Body
+  document.getElementById("jdBody").innerHTML=`
+    ${archived?`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:14px;font-size:.73rem;color:var(--text3)">📁 This posting is archived — the original job ad may no longer be active, but the salary data is preserved.</div>`:""}
+    <div class="jd-role">${j.role}</div>
+    <div class="jd-company">${j.company}</div>
+    <div class="jd-meta">${j.location||"Ontario, ON"} · Posted ${relDate(j.date)}</div>
+
+    <div class="jd-section">
+      <div class="jd-section-title">Disclosed Compensation Range</div>
+      <div class="jd-range-row">
+        <span class="jd-range-min">${fmt(j.min)}</span>
+        <span class="jd-range-sep">–</span>
+        <span class="jd-range-max">${fmt(j.max)}</span>
+      </div>
+      <div class="jd-mid">Midpoint: ${fmt(myMid)} &nbsp;·&nbsp; Spread: ${fmt(j.max-j.min)}</div>
+    </div>
+
+    ${allInCat.length>1?`
+    <div class="jd-section">
+      <div class="jd-section-title">Position among ${allInCat.length} ${catLabel} roles</div>
+      <div class="jd-pos-wrap">
+        <div class="jd-pos-bar-bg">
+          <div class="jd-pos-bar-fill" style="width:${posPos}%"></div>
+          <div class="jd-pos-dot" style="left:${posPos}%"></div>
+        </div>
+        <div class="jd-pos-labels"><span>${fmt(catFloor)}</span><span>${fmt(catCeil)}</span></div>
+        <div class="jd-pct-label">${pctLabel} <span style="color:var(--text3);font-weight:400">· ${pctile}th percentile (by midpoint)</span></div>
+      </div>
+    </div>`:""}
+
+    ${similar.length?`
+    <div class="jd-section">
+      <div class="jd-section-title">Other ${catLabel} roles</div>
+      ${similar.map(s=>`
+        <div class="jd-similar-item" onclick="openJobDetail(${s.id})">
+          <div style="min-width:0">
+            <div class="jd-similar-role">${s.role}</div>
+            <div class="jd-similar-co">${s.company} · ${s.location||"Ontario"}</div>
+          </div>
+          <div class="jd-similar-range">${fmt(s.min)}–${fmt(s.max)}</div>
+        </div>`).join("")}
+    </div>`:""}
+  `;
+
+  // Footer
+  document.getElementById("jdFooter").innerHTML=`
+    <a href="${j.src}" target="_blank" rel="noopener"
+       class="btn-primary" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;${archived?"opacity:.55":""}"
+       ${archived?'title="Posting may no longer be active"':""}>
+      ${archived?"📁 View Original":"View Full Posting ↗"}
+    </a>
+  `;
+
+  document.getElementById("jobDetailPanel").classList.add("open");
+}
+
+function closeJobDetail(){
+  document.getElementById("jobDetailPanel").classList.remove("open");
+  _jdCurrentId = null;
+}
+
+function jdToggleSave(){
+  if(_jdCurrentId===null) return;
+  toggleSave(_jdCurrentId);
+}
+
 // ===== INIT =====
 window.addEventListener("resize",()=>{ drawChart(); renderTable(); });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeAuth(); document.getElementById("savedPanel").classList.remove("open"); } });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeAuth(); closeJobDetail(); document.getElementById("savedPanel").classList.remove("open"); } });
 loadData(); // async: fetches data/jobs.json then initialises UI
 </script>
 </body>
