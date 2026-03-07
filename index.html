@@ -501,7 +501,9 @@ function normalizeJob(j, i) {
     src: fullUrl,      // full URL for <a href>
     domain: domain,    // domain only for display label
     status: j.status || "active",
-    date: j.posted || j.date || "2026-01-01"
+    date: j.posted || j.date || "2026-01-01",
+    work_mode: j.work_mode || "unknown",
+    salary_type: j.salary_type || "unknown"
   };
 }
 
