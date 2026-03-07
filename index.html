@@ -192,6 +192,11 @@ td { padding:12px 14px; vertical-align:middle; }
 .comp-note { background:var(--surface2); border:1px solid var(--accent-border); border-radius:var(--radius-sm); padding:12px 16px; margin:0 20px 12px; font-size:.78rem; color:var(--text2); display:none; }
 .comp-note strong { color:var(--accent); }
 .comp-note .comp-not-included { color:var(--text3); }
+/* ===== WORK MODE BADGES ===== */
+.wm-badge { font-size:.6rem; font-weight:700; border-radius:10px; padding:1px 6px; margin-left:4px; white-space:nowrap; vertical-align:middle; }
+.wm-remote { background:rgba(16,185,129,.12); color:#10b981; border:1px solid rgba(16,185,129,.25); }
+.wm-hybrid { background:rgba(99,102,241,.12); color:#818cf8; border:1px solid rgba(99,102,241,.25); }
+.wm-onsite { background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
 /* ===== TOP PAYER BADGE ===== */
 .top-badge { font-size:.6rem; font-weight:800; background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); border-radius:10px; padding:1px 6px; margin-left:5px; white-space:nowrap; }
 tr.top-row { border-left:3px solid var(--amber) !important; }
@@ -348,6 +353,12 @@ footer a { color:var(--accent); text-decoration:none; }
           <option value="100000">$100K+ midpoint</option>
           <option value="120000">$120K+ midpoint</option>
           <option value="150000">$150K+ midpoint</option>
+        </select>
+        <select class="filter-select" id="wmFilter" onchange="applyFilters()">
+          <option value="">All Work Modes</option>
+          <option value="remote">🏠 Remote</option>
+          <option value="hybrid">🔀 Hybrid</option>
+          <option value="onsite">🏢 Onsite</option>
         </select>
         <select class="filter-select" id="sortSelect" onchange="applyFilters()">
           <option value="mid-desc">↓ Highest Salary</option>
@@ -534,6 +545,7 @@ const S = {
   cat: "",
   region: "",
   salMin: 0,
+  wm: "",
   q: "",
 };
 
@@ -553,6 +565,10 @@ function isArchived(j){
   return j.status==="archived"||(Math.round((now-posted)/86400000)>90);
 }
 function tagClass(t){ return{eng:"tag-eng",data:"tag-data",hr:"tag-hr",pm:"tag-pm",mktg:"tag-mktg"}[t]||""; }
+function wmBadge(wm){
+  const m={remote:'<span class="wm-badge wm-remote">🏠 Remote</span>',hybrid:'<span class="wm-badge wm-hybrid">🔀 Hybrid</span>',onsite:'<span class="wm-badge wm-onsite">🏢 Onsite</span>'};
+  return m[wm]||"";
+}
 function topCo(){
   const cnt={};
   JOBS.forEach(j=>{cnt[j.company]=(cnt[j.company]||0)+1;});
@@ -616,9 +632,10 @@ function doRegister(){
 }
 function doSignout(){
   // Reset filters and saved badge on sign-out
-  S.cat=""; S.region=""; S.salMin=0;
+  S.cat=""; S.region=""; S.salMin=0; S.wm="";
   document.getElementById("catFilter").value="";
   document.getElementById("regionFilter").value="";
+  document.getElementById("wmFilter").value="";
   document.getElementById("salaryFilter").value="0";
   S.saved=[]; updateSaveBadge();
   S.user=null; localStorage.removeItem("user");
@@ -804,6 +821,7 @@ function applyFilters(){
   S.cat=document.getElementById("catFilter").value;
   S.region=document.getElementById("regionFilter").value;
   S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
+  S.wm=document.getElementById("wmFilter").value;
   S.sort=document.getElementById("sortSelect").value;
   renderTable();
 }
@@ -813,7 +831,8 @@ function renderTable(){
     const mc=!S.cat||j.tag===S.cat;
     const mr=!S.region||(j.location||"").startsWith(S.region);
     const ms=!S.salMin||mid(j)>=S.salMin;
-    return mq&&mc&&mr&&ms;
+    const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
+    return mq&&mc&&mr&&ms&&mw;
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
@@ -825,7 +844,7 @@ function renderTable(){
     else v=0;
     return sd==="desc"?-v:v;
   });
-  const isFiltered=!!(S.q||S.cat||S.region||S.salMin);
+  const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
@@ -857,7 +876,7 @@ function renderTable(){
             </div>
             <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
           </div>
-          <div style="font-weight:700;margin-bottom:2px">${j.company}</div>
+          <div style="font-weight:700;margin-bottom:2px">${j.company} ${wmBadge(j.work_mode)}</div>
           <div class="range-nums" style="margin-bottom:4px">
             <span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span>
             <span style="margin-left:8px;color:var(--cyan);font-weight:800">${fmt(mid(j))}</span>
@@ -878,7 +897,7 @@ function renderTable(){
       const isTop=top3Ids.has(j.id);
       return `<tr class="${isTop?'top-row':''}"${archived?' style="opacity:.7"':''}>
         <td><span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="Click for salary comparison">${j.role}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
-        <td class="company-name">${j.company}</td>
+        <td class="company-name">${j.company} ${wmBadge(j.work_mode)}</td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
           <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
@@ -1104,6 +1123,8 @@ function openJobDetail(id){
         <span class="jd-range-max">${fmt(j.max)}</span>
       </div>
       <div class="jd-mid">Midpoint: ${fmt(myMid)} &nbsp;·&nbsp; Spread: ${fmt(j.max-j.min)}</div>
+      ${j.salary_type==="total_comp"?'<div style="margin-top:6px;font-size:.72rem;color:#f59e0b;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:var(--radius-xs);padding:5px 10px;">⚠️ Likely <strong>total compensation</strong> (base + equity/bonus) — not base salary alone</div>':""}
+      ${j.salary_type==="base"?'<div style="margin-top:6px;font-size:.72rem;color:var(--text3)">💼 Base salary range</div>':""}
     </div>
 
     ${allInCat.length>1?`
