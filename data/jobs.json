@@ -24,7 +24,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Product-Owner---Product-Manager--TD-Direct-Investing-Journey_R_1473952",
       "posted": "2026-02-27",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "2",
@@ -36,7 +38,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Machine-Learning-Engineer-II_R_1468428",
       "posted": "2026-02-22",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "3",
@@ -48,7 +52,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Digital-Marketing-Manager_R_1473068",
       "posted": "2026-02-26",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "4",
@@ -60,7 +66,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Senior-Business-Intelligence-Analyst_R_1471557",
       "posted": "2026-02-25",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "5",
@@ -72,7 +80,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Account-Manager-II--Business-Banking_R_1470826-1",
       "posted": "2026-02-24",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "6",
@@ -84,7 +94,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Manager--Behavioural-Insights_R_1474009",
       "posted": "2026-02-27",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "7",
@@ -96,7 +108,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Risk-Analyst--Credit-Exceptions--3782-_R_1442440",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "8",
@@ -108,7 +122,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Manager--Data-Science_R_1382726",
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "9",
@@ -120,7 +136,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Manager--Patent-Engineer_R_1394201",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "10",
@@ -132,7 +150,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/td_bank_careers/job/toronto-ontario/senior-analyst--fcrm-testing-quality-assurance--qa-----technology-audit_r_1427118",
       "posted": "2026-02-03",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "11",
@@ -144,7 +164,9 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Senior-Information-Security-Analyst---Technology-Controls-Officer_R_1398167",
       "posted": "2026-01-22",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "12",
@@ -156,7 +178,9 @@
       "source_url": "https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Solution-Architect----Weath-Management-_R260002283",
       "posted": "2026-02-23",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "13",
@@ -168,7 +192,9 @@
       "source_url": "https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Manager--Project-and-Change-Risk-Management_R260005169",
       "posted": "2026-02-21",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "14",
@@ -180,7 +206,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/52232318-ec94-417f-a985-6fe6ccac97df",
       "posted": "2026-02-15",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "15",
@@ -192,7 +220,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/1200efa1-87c4-42ec-bf0b-072a49079fa4",
       "posted": "2026-02-12",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "16",
@@ -204,7 +234,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/6c5d99a9-8b3b-4001-8989-4ee30f9921f8",
       "posted": "2026-02-20",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "17",
@@ -216,7 +248,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/d4157dfb-2018-41cb-8342-f7990c1c3180",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "18",
@@ -228,7 +262,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/41901ca4-dc8f-4840-8fb9-573cf521dabf",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "19",
@@ -240,7 +276,9 @@
       "source_url": "https://jobs.lever.co/wealthsimple/31183f63-158d-4149-bcd1-84a0f726e0f5",
       "posted": "2026-02-18",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "20",
@@ -252,7 +290,9 @@
       "source_url": "https://jobs.lever.co/owner/a72058a0-6d4a-4310-8e01-68b950decf82",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "total_comp"
     },
     {
       "id": "21",
@@ -264,7 +304,9 @@
       "source_url": "https://jobs.lever.co/owner/248cac79-d1f0-450f-b32f-5cec0ee8b5d8",
       "posted": "2026-02-15",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "22",
@@ -276,7 +318,9 @@
       "source_url": "https://jobs.lever.co/owner/7fb5c4b6-0a8a-4e50-9628-2e0edeabf270",
       "posted": "2026-01-25",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "23",
@@ -288,7 +332,9 @@
       "source_url": "https://jobs.lever.co/owner/4e236d46-2002-4896-a868-c9a454f68013",
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "24",
@@ -300,7 +346,9 @@
       "source_url": "https://jobs.lever.co/pointclickcare/ce41a1f5-22d7-4e25-8ba0-94c2ad24556b",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "25",
@@ -312,7 +360,9 @@
       "source_url": "https://jobs.lever.co/pointclickcare/2abfa6c7-d9d3-4cf9-bbe9-ecd85c72f105",
       "posted": "2026-02-05",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "26",
@@ -324,7 +374,9 @@
       "source_url": "https://jobs.lever.co/pointclickcare/85cddfeb-3d8c-4464-992d-5843d58e310c",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "27",
@@ -336,7 +388,9 @@
       "source_url": "https://jobs.lever.co/waabi/9bcf52fc-482e-4404-8399-2a90d63c86f9",
       "posted": "2026-02-15",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "total_comp"
     },
     {
       "id": "28",
@@ -348,7 +402,9 @@
       "source_url": "https://jobs.lever.co/achievers/329a82f9-bf27-43a4-85d3-00f1ee3341f7",
       "posted": "2026-01-25",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "unknown",
+      "salary_type": "total_comp"
     },
     {
       "id": "29",
@@ -360,7 +416,9 @@
       "source_url": "https://jobs.lever.co/teleport/33979590-6ff1-47c9-aae1-2c50da825752",
       "posted": "2026-02-05",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "30",
@@ -372,7 +430,9 @@
       "source_url": "https://jobs.lever.co/caseware/2d27720a-fde6-4d41-8f0c-276c4a893255",
       "posted": "2026-02-12",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "31",
@@ -384,7 +444,9 @@
       "source_url": "https://jobs.lever.co/infrastructureontario/7470cc03-f0e7-446c-a59e-fc12795ba2a9",
       "posted": "2026-02-01",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "32",
@@ -396,7 +458,9 @@
       "source_url": "https://jobs.lever.co/infrastructureontario/b86774d7-c729-4333-bdb3-dcb8bb8aa342",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "33",
@@ -408,7 +472,9 @@
       "source_url": "https://jobs.lever.co/fullscript/d96a94e5-fe34-4f71-92a7-3ef17cfbcf20",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "34",
@@ -420,7 +486,9 @@
       "source_url": "https://jobs.lever.co/fullscript/dd6c1246-1757-4d33-ae34-0a8a94b5ad27",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "35",
@@ -432,7 +500,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-PROJECT-MANAGER-BUSINESS-SOLUTIONS-ON-M4Y-0E6/597133617/",
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "36",
@@ -444,7 +514,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-SENIOR-BUSINESS-&-SYSTEMS-ANALYST-ON-M/599983417/",
       "posted": "2026-02-12",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "37",
@@ -456,7 +528,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-PROJECT-MANAGER-TRANSPORTATION-SERVICES-ON-M/598747717/",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "38",
@@ -468,7 +542,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-BUSINESS-MANAGEMENT-ANALYST-ON-xxx/600169117/",
       "posted": "2026-02-20",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "39",
@@ -480,7 +556,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-ENGINEER-ON-M/590360617/",
       "posted": "2026-01-05",
       "scraped": "2026-03-06",
-      "status": "archived"
+      "status": "archived",
+      "work_mode": "unknown",
+      "salary_type": "unknown"
     },
     {
       "id": "40",
@@ -492,7 +570,9 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-BUDGET-&-OPERATIONS-ANALYST-ON-m5v/598202417/",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "active",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "41",
@@ -505,7 +585,9 @@
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "42",
@@ -518,7 +600,9 @@
       "posted": "2026-01-18",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "43",
@@ -531,7 +615,9 @@
       "posted": "2026-01-22",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "44",
@@ -544,7 +630,9 @@
       "posted": "2026-01-25",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "45",
@@ -557,7 +645,9 @@
       "posted": "2026-01-21",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "46",
@@ -570,7 +660,9 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "47",
@@ -583,7 +675,9 @@
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "48",
@@ -596,7 +690,9 @@
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "49",
@@ -609,7 +705,9 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "50",
@@ -622,7 +720,9 @@
       "posted": "2026-03-01",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "onsite",
+      "salary_type": "base"
     },
     {
       "id": "51",
@@ -635,7 +735,9 @@
       "posted": "2026-02-11",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     },
     {
       "id": "52",
@@ -648,7 +750,9 @@
       "posted": "2026-02-06",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-06"
+      "last_seen": "2026-03-06",
+      "work_mode": "hybrid",
+      "salary_type": "base"
     }
   ]
 }
