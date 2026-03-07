@@ -151,6 +151,66 @@ for job in existing:
     if "status" not in job:
         job["status"] = "active"
 
+# ---- 3.2. Auto-classify work_mode + salary_type for NEW jobs via local model ----
+import subprocess as _sp
+
+_CLASSIFY_PROMPT = """Classify this Ontario, Canada job posting.
+
+Role: {role}
+Company: {company}
+Location: {location}
+Salary: ${min_s} - ${max_s} CAD/year
+URL: {url}
+
+Return ONLY JSON, no other text:
+{{"work_mode": "remote|hybrid|onsite|unknown", "salary_type": "base|total_comp|unknown"}}
+
+Rules:
+- work_mode: remote=fully remote; hybrid=mix of remote+office; onsite=office required; unknown=unclear
+- salary_type: base=base salary only; total_comp=bundled base+equity+bonus as one figure; unknown=unclear
+- Canadian government/public sector → work_mode=onsite, salary_type=base
+- Canadian banks (TD,BMO,RBC,CIBC,Scotiabank) → salary_type=base (bonus always separate in Canada)
+- Most Canadian job postings list base salary only → default salary_type to base
+- Only total_comp if range explicitly bundles base+equity together as one number"""
+
+def _classify_new_job(job):
+    prompt = _CLASSIFY_PROMPT.format(
+        role=job["role"], company=job["company"],
+        location=job.get("location", "Ontario, ON"),
+        min_s=f"{job['min']:,}", max_s=f"{job['max']:,}",
+        url=job.get("source_url", "")[:80]
+    )
+    try:
+        r = _sp.run(["/Users/clawii/.local/bin/ollama", "run", "qwen2.5:14b"],
+                    input=prompt, capture_output=True, text=True, timeout=90)
+        import re as _re
+        m = _re.search(r'\{[^{}]*"work_mode"[^{}]*\}', r.stdout)
+        if m:
+            d = json.loads(m.group())
+            wm = d.get("work_mode", "unknown").lower()
+            st = d.get("salary_type", "unknown").lower()
+            if wm not in ("remote", "hybrid", "onsite", "unknown"): wm = "unknown"
+            if st not in ("base", "total_comp", "unknown"): st = "unknown"
+            return wm, st
+    except Exception:
+        pass
+    return "unknown", "unknown"
+
+if new_jobs:
+    print(f"Classifying {len(new_jobs)} new jobs...")
+    for job in new_jobs:
+        wm, st = _classify_new_job(job)
+        job["work_mode"] = wm
+        job["salary_type"] = st
+        print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → work_mode={wm} salary_type={st}")
+
+# Ensure existing jobs have work_mode/salary_type fields (schema consistency)
+for job in existing:
+    if "work_mode" not in job:
+        job["work_mode"] = "unknown"
+    if "salary_type" not in job:
+        job["salary_type"] = "unknown"
+
 # Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
 
