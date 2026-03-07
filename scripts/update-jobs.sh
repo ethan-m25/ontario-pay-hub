@@ -46,13 +46,21 @@ PREV_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(len
 log "Previous job count: $PREV_COUNT"
 
 # ---- 2. Search for new postings (results piped in by zetsu via stdin or temp file) ----
-# zetsu writes search results to: /tmp/ontario-jobs-raw-$TODAY.txt
+# zetsu writes search results to shared dir OR /tmp
 # Format expected: one JSON object per line:
 # {"role":"...","company":"...","min":N,"max":N,"location":"...","source_url":"...","posted":"YYYY-MM-DD"}
-RAW_FILE="/tmp/ontario-jobs-raw-$TODAY.txt"
+SHARED_RAW_FILE="$HOME/.openclaw/shared/ontario-jobs-raw-$TODAY.txt"
+TMP_RAW_FILE="/tmp/ontario-jobs-raw-$TODAY.txt"
 
-if [[ ! -f "$RAW_FILE" ]]; then
-  log "No raw search results found at $RAW_FILE — zetsu may not have run yet"
+# Prefer shared/ (written by zetsu write tool), fall back to /tmp
+if [[ -f "$SHARED_RAW_FILE" ]]; then
+  RAW_FILE="$SHARED_RAW_FILE"
+  log "Using shared raw file: $SHARED_RAW_FILE"
+elif [[ -f "$TMP_RAW_FILE" ]]; then
+  RAW_FILE="$TMP_RAW_FILE"
+  log "Using /tmp raw file: $TMP_RAW_FILE"
+else
+  log "No raw search results found (checked shared/ and /tmp) — zetsu may not have run yet"
   notify_discord "⚠️ Ontario Pay Hub daily update: no raw data from zetsu. Check zetsu search cron."
   exit 1
 fi
