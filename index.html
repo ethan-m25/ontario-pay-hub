@@ -429,7 +429,7 @@ footer a { color:var(--accent); text-decoration:none; }
 <!-- SAVED PANEL -->
 <div class="saved-panel" id="savedPanel">
   <div class="saved-header">
-    <h3>🔖 Saved Jobs</h3>
+    <h3 id="panelTitle">🔖 Saved Jobs</h3>
     <button class="btn-icon" onclick="toggleSaved()" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--text2)">✕</button>
   </div>
   <div class="saved-body" id="savedBody"></div>
@@ -579,7 +579,7 @@ function doSignin(){
   const u=users.find(x=>x.email===email&&x.pass===pass);
   if(!u){ document.getElementById("signinErr").style.display="block"; return; }
   S.user=u; localStorage.setItem("user",JSON.stringify(u));
-  updateUserUI(); closeAuth();
+  updateUserUI(); closeAuth(); applyUserPrefs();
 }
 function doRegister(){
   const name=document.getElementById("regName").value.trim();
@@ -596,12 +596,61 @@ function doRegister(){
   document.getElementById("regOk").style.display="block";
   setTimeout(()=>{ updateUserUI(); closeAuth(); },1200);
 }
-function doSignout(){ S.user=null; localStorage.removeItem("user"); updateUserUI(); renderSaved(); }
+function doSignout(){
+  // Reset filters to defaults on sign-out
+  S.cat=""; S.region=""; S.salMin=0;
+  document.getElementById("catFilter").value="";
+  document.getElementById("regionFilter").value="";
+  document.getElementById("salaryFilter").value="0";
+  S.user=null; localStorage.removeItem("user");
+  updateUserUI(); applyFilters();
+}
 function updateUserUI(){
   const btn=document.getElementById("userBtn");
-  if(S.user){ btn.textContent="👤 "+S.user.name.split(" ")[0]; btn.onclick=()=>{ if(confirm("Sign out?")) doSignout(); }; }
-  else { btn.textContent="Sign in"; btn.onclick=openAuth; }
+  if(S.user){
+    btn.textContent="👤 "+S.user.name.split(" ")[0];
+    btn.onclick=()=>{ _profileTab="prefs"; openProfilePanel(); };
+  } else {
+    btn.textContent="Sign in"; btn.onclick=openAuth;
+  }
   renderSaved();
+}
+// Profile panel helpers
+let _profileTab="saved";
+function openProfilePanel(){
+  document.getElementById("savedPanel").classList.add("open");
+  renderSaved();
+}
+function loadPreferences(){
+  if(!S.user) return {cat:"",region:"",salMin:0};
+  return JSON.parse(localStorage.getItem("prefs_"+S.user.email)||'{"cat":"","region":"","salMin":0}');
+}
+function savePreferences(btn){
+  if(!S.user) return;
+  const prefs={
+    cat:    document.getElementById("prefCat").value,
+    region: document.getElementById("prefRegion").value,
+    salMin: parseInt(document.getElementById("prefSalMin").value)||0
+  };
+  localStorage.setItem("prefs_"+S.user.email, JSON.stringify(prefs));
+  // Apply to active filters
+  S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
+  document.getElementById("catFilter").value=prefs.cat;
+  document.getElementById("regionFilter").value=prefs.region;
+  document.getElementById("salaryFilter").value=prefs.salMin;
+  applyFilters();
+  btn.textContent="✓ Saved & Applied!"; btn.disabled=true;
+  setTimeout(()=>{ btn.textContent="Apply & Save"; btn.disabled=false; },2000);
+}
+function applyUserPrefs(){
+  if(!S.user) return;
+  const prefs=loadPreferences();
+  if(!prefs.cat&&!prefs.region&&!prefs.salMin) return;
+  S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
+  document.getElementById("catFilter").value=prefs.cat;
+  document.getElementById("regionFilter").value=prefs.region;
+  document.getElementById("salaryFilter").value=prefs.salMin;
+  applyFilters();
 }
 
 // ===== SAVE =====
@@ -622,6 +671,7 @@ function updateSaveBadge(){
   badge.textContent=S.saved.length;
 }
 function toggleSaved(){
+  _profileTab="saved";
   const p=document.getElementById("savedPanel");
   p.classList.toggle("open");
   renderSaved();
@@ -629,25 +679,85 @@ function toggleSaved(){
 function renderSaved(){
   const body=document.getElementById("savedBody");
   const foot=document.getElementById("savedFooter");
+
   if(!S.user){
-    body.innerHTML=`<div class="login-prompt"><p>Sign in to save and track job postings across sessions.</p><button class="btn-primary" onclick="openAuth();toggleSaved()">Sign In / Register</button></div>`;
+    document.getElementById("panelTitle").textContent="🔖 Saved Jobs";
+    body.innerHTML=`<div class="login-prompt"><p>Sign in to save jobs and set your preferences.</p><button class="btn-primary" onclick="openAuth();toggleSaved()">Sign In / Register</button></div>`;
     foot.innerHTML=""; return;
   }
-  if(!S.saved.length){
-    body.innerHTML=`<div class="saved-empty">No saved jobs yet.<br>Click ☆ on any posting to save it.</div>`;
-    foot.innerHTML=""; return;
+
+  document.getElementById("panelTitle").textContent="👤 "+S.user.name;
+
+  // Tab bar
+  const tabs=`
+    <div class="tab-bar" style="margin-bottom:16px">
+      <button class="tab-btn${_profileTab==="saved"?" active":""}" onclick="_profileTab='saved';renderSaved()">
+        🔖 Saved${S.saved.length?" ("+S.saved.length+")":""}
+      </button>
+      <button class="tab-btn${_profileTab==="prefs"?" active":""}" onclick="_profileTab='prefs';renderSaved()">
+        ⚙️ Preferences
+      </button>
+    </div>`;
+
+  if(_profileTab==="saved"){
+    const items=JOBS.filter(j=>S.saved.includes(j.id));
+    const content=items.length
+      ? items.map(j=>`
+          <div class="saved-item">
+            <div class="saved-item-top">
+              <div>
+                <div class="saved-item-role" style="cursor:pointer" onclick="openJobDetail(${j.id});toggleSaved()">${j.role}</div>
+                <div class="saved-item-co">${j.company}</div>
+              </div>
+              <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
+            </div>
+            <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
+            <div style="font-size:.72rem;color:var(--text3);margin-top:4px">
+              <a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}
+            </div>
+          </div>`).join("")
+      : `<div class="saved-empty">No saved jobs yet.<br>Click ☆ on any posting to save it.</div>`;
+    body.innerHTML=tabs+content;
+    foot.innerHTML=items.length
+      ? `<button class="btn-secondary" style="width:100%;font-size:.8rem;margin-bottom:8px"
+           onclick="if(confirm('Clear all saved?')){S.saved=[];localStorage.setItem('saved','[]');updateSaveBadge();renderSaved();}">Clear all saved</button>
+         <button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`
+      : `<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
+
+  } else {
+    // Preferences tab
+    const prefs=loadPreferences();
+    const cities=[...new Set(JOBS.map(j=>(j.location||"").split(",")[0].trim()).filter(c=>c&&c!=="Ontario"))].sort();
+    const regionOpts=`<option value="">All Regions</option>`+
+      cities.map(c=>`<option value="${c}"${c===prefs.region?" selected":""}>${c}</option>`).join("");
+    body.innerHTML=tabs+`
+      <p style="font-size:.77rem;color:var(--text2);margin-bottom:18px;line-height:1.5">
+        Set your default filters. They'll be applied automatically each time you sign in.
+      </p>
+      <label class="form-label">Default Category</label>
+      <select class="filter-select" id="prefCat" style="width:100%;margin-bottom:14px">
+        <option value=""${!prefs.cat?" selected":""}>All Categories</option>
+        <option value="eng"${prefs.cat==="eng"?" selected":""}>Engineering</option>
+        <option value="data"${prefs.cat==="data"?" selected":""}>Data & Analytics</option>
+        <option value="fin"${prefs.cat==="fin"?" selected":""}>Finance & Risk</option>
+        <option value="pm"${prefs.cat==="pm"?" selected":""}>Product & Project</option>
+        <option value="mktg"${prefs.cat==="mktg"?" selected":""}>Marketing & Sales</option>
+        <option value="hr"${prefs.cat==="hr"?" selected":""}>People & HR</option>
+      </select>
+      <label class="form-label">Default Region</label>
+      <select class="filter-select" id="prefRegion" style="width:100%;margin-bottom:14px">${regionOpts}</select>
+      <label class="form-label">Minimum Salary (by midpoint)</label>
+      <select class="filter-select" id="prefSalMin" style="width:100%;margin-bottom:20px">
+        <option value="0"${!prefs.salMin?" selected":""}>Any Salary</option>
+        <option value="80000"${prefs.salMin===80000?" selected":""}>$80K+</option>
+        <option value="100000"${prefs.salMin===100000?" selected":""}>$100K+</option>
+        <option value="120000"${prefs.salMin===120000?" selected":""}>$120K+</option>
+        <option value="150000"${prefs.salMin===150000?" selected":""}>$150K+</option>
+      </select>
+      <button class="btn-primary" style="width:100%" onclick="savePreferences(this)">Apply & Save</button>
+    `;
+    foot.innerHTML=`<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
   }
-  const items=JOBS.filter(j=>S.saved.includes(j.id));
-  body.innerHTML=items.map(j=>`
-    <div class="saved-item">
-      <div class="saved-item-top">
-        <div><div class="saved-item-role">${j.role}</div><div class="saved-item-co">${j.company}</div></div>
-        <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
-      </div>
-      <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
-      <div style="font-size:.72rem;color:var(--text3);margin-top:4px"><a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}</div>
-    </div>`).join("");
-  foot.innerHTML=`<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="if(confirm('Clear all saved?')){S.saved=[];localStorage.setItem('saved','[]');updateSaveBadge();renderSaved();}">Clear all</button>`;
 }
 
 // ===== FILTER + RENDER =====
