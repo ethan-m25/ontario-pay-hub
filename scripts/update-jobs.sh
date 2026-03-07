@@ -3,10 +3,18 @@
 # ontario-pay-hub/scripts/update-jobs.sh
 # Daily job data updater — run by kisame via OpenClaw cron
 #
+# DATA RETENTION RULES (enforced in code):
+#   - NEVER delete or overwrite existing records
+#   - ONLY append new entries; dedup by role+company+posted
+#   - Archiving is ONLY via link validation (HTTP check), NOT by age
+#   - Archived = link dead, but data is preserved as historical record
+#   - Only a human admin may manually delete a record
+#
 # Flow:
 #   1. Search for new Ontario job postings with salary ranges (via zetsu/web_search)
 #   2. Parse & deduplicate against existing data/jobs.json
 #   3. Append new entries
+#   3.5. Validate links for all active jobs — archive if 404/closed
 #   4. Commit & push to GitHub → triggers Cloudflare Pages auto-deploy
 #   5. Report to Discord #command-center
 # =============================================================================
@@ -130,36 +138,97 @@ with open(raw_file) as f:
         new_jobs.append(new_entry)
         existing_keys.add(key)
 
-# Mark existing active jobs as archived if posted > 90 days ago
-from datetime import date, datetime
-today_date = date.fromisoformat(today)
+# Ensure status field exists on any old entries missing it
 for job in existing:
-    posted_str = job.get("posted", "")
-    if posted_str:
-        try:
-            posted_date = date.fromisoformat(posted_str)
-            age_days = (today_date - posted_date).days
-            if age_days > 90 and job.get("status") != "archived":
-                job["status"] = "archived"
-        except ValueError:
-            pass
-    # Ensure status field exists on old entries
     if "status" not in job:
         job["status"] = "active"
 
-# Merge
+# Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
+
+# ---- 3.5. Link validation — HTTP check all active jobs ----
+# Rules:
+#   - Already-archived jobs: skip (preserve state, do not re-check)
+#   - New jobs added this run: skip (just scraped, assume active)
+#   - Workday (*.myworkdayjobs.com): always returns 200 SPA shell,
+#     cannot detect closed jobs without JS rendering → mark as "unverifiable"
+#   - Lever (jobs.lever.co): 404 = job closed → archive
+#   - Greenhouse (job-boards.greenhouse.io / boards.greenhouse.io): 404 = closed → archive
+#   - jobs.toronto.ca: 200 but body contains "posting has ended" → archive
+#   - Any connection error / timeout: do NOT change status (assume transient)
+import urllib.request
+import urllib.error
+
+new_job_ids = {e["id"] for e in new_jobs}
+
+def _fetch(url, method="HEAD", timeout=8):
+    req = urllib.request.Request(url, method=method)
+    req.add_header("User-Agent", "Mozilla/5.0 (compatible; OntarioPayHub-Validator/1.1)")
+    return urllib.request.urlopen(req, timeout=timeout)
+
+def validate_url(url):
+    """Returns: 'active', 'archived', or 'skip'"""
+    if not url:
+        return "skip"
+    # Workday: unverifiable without browser JS
+    if "myworkdayjobs.com" in url:
+        return "skip"
+    try:
+        if "jobs.toronto.ca" in url:
+            # Must check body — 200 even for ended postings
+            with _fetch(url, method="GET", timeout=10) as r:
+                body = r.read().decode("utf-8", errors="ignore").lower()
+            if "posting has ended" in body or "job posting has ended" in body:
+                return "archived"
+            return "active"
+        else:
+            # Lever, Greenhouse, others: HEAD is sufficient
+            with _fetch(url, method="HEAD", timeout=8) as r:
+                return "active" if r.status < 400 else "archived"
+    except urllib.error.HTTPError as e:
+        return "archived" if e.code == 404 else "skip"
+    except Exception:
+        return "skip"  # Timeout / connection error — do not change status
+
+val_active = 0
+val_archived = 0
+val_skipped = 0
+
+for job in all_jobs:
+    if job.get("status") == "archived":
+        continue  # Already archived, never touch
+    if job.get("id") in new_job_ids:
+        continue  # Freshly added this run, skip validation
+    result = validate_url(job.get("source_url", ""))
+    if result == "active":
+        job["last_seen"] = today
+        val_active += 1
+    elif result == "archived":
+        job["status"] = "archived"
+        val_archived += 1
+    else:
+        val_skipped += 1
+
+print(f"VALIDATION: confirmed_active={val_active} newly_archived={val_archived} unverifiable={val_skipped}")
 
 # Update metadata
 db["jobs"] = all_jobs
+active_count = sum(1 for j in all_jobs if j.get("status") != "archived")
+archived_count = sum(1 for j in all_jobs if j.get("status") == "archived")
+
 db["meta"] = {
     "updated": "$TIMESTAMP",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
     "count": len(all_jobs),
-    "scraper_version": "1.1",
+    "active": active_count,
+    "archived": archived_count,
+    "scraper_version": "1.2",
     "last_run": today,
     "new_today": len(new_jobs),
-    "parse_errors": errors
+    "parse_errors": errors,
+    "links_validated": val_active,
+    "links_newly_archived": val_archived,
+    "links_unverifiable": val_skipped
 }
 
 with open(data_file, "w") as f:
@@ -169,11 +238,12 @@ print(f"RESULT: added={len(new_jobs)} total={len(all_jobs)} errors={errors}")
 PYEOF
 
 # ---- 4. Read result ----
-RESULT=$(tail -1 "$LOG_FILE" 2>/dev/null || echo "")
-NEW_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(len(d.get('jobs',[])))" 2>/dev/null || echo "?")
+NEW_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('count',0))" 2>/dev/null || echo "?")
+ACTIVE_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('active',0))" 2>/dev/null || echo "?")
 NEW_TODAY=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('new_today',0))" 2>/dev/null || echo "?")
+NEWLY_ARCHIVED=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('links_newly_archived',0))" 2>/dev/null || echo "?")
 
-log "New count: $NEW_COUNT (+$NEW_TODAY new today)"
+log "Total: $NEW_COUNT | Active: $ACTIVE_COUNT | +$NEW_TODAY new | $NEWLY_ARCHIVED links newly archived"
 
 # ---- 5. Git commit & push ----
 cd "$REPO_DIR"
@@ -191,7 +261,8 @@ log "Pushed to GitHub → Cloudflare Pages rebuilding"
 
 # ---- 6. Discord notification ----
 notify_discord "✅ Ontario Pay Hub updated [$TODAY]
-📊 +$NEW_TODAY new postings | $NEW_COUNT total
+📊 +$NEW_TODAY new | $ACTIVE_COUNT active | $NEW_COUNT total in DB
+🔗 $NEWLY_ARCHIVED links newly archived (dead links detected)
 🔄 Cloudflare Pages rebuilding now (~2 min)
 🌐 Live at: https://ontario-pay-hub.pages.dev"
 

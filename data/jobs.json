@@ -3,10 +3,15 @@
     "updated": "2026-03-07T00:19:00Z",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
     "count": 52,
-    "scraper_version": "1.1",
+    "scraper_version": "1.2",
     "last_run": "2026-03-06",
     "new_today": 12,
-    "parse_errors": 0
+    "parse_errors": 0,
+    "active": 43,
+    "archived": 9,
+    "links_validated": 0,
+    "links_newly_archived": 0,
+    "links_unverifiable": 0
   },
   "jobs": [
     {
