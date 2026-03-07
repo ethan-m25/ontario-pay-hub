@@ -292,7 +292,7 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "onsite",
-      "salary_type": "total_comp"
+      "salary_type": "base"
     },
     {
       "id": "21",
@@ -390,7 +390,7 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "total_comp"
+      "salary_type": "base"
     },
     {
       "id": "28",
@@ -404,7 +404,7 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "unknown",
-      "salary_type": "total_comp"
+      "salary_type": "base"
     },
     {
       "id": "29",
