@@ -83,6 +83,7 @@ def exa_search(query, num_results=10):
     req.add_header("x-api-key", EXA_API_KEY)
     req.add_header("Content-Type", "application/json")
     req.add_header("Accept", "application/json")
+    req.add_header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36")
 
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
