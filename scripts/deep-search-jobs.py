@@ -80,6 +80,16 @@ EXA_QUERIES = [
 
     # --- builtintoronto.com ---
     'site:builtintoronto.com salary range "$" CAD',
+
+    # --- Jobvite (server-rendered, confirmed Ontario salary data: Ornge, VON, Innio, etc.) ---
+    'site:jobs.jobvite.com Ontario Canada salary range "$" CAD engineer OR analyst OR manager OR nurse OR director',
+    'site:jobs.jobvite.com Toronto OR Ottawa OR Waterloo OR Mississauga OR Hamilton salary "$" CAD',
+    'site:jobs.jobvite.com Ontario Canada salary "$" CAD 2024 OR 2025 healthcare OR education OR government OR finance',
+
+    # --- Indeed Canada via Exa (Exa index bypasses direct 403; viewjob pages contain real employer-disclosed ranges) ---
+    'site:ca.indeed.com/viewjob Ontario 2026 salary "$" CAD engineer OR analyst OR manager OR director OR specialist',
+    'site:ca.indeed.com/viewjob Toronto OR Ottawa OR Waterloo salary range "$" CAD 2026',
+    'site:ca.indeed.com/viewjob Ontario salary "$" CAD 2024 OR 2025 healthcare OR government OR finance OR technology',
 ]
 
 

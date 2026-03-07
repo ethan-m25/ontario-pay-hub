@@ -51,11 +51,20 @@ SKIP_PATTERNS = [
 ]
 
 EXA_QUERIES = [
+    # --- Lever / Greenhouse (core) ---
     'Ontario Canada job posting 2026 salary range "$" CAD engineer OR analyst OR manager site:jobs.lever.co OR site:boards.greenhouse.io OR site:job-boards.greenhouse.io',
     'Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "compensation range" "$" CAD developer OR director OR senior',
     'Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,000" OR "$120,000" OR "$150,000" site:careers.*.com OR site:jobs.*',
     'ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 salary disclosed compensation CAD',
     'Ontario employer pay transparency 2026 new opening "salary" "$" CAD VP OR director OR manager OR specialist',
+
+    # --- Jobvite (server-rendered, no anti-scraping, confirmed Ontario salary data) ---
+    'site:jobs.jobvite.com Ontario Canada salary range "$" CAD 2026 engineer OR analyst OR manager OR nurse OR director',
+    'site:jobs.jobvite.com Toronto OR Ottawa OR Waterloo OR Mississauga salary "$" CAD',
+
+    # --- Indeed Canada via Exa (Exa index bypasses 403; viewjob pages have real disclosed ranges) ---
+    'site:ca.indeed.com/viewjob Ontario 2026 salary "$" CAD engineer OR analyst OR manager OR director',
+    'site:ca.indeed.com/viewjob Toronto OR Ottawa OR Waterloo salary range "$" CAD 2026',
 ]
 
 
