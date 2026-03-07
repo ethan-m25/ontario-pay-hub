@@ -858,7 +858,7 @@ function renderTable(){
     const mr=!S.region||(j.location||"").startsWith(S.region);
     const ms=!S.salMin||mid(j)>=S.salMin;
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
-    const posted=j.posted||j.scraped||"";
+    const posted=j.date||"";
     const cutoff=(days)=>{const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);};
     const ma=!S.age||!posted||(S.age==='1m'?posted>=cutoff(30):S.age==='3m'?posted>=cutoff(90):S.age==='6m'?posted>=cutoff(180):posted<cutoff(180));
     return mq&&mc&&mr&&ms&&mw&&ma;
