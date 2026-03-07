@@ -1,11 +1,11 @@
 {
   "meta": {
-    "updated": "2026-03-06T14:32:26Z",
+    "updated": "2026-03-07T00:19:00Z",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
-    "count": 40,
+    "count": 52,
     "scraper_version": "1.1",
     "last_run": "2026-03-06",
-    "new_today": 0,
+    "new_today": 12,
     "parse_errors": 0
   },
   "jobs": [
@@ -91,7 +91,7 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Risk-Analyst--Credit-Exceptions--3782-_R_1442440",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "8",
@@ -103,7 +103,7 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Manager--Data-Science_R_1382726",
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "9",
@@ -115,7 +115,7 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Manager--Patent-Engineer_R_1394201",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "10",
@@ -127,7 +127,7 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/td_bank_careers/job/toronto-ontario/senior-analyst--fcrm-testing-quality-assurance--qa-----technology-audit_r_1427118",
       "posted": "2026-02-03",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "11",
@@ -139,7 +139,7 @@
       "source_url": "https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Senior-Information-Security-Analyst---Technology-Controls-Officer_R_1398167",
       "posted": "2026-01-22",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "12",
@@ -355,7 +355,7 @@
       "source_url": "https://jobs.lever.co/teleport/33979590-6ff1-47c9-aae1-2c50da825752",
       "posted": "2026-02-05",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "30",
@@ -379,7 +379,7 @@
       "source_url": "https://jobs.lever.co/infrastructureontario/7470cc03-f0e7-446c-a59e-fc12795ba2a9",
       "posted": "2026-02-01",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "32",
@@ -391,7 +391,7 @@
       "source_url": "https://jobs.lever.co/infrastructureontario/b86774d7-c729-4333-bdb3-dcb8bb8aa342",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "33",
@@ -475,7 +475,7 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-ENGINEER-ON-M/590360617/",
       "posted": "2026-01-05",
       "scraped": "2026-03-06",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "40",
@@ -488,6 +488,162 @@
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
       "status": "active"
+    },
+    {
+      "id": "41",
+      "role": "Sr Data Scientist, Finance & Market Risk",
+      "company": "Wealthsimple",
+      "min": 151200,
+      "max": 189000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/wealthsimple/0c6eb5e6-3287-4a87-a94a-dcf6a1837ad2",
+      "posted": "2026-01-20",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "42",
+      "role": "Senior Analyst, Investment Research",
+      "company": "Wealthsimple",
+      "min": 123200,
+      "max": 154000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/wealthsimple/15ca085a-109f-469d-95a1-73432011a62a",
+      "posted": "2026-01-18",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "43",
+      "role": "HR Business Partner (Contract)",
+      "company": "Wealthsimple",
+      "min": 116000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/wealthsimple/6069fe39-8dc7-4183-98be-962a3164e086",
+      "posted": "2026-01-22",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "44",
+      "role": "Product Marketing Manager, Active Trader",
+      "company": "Wealthsimple",
+      "min": 116000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/wealthsimple/b039c106-82a3-4d9e-9313-e96afb68dc15",
+      "posted": "2026-01-25",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "45",
+      "role": "Product Manager, Care Mode",
+      "company": "Fullscript",
+      "min": 105000,
+      "max": 130000,
+      "location": "Ottawa, ON",
+      "source_url": "https://jobs.lever.co/fullscript/aa0c78c5-dbf8-471e-89fc-7f02e6f282ef",
+      "posted": "2026-01-21",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "46",
+      "role": "Senior Digital Marketing Manager",
+      "company": "Fullscript",
+      "min": 110000,
+      "max": 135000,
+      "location": "Ottawa, ON",
+      "source_url": "https://jobs.lever.co/fullscript/d19f3565-51ea-44c5-b7fa-d94bb7bae606",
+      "posted": "2026-01-15",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "47",
+      "role": "Senior Financial Analyst, FP&A",
+      "company": "PointClickCare",
+      "min": 81000,
+      "max": 90000,
+      "location": "Mississauga, ON",
+      "source_url": "https://jobs.lever.co/pointclickcare/5de096e0-23d7-4e83-9a15-87a667df1f5a",
+      "posted": "2026-01-28",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "48",
+      "role": "Senior HR Business Partner",
+      "company": "Caseware",
+      "min": 130000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/caseware/10189a2b-2cf7-4f5d-988f-aaceb538f3c9",
+      "posted": "2026-01-20",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "49",
+      "role": "Product Manager",
+      "company": "PolicyMe",
+      "min": 110000,
+      "max": 143000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/policyme/a9c9ce51-b9cf-4648-9ff8-a1f7b61f32a0",
+      "posted": "2026-01-15",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "50",
+      "role": "Regional Manager, Ontario & Maritimes",
+      "company": "Arc'teryx",
+      "min": 113000,
+      "max": 156000,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.lever.co/arcteryx.com/46dca30a-dbbd-4782-bf62-5f13a0a1fa89",
+      "posted": "2026-03-01",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "51",
+      "role": "Data Technical Analyst",
+      "company": "StackAdapt",
+      "min": 64000,
+      "max": 76000,
+      "location": "Toronto, ON",
+      "source_url": "https://job-boards.greenhouse.io/stackadapt/jobs/4129356009",
+      "posted": "2026-02-11",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
+    },
+    {
+      "id": "52",
+      "role": "Vertical Lead, Commerce",
+      "company": "StackAdapt",
+      "min": 114400,
+      "max": 135850,
+      "location": "Toronto, ON",
+      "source_url": "https://job-boards.greenhouse.io/stackadapt/jobs/4031165009",
+      "posted": "2026-02-06",
+      "scraped": "2026-03-06",
+      "status": "active",
+      "last_seen": "2026-03-06"
     }
   ]
 }
