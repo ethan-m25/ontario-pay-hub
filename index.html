@@ -564,7 +564,14 @@ function applyTheme(){
 function toggleTheme(){ S.theme=S.theme==="dark"?"light":"dark"; applyTheme(); }
 
 // ===== AUTH =====
-function openAuth(){ document.getElementById("authModal").classList.add("open"); }
+function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function openAuth(){
+  // Clear all fields and reset messages every time the modal opens
+  ["siEmail","siPass","regName","regEmail","regPass"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  ["signinErr","regErr","regOk"].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
+  switchTab("signin");
+  document.getElementById("authModal").classList.add("open");
+}
 function closeAuth(e){ if(!e||e.target===document.getElementById("authModal")) document.getElementById("authModal").classList.remove("open"); }
 function switchTab(t){
   document.getElementById("tabSign").className="tab-btn"+(t==="signin"?" active":"");
@@ -575,10 +582,13 @@ function switchTab(t){
 function doSignin(){
   const email=document.getElementById("siEmail").value.trim();
   const pass=document.getElementById("siPass").value;
+  const errEl=document.getElementById("signinErr");
+  if(!isValidEmail(email)){ errEl.textContent="Please enter a valid email address."; errEl.style.display="block"; return; }
   const users=JSON.parse(localStorage.getItem("users")||"[]");
   const u=users.find(x=>x.email===email&&x.pass===pass);
-  if(!u){ document.getElementById("signinErr").style.display="block"; return; }
+  if(!u){ errEl.textContent="Invalid email or password."; errEl.style.display="block"; return; }
   S.user=u; localStorage.setItem("user",JSON.stringify(u));
+  S.saved=JSON.parse(localStorage.getItem("saved")||"[]"); updateSaveBadge();
   updateUserUI(); closeAuth(); applyUserPrefs();
 }
 function doRegister(){
@@ -587,7 +597,9 @@ function doRegister(){
   const pass=document.getElementById("regPass").value;
   const errEl=document.getElementById("regErr");
   errEl.style.display="none";
-  if(!name||!email||pass.length<6){ errEl.textContent=!name?"Name required":!email?"Email required":"Password min 6 chars"; errEl.style.display="block"; return; }
+  if(!name){ errEl.textContent="Name is required."; errEl.style.display="block"; return; }
+  if(!isValidEmail(email)){ errEl.textContent="Please enter a valid email address."; errEl.style.display="block"; return; }
+  if(pass.length<6){ errEl.textContent="Password must be at least 6 characters."; errEl.style.display="block"; return; }
   const users=JSON.parse(localStorage.getItem("users")||"[]");
   if(users.find(x=>x.email===email)){ errEl.textContent="Email already registered."; errEl.style.display="block"; return; }
   const u={name,email,pass};
@@ -597,12 +609,14 @@ function doRegister(){
   setTimeout(()=>{ updateUserUI(); closeAuth(); },1200);
 }
 function doSignout(){
-  // Reset filters to defaults on sign-out
+  // Reset filters and saved badge on sign-out
   S.cat=""; S.region=""; S.salMin=0;
   document.getElementById("catFilter").value="";
   document.getElementById("regionFilter").value="";
   document.getElementById("salaryFilter").value="0";
+  S.saved=[]; updateSaveBadge();
   S.user=null; localStorage.removeItem("user");
+  document.getElementById("savedPanel").classList.remove("open");
   updateUserUI(); applyFilters();
 }
 function updateUserUI(){
