@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 """
 ontario-pay-hub/scripts/search-jobs.py
-Ontario job discovery: Exa API (find URLs) + qwen2.5:14b (extract structured data)
+Ontario job discovery: Exa API (find URLs) + qwen2.5:14b via HTTP API (extract data)
 
 Run by kisame at 2 AM ET daily via OpenClaw cron.
 
 Flow:
   1. Query Exa API with 5 Ontario-salary-specific searches
   2. For each unique URL: fetch HTML, strip to text
-  3. Pipe to local model → extract role/company/min/max/location/url/posted
+  3. Call local ollama HTTP API → extract role/company/min/max/location/url/posted
   4. Write valid jobs as JSON lines to ~/.openclaw/shared/ontario-jobs-raw-DATE.txt
   5. update-jobs.sh picks up that file next
-
-Output format (one JSON per line):
-  {"role":"...","company":"...","min":N,"max":N,"location":"...","source_url":"...","posted":"YYYY-MM-DD"}
 """
 
+import atexit
 import json
 import os
 import re
-import subprocess
+import signal
+import socket
 import sys
 import time
 import urllib.error
@@ -28,13 +27,16 @@ from datetime import date, timedelta
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 EXA_API_KEY  = os.environ.get("EXA_API_KEY", "d0d9614a-58d8-4166-9b27-4ae6b6e2761e")
-OLLAMA_BIN   = os.path.expanduser("~/.local/bin/ollama")
+OLLAMA_API   = "http://127.0.0.1:11434/api/generate"
 MODEL        = "qwen2.5:14b"
 TODAY        = date.today().isoformat()
-YESTERDAY    = (date.today() - timedelta(days=1)).isoformat()
 SHARED_DIR   = os.path.expanduser("~/.openclaw/shared")
 OUTPUT_FILE  = os.path.join(SHARED_DIR, f"ontario-jobs-raw-{TODAY}.txt")
 LOG_FILE     = os.path.expanduser("~/ontario-pay-hub/scripts/search.log")
+LOCK_FILE    = os.path.expanduser("~/ontario-pay-hub/scripts/.search.lock")
+
+# Global HTTP read timeout — prevents r.read() from hanging indefinitely
+socket.setdefaulttimeout(20)
 
 # Thirty-day lookback for Exa date filter
 LOOKBACK_DATE = (date.today() - timedelta(days=30)).isoformat() + "T00:00:00.000Z"
@@ -48,7 +50,6 @@ SKIP_PATTERNS = [
     "eluta.ca", "simplyhired.ca/search",
 ]
 
-# Exa search queries — optimised for job-posting pages with explicit salary ranges
 EXA_QUERIES = [
     'Ontario Canada job posting 2026 salary range "$" CAD engineer OR analyst OR manager site:jobs.lever.co OR site:boards.greenhouse.io OR site:job-boards.greenhouse.io',
     'Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "compensation range" "$" CAD developer OR director OR senior',
@@ -56,6 +57,32 @@ EXA_QUERIES = [
     'ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 salary disclosed compensation CAD',
     'Ontario employer pay transparency 2026 new opening "salary" "$" CAD VP OR director OR manager OR specialist',
 ]
+
+
+# ── Lock file ─────────────────────────────────────────────────────────────────
+def _release_lock():
+    try:
+        os.remove(LOCK_FILE)
+    except OSError:
+        pass
+
+
+def _acquire_lock():
+    if os.path.exists(LOCK_FILE):
+        try:
+            with open(LOCK_FILE) as f:
+                old_pid = int(f.read().strip())
+            os.kill(old_pid, 0)
+            log(f"Another instance is already running (PID {old_pid}). Exiting.")
+            return False
+        except (OSError, ValueError):
+            log("Stale lock file found — removing and continuing.")
+            os.remove(LOCK_FILE)
+    with open(LOCK_FILE, "w") as f:
+        f.write(str(os.getpid()))
+    atexit.register(_release_lock)
+    signal.signal(signal.SIGTERM, lambda s, f: (_release_lock(), sys.exit(1)))
+    return True
 
 
 # ── Logging ────────────────────────────────────────────────────────────────────
@@ -94,12 +121,14 @@ def exa_search(query, num_results=10):
 
 
 # ── Page fetch ────────────────────────────────────────────────────────────────
-def fetch_page_text(url, timeout=12):
-    """Fetch job posting page, strip HTML → plain text (max 4000 chars)."""
+def fetch_page_text(url, timeout=15):
+    """Fetch job posting page, strip HTML → plain text (max 4000 chars).
+    socket.setdefaulttimeout() ensures r.read() cannot hang indefinitely.
+    """
     if not url:
         return None
     if "myworkdayjobs.com" in url:
-        return None  # SPA — content unreachable without JS
+        return None
     try:
         req = urllib.request.Request(url)
         req.add_header("User-Agent", "Mozilla/5.0 (compatible; OntarioPayHub-Scraper/2.0)")
@@ -114,7 +143,7 @@ def fetch_page_text(url, timeout=12):
         return None
 
 
-# ── LLM extraction ────────────────────────────────────────────────────────────
+# ── LLM extraction via ollama HTTP API ────────────────────────────────────────
 EXTRACT_PROMPT = """\
 Extract ONE Ontario job posting from the text below.
 
@@ -141,8 +170,22 @@ Rules:
 - source_url = exact URL of this specific job posting"""
 
 
+def _call_ollama(prompt):
+    """Call ollama HTTP API. Returns raw text output or raises exception."""
+    payload = json.dumps({
+        "model": MODEL,
+        "prompt": prompt,
+        "stream": False,
+        "options": {"temperature": 0, "num_predict": 256},
+    }).encode()
+    req = urllib.request.Request(OLLAMA_API, data=payload, method="POST")
+    req.add_header("Content-Type", "application/json")
+    with urllib.request.urlopen(req, timeout=90) as r:
+        resp = json.loads(r.read())
+    return resp.get("response", "").strip()
+
+
 def extract_job(url, snippet, page_text):
-    """Call local model to extract structured job data. Returns dict or None."""
     prompt = EXTRACT_PROMPT.format(
         url=url,
         snippet=(snippet or "")[:600],
@@ -150,73 +193,69 @@ def extract_job(url, snippet, page_text):
         today=TODAY,
     )
 
-    try:
-        result = subprocess.run(
-            [OLLAMA_BIN, "run", MODEL],
-            input=prompt,
-            capture_output=True,
-            text=True,
-            timeout=120,
-        )
-        output = result.stdout.strip()
-
-        # Check for explicit null response
-        if re.match(r'^null$', output, re.IGNORECASE):
-            return None
-
-        # Extract JSON object
-        match = re.search(r'\{[^{}]*"role"[^{}]*\}', output, re.DOTALL)
-        if not match:
-            return None
-
-        job = json.loads(match.group())
-
-        # Validate required fields
-        for k in ("role", "company", "min", "max", "source_url"):
-            if k not in job:
+    output = None
+    for attempt in range(2):
+        try:
+            output = _call_ollama(prompt)
+            break
+        except Exception as e:
+            if attempt == 0:
+                log(f"  Ollama attempt 1 failed ({type(e).__name__}: {e}) — retrying in 5s")
+                time.sleep(5)
+            else:
+                log(f"  Ollama failed after retry: {e}")
                 return None
 
-        # Validate salary range
-        if not (30_000 <= int(job["min"]) <= 700_000):
-            return None
-        if int(job["min"]) >= int(job["max"]):
-            return None
-
-        # Validate Ontario location
-        location = job.get("location", "")
-        ontario_terms = [
-            "ontario", "toronto", "ottawa", "waterloo", "mississauga",
-            "hamilton", "london", "brampton", "markham", "vaughan",
-            "richmond hill", "oakville", "kitchener", "windsor", ", on",
-        ]
-        if not any(t in location.lower() for t in ontario_terms):
-            return None
-
-        return job
-
-    except (json.JSONDecodeError, subprocess.TimeoutExpired, ValueError):
+    if output is None:
         return None
-    except Exception:
+    if re.match(r'^null$', output, re.IGNORECASE):
         return None
+
+    match = re.search(r'\{[^{}]*"role"[^{}]*\}', output, re.DOTALL)
+    if not match:
+        return None
+
+    try:
+        job = json.loads(match.group())
+    except json.JSONDecodeError:
+        return None
+
+    for k in ("role", "company", "min", "max", "source_url"):
+        if k not in job:
+            return None
+    if not (30_000 <= int(job["min"]) <= 700_000):
+        return None
+    if int(job["min"]) >= int(job["max"]):
+        return None
+
+    location = job.get("location", "")
+    ontario_terms = [
+        "ontario", "toronto", "ottawa", "waterloo", "mississauga",
+        "hamilton", "london", "brampton", "markham", "vaughan",
+        "richmond hill", "oakville", "kitchener", "windsor", ", on",
+    ]
+    if not any(t in location.lower() for t in ontario_terms):
+        return None
+    return job
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
+    if not _acquire_lock():
+        return 1
+
     log(f"=== Ontario Pay Hub job search started ===")
-    log(f"Model: {MODEL} | Output: {OUTPUT_FILE}")
+    log(f"Model: {MODEL} (HTTP API) | Output: {OUTPUT_FILE}")
 
     # Step 1: collect URLs from Exa
-    candidates = {}  # url → snippet
-
+    candidates = {}
     for i, query in enumerate(EXA_QUERIES, 1):
         log(f"Exa [{i}/{len(EXA_QUERIES)}]: {query[:65]}...")
         resp = exa_search(query, num_results=8)
         if not resp:
             continue
-
         results = resp.get("results", [])
         log(f"  → {len(results)} results")
-
         for r in results:
             url = r.get("url", "").strip()
             if not url or url in candidates:
@@ -224,25 +263,27 @@ def main():
             if any(p in url for p in SKIP_PATTERNS):
                 continue
             text = r.get("text") or ""
-            snippet = text[:600] if text else ""
-            candidates[url] = snippet
-
-        time.sleep(1.5)  # Exa rate limit courtesy
+            candidates[url] = text[:600] if text else ""
+        time.sleep(1.5)
 
     log(f"Unique URLs to process: {len(candidates)}")
 
-    # Step 2: extract jobs
-    jobs_out = []
+    # Step 2: extract — write each job immediately to survive crashes
+    os.makedirs(SHARED_DIR, exist_ok=True)
+    jobs_found = 0
     seen_keys = set()
 
     for i, (url, snippet) in enumerate(candidates.items(), 1):
         log(f"[{i:2d}/{len(candidates)}] {url[:75]}")
-
-        # Fetch page text (supplement Exa snippet)
         page_text = fetch_page_text(url)
-
         t0 = time.time()
-        job = extract_job(url, snippet, page_text)
+
+        try:
+            job = extract_job(url, snippet, page_text)
+        except Exception as e:
+            log(f"  → error: {e}")
+            continue
+
         elapsed = time.time() - t0
 
         if job:
@@ -251,19 +292,16 @@ def main():
                 log(f"  → SKIP duplicate: {job['role']} @ {job['company']}")
                 continue
             seen_keys.add(key)
-            jobs_out.append(job)
+            # Write immediately — crash-safe
+            with open(OUTPUT_FILE, "a") as f:
+                f.write(json.dumps(job, ensure_ascii=False) + "\n")
+            jobs_found += 1
             log(f"  → FOUND ({elapsed:.1f}s): {job['role']} @ {job['company']} "
                 f"${job['min']:,}–${job['max']:,} [{job.get('location','')}]")
         else:
             log(f"  → skip ({elapsed:.1f}s)")
 
-    # Step 3: write output
-    os.makedirs(SHARED_DIR, exist_ok=True)
-    with open(OUTPUT_FILE, "w") as f:
-        for job in jobs_out:
-            f.write(json.dumps(job, ensure_ascii=False) + "\n")
-
-    log(f"=== Search complete: {len(jobs_out)} valid jobs written to {OUTPUT_FILE} ===")
+    log(f"=== Search complete: {jobs_found} valid jobs written to {OUTPUT_FILE} ===")
     return 0
 
 
