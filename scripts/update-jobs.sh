@@ -328,11 +328,37 @@ git push origin main
 log "Pushed to GitHub → Cloudflare Pages rebuilding"
 
 # ---- 6. Discord notification ----
-notify_discord "✅ Ontario Pay Hub updated [$TODAY]
+# Build new jobs list if any were added
+NEW_JOBS_LIST=""
+if [ "$NEW_TODAY" -gt 0 ] 2>/dev/null; then
+  NEW_JOBS_LIST=$(python3 -c "
+import json
+d=json.load(open('$DATA_FILE'))
+jobs=d.get('jobs',[])
+# Get the last NEW_TODAY active jobs (most recently added)
+new_ones=[j for j in jobs if j.get('status')!='archived'][-${NEW_TODAY}:]
+lines=[]
+for j in new_ones:
+    wm={'remote':'🏠','hybrid':'🔀','onsite':'🏢'}.get(j.get('work_mode',''),'')
+    lines.append(f\"  • {j['role']} @ {j['company']} — \${j['min']:,}–\${j['max']:,} CAD {wm}\")
+print('\n'.join(lines))
+" 2>/dev/null || echo "")
+fi
+
+DISCORD_MSG="✅ Ontario Pay Hub updated [$TODAY]
 📊 +$NEW_TODAY new | $ACTIVE_COUNT active | $NEW_COUNT total in DB
 🔗 $NEWLY_ARCHIVED links newly archived (dead links detected)
 🔄 Cloudflare Pages rebuilding now (~2 min)
-🌐 Live at: https://ontario-pay-hub.pages.dev"
+🌐 https://ontariopayhub.fyi"
+
+if [ -n "$NEW_JOBS_LIST" ]; then
+  DISCORD_MSG="$DISCORD_MSG
+
+🆕 New today:
+$NEW_JOBS_LIST"
+fi
+
+notify_discord "$DISCORD_MSG"
 
 # ---- 7. Cleanup ----
 rm -f "$RAW_FILE"
