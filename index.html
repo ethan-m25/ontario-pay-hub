@@ -239,6 +239,8 @@ tr.top-row { border-left:3px solid var(--amber) !important; }
 .login-prompt p { color:var(--text2); font-size:.875rem; margin-bottom:16px; }
 
 /* ===== JOB DETAIL PANEL ===== */
+.jd-backdrop { position:fixed; inset:0; z-index:309; display:none; }
+.jd-backdrop.open { display:block; }
 .job-detail-panel { position:fixed; right:0; top:0; bottom:0; width:100%; max-width:440px; background:var(--surface); border-left:1px solid var(--border); z-index:310; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s ease; display:flex; flex-direction:column; overflow:hidden; }
 .job-detail-panel.open { transform:translateX(0); }
 .jd-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:10px; }
@@ -418,7 +420,8 @@ footer a { color:var(--accent); text-decoration:none; }
   <div class="saved-footer" id="savedFooter"></div>
 </div>
 
-<!-- JOB DETAIL PANEL -->
+<!-- JOB DETAIL BACKDROP + PANEL -->
+<div class="jd-backdrop" id="jdBackdrop" onclick="closeJobDetail()"></div>
 <div class="job-detail-panel" id="jobDetailPanel">
   <div class="jd-header">
     <div class="jd-header-left">
@@ -984,10 +987,12 @@ function openJobDetail(id){
   `;
 
   document.getElementById("jobDetailPanel").classList.add("open");
+  document.getElementById("jdBackdrop").classList.add("open");
 }
 
 function closeJobDetail(){
   document.getElementById("jobDetailPanel").classList.remove("open");
+  document.getElementById("jdBackdrop").classList.remove("open");
   _jdCurrentId = null;
 }
 
