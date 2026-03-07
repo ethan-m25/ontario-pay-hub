@@ -300,22 +300,6 @@ footer a { color:var(--accent); text-decoration:none; }
       <div class="filters">
         <select class="filter-select" id="roleFilter" onchange="applyFilters()">
           <option value="">All Roles</option>
-          <option>Software Engineer</option>
-          <option>Data Analyst</option>
-          <option>Financial Analyst</option>
-          <option>HR Manager</option>
-          <option>Product Manager</option>
-          <option>Marketing Manager</option>
-          <option>Civil Engineer</option>
-          <option>Electrical Engineer</option>
-          <option>Mechanical Engineer</option>
-          <option>Network Engineer</option>
-          <option>Business Analyst</option>
-          <option>Policy Analyst</option>
-          <option>IT Project Manager</option>
-          <option>Program Manager</option>
-          <option>Clinical Project Manager</option>
-          <option>Research Analyst</option>
         </select>
         <select class="filter-select" id="sortSelect" onchange="applyFilters()">
           <option value="mid-desc">↓ Highest Salary</option>
@@ -406,14 +390,17 @@ footer a { color:var(--accent); text-decoration:none; }
 
 <script>
 // ===== DATA (loaded from data/jobs.json, fallback inline) =====
-const TAG_MAP = {
-  "Software Engineer":"eng","Data Analyst":"data","HR Manager":"hr",
-  "Product Manager":"pm","Marketing Manager":"mktg",
-  "Financial Analyst":"data","Business Analyst":"data","Research Analyst":"data",
-  "Civil Engineer":"eng","Electrical Engineer":"eng","Mechanical Engineer":"eng","Network Engineer":"eng",
-  "IT Project Manager":"pm","Program Manager":"pm","Clinical Project Manager":"pm",
-  "Policy Analyst":"hr"
-};
+function getTag(role){
+  const r=(role||"").toLowerCase();
+  if(r.includes("engineer")||r.includes("developer")||r.includes("architect")||r.includes("devops")||r.includes("systems developer")||r.includes("security analyst")) return"eng";
+  if(r.includes("data scientist")||r.includes("data analyst")||r.includes("intelligence analyst")||r.includes("data science")||r.includes("business analyst")||r.includes("systems analyst")||r.includes("management analyst")||r.includes("operations analyst")||r.includes("applied data")) return"data";
+  if(r.includes("financial")||r.includes("treasury")||r.includes("actuarial")||r.includes("aml")||r.includes("credit")||r.includes("risk analyst")||r.includes("budget")||r.includes("accounting")||r.includes("settlements")||r.includes("capital markets")) return"fin";
+  if(r.includes("product manager")||r.includes("product owner")||r.includes("project manager")||r.includes("project coordinator")||r.includes("schedule manager")||r.includes("program manager")) return"pm";
+  if(r.includes("marketing")||r.includes("business development")||r.includes("merchandising")||r.includes("sales development")||r.includes("account director")) return"mktg";
+  if(r.includes("hr ")||r.includes("human resources")||r.includes("people business")||r.includes("talent")||r.includes("recruiter")||r.includes("office coordinator")||r.includes("benefits lead")) return"hr";
+  if(r.includes("manager")) return"pm";
+  return"eng";
+}
 const FALLBACK_JOBS = [
   {id:1,role:"Software Engineer",tag:"eng",company:"Shopify",min:110000,max:160000,src:"shopify.com/careers",date:"2026-03-04"},
   {id:2,role:"Software Engineer",tag:"eng",company:"RBC",min:95000,max:140000,src:"rbc.com/careers",date:"2026-03-03"},
@@ -433,7 +420,7 @@ function normalizeJob(j, i) {
   return {
     id: parseInt(j.id) || i+1,
     role: j.role,
-    tag: TAG_MAP[j.role] || "eng",
+    tag: getTag(j.role),
     company: j.company,
     min: j.min,
     max: j.max,
@@ -466,6 +453,7 @@ async function loadData() {
   }
   applyTheme();
   updateStats();
+  populateRoleFilter();
   applyFilters();
   updateUserUI();
 }
@@ -607,6 +595,12 @@ function setSort(k){
   sel.value=S.sort;
   applyFilters();
 }
+function populateRoleFilter(){
+  const sel=document.getElementById("roleFilter");
+  const cur=sel.value;
+  const roles=[...new Set(JOBS.map(j=>j.role))].sort();
+  sel.innerHTML='<option value="">All Roles</option>'+roles.map(r=>`<option${r===cur?' selected':''}>${r}</option>`).join('');
+}
 function applyFilters(){
   S.q=document.getElementById("searchInput").value.toLowerCase();
   S.role=document.getElementById("roleFilter").value;
@@ -710,7 +704,7 @@ function updateStats(){
   document.getElementById("statSpread").textContent=fmt(spread);
 }
 
-// ===== CHART =====
+// ===== CHART — dynamic categories from actual data =====
 function drawChart(){
   const canvas=document.getElementById("chartCanvas");
   const ctx=canvas.getContext("2d");
@@ -718,56 +712,82 @@ function drawChart(){
   const dpr=window.devicePixelRatio||1;
   const isMobile=window.innerWidth<600;
   const W=canvas.parentElement.clientWidth-(isMobile?16:40);
-  const H=isMobile?210:210;
+
+  // Category config
+  const CAT={
+    "eng": {label:isMobile?"Engineering":"Engineering",     color:"#6366f1"},
+    "data":{label:isMobile?"Data & Analytics":"Data & Analytics",  color:"#22d3ee"},
+    "fin": {label:isMobile?"Finance":"Finance & Risk",      color:"#10b981"},
+    "pm":  {label:isMobile?"Prod/Proj":"Product & Project Mgmt", color:"#f59e0b"},
+    "mktg":{label:isMobile?"Marketing":"Marketing & Sales", color:"#ef4444"},
+    "hr":  {label:isMobile?"People/HR":"People & HR",       color:"#a78bfa"},
+  };
+
+  // Aggregate JOBS by tag
+  const agg={};
+  JOBS.forEach(j=>{
+    if(!agg[j.tag]) agg[j.tag]={count:0,minSum:0,maxSum:0};
+    agg[j.tag].count++;
+    agg[j.tag].minSum+=j.min;
+    agg[j.tag].maxSum+=j.max;
+  });
+
+  // Sort by count desc, take top 5 known categories
+  const displayCats=Object.entries(agg)
+    .filter(([k])=>CAT[k])
+    .sort((a,b)=>b[1].count-a[1].count)
+    .slice(0,5)
+    .map(([tag,d])=>({
+      label:CAT[tag].label,
+      color:CAT[tag].color,
+      count:d.count,
+      avgMin:Math.round(d.minSum/d.count),
+      avgMax:Math.round(d.maxSum/d.count),
+    }));
+
+  if(!displayCats.length) return;
+
+  const BH=isMobile?30:36;
+  const GAP=isMobile?8:10;
+  const PT=8,PB=26;
+  const numBars=displayCats.length;
+  const H=PT+numBars*(BH+GAP)+PB;
+  const PL=isMobile?84:148;
+  const PR=8;
+  const CW=W-PL-PR;
+  const CH=H-PT-PB;
+
   canvas.style.width=W+"px"; canvas.style.height=H+"px";
   canvas.width=W*dpr; canvas.height=H*dpr;
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
 
-  // Role labels on LEFT side to avoid overlap
-  const roleLabels=isMobile
-    ?["SW Eng","Data Analyst","HR Mgr","Prod Mgr","Mktg Mgr"]
-    :["Software Eng","Data Analyst","HR Manager","Product Mgr","Marketing Mgr"];
-  const roleKeys=["Software Engineer","Data Analyst","HR Manager","Product Manager","Marketing Manager"];
-  const colors=["#6366f1","#22d3ee","#10b981","#f59e0b","#ef4444"];
-  const data=roleKeys.map(r=>{
-    const jobs=JOBS.filter(j=>j.role===r);
-    if(!jobs.length) return{avgMin:0,avgMax:0};
-    return{avgMin:Math.round(jobs.reduce((a,j)=>a+j.min,0)/jobs.length),avgMax:Math.round(jobs.reduce((a,j)=>a+j.max,0)/jobs.length)};
-  });
-
-  const PL=isMobile?76:112; // left margin for role label text
-  const PR=8, PT=8, PB=26;
-  const CW=W-PL-PR, CH=H-PT-PB;
-  const maxVal=220000;
-  const BH=Math.floor(CH/roleKeys.length*0.62);
-  const GAP=(CH-BH*roleKeys.length)/(roleKeys.length+1);
+  const maxVal=Math.max(...displayCats.map(d=>d.avgMax))*1.08||250000;
   const gridColor=isDark?"rgba(42,47,74,0.8)":"rgba(203,213,225,0.8)";
   const textColor=isDark?"rgba(100,116,139,0.9)":"rgba(100,116,139,1)";
   const labelColor=isDark?"rgba(148,163,184,0.92)":"rgba(71,85,105,1)";
 
-  // Vertical grid lines + x-axis labels
+  // Vertical grid lines
   ctx.strokeStyle=gridColor; ctx.lineWidth=1;
-  [0,50000,100000,150000,200000].forEach(v=>{
-    const x=PL+(v/maxVal)*CW;
+  [0,50,100,150,200,250].filter(v=>v*1000<=maxVal*1.05).forEach(v=>{
+    const x=PL+(v*1000/maxVal)*CW;
     ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PT+CH);ctx.stroke();
     ctx.fillStyle=textColor;
     ctx.font=`${isMobile?8:9}px -apple-system,sans-serif`;
     ctx.textAlign="center";
-    ctx.fillText("$"+(v/1000)+"k",x,PT+CH+16);
+    ctx.fillText("$"+v+"k",x,PT+CH+16);
   });
 
-  data.forEach((d,i)=>{
-    if(!d.avgMin&&!d.avgMax) return;
-    const y=PT+GAP*(i+1)+BH*i;
+  displayCats.forEach((d,i)=>{
+    const y=PT+i*(BH+GAP);
     const xMin=PL+(d.avgMin/maxVal)*CW;
     const xMax=PL+(d.avgMax/maxVal)*CW;
 
-    // Role label on LEFT (right-aligned into left margin)
+    // Label on LEFT with count badge
     ctx.fillStyle=labelColor;
     ctx.font=`600 ${isMobile?8:10}px -apple-system,sans-serif`;
     ctx.textAlign="right";
-    ctx.fillText(roleLabels[i],PL-5,y+BH/2+3);
+    ctx.fillText(d.label+(d.count>1?` (${d.count})`:""),PL-5,y+BH/2+3);
 
     // Background track
     ctx.fillStyle=isDark?"rgba(38,43,74,0.5)":"rgba(226,232,240,0.7)";
@@ -778,17 +798,17 @@ function drawChart(){
 
     // Range fill
     const g=ctx.createLinearGradient(xMin,0,xMax,0);
-    g.addColorStop(0,colors[i]+"88");g.addColorStop(1,colors[i]);
+    g.addColorStop(0,d.color+"88"); g.addColorStop(1,d.color);
     ctx.fillStyle=g;
     ctx.beginPath();
     if(ctx.roundRect) ctx.roundRect(xMin,y,Math.max(xMax-xMin,4),BH,3);
     else ctx.rect(xMin,y,Math.max(xMax-xMin,4),BH);
     ctx.fill();
 
-    // Salary text INSIDE bar, centered — no overflow risk
+    // Salary text inside bar
     const midX=(xMin+xMax)/2;
     const salaryText=isMobile
-      ?"$"+Math.round((d.avgMin+d.avgMax)/2/1000)+"k"  // midpoint only on mobile
+      ?"$"+Math.round((d.avgMin+d.avgMax)/2/1000)+"k"
       :"$"+(d.avgMin/1000).toFixed(0)+"k–$"+(d.avgMax/1000).toFixed(0)+"k";
     ctx.fillStyle="rgba(255,255,255,0.95)";
     ctx.font=`700 ${isMobile?8:10}px -apple-system,monospace`;
