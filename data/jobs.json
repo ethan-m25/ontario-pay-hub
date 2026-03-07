@@ -1,17 +1,17 @@
 {
   "meta": {
-    "updated": "2026-03-07T00:19:00Z",
+    "updated": "2026-03-07T03:05:29Z",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
     "count": 52,
+    "active": 31,
+    "archived": 21,
     "scraper_version": "1.2",
     "last_run": "2026-03-06",
-    "new_today": 12,
+    "new_today": 0,
     "parse_errors": 0,
-    "active": 43,
-    "archived": 9,
-    "links_validated": 0,
-    "links_newly_archived": 0,
-    "links_unverifiable": 0
+    "links_validated": 23,
+    "links_newly_archived": 12,
+    "links_unverifiable": 8
   },
   "jobs": [
     {
@@ -208,7 +208,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "15",
@@ -222,7 +223,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "16",
@@ -236,7 +238,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "17",
@@ -250,7 +253,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "18",
@@ -264,7 +268,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "19",
@@ -278,7 +283,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "20",
@@ -292,7 +298,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "onsite",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "21",
@@ -306,7 +313,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "onsite",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "22",
@@ -320,7 +328,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "onsite",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "23",
@@ -332,7 +341,7 @@
       "source_url": "https://jobs.lever.co/owner/4e236d46-2002-4896-a868-c9a454f68013",
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -348,7 +357,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "25",
@@ -360,7 +370,7 @@
       "source_url": "https://jobs.lever.co/pointclickcare/2abfa6c7-d9d3-4cf9-bbe9-ecd85c72f105",
       "posted": "2026-02-05",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -374,7 +384,7 @@
       "source_url": "https://jobs.lever.co/pointclickcare/85cddfeb-3d8c-4464-992d-5843d58e310c",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -388,7 +398,7 @@
       "source_url": "https://jobs.lever.co/waabi/9bcf52fc-482e-4404-8399-2a90d63c86f9",
       "posted": "2026-02-15",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -404,7 +414,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "unknown",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "29",
@@ -430,7 +441,7 @@
       "source_url": "https://jobs.lever.co/caseware/2d27720a-fde6-4d41-8f0c-276c4a893255",
       "posted": "2026-02-12",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -474,7 +485,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "34",
@@ -488,7 +500,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "hybrid",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "35",
@@ -500,7 +513,7 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-PROJECT-MANAGER-BUSINESS-SOLUTIONS-ON-M4Y-0E6/597133617/",
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -514,7 +527,7 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-SENIOR-BUSINESS-&-SYSTEMS-ANALYST-ON-M/599983417/",
       "posted": "2026-02-12",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -528,7 +541,7 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-PROJECT-MANAGER-TRANSPORTATION-SERVICES-ON-M/598747717/",
       "posted": "2026-02-10",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -544,7 +557,8 @@
       "scraped": "2026-03-06",
       "status": "active",
       "work_mode": "onsite",
-      "salary_type": "base"
+      "salary_type": "base",
+      "last_seen": "2026-03-06"
     },
     {
       "id": "39",
@@ -570,7 +584,7 @@
       "source_url": "https://jobs.toronto.ca/jobsatcity/job/Toronto-BUDGET-&-OPERATIONS-ANALYST-ON-m5v/598202417/",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -614,7 +628,7 @@
       "source_url": "https://jobs.lever.co/wealthsimple/6069fe39-8dc7-4183-98be-962a3164e086",
       "posted": "2026-01-22",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "last_seen": "2026-03-06",
       "work_mode": "hybrid",
       "salary_type": "base"
@@ -689,7 +703,7 @@
       "source_url": "https://jobs.lever.co/caseware/10189a2b-2cf7-4f5d-988f-aaceb538f3c9",
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "last_seen": "2026-03-06",
       "work_mode": "hybrid",
       "salary_type": "base"
@@ -719,7 +733,7 @@
       "source_url": "https://jobs.lever.co/arcteryx.com/46dca30a-dbbd-4782-bf62-5f13a0a1fa89",
       "posted": "2026-03-01",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "last_seen": "2026-03-06",
       "work_mode": "onsite",
       "salary_type": "base"
