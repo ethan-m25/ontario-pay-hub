@@ -138,6 +138,11 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 .filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
 .filter-select { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:9px 12px; color:var(--text); font-size:.82rem; outline:none; cursor:pointer; transition:border-color var(--transition); min-width:130px; }
 .filter-select:focus { border-color:var(--accent); }
+.age-filter { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:0 20px 14px; }
+.age-label { font-size:.73rem; color:var(--text3); margin-right:2px; white-space:nowrap; }
+.age-btn { font-size:.75rem; font-weight:600; padding:5px 13px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; }
+.age-btn:hover { border-color:var(--accent); color:var(--accent); }
+.age-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 .result-info { margin-left:auto; font-size:.75rem; color:var(--text3); white-space:nowrap; }
 @media(max-width:500px){
   .filter-select { flex:1; min-width:0; }
@@ -369,6 +374,14 @@ footer a { color:var(--accent); text-decoration:none; }
         </select>
         <div class="result-info" id="resultInfo"></div>
       </div>
+      <div class="age-filter">
+        <span class="age-label">Posted:</span>
+        <button class="age-btn active" id="age-all"   onclick="setAge('')">All time</button>
+        <button class="age-btn"        id="age-1m"    onclick="setAge('1m')">Last month</button>
+        <button class="age-btn"        id="age-3m"    onclick="setAge('3m')">3 months</button>
+        <button class="age-btn"        id="age-6m"    onclick="setAge('6m')">6 months</button>
+        <button class="age-btn"        id="age-old"   onclick="setAge('6m+')">6 months+</button>
+      </div>
     </div>
     <div class="comp-note" id="compNote">
       <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
@@ -550,6 +563,7 @@ const S = {
   region: "",
   salMin: 0,
   wm: "",
+  age: "",
   q: "",
 };
 
@@ -636,7 +650,7 @@ function doRegister(){
 }
 function doSignout(){
   // Reset filters and saved badge on sign-out
-  S.cat=""; S.region=""; S.salMin=0; S.wm="";
+  S.cat=""; S.region=""; S.salMin=0; S.wm=""; S.age=""; setAge("");
   document.getElementById("catFilter").value="";
   document.getElementById("regionFilter").value="";
   document.getElementById("wmFilter").value="";
@@ -820,6 +834,14 @@ function populateFilters(){
   sel.innerHTML='<option value="">All Regions</option>'+
     cities.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
 }
+function setAge(val){
+  S.age=val;
+  const map={'':'age-all','1m':'age-1m','3m':'age-3m','6m':'age-6m','6m+':'age-old'};
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById(map[val]);
+  if(el) el.classList.add('active');
+  renderTable();
+}
 function applyFilters(){
   S.q=document.getElementById("searchInput").value.toLowerCase();
   S.cat=document.getElementById("catFilter").value;
@@ -836,7 +858,10 @@ function renderTable(){
     const mr=!S.region||(j.location||"").startsWith(S.region);
     const ms=!S.salMin||mid(j)>=S.salMin;
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
-    return mq&&mc&&mr&&ms&&mw;
+    const posted=j.posted||j.scraped||"";
+    const cutoff=(days)=>{const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);};
+    const ma=!S.age||!posted||(S.age==='1m'?posted>=cutoff(30):S.age==='3m'?posted>=cutoff(90):S.age==='6m'?posted>=cutoff(180):posted<cutoff(180));
+    return mq&&mc&&mr&&ms&&mw&&ma;
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
@@ -848,7 +873,7 @@ function renderTable(){
     else v=0;
     return sd==="desc"?-v:v;
   });
-  const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm);
+  const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
