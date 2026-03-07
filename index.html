@@ -852,7 +852,7 @@ function renderTable(){
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
-    ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,3).map(j=>j.id))
+    ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,1).map(j=>j.id))
     : new Set();
   const mxMax=Math.max(...JOBS.map(j=>j.max));
   const isSmall=window.innerWidth<700;
