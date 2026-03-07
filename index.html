@@ -524,7 +524,12 @@ async function loadData() {
 const S = {
   theme: localStorage.getItem("theme") || "dark",
   user: JSON.parse(localStorage.getItem("user") || "null"),
-  saved: JSON.parse(localStorage.getItem("saved") || "[]"),
+  saved: (()=>{
+    try{
+      const u=JSON.parse(localStorage.getItem("user")||"null");
+      return u?JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"):[];
+    }catch(e){ return []; }
+  })(),
   sort: "mid-desc",
   cat: "",
   region: "",
@@ -588,7 +593,7 @@ function doSignin(){
   const u=users.find(x=>x.email===email&&x.pass===pass);
   if(!u){ errEl.textContent="Invalid email or password."; errEl.style.display="block"; return; }
   S.user=u; localStorage.setItem("user",JSON.stringify(u));
-  S.saved=JSON.parse(localStorage.getItem("saved")||"[]"); updateSaveBadge();
+  S.saved=JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"); updateSaveBadge();
   updateUserUI(); closeAuth(); applyUserPrefs();
 }
 function doRegister(){
@@ -605,8 +610,9 @@ function doRegister(){
   const u={name,email,pass};
   users.push(u); localStorage.setItem("users",JSON.stringify(users));
   S.user=u; localStorage.setItem("user",JSON.stringify(u));
+  S.saved=JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"); updateSaveBadge();
   document.getElementById("regOk").style.display="block";
-  setTimeout(()=>{ updateUserUI(); closeAuth(); },1200);
+  setTimeout(()=>{ updateUserUI(); closeAuth(); applyUserPrefs(); },1200);
 }
 function doSignout(){
   // Reset filters and saved badge on sign-out
@@ -672,7 +678,7 @@ function toggleSave(id){
   if(!S.user){ openAuth(); return; }
   const idx=S.saved.indexOf(id);
   if(idx===-1) S.saved.push(id); else S.saved.splice(idx,1);
-  localStorage.setItem("saved",JSON.stringify(S.saved));
+  localStorage.setItem("saved_"+S.user.email,JSON.stringify(S.saved));
   updateSaveBadge(); renderSaved();
   document.querySelectorAll("[data-save='"+id+"']").forEach(b=>{
     b.className="btn-save"+(S.saved.includes(id)?" saved":"");
