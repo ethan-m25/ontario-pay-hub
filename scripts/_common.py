@@ -184,8 +184,8 @@ EXTRACT_PROMPT = """\
 Extract ONE Ontario job posting from the text below.
 
 URL: {url}
-Summary/snippet: {snippet}
-Page text: {page_text}
+Search snippet (may be from a different but related job — DO NOT use for salary numbers): {snippet}
+Page text (authoritative — use THIS for all data including salary): {page_text}
 
 Today's date: {today}
 
@@ -193,14 +193,15 @@ Return ONLY valid JSON in this exact format if a valid Ontario job with explicit
 {{"role":"Job Title","company":"Company Name","min":80000,"max":120000,"location":"Toronto, ON","source_url":"{url}","posted":"YYYY-MM-DD"}}
 
 Return ONLY the word null (no quotes, no JSON) if:
-- No explicit CAD annual salary range with actual dollar numbers
+- No explicit CAD annual salary range with actual dollar numbers in the PAGE TEXT
 - Not an Ontario location
 - This is a salary guide / aggregator page / company careers homepage
 - Hourly rate only (do NOT convert hourly to annual)
 - URL is a search results page
 
 Rules:
-- min and max = annual CAD integers (e.g. 90000)
+- min and max = annual CAD integers extracted from PAGE TEXT ONLY (e.g. 90000)
+- NEVER use salary numbers from the snippet — only use page text salary data
 - location must be in Ontario (Toronto, Ottawa, Waterloo, Mississauga, Hamilton, London, Brampton, Markham, Vaughan, Oakville, Kitchener, Windsor, ON)
 - posted = date visible in posting, or {today} if not shown
 - source_url = exact URL of this specific job posting"""
@@ -274,6 +275,25 @@ def extract_job(url, snippet, page_text, log=None):
 
     if not any(t in job.get("location", "").lower() for t in ONTARIO_TERMS):
         return None
+
+    # Salary ground-truth check: at least one of the extracted salary values must
+    # appear in the page text. If neither appears, the LLM pulled numbers from the
+    # Exa snippet (which may describe a different but related job) rather than the
+    # actual page — this is the root cause of role/salary/URL mismatches.
+    if page_text:
+        def _in_text(val):
+            # Match e.g. 116000, 116,000, $116,000, $116k, 116K
+            s = str(val)
+            k = str(val // 1000)
+            return (
+                re.search(r'[,\s$]' + s[:3], page_text) is not None  # first 3 digits prefix
+                or re.search(s.replace("000", "[,.]?000"), page_text) is not None
+                or re.search(rf'\b{k}[kK]\b', page_text) is not None
+            )
+        if not (_in_text(val_min) or _in_text(val_max)):
+            if log:
+                log(f"  Salary {val_min:,}–{val_max:,} not found in page text (snippet hallucination) — skip")
+            return None
 
     return job
 
