@@ -266,8 +266,8 @@ def main():
         # Paginate through all jobs, collect Ontario ones
         ontario_jobs = []
         offset = 0
-        limit = 50
-        max_pages = 6  # cap at 300 jobs per company per run
+        limit = 10     # Workday blocks limit >= 25 (anti-scraping); 10 is safe
+        max_pages = 5  # covers 50 most recent jobs per company
 
         while offset // limit < max_pages:
             postings, total = wd_list_jobs(host, company_id, tenant, offset, limit)
@@ -280,7 +280,7 @@ def main():
             offset += limit
             if offset >= total:
                 break
-            time.sleep(0.5)
+            time.sleep(5)  # brief pause between pages within same company
 
         log(f"  Ontario jobs: {len(ontario_jobs)}")
 
