@@ -67,7 +67,7 @@ fi
 
 # ---- 3. Parse & merge ----
 python3 - <<PYEOF
-import json, sys, os, hashlib
+import json, os, re, subprocess, urllib.request, urllib.error
 
 data_file = "$DATA_FILE"
 raw_file = "$RAW_FILE"
@@ -113,7 +113,6 @@ with open(raw_file) as f:
             continue
 
         # Validate source_url is a specific job posting page (not a career homepage)
-        import re
         url = j.get("source_url", "")
         # Reject if URL is a bare career/jobs homepage (no job-specific path)
         generic_pattern = re.compile(
@@ -152,8 +151,6 @@ for job in existing:
         job["status"] = "active"
 
 # ---- 3.2. Auto-classify work_mode + salary_type for NEW jobs via local model ----
-import subprocess as _sp
-
 _CLASSIFY_PROMPT = """Classify this Ontario, Canada job posting.
 
 Role: {role}
@@ -181,10 +178,9 @@ def _classify_new_job(job):
         url=job.get("source_url", "")[:80]
     )
     try:
-        r = _sp.run(["/Users/clawii/.local/bin/ollama", "run", "qwen2.5:14b"],
-                    input=prompt, capture_output=True, text=True, timeout=90)
-        import re as _re
-        m = _re.search(r'\{[^{}]*"work_mode"[^{}]*\}', r.stdout)
+        r = subprocess.run(["/Users/clawii/.local/bin/ollama", "run", "qwen2.5:14b"],
+                           input=prompt, capture_output=True, text=True, timeout=90)
+        m = re.search(r'\{[^{}]*"work_mode"[^{}]*\}', r.stdout)
         if m:
             d = json.loads(m.group())
             wm = d.get("work_mode", "unknown").lower()
@@ -235,7 +231,7 @@ def _fetch(url, method="HEAD", timeout=8):
     return urllib.request.urlopen(req, timeout=timeout)
 
 def validate_url(url):
-    """Returns: 'active', 'archived', or 'skip'"""
+    """Returns: 'active', 'archived', or 'skip'."""
     if not url:
         return "skip"
     # Workday: unverifiable without browser JS
@@ -243,7 +239,7 @@ def validate_url(url):
         return "skip"
     try:
         if "jobs.toronto.ca" in url:
-            # Must check body — 200 even for ended postings
+            # Must check body — returns 200 even for ended postings
             with _fetch(url, method="GET", timeout=10) as r:
                 body = r.read().decode("utf-8", errors="ignore").lower()
             if "posting has ended" in body or "job posting has ended" in body:
@@ -305,11 +301,12 @@ with open(data_file, "w") as f:
 print(f"RESULT: added={len(new_jobs)} total={len(all_jobs)} errors={errors}")
 PYEOF
 
-# ---- 4. Read result ----
-NEW_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('count',0))" 2>/dev/null || echo "?")
-ACTIVE_COUNT=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('active',0))" 2>/dev/null || echo "?")
-NEW_TODAY=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('new_today',0))" 2>/dev/null || echo "?")
-NEWLY_ARCHIVED=$(python3 -c "import json; d=json.load(open('$DATA_FILE')); print(d.get('meta',{}).get('links_newly_archived',0))" 2>/dev/null || echo "?")
+# ---- 4. Read result (single python3 invocation reads all fields at once) ----
+read NEW_COUNT ACTIVE_COUNT NEW_TODAY NEWLY_ARCHIVED < <(python3 -c "
+import json
+m = json.load(open('$DATA_FILE')).get('meta', {})
+print(m.get('count',0), m.get('active',0), m.get('new_today',0), m.get('links_newly_archived',0))
+" 2>/dev/null || echo "0 0 0 0")
 
 log "Total: $NEW_COUNT | Active: $ACTIVE_COUNT | +$NEW_TODAY new | $NEWLY_ARCHIVED links newly archived"
 

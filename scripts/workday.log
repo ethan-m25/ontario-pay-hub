@@ -1,0 +1,238 @@
+[2026-03-07 16:40:57] === Workday scraper started ===
+[2026-03-07 16:40:57] Tenants: 8 | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 16:40:57] 
+── RBC (rbc.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:40:57]   API rbc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:40:57]   Ontario jobs: 0
+[2026-03-07 16:40:57] 
+── TD Bank (td.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:40:58]   API td.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:40:58]   Ontario jobs: 0
+[2026-03-07 16:40:58] 
+── BMO (bmo.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:40:59]   API bmo.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:40:59]   Ontario jobs: 0
+[2026-03-07 16:40:59] 
+── CIBC (cibc.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:40:59]   API cibc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:40:59]   Ontario jobs: 0
+[2026-03-07 16:40:59] 
+── Manulife (manulife.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:41:00]   API manulife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:41:00]   Ontario jobs: 0
+[2026-03-07 16:41:00] 
+── Sun Life (sunlife.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:41:01]   API sunlife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:41:01]   Ontario jobs: 0
+[2026-03-07 16:41:01] 
+── Walmart Canada (walmart.wd5.myworkdayjobs.com) ──
+[2026-03-07 16:41:01]   API walmart.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:41:01]   Ontario jobs: 0
+[2026-03-07 16:41:01] 
+── Brookfield (brookfield.wd5.myworkdayjobs.com) ──
+[2026-03-07 16:41:01]   API brookfield.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:41:01]   Ontario jobs: 0
+[2026-03-07 16:41:01] 
+=== Workday scraper complete: 0 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 16:42:23] === Workday scraper started ===
+[2026-03-07 16:42:23] Tenants: 8 | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 16:42:23] 
+── RBC (rbc.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:24]   API rbc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:24]   Ontario jobs: 0
+[2026-03-07 16:42:24] 
+── TD Bank (td.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:25]   API td.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:25]   Ontario jobs: 0
+[2026-03-07 16:42:25] 
+── BMO (bmo.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:25]   API bmo.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:25]   Ontario jobs: 0
+[2026-03-07 16:42:25] 
+── CIBC (cibc.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:26]   API cibc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:26]   Ontario jobs: 0
+[2026-03-07 16:42:26] 
+── Manulife (manulife.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:27]   API manulife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:27]   Ontario jobs: 0
+[2026-03-07 16:42:27] 
+── Sun Life (sunlife.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:42:28]   API sunlife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:28]   Ontario jobs: 0
+[2026-03-07 16:42:28] 
+── Walmart Canada (walmart.wd5.myworkdayjobs.com) ──
+[2026-03-07 16:42:28]   API walmart.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:28]   Ontario jobs: 0
+[2026-03-07 16:42:28] 
+── Brookfield (brookfield.wd5.myworkdayjobs.com) ──
+[2026-03-07 16:42:28]   API brookfield.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:42:28]   Ontario jobs: 0
+[2026-03-07 16:42:28] 
+=== Workday scraper complete: 0 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 16:59:44] === Workday scraper started ===
+[2026-03-07 16:59:44] Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 16:59:44] Seed tenants: 8 | Running tenant discovery via Exa...
+[2026-03-07 16:59:44]   Discovery Exa [1/4]: site:myworkdayjobs.com Ontario Canada job 2026...
+[2026-03-07 16:59:45]     → 4 results, 1 new tenants
+[2026-03-07 16:59:47]   Discovery Exa [2/4]: site:myworkdayjobs.com Toronto OR Ottawa OR Waterloo job 202...
+[2026-03-07 16:59:48]     → 4 results, 0 new tenants
+[2026-03-07 16:59:49]   Discovery Exa [3/4]: site:myworkdayjobs.com Ontario Canada salary "$" CAD...
+[2026-03-07 16:59:50]     → 0 results, 0 new tenants
+[2026-03-07 16:59:52]   Discovery Exa [4/4]: site:myworkdayjobs.com "Ontario" Canada engineer OR analyst ...
+[2026-03-07 16:59:53]     → 0 results, 0 new tenants
+[2026-03-07 16:59:54] Total tenants: 9 (8 seed + 1 discovered)
+[2026-03-07 16:59:54] 
+── RBC (rbc.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:59:55]   API rbc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:59:55]   Ontario jobs: 0
+[2026-03-07 16:59:57] 
+── TD Bank (td.wd3.myworkdayjobs.com) ──
+[2026-03-07 16:59:57]   API td.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 16:59:57]   Ontario jobs: 0
+[2026-03-07 16:59:59] 
+── BMO (bmo.wd3.myworkdayjobs.com) ──
+[2026-03-07 17:00:00]   API bmo.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:00]   Ontario jobs: 0
+[2026-03-07 17:00:02] 
+── CIBC (cibc.wd3.myworkdayjobs.com) ──
+[2026-03-07 17:00:03]   API cibc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:03]   Ontario jobs: 0
+[2026-03-07 17:00:05] 
+── Manulife (manulife.wd3.myworkdayjobs.com) ──
+[2026-03-07 17:00:05]   API manulife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:05]   Ontario jobs: 0
+[2026-03-07 17:00:07] 
+── Sun Life (sunlife.wd3.myworkdayjobs.com) ──
+[2026-03-07 17:00:08]   API sunlife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:08]   Ontario jobs: 0
+[2026-03-07 17:00:10] 
+── Walmart Canada (walmart.wd5.myworkdayjobs.com) ──
+[2026-03-07 17:00:10]   API walmart.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:10]   Ontario jobs: 0
+[2026-03-07 17:00:12] 
+── Brookfield (brookfield.wd5.myworkdayjobs.com) ──
+[2026-03-07 17:00:13]   API brookfield.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:13]   Ontario jobs: 0
+[2026-03-07 17:00:15] 
+── ROCHE (roche.wd3.myworkdayjobs.com) ──
+[2026-03-07 17:00:15]   API roche.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 17:00:15]   Ontario jobs: 0
+[2026-03-07 17:00:17] 
+=== Workday scraper complete: 0 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 18:09:15] === Workday scraper started ===
+[2026-03-07 18:09:15] Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 18:09:15] Seed tenants: 8 | Running tenant discovery via Exa...
+[2026-03-07 18:09:15]   Discovery Exa [1/4]: site:myworkdayjobs.com Ontario Canada job 2026...
+[2026-03-07 18:09:17]     → 7 results, 3 new tenants
+[2026-03-07 18:09:18]   Discovery Exa [2/4]: site:myworkdayjobs.com Toronto OR Ottawa OR Waterloo job 202...
+[2026-03-07 18:09:19]     → 4 results, 0 new tenants
+[2026-03-07 18:09:21]   Discovery Exa [3/4]: site:myworkdayjobs.com Ontario Canada salary "$" CAD...
+[2026-03-07 18:09:22]     → 0 results, 0 new tenants
+[2026-03-07 18:09:24]   Discovery Exa [4/4]: site:myworkdayjobs.com "Ontario" Canada engineer OR analyst ...
+[2026-03-07 18:09:25]     → 0 results, 0 new tenants
+[2026-03-07 18:09:26] Total tenants: 11 (8 seed + 3 discovered)
+[2026-03-07 18:09:26] 
+── RBC (rbc.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:27]   API rbc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:27]   Ontario jobs: 0
+[2026-03-07 18:09:29] 
+── TD Bank (td.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:29]   API td.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:29]   Ontario jobs: 0
+[2026-03-07 18:09:31] 
+── BMO (bmo.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:32]   API bmo.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:32]   Ontario jobs: 0
+[2026-03-07 18:09:34] 
+── CIBC (cibc.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:35]   API cibc.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:35]   Ontario jobs: 0
+[2026-03-07 18:09:37] 
+── Manulife (manulife.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:37]   API manulife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:37]   Ontario jobs: 0
+[2026-03-07 18:09:39] 
+── Sun Life (sunlife.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:40]   API sunlife.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:40]   Ontario jobs: 0
+[2026-03-07 18:09:42] 
+── Walmart Canada (walmart.wd5.myworkdayjobs.com) ──
+[2026-03-07 18:09:42]   API walmart.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:42]   Ontario jobs: 0
+[2026-03-07 18:09:44] 
+── Brookfield (brookfield.wd5.myworkdayjobs.com) ──
+[2026-03-07 18:09:45]   API brookfield.wd5.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:45]   Ontario jobs: 0
+[2026-03-07 18:09:47] 
+── ROCHE (roche.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:47]   API roche.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:47]   Ontario jobs: 0
+[2026-03-07 18:09:49] 
+── VALEO (valeo.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:50]   API valeo.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:50]   Ontario jobs: 0
+[2026-03-07 18:09:52] 
+── JLP (jlp.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:09:52]   API jlp.wd3.myworkdayjobs.com: HTTP 400
+[2026-03-07 18:09:52]   Ontario jobs: 0
+[2026-03-07 18:09:54] 
+=== Workday scraper complete: 0 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 18:11:33] === Workday scraper started ===
+[2026-03-07 18:11:33] Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 18:11:33] Seed tenants: 8 | Running tenant discovery via Exa...
+[2026-03-07 18:11:33]   Discovery Exa [1/4]: site:myworkdayjobs.com Ontario Canada job 2026...
+[2026-03-07 18:11:33]     → 7 results, 3 new tenants
+[2026-03-07 18:11:35]   Discovery Exa [2/4]: site:myworkdayjobs.com Toronto OR Ottawa OR Waterloo job 202...
+[2026-03-07 18:11:36]     → 4 results, 0 new tenants
+[2026-03-07 18:11:37]   Discovery Exa [3/4]: site:myworkdayjobs.com Ontario Canada salary "$" CAD...
+[2026-03-07 18:11:38]     → 0 results, 0 new tenants
+[2026-03-07 18:11:40]   Discovery Exa [4/4]: site:myworkdayjobs.com "Ontario" Canada engineer OR analyst ...
+[2026-03-07 18:11:41]     → 0 results, 0 new tenants
+[2026-03-07 18:11:42] Total tenants: 11 (8 seed + 3 discovered)
+[2026-03-07 18:11:42] 
+── RBC (rbc.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:43]   API rbc.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"F1FEA1MMGXTWY5","httpStatus":400,"message'
+[2026-03-07 18:11:43]   Ontario jobs: 0
+[2026-03-07 18:11:45] 
+── TD Bank (td.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:45]   API td.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"F7C062MMGXTYV6","httpStatus":400,"message'
+[2026-03-07 18:11:45]   Ontario jobs: 0
+[2026-03-07 18:11:47] 
+── BMO (bmo.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:48]   API bmo.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"6A78DCMMGXU0S4","httpStatus":400,"message'
+[2026-03-07 18:11:48]   Ontario jobs: 0
+[2026-03-07 18:11:50] 
+── CIBC (cibc.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:50]   API cibc.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"48A3CDMMGXU2PI","httpStatus":400,"message'
+[2026-03-07 18:11:50]   Ontario jobs: 0
+[2026-03-07 18:11:52] 
+── Manulife (manulife.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:53]   API manulife.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"840F39MMGXU4M3","httpStatus":400,"message'
+[2026-03-07 18:11:53]   Ontario jobs: 0
+[2026-03-07 18:11:55] 
+── Sun Life (sunlife.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:11:55]   API sunlife.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"2EC836MMGXU6M3","httpStatus":400,"message'
+[2026-03-07 18:11:55]   Ontario jobs: 0
+[2026-03-07 18:11:57] 
+── Walmart Canada (walmart.wd5.myworkdayjobs.com) ──
+[2026-03-07 18:11:58]   API walmart.wd5.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"5D5CEFMMGXU8FK","httpStatus":400,"message'
+[2026-03-07 18:11:58]   Ontario jobs: 0
+[2026-03-07 18:12:00] 
+── Brookfield (brookfield.wd5.myworkdayjobs.com) ──
+[2026-03-07 18:12:00]   API brookfield.wd5.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"E681E4MMGXUA85","httpStatus":400,"message'
+[2026-03-07 18:12:00]   Ontario jobs: 0
+[2026-03-07 18:12:02] 
+── ROCHE (roche.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:12:03]   API roche.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"7BDCC1MMGXUC5L","httpStatus":400,"message'
+[2026-03-07 18:12:03]   Ontario jobs: 0
+[2026-03-07 18:12:05] 
+── VALEO (valeo.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:12:05]   API valeo.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"D0726CMMGXUE21","httpStatus":400,"message'
+[2026-03-07 18:12:05]   Ontario jobs: 0
+[2026-03-07 18:12:07] 
+── JLP (jlp.wd3.myworkdayjobs.com) ──
+[2026-03-07 18:12:08]   API jlp.wd3.myworkdayjobs.com: unexpected response: b'{"errorCode":"HTTP_400","errorCaseId":"CF2D8EMMGXUFZJ","httpStatus":400,"message'
+[2026-03-07 18:12:08]   Ontario jobs: 0
+[2026-03-07 18:12:10] 
+=== Workday scraper complete: 0 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===

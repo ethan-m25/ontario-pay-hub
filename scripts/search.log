@@ -1,0 +1,184 @@
+[2026-03-07 07:54:13] === Ontario Pay Hub job search started ===
+[2026-03-07 07:54:13] Model: qwen2.5:14b | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 07:54:13] Exa [1/5]: Ontario Canada job posting 2026 salary range "$" CAD engineer OR ...
+[2026-03-07 07:54:13]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:54:13] Exa [2/5]: Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "comp...
+[2026-03-07 07:54:13]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:54:13] Exa [3/5]: Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,00...
+[2026-03-07 07:54:13]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:54:13] Exa [4/5]: ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 s...
+[2026-03-07 07:54:13]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:54:13] Exa [5/5]: Ontario employer pay transparency 2026 new opening "salary" "$" C...
+[2026-03-07 07:54:13]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:54:13] Unique URLs to process: 0
+[2026-03-07 07:54:13] === Search complete: 0 valid jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 07:57:57] === Ontario Pay Hub job search started ===
+[2026-03-07 07:57:57] Model: qwen2.5:14b | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 07:57:57] Exa [1/5]: Ontario Canada job posting 2026 salary range "$" CAD engineer OR ...
+[2026-03-07 07:57:57]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:57:57] Exa [2/5]: Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "comp...
+[2026-03-07 07:57:57]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:57:57] Exa [3/5]: Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,00...
+[2026-03-07 07:57:57]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:57:57] Exa [4/5]: ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 s...
+[2026-03-07 07:57:57]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:57:57] Exa [5/5]: Ontario employer pay transparency 2026 new opening "salary" "$" C...
+[2026-03-07 07:57:57]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:57:57] Unique URLs to process: 0
+[2026-03-07 07:57:57] === Search complete: 0 valid jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 07:58:54] === Ontario Pay Hub job search started ===
+[2026-03-07 07:58:54] Model: qwen2.5:14b | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 07:58:54] Exa [1/5]: Ontario Canada job posting 2026 salary range "$" CAD engineer OR ...
+[2026-03-07 07:58:54]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:58:54] Exa [2/5]: Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "comp...
+[2026-03-07 07:58:55]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:58:55] Exa [3/5]: Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,00...
+[2026-03-07 07:58:55]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:58:55] Exa [4/5]: ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 s...
+[2026-03-07 07:58:55]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:58:55] Exa [5/5]: Ontario employer pay transparency 2026 new opening "salary" "$" C...
+[2026-03-07 07:58:55]   Exa error: HTTP Error 403: Forbidden
+[2026-03-07 07:58:55] Unique URLs to process: 0
+[2026-03-07 07:58:55] === Search complete: 0 valid jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 08:01:05] === Ontario Pay Hub job search started ===
+[2026-03-07 08:01:05] Model: qwen2.5:14b | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 08:01:05] Exa [1/5]: Ontario Canada job posting 2026 salary range "$" CAD engineer OR ...
+[2026-03-07 08:01:06]   → 2 results
+[2026-03-07 08:01:08] Exa [2/5]: Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "comp...
+[2026-03-07 08:01:09]   → 7 results
+[2026-03-07 08:01:11] Exa [3/5]: Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,00...
+[2026-03-07 08:01:12]   → 0 results
+[2026-03-07 08:01:14] Exa [4/5]: ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 s...
+[2026-03-07 08:01:15]   → 8 results
+[2026-03-07 08:01:17] Exa [5/5]: Ontario employer pay transparency 2026 new opening "salary" "$" C...
+[2026-03-07 08:01:18]   → 8 results
+[2026-03-07 08:01:20] Unique URLs to process: 23
+[2026-03-07 08:01:20] [ 1/23] https://jobs.lever.co/quandri/c25acc7c-1b73-463f-b868-b0a78a3a5168
+[2026-03-07 08:01:42]   → skip (21.8s)
+[2026-03-07 08:01:42] [ 2/23] https://jobs.lever.co/bloom/11c740b3-3d94-4a5c-9769-4213b2ecf133
+[2026-03-07 08:01:53]   → skip (9.9s)
+[2026-03-07 08:01:53] [ 3/23] https://www.careercheck.io/blog/software-engineer-salary-toronto-2026
+[2026-03-07 08:01:58]   → skip (4.6s)
+[2026-03-07 08:01:58] [ 4/23] https://jobflexy.com/software-development-manager-amazon-toronto/
+[2026-03-07 08:02:15]   → FOUND (16.3s): Software Development Manager @ Amazon $171,400–$286,200 [Toronto, ON]
+[2026-03-07 08:02:15] [ 5/23] https://cybotrix.com/blogs/software-engineer-salary-in-canada-by-city-2026-
+[2026-03-07 08:02:27]   → skip (9.3s)
+[2026-03-07 08:02:27] [ 6/23] https://tietalent.com/en/jobs/p-453504940/toronto-senior-software-engineer
+[2026-03-07 08:02:38]   → skip (9.9s)
+[2026-03-07 08:02:38] [ 7/23] https://bettercareer.ca/job/senior-software-developer-2/
+[2026-03-07 08:02:47]   → skip (8.9s)
+[2026-03-07 08:02:47] [ 8/23] https://jobs.teemagroup.com/job/86341-sr-data-engineer-databricks-toronto-o
+[2026-03-07 08:03:06]   → FOUND (17.1s): Senior Data Engineer – Databricks @ TEEMA $120,000–$150,000 [Toronto, ON]
+[2026-03-07 08:03:06] [ 9/23] https://www.thesaraslist.com/jobs/senior-site-reliability-engineer-buildops
+[2026-03-07 08:03:25]   → FOUND (18.4s): Senior Site Reliability Engineer @ BuildOps $151,000–$190,000 [Toronto, ON]
+[2026-03-07 08:03:25] [10/23] https://yotru.com/blog/ontario-job-posting-law-2026-salary-range-ai-disclos
+[2026-03-07 08:03:35]   → skip (9.3s)
+[2026-03-07 08:03:35] [11/23] https://www.mondaq.com/canada/employee-rights-labour-relations/1741472/onta
+[2026-03-07 08:03:46]   → skip (10.0s)
+[2026-03-07 08:03:46] [12/23] https://webiis05.mondaq.com/canada/employee-rights-labour-relations/1741472
+[2026-03-07 08:03:57]   → skip (9.9s)
+[2026-03-07 08:03:57] [13/23] https://webiis10.mondaq.com/canada/employee-rights-labour-relations/1741472
+[2026-03-07 08:04:08]   → skip (9.8s)
+[2026-03-07 08:04:08] [14/23] https://tietalent.com/en/jobs/p-433321132/toronto-registered-nurse
+[2026-03-07 08:04:19]   → skip (9.9s)
+[2026-03-07 08:04:19] [15/23] https://ca.linkedin.com/jobs/salary-jobs-toronto-on
+[2026-03-07 08:04:31]   → skip (10.9s)
+[2026-03-07 08:04:31] [16/23] https://careersen-lsuc.icims.com/jobs/2488/counsel%2C-licensing-examination
+[2026-03-07 08:04:37]   → skip (4.9s)
+[2026-03-07 08:04:37] [17/23] https://jobs.accaglobal.com/job/13739483/sr-financial-analyst-fp-and-a-/
+[2026-03-07 08:04:47]   → skip (9.8s)
+[2026-03-07 08:04:47] [18/23] https://willisbusinesslaw.com/blog/employment-law-for-employers/ontario-pay
+[2026-03-07 08:04:58]   → skip (9.8s)
+[2026-03-07 08:04:58] [19/23] https://www.facebook.com/OntarioAtWork/posts/as-of-january-1-2026-ontario-e
+[2026-03-07 08:05:03]   → skip (4.9s)
+[2026-03-07 08:05:03] [20/23] https://financialpost.com/fp-work/five-changes-to-employment-hiring-rules-2
+[2026-03-07 08:05:13]   → skip (9.0s)
+[2026-03-07 08:05:13] [21/23] https://www.hcamag.com/ca/specialization/employment-law/new-job-posting-req
+[2026-03-07 08:05:24]   → skip (10.1s)
+[2026-03-07 08:05:24] [22/23] https://www.linkedin.com/posts/samanthabateman_im-pretty-sure-your-organiza
+[2026-03-07 08:05:36]   → skip (10.9s)
+[2026-03-07 08:05:36] [23/23] https://www.avanti.ca/post/ontario-pay-transparency
+[2026-03-07 08:05:44]   → skip (8.6s)
+[2026-03-07 08:05:44] === Search complete: 3 valid jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
+[2026-03-07 16:58:50] === Ontario Pay Hub job search started ===
+[2026-03-07 16:58:50] Model: qwen2.5:14b (HTTP API) | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 16:58:50] Exa [1/9]: Ontario Canada job posting 2026 salary range "$" CAD engineer OR ...
+[2026-03-07 16:58:51]   → 2 results
+[2026-03-07 16:58:52] Exa [2/9]: Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "comp...
+[2026-03-07 16:58:54]   → 7 results
+[2026-03-07 16:58:55] Exa [3/9]: Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,00...
+[2026-03-07 16:58:57]   → 0 results
+[2026-03-07 16:58:58] Exa [4/9]: ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 s...
+[2026-03-07 16:59:00]   → 7 results
+[2026-03-07 16:59:01] Exa [5/9]: Ontario employer pay transparency 2026 new opening "salary" "$" C...
+[2026-03-07 16:59:03]   → 8 results
+[2026-03-07 16:59:04] Exa [6/9]: site:jobs.jobvite.com Ontario Canada salary range "$" CAD 2026 en...
+[2026-03-07 16:59:05]   → 3 results
+[2026-03-07 16:59:07] Exa [7/9]: site:jobs.jobvite.com Toronto OR Ottawa OR Waterloo OR Mississaug...
+[2026-03-07 16:59:08]   → 5 results
+[2026-03-07 16:59:09] Exa [8/9]: site:ca.indeed.com/viewjob Ontario 2026 salary "$" CAD engineer O...
+[2026-03-07 16:59:10]   → 0 results
+[2026-03-07 16:59:12] Exa [9/9]: site:ca.indeed.com/viewjob Toronto OR Ottawa OR Waterloo salary r...
+[2026-03-07 16:59:13]   → 0 results
+[2026-03-07 16:59:14] Unique URLs to process: 30
+[2026-03-07 16:59:14] [ 1/30] https://jobs.lever.co/quandri/c25acc7c-1b73-463f-b868-b0a78a3a5168
+[2026-03-07 16:59:36]   → skip (21.1s)
+[2026-03-07 16:59:36] [ 2/30] https://jobs.lever.co/bloom/11c740b3-3d94-4a5c-9769-4213b2ecf133
+[2026-03-07 16:59:47]   → skip (9.5s)
+[2026-03-07 16:59:47] [ 3/30] https://www.careercheck.io/blog/software-engineer-salary-toronto-2026
+[2026-03-07 16:59:50]   → skip (3.4s)
+[2026-03-07 16:59:50] [ 4/30] https://sportstechjobs.com/senior-full-stack-developer-(devops-or-go-or-rea
+[2026-03-07 17:00:10]   → FOUND (19.1s): Senior Full Stack Developer (DevOps | Go | React) @ Betstamp $140,000–$175,000 [Toronto, ON]
+[2026-03-07 17:00:10] [ 5/30] https://www.levels.fyi/t/software-engineer/levels/senior/locations/greater-
+[2026-03-07 17:00:22]   → skip (11.0s)
+[2026-03-07 17:00:22] [ 6/30] https://jobflexy.com/software-development-manager-amazon-toronto/
+[2026-03-07 17:00:37]   → FOUND (15.3s): Software Development Manager @ Amazon $171,400–$286,200 [Toronto, ON]
+[2026-03-07 17:00:37] [ 7/30] https://cybotrix.com/blogs/software-engineer-salary-in-canada-by-city-2026-
+[2026-03-07 17:00:49]   → skip (8.9s)
+[2026-03-07 17:00:49] [ 8/30] https://tietalent.com/en/jobs/p-453504940/toronto-senior-software-engineer
+[2026-03-07 17:00:59]   → skip (9.5s)
+[2026-03-07 17:00:59] [ 9/30] https://bettercareer.ca/job/senior-software-developer-2/
+[2026-03-07 17:01:08]   → skip (8.8s)
+[2026-03-07 17:01:08] [10/30] https://yotru.com/blog/ontario-job-posting-law-2026-salary-range-ai-disclos
+[2026-03-07 17:01:18]   → skip (9.1s)
+[2026-03-07 17:01:18] [11/30] https://www.linkedin.com/pulse/ontario-pay-transparency-job-posting-require
+[2026-03-07 17:01:35]   → skip (16.5s)
+[2026-03-07 17:01:35] [12/30] https://www.mondaq.com/canada/employee-rights-labour-relations/1741472/onta
+[2026-03-07 17:02:09]   → skip (32.8s)
+[2026-03-07 17:02:09] [13/30] https://www.minkenemploymentlawyers.com/blog/ontarios-new-pay-transparency-
+[2026-03-07 17:02:44]   → skip (35.1s)
+[2026-03-07 17:02:44] [14/30] https://www.facebook.com/groups/letstalkalbertaindependence/posts/196252559
+[2026-03-07 17:03:15]   → skip (30.1s)
+[2026-03-07 17:03:15] [15/30] https://careersen-lsuc.icims.com/jobs/2488/counsel%2C-licensing-examination
+[2026-03-07 17:03:46]   → skip (30.7s)
+[2026-03-07 17:03:46] [16/30] https://www.ontario.ca/public-sector-salary-disclosure/2024/all-sectors-and
+[2026-03-07 17:04:04]   → skip (7.7s)
+[2026-03-07 17:04:04] [17/30] https://www.facebook.com/OntarioAtWork/posts/as-of-january-1-2026-ontario-e
+[2026-03-07 17:04:14]   → skip (4.8s)
+[2026-03-07 17:04:14] [18/30] https://www.lexology.com/library/detail.aspx?g=cbc076b9-3ef0-422c-aa2f-a7c8
+[2026-03-07 17:04:27]   → skip (10.1s)
+[2026-03-07 17:04:27] [19/30] https://willisbusinesslaw.com/blog/employment-law-for-employers/ontario-pay
+[2026-03-07 17:05:04]   → skip (35.1s)
+[2026-03-07 17:05:04] [20/30] https://www.avanti.ca/post/ontario-pay-transparency
+[2026-03-07 17:05:15]   → skip (8.6s)
+[2026-03-07 17:05:15] [21/30] https://thefulcrum.ca/sciencetech/business/more-transparency-but-not-more-p
+[2026-03-07 17:05:52]   → skip (35.4s)
+[2026-03-07 17:05:52] [22/30] https://thrivelawyers.ca/pay-transparency-act-ontario/
+[2026-03-07 17:06:29]   → skip (37.1s)
+[2026-03-07 17:06:29] [23/30] https://jobs.jobvite.com/innio/job/obEZxfw5
+[2026-03-07 17:07:12]   → FOUND (42.2s): Manufacturing Project Engineer @ INNIO $95,000–$115,000 [Welland, ON]
+[2026-03-07 17:07:12] [24/30] https://jobs.jobvite.com/carfax/job/oYr5yfwM
+[2026-03-07 17:07:47]   → skip (34.7s)
+[2026-03-07 17:07:47] [25/30] https://jobs.jobvite.com/uniqloca/job/o74zzfw3
+[2026-03-07 17:08:05]   → skip (18.4s)
+[2026-03-07 17:08:05] [26/30] https://jobs.jobvite.com/uniqloca/job/o41kzfwI
+[2026-03-07 17:08:23]   → skip (17.5s)
+[2026-03-07 17:08:23] [27/30] https://jobs.jobvite.com/moz-group/job/ooT7xfwF
+[2026-03-07 17:08:40]   → skip (16.9s)
+[2026-03-07 17:08:40] [28/30] https://jobs.jobvite.com/hso/job/o0lLffw5
+[2026-03-07 17:09:07]   → skip (26.7s)
+[2026-03-07 17:09:07] [29/30] https://jobs.jobvite.com/moneycorp/job/oTO4yfw3
+[2026-03-07 17:09:25]   → skip (17.5s)
+[2026-03-07 17:09:25] [30/30] https://jobs.jobvite.com/uniqloca/job/oSFezfw4
+[2026-03-07 17:09:52]   → skip (26.7s)
+[2026-03-07 17:09:52] === Search complete: 3 valid jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===

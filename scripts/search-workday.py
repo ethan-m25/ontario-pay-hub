@@ -4,43 +4,41 @@ ontario-pay-hub/scripts/search-workday.py
 Workday API scraper — NO JavaScript rendering required.
 
 Strategy:
-  1. CXS JSON API  → paginate all jobs, filter Ontario locations (fast, no JS)
-  2. HTML job page → server-rendered, salary embedded in plain text (no JS)
-  3. Pure regex extraction — no LLM needed, very fast (~1-2s/job)
+  1. Tenant discovery — Exa search finds *.myworkdayjobs.com job URLs → extract all employers
+  2. CXS JSON API   — paginate all jobs per employer, filter Ontario (fast, no JS)
+  3. HTML job page  — salary in raw HTML (meta content attrs); pure regex, no LLM
 
-Covers 8 major Ontario employers:
-  RBC, TD Bank, BMO, CIBC, Manulife, Sun Life, Walmart Canada, Brookfield
+Seed tenants (8 known) + dynamic discovery via Exa = covers ALL Workday employers
+posting Ontario jobs, not just the predefined list.
 
 Run: python3 ~/ontario-pay-hub/scripts/search-workday.py
 """
 
-import atexit
-import http.client
 import json
 import os
 import re
-import signal
-import socket
-import ssl
+import subprocess
 import sys
 import time
-import urllib.error
 import urllib.request
-from datetime import date
+from datetime import date, timedelta
 
-socket.setdefaulttimeout(20)
+from _common import (
+    make_logger, acquire_lock, exa_search, load_existing_keys, write_job,
+    TODAY, OUTPUT_FILE,
+)
 
-TODAY        = date.today().isoformat()
-SHARED_DIR   = os.path.expanduser("~/.openclaw/shared")
-OUTPUT_FILE  = os.path.join(SHARED_DIR, f"ontario-jobs-raw-{TODAY}.txt")
-LOG_FILE     = os.path.expanduser("~/ontario-pay-hub/scripts/workday.log")
-LOCK_FILE    = os.path.expanduser("~/ontario-pay-hub/scripts/.workday.lock")
+LOG_FILE      = os.path.expanduser("~/ontario-pay-hub/scripts/workday.log")
+LOCK_FILE     = os.path.expanduser("~/ontario-pay-hub/scripts/.workday.lock")
+LOOKBACK_DATE = (date.today() - timedelta(days=60)).isoformat() + "T00:00:00.000Z"
+
+log = make_logger(LOG_FILE)
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
+# ── Seed tenants (known-good with verified tenant IDs) ────────────────────────
 # (host, company_id, tenant, display_name)
-# host format: subdomain.wdN.myworkdayjobs.com
-WORKDAY_TENANTS = [
+SEED_TENANTS = [
     ("rbc.wd3.myworkdayjobs.com",       "rbc",       "RBCGLOBAL1",        "RBC"),
     ("td.wd3.myworkdayjobs.com",         "td",        "TD_Bank_Careers",   "TD Bank"),
     ("bmo.wd3.myworkdayjobs.com",        "bmo",       "External",          "BMO"),
@@ -51,6 +49,16 @@ WORKDAY_TENANTS = [
     ("brookfield.wd5.myworkdayjobs.com", "brookfield","brookfield",        "Brookfield"),
 ]
 
+# Exa queries to discover additional Workday tenants (Ontario employers)
+DISCOVERY_QUERIES = [
+    'site:myworkdayjobs.com Ontario Canada job 2026',
+    'site:myworkdayjobs.com Toronto OR Ottawa OR Waterloo job 2026',
+    'site:myworkdayjobs.com Ontario Canada salary "$" CAD',
+    'site:myworkdayjobs.com "Ontario" Canada engineer OR analyst OR manager OR director',
+]
+
+# Ontario location terms — Workday-specific: includes "locations" for multi-site postings
+# and ", on," (with trailing comma) to match Workday's locationsText comma format
 ONTARIO_TERMS = [
     "ontario", "toronto", "ottawa", "waterloo", "mississauga",
     "hamilton", "london", "brampton", "markham", "vaughan",
@@ -58,7 +66,7 @@ ONTARIO_TERMS = [
     "locations",  # "2 Locations" = multi-location, may include Ontario
 ]
 
-# Salary patterns for Workday HTML (no LLM — regex is sufficient)
+# Salary regex patterns for Workday HTML (no LLM — regex is sufficient for structured pages)
 SALARY_RE = [
     # "$86,100.00 CAD - $136,100 CAD" or "between $86,100 and $136,100"
     re.compile(r'\$\s*([\d,]+)(?:\.\d+)?\s*(?:CAD)?\s*[-–—to]+\s*\$\s*([\d,]+)', re.IGNORECASE),
@@ -69,69 +77,88 @@ SALARY_RE = [
 ]
 
 
-# ── Lock file ─────────────────────────────────────────────────────────────────
-def _release_lock():
-    try:
-        os.remove(LOCK_FILE)
-    except OSError:
-        pass
+# ── Tenant discovery via Exa ──────────────────────────────────────────────────
+# Workday URL format: https://rbc.wd3.myworkdayjobs.com/en-US/RBCGLOBAL1/job/...
+_WD_URL_RE = re.compile(
+    r'https?://([a-z0-9][a-z0-9-]*)\.wd\d+\.myworkdayjobs\.com'
+    r'(?:/[a-z]{2}-[A-Z]{2})?/([^/?#]+)',
+    re.IGNORECASE,
+)
+_SKIP_TENANTS = {'job', 'jobs', 'search', 'en', 'en-us', 'en-gb', 'fr', 'fr-ca'}
 
 
-def _acquire_lock():
-    if os.path.exists(LOCK_FILE):
-        try:
-            with open(LOCK_FILE) as f:
-                old_pid = int(f.read().strip())
-            os.kill(old_pid, 0)
-            log(f"Another instance running (PID {old_pid}). Exiting.")
-            return False
-        except (OSError, ValueError):
-            log("Stale lock file — removing.")
-            os.remove(LOCK_FILE)
-    with open(LOCK_FILE, "w") as f:
-        f.write(str(os.getpid()))
-    atexit.register(_release_lock)
-    signal.signal(signal.SIGTERM, lambda s, f: (_release_lock(), sys.exit(1)))
-    return True
+def parse_workday_tenant(url):
+    """Extract (host, company_id, tenant) from a myworkdayjobs.com URL, or None."""
+    m = _WD_URL_RE.match(url)
+    if not m:
+        return None
+    company_id = m.group(1).lower()
+    host_m = re.match(r'https?://([^/]+)', url)
+    if not host_m:
+        return None
+    host = host_m.group(1).lower()
+    tenant = m.group(2)
+    if tenant.lower() in _SKIP_TENANTS or len(tenant) < 3:
+        return None
+    return host, company_id, tenant
 
 
-def log(msg):
-    ts = time.strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{ts}] {msg}"
-    print(line, flush=True)
-    with open(LOG_FILE, "a") as f:
-        f.write(line + "\n")
+def discover_tenants():
+    """Use Exa to find myworkdayjobs.com job URLs and extract unique (host, tenant) pairs."""
+    discovered = {}  # host → (host, company_id, tenant, display_name)
+
+    for i, query in enumerate(DISCOVERY_QUERIES, 1):
+        log(f"  Discovery Exa [{i}/{len(DISCOVERY_QUERIES)}]: {query[:60]}...")
+        resp = exa_search(query, num_results=15, start_date=LOOKBACK_DATE, log=log)
+        if not resp:
+            continue
+        results = resp.get("results", [])
+        new = 0
+        for r in results:
+            parsed = parse_workday_tenant(r.get("url", ""))
+            if parsed and parsed[0] not in discovered:
+                host, company_id, tenant = parsed
+                discovered[host] = (host, company_id, tenant, company_id.upper())
+                new += 1
+        log(f"    → {len(results)} results, {new} new tenants")
+        time.sleep(1.5)
+
+    return list(discovered.values())
 
 
 # ── Workday CXS JSON API ──────────────────────────────────────────────────────
-_ssl_ctx = ssl.create_default_context()
-
+# NOTE: Python's TLS stack (http.client / urllib) has a distinct JA3 fingerprint
+# that Cloudflare identifies as bot traffic after repeated calls and rate-limits
+# with HTTP 400. curl uses a browser-like TLS fingerprint and is not affected.
+# Solution: delegate API calls to curl via subprocess.
 
 def wd_list_jobs(host, company_id, tenant, offset=0, limit=50):
-    """Return list of job postings from Workday CXS API.
+    """Return (job_postings, total) from Workday CXS API via curl.
 
-    Uses http.client directly to avoid urllib's automatic 'Accept-Encoding: identity'
-    header, which some Workday tenants reject with HTTP 400.
+    curl's TLS fingerprint (JA3) passes Cloudflare's bot detection;
+    Python's http.client/urllib fingerprint gets blocked after repeated calls.
     """
-    path = f"/wday/cxs/{company_id}/{tenant}/jobs"
+    url = f"https://{host}/wday/cxs/{company_id}/{tenant}/jobs"
     body = json.dumps({
         "appliedFacets": {}, "limit": limit, "offset": offset, "searchText": ""
-    }).encode()
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "User-Agent": UA,
-        "Content-Length": str(len(body)),
-    }
+    })
+    cmd = [
+        "curl", "-s", "--max-time", "20",
+        "-X", "POST", url,
+        "-H", "Content-Type: application/json",
+        "-H", "Accept: application/json",
+        "-H", f"User-Agent: {UA}",
+        "-d", body,
+    ]
     try:
-        conn = http.client.HTTPSConnection(host, context=_ssl_ctx, timeout=20)
-        conn.request("POST", path, body=body, headers=headers)
-        resp = conn.getresponse()
-        if resp.status != 200:
-            log(f"  API {host}: HTTP {resp.status}")
+        result = subprocess.run(cmd, capture_output=True, timeout=25)
+        if result.returncode != 0:
+            log(f"  curl error ({host}): {result.stderr.decode()[:100]}")
             return [], 0
-        data = json.loads(resp.read())
-        conn.close()
+        data = json.loads(result.stdout)
+        if "total" not in data:
+            log(f"  API {host}: unexpected response: {result.stdout[:80]}")
+            return [], 0
         return data.get("jobPostings", []), data.get("total", 0)
     except Exception as e:
         log(f"  API error ({host}): {e}")
@@ -158,7 +185,6 @@ def parse_location(locations_text, external_path):
     for city, label in city_map.items():
         if city in lt:
             return label
-    # Try from external_path
     path_lower = external_path.lower()
     for city, label in city_map.items():
         if city.replace(" ", "-") in path_lower or city.replace(" ", "") in path_lower:
@@ -166,9 +192,9 @@ def parse_location(locations_text, external_path):
     return "Ontario, ON"
 
 
-# ── Job HTML fetch + salary extraction ───────────────────────────────────────
+# ── Job HTML fetch + salary extraction ────────────────────────────────────────
 def fetch_job_html(host, tenant, external_path):
-    """Fetch Workday job page and return raw HTML.
+    """Fetch a Workday job page and return raw HTML.
 
     Workday pages are JS SPAs (body = <div id="root"></div>), but the job
     description and salary range are embedded in <meta content="..."> attributes
@@ -188,7 +214,7 @@ def fetch_job_html(host, tenant, external_path):
 
 
 def extract_salary(text):
-    """Try to extract min/max annual CAD salary from page text. Returns (min, max) or None."""
+    """Try to extract min/max annual CAD salary from page HTML. Returns (min, max) or None."""
     if not text:
         return None
     for pattern in SALARY_RE:
@@ -197,14 +223,12 @@ def extract_salary(text):
             try:
                 raw_min = m.group(1).replace(",", "")
                 raw_max = m.group(2).replace(",", "")
-                # Handle k suffix
                 if "k" in m.group(0).lower():
                     val_min = int(float(raw_min) * 1000)
                     val_max = int(float(raw_max) * 1000)
                 else:
                     val_min = int(float(raw_min))
                     val_max = int(float(raw_max))
-                # Sanity check
                 if 25_000 <= val_min <= 700_000 and val_min < val_max:
                     return val_min, val_max
             except (ValueError, IndexError):
@@ -212,34 +236,31 @@ def extract_salary(text):
     return None
 
 
-def load_existing_keys():
-    data_file = os.path.expanduser("~/ontario-pay-hub/data/jobs.json")
-    try:
-        with open(data_file) as f:
-            db = json.load(f)
-        return set(
-            f"{j['role'].lower().strip()}|{j['company'].lower().strip()}"
-            for j in db.get("jobs", [])
-        )
-    except Exception:
-        return set()
-
-
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
-    if not _acquire_lock():
+    if not acquire_lock(LOCK_FILE, log):
         return 1
 
     log("=== Workday scraper started ===")
-    log(f"Tenants: {len(WORKDAY_TENANTS)} | Output: {OUTPUT_FILE}")
+    log(f"Output: {OUTPUT_FILE}")
+
+    # Build tenant list: seed (known-good) + dynamically discovered via Exa
+    log(f"Seed tenants: {len(SEED_TENANTS)} | Running tenant discovery via Exa...")
+    discovered = discover_tenants()
+
+    # Merge: seed takes priority (has proper display names + verified tenant IDs)
+    seed_hosts = {t[0] for t in SEED_TENANTS}
+    extra = [t for t in discovered if t[0] not in seed_hosts]
+    all_tenants = SEED_TENANTS + extra
+    log(f"Total tenants: {len(all_tenants)} ({len(SEED_TENANTS)} seed + {len(extra)} discovered)")
 
     existing_keys = load_existing_keys()
     seen_keys = set(existing_keys)
-    os.makedirs(SHARED_DIR, exist_ok=True)
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
     total_found = 0
 
-    for host, company_id, tenant, company_name in WORKDAY_TENANTS:
+    for host, company_id, tenant, company_name in all_tenants:
         log(f"\n── {company_name} ({host}) ──")
 
         # Paginate through all jobs, collect Ontario ones
@@ -254,8 +275,7 @@ def main():
                 break
             log(f"  API offset={offset}: {len(postings)} postings (total={total})")
             for p in postings:
-                lt = p.get("locationsText", "")
-                if is_ontario(lt):
+                if is_ontario(p.get("locationsText", "")):
                     ontario_jobs.append(p)
             offset += limit
             if offset >= total:
@@ -266,12 +286,12 @@ def main():
 
         # Fetch HTML for each Ontario job and extract salary
         for i, posting in enumerate(ontario_jobs, 1):
-            title       = posting.get("title", "").strip()
-            ext_path    = posting.get("externalPath", "")
-            posted_on   = posting.get("postedOn", TODAY)
-            locations   = posting.get("locationsText", "")
+            title    = posting.get("title", "").strip()
+            ext_path = posting.get("externalPath", "")
+            posted_on = posting.get("postedOn", TODAY)
+            locations = posting.get("locationsText", "")
 
-            # Deduplicate early
+            # Deduplicate early — skip HTML fetch if already known
             key = f"{title.lower()}|{company_name.lower()}"
             if key in seen_keys:
                 continue
@@ -279,13 +299,13 @@ def main():
             log(f"  [{i}/{len(ontario_jobs)}] {title[:55]}")
             text = fetch_job_html(host, tenant, ext_path)
             if not text:
-                log(f"    → fetch failed")
+                log("    → fetch failed")
                 time.sleep(0.5)
                 continue
 
             salary = extract_salary(text)
             if not salary:
-                log(f"    → no salary")
+                log("    → no salary")
                 time.sleep(0.3)
                 continue
 
@@ -293,8 +313,7 @@ def main():
             location = parse_location(locations, ext_path)
             source_url = f"https://{host}/en-US/{tenant}{ext_path}"
 
-            # Parse posted date
-            # Workday returns "Posted 30+ Days Ago", "Posted Today", or ISO date
+            # Parse posted date — Workday returns "Posted 30+ Days Ago", "Posted Today", or ISO date
             posted = TODAY
             date_match = re.search(r'(\d{4}-\d{2}-\d{2})', posted_on or "")
             if date_match:
@@ -311,8 +330,7 @@ def main():
             }
 
             seen_keys.add(key)
-            with open(OUTPUT_FILE, "a") as f:
-                f.write(json.dumps(job, ensure_ascii=False) + "\n")
+            write_job(OUTPUT_FILE, job)
             total_found += 1
             log(f"    → FOUND: ${val_min:,}–${val_max:,} [{location}]")
             time.sleep(0.8)

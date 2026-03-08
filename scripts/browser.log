@@ -1,0 +1,248 @@
+[2026-03-07 17:00:17] === Browser scraper started ===
+[2026-03-07 17:00:17] Queries: 19 | Model: qwen2.5:14b | Output: /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt
+[2026-03-07 17:00:17] Existing jobs to skip: 77
+[2026-03-07 17:00:17] Exa [ 1/19]: site:scotiabank.com Ontario job salary range "$" CAD 2026 enginee...
+[2026-03-07 17:00:18]   → 6 results
+[2026-03-07 17:00:19] Exa [ 2/19]: site:careers.rogers.com Ontario salary "$" CAD 2026...
+[2026-03-07 17:00:21]   → 0 results
+[2026-03-07 17:00:23] Exa [ 3/19]: site:magna.com careers Ontario salary range "$" CAD 2026...
+[2026-03-07 17:00:23]   → 5 results
+[2026-03-07 17:00:25] Exa [ 4/19]: SuccessFactors Ontario Canada job posting 2026 salary "$" CAD eng...
+[2026-03-07 17:00:26]   → 8 results
+[2026-03-07 17:00:28] Exa [ 5/19]: site:jobs.bell.ca Ontario salary range "$" CAD 2026...
+[2026-03-07 17:00:29]   → 1 results
+[2026-03-07 17:00:30] Exa [ 6/19]: Bell Canada Ontario job 2026 salary "$" CAD engineer OR analyst O...
+[2026-03-07 17:00:32]   → 8 results
+[2026-03-07 17:00:33] Exa [ 7/19]: site:amazon.jobs Ontario Canada salary range "$" CAD 2026...
+[2026-03-07 17:00:34]   → 2 results
+[2026-03-07 17:00:36] Exa [ 8/19]: amazon.ca OR amazon.jobs Ontario 2026 salary range "$" CAD softwa...
+[2026-03-07 17:00:37]   → 8 results
+[2026-03-07 17:00:39] Exa [ 9/19]: site:gojobs.gov.on.ca salary range "$" CAD 2026 manager OR analys...
+[2026-03-07 17:00:40]   → 0 results
+[2026-03-07 17:00:42] Exa [10/19]: Ontario Public Service 2026 salary range "$" CAD "Ministry of" jo...
+[2026-03-07 17:00:43]   → 8 results
+[2026-03-07 17:00:45] Exa [11/19]: "Ontario Public Service" job 2026 "salary range" "$" CAD analyst ...
+[2026-03-07 17:00:46]   → 6 results
+[2026-03-07 17:00:48] Exa [12/19]: site:shopify.com/careers Ontario salary range "$" CAD 2026...
+[2026-03-07 17:00:49]   → 8 results
+[2026-03-07 17:00:50] Exa [13/19]: site:careers.loblaw.ca Ontario salary range "$" CAD 2026...
+[2026-03-07 17:00:52]   → 0 results
+[2026-03-07 17:00:54] Exa [14/19]: Loblaw Companies 2026 Ontario job posting "salary range" "$" CAD ...
+[2026-03-07 17:00:55]   → 8 results
+[2026-03-07 17:00:56] Exa [15/19]: site:cn.ca/careers Ontario salary "$" CAD 2026...
+[2026-03-07 17:00:57]   → 8 results
+[2026-03-07 17:00:59] Exa [16/19]: site:*.bamboohr.com/careers Ontario salary range "$" CAD 2026...
+[2026-03-07 17:01:01]   → 0 results
+[2026-03-07 17:01:02] Exa [17/19]: site:app.breezy.hr Ontario salary "$" CAD 2026 engineer OR analys...
+[2026-03-07 17:01:04]   → 0 results
+[2026-03-07 17:01:06] Exa [18/19]: site:oracle.taleo.net OR site:ats.ca Ontario 2026 salary range "$...
+[2026-03-07 17:01:08]   → 0 results
+[2026-03-07 17:01:10] Exa [19/19]: site:tbe.taleo.net Ontario Canada salary "$" CAD 2026 manager OR ...
+[2026-03-07 17:01:11]   → 0 results
+[2026-03-07 17:01:12] Unique URLs to process: 67
+[2026-03-07 17:01:12] [  1/67] https://www.scotiabank.com/ca/en/commercial-banking/professionals/acco
+[2026-03-07 17:01:13]   fetch=http 0.5s text=5000ch
+[2026-03-07 17:01:26]   → skip (13.7s)
+[2026-03-07 17:01:27] [  2/67] https://www.scotiabank.com/content/dam/scotiabank/corporate/quarterly-
+[2026-03-07 17:01:27]   fetch=http 0.3s text=5000ch
+[2026-03-07 17:01:59]   → skip (32.1s)
+[2026-03-07 17:02:00] [  3/67] https://www.scotiabank.com/content/dam/scotiabank/corporate/quarterly-
+[2026-03-07 17:02:00]   fetch=http 0.4s text=5000ch
+[2026-03-07 17:02:35]   → skip (34.4s)
+[2026-03-07 17:02:35] [  4/67] https://www.scotiabank.com/content/dam/scotiabank/corporate/quarterly-
+[2026-03-07 17:02:35]   fetch=http 0.4s text=5000ch
+[2026-03-07 17:03:12]   → skip (36.5s)
+[2026-03-07 17:03:13] [  5/67] https://www.scotiabank.com/content/dam/scotiabank/corporate/BNS_Annual
+[2026-03-07 17:03:13]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:03:41]   → skip (28.3s)
+[2026-03-07 17:03:42] [  6/67] https://www.scotiabank.com/global/en/global-site.html
+[2026-03-07 17:03:46]   fetch=http 4.1s text=3485ch
+[2026-03-07 17:03:55]   → skip (9.2s)
+[2026-03-07 17:03:56] [  7/67] https://www.magna.com/docs/default-source/financial-disclosures/2024/q
+[2026-03-07 17:04:23]   fetch=http 27.5s text=5000ch
+[2026-03-07 17:04:54]   → skip (31.0s)
+[2026-03-07 17:04:55] [  8/67] https://www.magna.com/docs/default-source/corporate-governance/disclos
+[2026-03-07 17:05:09]   fetch=http 14.5s text=5000ch
+[2026-03-07 17:05:41]   → skip (32.1s)
+[2026-03-07 17:05:42] [  9/67] https://www.magna.com/docs/default-source/corporate-governance/disclos
+[2026-03-07 17:05:43]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:06:20]   → skip (37.5s)
+[2026-03-07 17:06:20] [ 10/67] https://www.magna.com/docs/default-source/2025-news---press-releases/m
+[2026-03-07 17:06:21]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:06:57]   → skip (35.7s)
+[2026-03-07 17:06:57] [ 11/67] https://www.magna.com/docs/default-source/corporate-governance/disclos
+[2026-03-07 17:06:58]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:07:38]   → skip (40.2s)
+[2026-03-07 17:07:39] [ 12/67] https://www.kuka.com/en-us/company/careers/vacancies/sap-successfactor
+[2026-03-07 17:07:41]   fetch=http 2.1s text=5000ch
+[2026-03-07 17:07:56]   → skip (15.1s)
+[2026-03-07 17:07:56] [ 13/67] https://2iresourcing.ca/the-future-of-sap-jobs-in-canada-trends-salari
+[2026-03-07 17:07:57]   fetch=http 0.5s text=5000ch
+[2026-03-07 17:08:15]   → skip (17.9s)
+[2026-03-07 17:08:15] [ 14/67] https://careers.opentext.com/us/en/job/48668/Lead-Data-Architect-Devel
+[2026-03-07 17:08:22]   fetch=browser 6.7s text=2393ch
+[2026-03-07 17:08:31]   → skip (9.6s)
+[2026-03-07 17:08:32] [ 15/67] https://jobs.teemagroup.com/job/86341-sr-data-engineer-databricks-toro
+[2026-03-07 17:08:32]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:08:57]   → SKIP duplicate: Senior Data Engineer – Databricks @ TEEMA
+[2026-03-07 17:08:57] [ 16/67] https://www.kuka.com/en-ca/company/careers/vacancies/senior-enterprise
+[2026-03-07 17:08:58]   fetch=http 0.9s text=5000ch
+[2026-03-07 17:09:16]   → skip (17.6s)
+[2026-03-07 17:09:17] [ 17/67] https://jobflexy.com/test-developing-manager-ii-xr-google-waterloo/
+[2026-03-07 17:09:17]   fetch=http 0.2s text=5000ch
+[2026-03-07 17:09:42]   → FOUND (25.3s): Test Developing Manager II, XR @ Google $198,000–$203,000 [Waterloo, ON]
+[2026-03-07 17:09:43] [ 18/67] https://prideatwork.ca/careers/avp-technology-lead-digital-enablement/
+[2026-03-07 17:09:44]   fetch=http 1.2s text=5000ch
+[2026-03-07 17:10:01]   → skip (17.1s)
+[2026-03-07 17:10:01] [ 19/67] https://jobs.teemagroup.com/job/85922-lead-developer-design-systems-to
+[2026-03-07 17:10:05]   fetch=browser 3.9s text=856ch
+[2026-03-07 17:10:19]   → FOUND (13.8s): Lead Developer Design Systems @ TEEMA $120,000–$160,000 [Toronto, ON]
+[2026-03-07 17:10:20] [ 20/67] https://jobs.bell.ca/ca/en/life-at-bell/home
+[2026-03-07 17:10:20]   fetch=http 0.4s text=5000ch
+[2026-03-07 17:10:29]   → skip (9.5s)
+[2026-03-07 17:10:30] [ 21/67] https://www.ambitionbox.com/salaries/bell-canada-salaries
+[2026-03-07 17:10:43]   Browser error: Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.ambitionbox.com/salaries/bell-canada-salaries
+Call log:
+  - navigating to "https://www.ambitionbox.com/salaries/bell-canada-salaries", waiting until "domcontentloaded"
+
+[2026-03-07 17:10:43]   fetch=browser 13.2s text=0ch
+[2026-03-07 17:10:43]   → no content
+[2026-03-07 17:10:44] [ 22/67] https://tietalent.com/en/jobs/p-474898831/ontario-engineering-manager-
+[2026-03-07 17:10:45]   fetch=http 1.1s text=5000ch
+[2026-03-07 17:10:55]   → skip (9.7s)
+[2026-03-07 17:10:55] [ 23/67] https://careers.services.global.ntt/global/en/job/R-137870/Senior-Netw
+[2026-03-07 17:10:57]   fetch=http 1.9s text=1031ch
+[2026-03-07 17:11:03]   → skip (6.2s)
+[2026-03-07 17:11:04] [ 24/67] https://jobs.accaglobal.com/job/13739483/sr-financial-analyst-fp-and-a
+[2026-03-07 17:11:05]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:11:15]   → skip (9.8s)
+[2026-03-07 17:11:15] [ 25/67] https://amazon.jobs/en/jobs/3106656/senior-business-development-manage
+[2026-03-07 17:11:16]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:11:25]   → skip (8.9s)
+[2026-03-07 17:11:25] [ 26/67] https://www.amazon.jobs/en-gb/jobs/3048857/area-manager-2026-canada-re
+[2026-03-07 17:11:26]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:11:36]   → skip (10.2s)
+[2026-03-07 17:11:37] [ 27/67] https://www.amazon.jobs/en/jobs/3165932/software-development-engineer-
+[2026-03-07 17:11:37]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:11:47]   → skip (9.8s)
+[2026-03-07 17:11:48] [ 28/67] https://www.levels.fyi/companies/amazon/salaries/software-engineer/loc
+[2026-03-07 17:11:53]   fetch=browser 5.7s text=5000ch
+[2026-03-07 17:12:14]   → skip (20.1s)
+[2026-03-07 17:12:14] [ 29/67] https://jobflexy.com/software-development-manager-amazon-toronto/
+[2026-03-07 17:12:14]   fetch=http 0.2s text=5000ch
+[2026-03-07 17:12:31]   → SKIP duplicate: Software Development Manager @ Amazon
+[2026-03-07 17:12:31] [ 30/67] https://jobflexy.com/insights-measurement-lead-amazon-advertising-cana
+[2026-03-07 17:12:31]   fetch=http 0.2s text=5000ch
+[2026-03-07 17:12:49]   → FOUND (17.9s): Insights & Measurement Lead @ Amazon Advertising Canada Inc. $99,900–$166,900 [Toronto, ON]
+[2026-03-07 17:12:49] [ 31/67] https://jobflexy.com/operations-finance-rotational-program-amazon-toro
+[2026-03-07 17:12:50]   fetch=http 0.2s text=5000ch
+[2026-03-07 17:13:06]   → FOUND (16.9s): Operations Financial Analyst @ Amazon $49,300–$82,300 [Toronto, ON]
+[2026-03-07 17:13:07] [ 32/67] https://www.amazon.jobs/en/jobs/3185302/software-development-engineer-
+[2026-03-07 17:13:08]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:13:18]   → skip (10.3s)
+[2026-03-07 17:13:19] [ 33/67] https://yotru.com/blog/ontario-job-posting-law-2026-salary-range-ai-di
+[2026-03-07 17:13:19]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:13:29]   → skip (9.7s)
+[2026-03-07 17:13:29] [ 34/67] https://www.mondaq.com/canada/employee-rights-labour-relations/1741472
+[2026-03-07 17:13:30]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:13:40]   → skip (10.3s)
+[2026-03-07 17:13:41] [ 35/67] https://webiis05.mondaq.com/canada/employee-rights-labour-relations/17
+[2026-03-07 17:13:42]   fetch=http 0.9s text=5000ch
+[2026-03-07 17:13:52]   → skip (10.3s)
+[2026-03-07 17:13:53] [ 36/67] https://webiis10.mondaq.com/canada/employee-rights-labour-relations/17
+[2026-03-07 17:13:53]   fetch=http 0.8s text=5000ch
+[2026-03-07 17:14:04]   → skip (10.3s)
+[2026-03-07 17:14:04] [ 37/67] https://www.canada.ca/en/employment-social-development/services/foreig
+[2026-03-07 17:14:29]   fetch=browser 24.9s text=5000ch
+[2026-03-07 17:14:38]   → skip (9.4s)
+[2026-03-07 17:14:39] [ 38/67] https://www.facebook.com/groups/letstalkalbertaindependence/posts/1962
+[2026-03-07 17:14:42]   fetch=browser 3.4s text=3530ch
+[2026-03-07 17:14:51]   → skip (9.0s)
+[2026-03-07 17:14:52] [ 39/67] https://www.canada.ca/en/employment-social-development/services/foreig
+[2026-03-07 17:15:15]   fetch=browser 22.6s text=5000ch
+[2026-03-07 17:15:24]   → skip (9.3s)
+[2026-03-07 17:15:24] [ 40/67] https://www.ontario.ca/orders-in-council/oc-1072026
+[2026-03-07 17:15:25]   fetch=http 0.5s text=2598ch
+[2026-03-07 17:15:34]   → skip (9.3s)
+[2026-03-07 17:15:35] [ 41/67] https://awic.ca/noc/noc1/?wdt-page=active-job-posts
+[2026-03-07 17:15:36]   fetch=http 1.5s text=5000ch
+[2026-03-07 17:15:45]   → skip (8.6s)
+[2026-03-07 17:15:45] [ 42/67] https://employmentbghs.ca/industry/naics91/?wdt-page=active-job-posts
+[2026-03-07 17:15:47]   fetch=http 1.7s text=5000ch
+[2026-03-07 17:15:56]   → skip (9.3s)
+[2026-03-07 17:15:57] [ 43/67] https://versafi.ca/jobs/manager-finance-data-analytics-insights
+[2026-03-07 17:15:59]   fetch=http 2.4s text=5000ch
+[2026-03-07 17:16:08]   → skip (8.9s)
+[2026-03-07 17:16:09] [ 44/67] https://www.masongroup.ca/job-details/senior-financial-analyst-12/
+[2026-03-07 17:16:09]   fetch=http 0.8s text=4431ch
+[2026-03-07 17:16:26]   → skip (16.9s)
+[2026-03-07 17:16:27] [ 45/67] https://www.shopify.com/ca/blog/influencer-pricing
+[2026-03-07 17:16:27]   fetch=http 0.3s text=5000ch
+[2026-03-07 17:16:36]   → skip (9.1s)
+[2026-03-07 17:16:37] [ 46/67] https://www.shopify.com/ca/blog/side-hustle
+[2026-03-07 17:16:37]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:16:47]   → skip (9.3s)
+[2026-03-07 17:16:47] [ 47/67] https://www.shopify.com/ca/blog/low-investment-business-ideas
+[2026-03-07 17:16:48]   fetch=http 0.8s text=5000ch
+[2026-03-07 17:16:57]   → skip (9.3s)
+[2026-03-07 17:16:58] [ 48/67] https://www.shopify.com/ca/blog/online-business-ideas
+[2026-03-07 17:16:59]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:17:08]   → skip (9.3s)
+[2026-03-07 17:17:08] [ 49/67] https://www.shopify.com/au/blog/influencer-pricing
+[2026-03-07 17:17:10]   fetch=http 1.2s text=5000ch
+[2026-03-07 17:17:19]   → skip (9.3s)
+[2026-03-07 17:17:19] [ 50/67] https://www.shopify.com/ca/blog/passive-income-ideas
+[2026-03-07 17:17:20]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:17:29]   → skip (9.3s)
+[2026-03-07 17:17:30] [ 51/67] https://www.shopify.com/pk/blog/213396233-how-to-start-a-food-business
+[2026-03-07 17:17:31]   fetch=http 0.8s text=5000ch
+[2026-03-07 17:17:40]   → skip (9.3s)
+[2026-03-07 17:17:41] [ 52/67] https://www.shopify.com/in/blog/ecommerce-website-cost
+[2026-03-07 17:17:42]   fetch=http 1.0s text=5000ch
+[2026-03-07 17:17:51]   → skip (9.3s)
+[2026-03-07 17:17:51] [ 53/67] https://www.comparably.com/companies/loblaw-companies-limited/salaries
+[2026-03-07 17:17:52]   fetch=http 1.0s text=3930ch
+[2026-03-07 17:18:03]   → skip (10.3s)
+[2026-03-07 17:18:03] [ 54/67] https://www.comparably.com/companies/loblaw-companies-limited/salaries
+[2026-03-07 17:18:04]   fetch=http 0.6s text=3959ch
+[2026-03-07 17:18:14]   → skip (10.6s)
+[2026-03-07 17:18:15] [ 55/67] https://www.comparably.com/companies/loblaw-companies-limited/salaries
+[2026-03-07 17:18:16]   fetch=http 0.8s text=3900ch
+[2026-03-07 17:18:26]   → skip (10.5s)
+[2026-03-07 17:18:27] [ 56/67] https://www.careerbliss.com/loblaw/salaries/supply-chain-analyst
+[2026-03-07 17:18:28]   fetch=http 1.9s text=3636ch
+[2026-03-07 17:18:39]   → skip (10.8s)
+[2026-03-07 17:18:40] [ 57/67] https://www.careerbliss.com/loblaw/salaries/district-manager/
+[2026-03-07 17:18:41]   fetch=http 1.7s text=3486ch
+[2026-03-07 17:18:52]   → skip (10.5s)
+[2026-03-07 17:18:53] [ 58/67] https://www.careerbliss.com/loblaw/salaries/hr-manager/
+[2026-03-07 17:18:53]   fetch=http 0.9s text=3349ch
+[2026-03-07 17:19:04]   → skip (10.8s)
+[2026-03-07 17:19:05] [ 59/67] https://www.comparably.com/companies/loblaw-companies-limited/salaries
+[2026-03-07 17:19:06]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:19:17]   → skip (11.5s)
+[2026-03-07 17:19:18] [ 60/67] https://www.cn.ca/en/careers/
+[2026-03-07 17:19:18]   fetch=http 0.9s text=5000ch
+[2026-03-07 17:19:27]   → skip (8.3s)
+[2026-03-07 17:19:27] [ 61/67] https://www.cn.ca/-/media/files/investors/investor-annual-report/2024-
+[2026-03-07 17:19:42]   fetch=http 14.8s text=5000ch
+[2026-03-07 17:20:09]   → skip (27.3s)
+[2026-03-07 17:20:10] [ 62/67] https://www.cn.ca/en/investors/events/-/media/a1958ef6ca6f40ebb32aa2d3
+[2026-03-07 17:20:11]   fetch=http 0.8s text=5000ch
+[2026-03-07 17:20:41]   → skip (30.7s)
+[2026-03-07 17:20:42] [ 63/67] https://www.cn.ca/-/media/files/investors/investor-financial-quarterly
+[2026-03-07 17:20:42]   fetch=http 0.7s text=5000ch
+[2026-03-07 17:21:13]   → skip (30.7s)
+[2026-03-07 17:21:14] [ 64/67] https://www.cn.ca/en/investors/events/-/media/13b9ed4e99214a95ba9a6d95
+[2026-03-07 17:21:15]   fetch=http 0.8s text=5000ch
+[2026-03-07 17:21:38]   → skip (23.8s)
+[2026-03-07 17:21:39] [ 65/67] https://www.cn.ca/-/media/files/investors/investor-financial-quarterly
+[2026-03-07 17:21:39]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:22:09]   → skip (29.2s)
+[2026-03-07 17:22:09] [ 66/67] https://www.cn.ca/-/media/files/investors/investor-shareholder/informa
+[2026-03-07 17:22:11]   fetch=http 1.9s text=5000ch
+[2026-03-07 17:22:40]   → skip (28.9s)
+[2026-03-07 17:22:40] [ 67/67] https://www.cn.ca/-/media/files/investors/investor-financial-quarterly
+[2026-03-07 17:22:41]   fetch=http 0.6s text=5000ch
+[2026-03-07 17:23:10]   → skip (28.5s)
+[2026-03-07 17:23:10] === Browser scraper complete: 4 new jobs written to /Users/clawii/.openclaw/shared/ontario-jobs-raw-2026-03-07.txt ===
