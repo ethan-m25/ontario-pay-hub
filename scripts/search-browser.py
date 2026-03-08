@@ -40,11 +40,15 @@ LOOKBACK_DATE = (date.today() - timedelta(days=30)).isoformat() + "T00:00:00.000
 log = make_logger(LOG_FILE)
 
 EXA_QUERIES = [
-    # --- SAP SuccessFactors (Scotiabank, Rogers, Magna, CIBC uses hybrid) ---
+    # --- SAP SuccessFactors (Scotiabank, Rogers, Magna, Telus, CIBC uses hybrid) ---
     'site:scotiabank.com Ontario job salary range "$" CAD 2026 engineer OR analyst OR manager',
-    'site:careers.rogers.com Ontario salary "$" CAD 2026',
+    'site:jobs.rogers.com Ontario salary "$" CAD 2026',  # correct domain (careers.rogers.com does not resolve)
     'site:magna.com careers Ontario salary range "$" CAD 2026',
     'SuccessFactors Ontario Canada job posting 2026 salary "$" CAD engineer OR director OR manager',
+
+    # --- Telus (SuccessFactors at careers.telus.com — confirmed salary disclosure) ---
+    'site:careers.telus.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager OR specialist',
+    'Telus Communications Ontario job 2026 "salary range" "$" CAD analyst OR engineer OR manager OR director',
 
     # --- Phenom People (Bell Canada, RBC jobs.rbc.com, CIBC jobs.cibc.com) ---
     # NOTE: RBC has two portals — rbc.wd3.myworkdayjobs.com (Workday, covered by search-workday.py)
