@@ -40,15 +40,21 @@ LOOKBACK_DATE = (date.today() - timedelta(days=30)).isoformat() + "T00:00:00.000
 log = make_logger(LOG_FILE)
 
 EXA_QUERIES = [
-    # --- SAP SuccessFactors (Scotiabank, Rogers, Magna) ---
+    # --- SAP SuccessFactors (Scotiabank, Rogers, Magna, CIBC uses hybrid) ---
     'site:scotiabank.com Ontario job salary range "$" CAD 2026 engineer OR analyst OR manager',
     'site:careers.rogers.com Ontario salary "$" CAD 2026',
     'site:magna.com careers Ontario salary range "$" CAD 2026',
     'SuccessFactors Ontario Canada job posting 2026 salary "$" CAD engineer OR director OR manager',
 
-    # --- Phenom People (Bell Canada) ---
+    # --- Phenom People (Bell Canada, RBC jobs.rbc.com, CIBC jobs.cibc.com) ---
+    # NOTE: RBC has two portals — rbc.wd3.myworkdayjobs.com (Workday, covered by search-workday.py)
+    # AND jobs.rbc.com (Phenom People, different job set). Both need to be scraped.
     'site:jobs.bell.ca Ontario salary range "$" CAD 2026',
     'Bell Canada Ontario job 2026 salary "$" CAD engineer OR analyst OR manager',
+    'site:jobs.rbc.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager OR director',
+    'site:jobs.rbc.com Toronto 2026 salary "$" CAD specialist OR associate OR VP OR senior',
+    'site:jobs.cibc.com Ontario salary range "$" CAD 2026',
+    'site:careers.td.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager',
 
     # --- Amazon.jobs ---
     'site:amazon.jobs Ontario Canada salary range "$" CAD 2026',
@@ -66,6 +72,10 @@ EXA_QUERIES = [
     'site:careers.loblaw.ca Ontario salary range "$" CAD 2026',
     'Loblaw Companies 2026 Ontario job posting "salary range" "$" CAD manager OR analyst OR director',
 
+    # --- Canada Life / Great-West Life / Lifeco (Winnipeg HQ but large Ontario presence) ---
+    'site:canadalife.com careers Ontario salary range "$" CAD 2026',
+    '"Canada Life" OR "Great-West Life" Ontario job posting salary range "$" CAD 2026',
+
     # --- CN Rail (Cornerstone) ---
     'site:cn.ca/careers Ontario salary "$" CAD 2026',
 
@@ -78,6 +88,11 @@ EXA_QUERIES = [
     # --- Taleo (large legacy users) ---
     'site:oracle.taleo.net OR site:ats.ca Ontario 2026 salary range "$" CAD',
     'site:tbe.taleo.net Ontario Canada salary "$" CAD 2026 manager OR engineer OR analyst',
+
+    # --- Workday custom domains (careers sites with own domain, not myworkdayjobs.com) ---
+    # Some Ontario employers embed Workday but use branded URLs like careers.manulife.com
+    'site:careers.manulife.com Ontario salary range "$" CAD 2026',
+    '"Intact Financial" OR "Intact Insurance" Ontario job salary range "$" CAD 2026',
 ]
 
 

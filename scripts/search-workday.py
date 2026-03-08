@@ -39,29 +39,52 @@ UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
 # ── Seed tenants (known-good with verified tenant IDs) ────────────────────────
 # (host, company_id, tenant, display_name)
 SEED_TENANTS = [
+    # Major Canadian banks
     ("rbc.wd3.myworkdayjobs.com",       "rbc",       "RBCGLOBAL1",        "RBC"),
-    ("td.wd3.myworkdayjobs.com",         "td",        "TD_Bank_Careers",   "TD Bank"),
-    ("bmo.wd3.myworkdayjobs.com",        "bmo",       "External",          "BMO"),
-    ("cibc.wd3.myworkdayjobs.com",       "cibc",      "search",            "CIBC"),
-    ("manulife.wd3.myworkdayjobs.com",   "manulife",  "MFCJH_Jobs",        "Manulife"),
-    ("sunlife.wd3.myworkdayjobs.com",    "sunlife",   "Experienced-Jobs",  "Sun Life"),
-    ("walmart.wd5.myworkdayjobs.com",    "walmart",   "WalmartExternal",   "Walmart Canada"),
-    ("brookfield.wd5.myworkdayjobs.com", "brookfield","brookfield",        "Brookfield"),
+    ("td.wd3.myworkdayjobs.com",        "td",        "TD_Bank_Careers",   "TD Bank"),
+    ("bmo.wd3.myworkdayjobs.com",       "bmo",       "External",          "BMO"),
+    ("cibc.wd3.myworkdayjobs.com",      "cibc",      "search",            "CIBC"),
+    # Insurance / financial services
+    ("manulife.wd3.myworkdayjobs.com",  "manulife",  "MFCJH_Jobs",        "Manulife"),
+    ("sunlife.wd3.myworkdayjobs.com",   "sunlife",   "Experienced-Jobs",  "Sun Life"),
+    # Pension funds (Toronto-HQ, large Ontario employers)
+    ("omers.wd3.myworkdayjobs.com",     "omers",     "OMERS_External",    "OMERS"),
+    # Real estate / asset management
+    ("brookfield.wd5.myworkdayjobs.com","brookfield","brookfield",        "Brookfield"),
+    # Retail
+    ("walmart.wd5.myworkdayjobs.com",   "walmart",   "WalmartExternal",   "Walmart Canada"),
 ]
 
 # Exa queries to discover additional Workday tenants (Ontario employers)
+# Runs each nightly — finds newly indexed job URLs and extracts myworkdayjobs.com tenant IDs.
+# Queries target specific major Ontario employers and sectors to fill coverage gaps.
 DISCOVERY_QUERIES = [
+    # General Ontario coverage
     'site:myworkdayjobs.com Ontario Canada job 2026',
     'site:myworkdayjobs.com Toronto OR Ottawa OR Waterloo job 2026',
     'site:myworkdayjobs.com Ontario Canada salary "$" CAD',
     'site:myworkdayjobs.com "Ontario" Canada engineer OR analyst OR manager OR director',
+    # Major Ontario financial / investment employers
+    'site:myworkdayjobs.com "CPP Investments" OR "CPPIB" OR "OMERS" OR "Ontario Teachers" Ontario',
+    'site:myworkdayjobs.com "Canada Life" OR "Great-West Life" OR "Intact" Ontario Canada',
+    'site:myworkdayjobs.com "Fairfax" OR "Mackenzie" OR "IGM Financial" OR "Power Corporation" Ontario',
+    # Ontario tech / professional services
+    'site:myworkdayjobs.com "OpenText" OR "Celestica" OR "Mitel" OR "Descartes" Ontario Canada',
+    'site:myworkdayjobs.com "Colliers" OR "CBRE" OR "Avison Young" OR "Hatch" Ontario salary',
+    # Ontario mining / energy / resources (Toronto-HQ companies)
+    'site:myworkdayjobs.com "Kinross" OR "Agnico" OR "Barrick" OR "Teck" Ontario Canada',
+    'site:myworkdayjobs.com "Enbridge" OR "TC Energy" OR "OPG" OR "Hydro One" Ontario',
+    # Ontario healthcare / pharma (beyond Roche)
+    'site:myworkdayjobs.com "Sanofi" OR "AstraZeneca" OR "Novartis" OR "Bayer" Ontario salary',
 ]
 
 # Ontario location terms — matched against locationsText from Workday API.
-# "locations" removed: it matched ANY multi-site posting (e.g. "2 Locations") including US jobs.
+# Removed: "locations" (matched ANY "2 Locations" posting including US jobs)
+# Removed: "london" (ambiguous — also matches London, England in global tenants like OMERS)
+# London, Ontario is caught by _ONTARIO_PATH_TERMS via "/job/London-Ontario/" URL pattern.
 ONTARIO_TERMS = [
     "ontario", "toronto", "ottawa", "waterloo", "mississauga",
-    "hamilton", "london", "brampton", "markham", "vaughan",
+    "hamilton", "brampton", "markham", "vaughan",
     "richmond hill", "oakville", "kitchener", "windsor", ", on,",
 ]
 
@@ -76,15 +99,20 @@ _NON_ONTARIO_PATH_TERMS = [
     "/north-carolina/", "/new-jersey/", "/south-san-francisco",
     "/wellesley-hills", "/richmond/", "/phoenix/", "/chicago/",
     "/boston/", "/seattle/", "/atlanta/", "/san-francisco/", "/los-angeles/",
+    "/emeryville", "/new-haven", "/new-brunswick",   # more US cities
+    "/london-london",   # London, England (OMERS-style "London, London" → /job/London-London/)
+    "/united-kingdom", "/england",
     "/vancouver/", "/british-columbia", "/alberta/", "/quebec/",
 ]
 
 # Salary regex patterns for Workday HTML (no LLM — regex is sufficient for structured pages)
+# NOTE: Canadian job postings use both "$" and "C$" (e.g. Brookfield: "C$90,000.00 - C$105,000.00")
+# The (?:[A-Z])? prefix on \$ handles C$, US$, etc. without breaking plain-$ matches.
 SALARY_RE = [
-    # "$86,100.00 CAD - $136,100 CAD" or "between $86,100 and $136,100"
-    re.compile(r'\$\s*([\d,]+)(?:\.\d+)?\s*(?:CAD)?\s*[-–—to]+\s*\$\s*([\d,]+)', re.IGNORECASE),
-    # "$86K – $136K"
-    re.compile(r'\$([\d]+(?:\.\d+)?)[kK]\s*[-–—]\s*\$([\d]+(?:\.\d+)?)[kK]', re.IGNORECASE),
+    # "$86,100.00 CAD - $136,100 CAD" or "C$90,000 - C$105,000" (Brookfield style)
+    re.compile(r'(?:[A-Z])?\$\s*([\d,]+)(?:\.\d+)?\s*(?:CAD)?\s*[-–—to]+\s*(?:[A-Z])?\$\s*([\d,]+)', re.IGNORECASE),
+    # "$86K – $136K" or "C$86K – C$136K"
+    re.compile(r'(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]\s*[-–—]\s*(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]', re.IGNORECASE),
     # "pay range: 80,000 to 120,000" (without dollar sign)
     re.compile(r'(?:pay|salary|compensation|wage)[^$\n]{0,30}([\d,]{6,})\s*[-–—to]+\s*([\d,]{6,})', re.IGNORECASE),
 ]
@@ -300,16 +328,22 @@ def main():
         limit = 10     # Workday blocks limit >= 25 (anti-scraping); 10 is safe
         max_pages = 5  # covers 50 most recent jobs per company
 
+        # wd5 tenants (Brookfield, Walmart) return total=0 on offset>0 despite having more jobs.
+        # Track the first valid total and use it for pagination decisions; if a page returns
+        # total=0 we still continue until we hit max_pages or get an empty postings list.
+        known_total = 0
         while offset // limit < max_pages:
             postings, total = wd_list_jobs(host, company_id, tenant, offset, limit)
             if not postings:
                 break
+            if total > 0:
+                known_total = total  # Only trust non-zero totals (wd5 bug: returns 0 on page 2+)
             log(f"  API offset={offset}: {len(postings)} postings (total={total})")
             for p in postings:
                 if is_ontario(p.get("locationsText", ""), p.get("externalPath", "")):
                     ontario_jobs.append(p)
             offset += limit
-            if offset >= total:
+            if known_total > 0 and offset >= known_total:
                 break
             time.sleep(5)  # brief pause between pages within same company
 
