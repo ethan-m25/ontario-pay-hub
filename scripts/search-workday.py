@@ -335,8 +335,9 @@ def main():
             log(f"    → FOUND: ${val_min:,}–${val_max:,} [{location}]")
             time.sleep(0.8)
 
-        # Brief pause between companies to avoid Workday API rate limiting
-        time.sleep(2)
+        # 60s pause between companies — confirmed minimum needed to avoid Workday rate limiting.
+        # Single calls work fine; rapid sequential calls (< ~30s apart) trigger HTTP 400 blocks.
+        time.sleep(60)
 
     log(f"\n=== Workday scraper complete: {total_found} new jobs written to {OUTPUT_FILE} ===")
     return 0
