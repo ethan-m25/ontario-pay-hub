@@ -217,6 +217,7 @@ td { padding:12px 14px; vertical-align:middle; }
 /* ===== TOP PAYER BADGE ===== */
 .top-badge { font-size:.6rem; font-weight:800; background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); border-radius:10px; padding:1px 6px; margin-left:5px; white-space:nowrap; }
 tr.top-row { border-left:3px solid var(--amber) !important; }
+tr.selected-row { background:rgba(99,102,241,.12) !important; border-left:3px solid var(--accent) !important; }
 /* ===== EMPTY STATE ===== */
 .empty { text-align:center; padding:60px 20px; color:var(--text3); font-size:.9rem; }
 
@@ -1114,6 +1115,13 @@ function openJobDetail(id){
   if(!j) return;
   _jdCurrentId = id;
 
+  // Highlight selected row, clear any previous highlight
+  document.querySelectorAll("tr.selected-row").forEach(r=>r.classList.remove("selected-row"));
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach(r=>{
+    if(r.querySelector(`[onclick*="openJobDetail(${id})"]`)) r.classList.add("selected-row");
+  });
+
   // Close saved panel if open
   document.getElementById("savedPanel").classList.remove("open");
 
@@ -1213,6 +1221,7 @@ function openJobDetail(id){
 function closeJobDetail(){
   document.getElementById("jobDetailPanel").classList.remove("open");
   document.getElementById("jdBackdrop").classList.remove("open");
+  document.querySelectorAll("tr.selected-row").forEach(r=>r.classList.remove("selected-row"));
   _jdCurrentId = null;
 }
 
