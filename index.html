@@ -937,8 +937,9 @@ function renderTable(){
       const barW=Math.round((j.max/mxMax)*100);
       const archived=isArchived(j);
       const isTop=top3Ids.has(j.id);
+      const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
       return `<tr class="${isTop?'top-row':''}"${archived?' style="opacity:.7"':''}>
-        <td><span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="Click for salary comparison">${j.role}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
+        <td><span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
         <td class="company-name">${j.company} ${wmBadge(j.work_mode)}</td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>

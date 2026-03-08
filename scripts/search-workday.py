@@ -57,13 +57,26 @@ DISCOVERY_QUERIES = [
     'site:myworkdayjobs.com "Ontario" Canada engineer OR analyst OR manager OR director',
 ]
 
-# Ontario location terms — Workday-specific: includes "locations" for multi-site postings
-# and ", on," (with trailing comma) to match Workday's locationsText comma format
+# Ontario location terms — matched against locationsText from Workday API.
+# "locations" removed: it matched ANY multi-site posting (e.g. "2 Locations") including US jobs.
 ONTARIO_TERMS = [
     "ontario", "toronto", "ottawa", "waterloo", "mississauga",
     "hamilton", "london", "brampton", "markham", "vaughan",
     "richmond hill", "oakville", "kitchener", "windsor", ", on,",
-    "locations",  # "2 Locations" = multi-location, may include Ontario
+]
+
+# Ontario indicators in Workday URL path (used for secondary check when locationsText is vague)
+_ONTARIO_PATH_TERMS = ["-ontario", "-on-can", "/ontario-", "can-ontario", "/can-on-"]
+
+# Non-Ontario location patterns in URL path — these explicitly contradict an Ontario match.
+# Covers US states, BC, AB, QC to reject false positives from global Workday tenants.
+_NON_ONTARIO_PATH_TERMS = [
+    "-usa/", "-usa-", "az-usa", "us-telecommut", "us-remote",
+    "/new-york/", "/new-york-city/", "/california/", "/texas/", "/florida/",
+    "/north-carolina/", "/new-jersey/", "/south-san-francisco",
+    "/wellesley-hills", "/richmond/", "/phoenix/", "/chicago/",
+    "/boston/", "/seattle/", "/atlanta/", "/san-francisco/", "/los-angeles/",
+    "/vancouver/", "/british-columbia", "/alberta/", "/quebec/",
 ]
 
 # Salary regex patterns for Workday HTML (no LLM — regex is sufficient for structured pages)
@@ -165,9 +178,27 @@ def wd_list_jobs(host, company_id, tenant, offset=0, limit=50):
         return [], 0
 
 
-def is_ontario(locations_text):
+def is_ontario(locations_text, external_path=""):
+    """Return True only if the job is plausibly located in Ontario.
+
+    Two-stage check:
+    1. Reject if the URL path contains an explicit non-Ontario location (US state, BC, AB, QC).
+    2. Accept if locationsText mentions an Ontario city/term, OR if the URL path contains
+       an Ontario path segment (covers jobs whose locationsText is just a generic city name
+       that didn't match, but whose Workday URL makes the province clear).
+    """
+    ep = (external_path or "").lower()
     lt = (locations_text or "").lower()
-    return any(t in lt for t in ONTARIO_TERMS)
+
+    # Stage 1: reject if URL path names a non-Ontario location
+    if any(t in ep for t in _NON_ONTARIO_PATH_TERMS):
+        return False
+
+    # Stage 2: accept on explicit Ontario term in locationsText OR Ontario URL segment
+    return (
+        any(t in lt for t in ONTARIO_TERMS)
+        or any(t in ep for t in _ONTARIO_PATH_TERMS)
+    )
 
 
 def parse_location(locations_text, external_path):
@@ -275,7 +306,7 @@ def main():
                 break
             log(f"  API offset={offset}: {len(postings)} postings (total={total})")
             for p in postings:
-                if is_ontario(p.get("locationsText", "")):
+                if is_ontario(p.get("locationsText", ""), p.get("externalPath", "")):
                     ontario_jobs.append(p)
             offset += limit
             if offset >= total:
