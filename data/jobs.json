@@ -1,17 +1,17 @@
 {
   "meta": {
-    "updated": "2026-03-08T16:38:32Z",
+    "updated": "2026-03-09T10:54:08Z",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
-    "count": 215,
-    "active": 190,
+    "count": 225,
+    "active": 200,
     "archived": 25,
     "scraper_version": "1.2",
-    "last_run": "2026-03-08",
-    "new_today": 94,
+    "last_run": "2026-03-09",
+    "new_today": 10,
     "parse_errors": 0,
-    "links_validated": 52,
+    "links_validated": 57,
     "links_newly_archived": 0,
-    "links_unverifiable": 44
+    "links_unverifiable": 133
   },
   "jobs": [
     {
@@ -209,7 +209,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "15",
@@ -224,7 +224,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "16",
@@ -239,7 +239,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "17",
@@ -254,7 +254,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "18",
@@ -269,7 +269,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "19",
@@ -284,7 +284,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "20",
@@ -299,7 +299,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "21",
@@ -314,7 +314,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "22",
@@ -329,7 +329,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "23",
@@ -358,7 +358,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "25",
@@ -415,7 +415,7 @@
       "status": "active",
       "work_mode": "unknown",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "29",
@@ -486,7 +486,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "34",
@@ -501,7 +501,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "35",
@@ -558,7 +558,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-08"
+      "last_seen": "2026-03-09"
     },
     {
       "id": "39",
@@ -599,7 +599,7 @@
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -614,7 +614,7 @@
       "posted": "2026-01-18",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -644,7 +644,7 @@
       "posted": "2026-01-25",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -659,7 +659,7 @@
       "posted": "2026-01-21",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -674,7 +674,7 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -689,7 +689,7 @@
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -719,7 +719,7 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -749,7 +749,7 @@
       "posted": "2026-02-11",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -764,7 +764,7 @@
       "posted": "2026-02-06",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -779,7 +779,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "unknown"
     },
@@ -809,7 +809,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -854,7 +854,7 @@
       "posted": "2026-01-17",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -869,7 +869,7 @@
       "posted": "2023-02-27",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -884,7 +884,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -899,7 +899,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -914,7 +914,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -944,7 +944,7 @@
       "posted": "2025-10-11",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -959,7 +959,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "unknown"
     },
@@ -974,7 +974,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -989,7 +989,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1004,7 +1004,7 @@
       "posted": "2023-06-26",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1019,7 +1019,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1034,7 +1034,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1049,7 +1049,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1064,7 +1064,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1079,7 +1079,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1094,7 +1094,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1109,7 +1109,7 @@
       "posted": "2026-02-24",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1124,7 +1124,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1139,7 +1139,7 @@
       "posted": "2026-03-04",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1154,7 +1154,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1169,7 +1169,7 @@
       "posted": "2026-03-05",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1184,7 +1184,7 @@
       "posted": "2026-02-18",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1199,7 +1199,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1214,7 +1214,7 @@
       "posted": "2026-02-09",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1229,7 +1229,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1244,7 +1244,7 @@
       "posted": "2026-02-16",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1259,7 +1259,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3134,7 +3134,7 @@
       "posted": "2026-02-25",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3149,7 +3149,7 @@
       "posted": "2026-02-11",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3164,7 +3164,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3194,7 +3194,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -3209,7 +3209,157 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-08",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "218",
+      "role": "Manufacturing Project Engineer - Machining",
+      "company": "INNIO",
+      "min": 95000,
+      "max": 115000,
+      "location": "Welland, Ontario",
+      "source_url": "https://jobs.jobvite.com/innio/job/obEZxfw5",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "219",
+      "role": "Director, Business Management",
+      "company": "TD Bank",
+      "min": 115600,
+      "max": 163200,
+      "location": "Toronto, ON",
+      "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Director--Business-Management_R_1476396",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "220",
+      "role": "Senior Analyst, Payroll Accounting",
+      "company": "OMERS",
+      "min": 72000,
+      "max": 108000,
+      "location": "Toronto, ON",
+      "source_url": "https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Senior-Analyst--Payroll-Accounting_JR-7766",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "221",
+      "role": "Senior Associate, Treasury Operations",
+      "company": "OTPPB",
+      "min": 105000,
+      "max": 155000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Senior-Associate--Treasury-Operations_6915",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "222",
+      "role": "Executive Assistant, Teachers’ Venture Growth (TVG) - 15-month contract",
+      "company": "OTPPB",
+      "min": 55000,
+      "max": 90000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Executive-Assistant--Teachers--Venture-Growth--TVG----15-month-contract_6862",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "onsite",
+      "salary_type": "base"
+    },
+    {
+      "id": "223",
+      "role": "Senior Associate, Total Fund Risk Analytics",
+      "company": "OTPPB",
+      "min": 95000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Senior-Associate--Total-Fund-Risk-Analytics_6861",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "224",
+      "role": "Manager, Collateral & Liquidity Operations (12-month contract)",
+      "company": "OTPPB",
+      "min": 95000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Manager--Collateral---Liquidity-Operations--12-month-contract-_6857",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "225",
+      "role": "Senior Executive Assistant",
+      "company": "OTPPB",
+      "min": 70000,
+      "max": 115000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Senior-Executive-Assistant_6848",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "226",
+      "role": "Manager, Due Diligence",
+      "company": "OTPPB",
+      "min": 95000,
+      "max": 145000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Manager--Due-Diligence_6827",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
+      "work_mode": "onsite",
+      "salary_type": "base"
+    },
+    {
+      "id": "227",
+      "role": "Law Clerk - Corporate and Investments",
+      "company": "OTPPB",
+      "min": 85000,
+      "max": 135000,
+      "location": "Toronto, ON",
+      "source_url": "https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Canada/Law-Clerk---Corporate-and-Investments_6821",
+      "posted": "2026-03-09",
+      "scraped": "2026-03-09",
+      "status": "active",
+      "last_seen": "2026-03-09",
       "work_mode": "unknown",
       "salary_type": "base"
     }
