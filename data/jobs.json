@@ -1,17 +1,17 @@
 {
   "meta": {
-    "updated": "2026-03-09T10:54:08Z",
+    "updated": "2026-03-10T10:26:39Z",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
-    "count": 225,
-    "active": 200,
-    "archived": 25,
+    "count": 257,
+    "active": 231,
+    "archived": 26,
     "scraper_version": "1.2",
-    "last_run": "2026-03-09",
-    "new_today": 10,
+    "last_run": "2026-03-10",
+    "new_today": 32,
     "parse_errors": 0,
-    "links_validated": 57,
-    "links_newly_archived": 0,
-    "links_unverifiable": 133
+    "links_validated": 56,
+    "links_newly_archived": 1,
+    "links_unverifiable": 143
   },
   "jobs": [
     {
@@ -209,7 +209,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "15",
@@ -224,7 +224,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "16",
@@ -239,7 +239,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "17",
@@ -254,7 +254,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "18",
@@ -269,7 +269,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "19",
@@ -284,7 +284,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "20",
@@ -299,7 +299,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "21",
@@ -314,7 +314,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "22",
@@ -329,7 +329,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "23",
@@ -358,7 +358,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "25",
@@ -415,7 +415,7 @@
       "status": "active",
       "work_mode": "unknown",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "29",
@@ -483,7 +483,7 @@
       "source_url": "https://jobs.lever.co/fullscript/d96a94e5-fe34-4f71-92a7-3ef17cfbcf20",
       "posted": "2026-02-08",
       "scraped": "2026-03-06",
-      "status": "active",
+      "status": "archived",
       "work_mode": "hybrid",
       "salary_type": "base",
       "last_seen": "2026-03-09"
@@ -501,7 +501,7 @@
       "status": "active",
       "work_mode": "hybrid",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "35",
@@ -558,7 +558,7 @@
       "status": "active",
       "work_mode": "onsite",
       "salary_type": "base",
-      "last_seen": "2026-03-09"
+      "last_seen": "2026-03-10"
     },
     {
       "id": "39",
@@ -599,7 +599,7 @@
       "posted": "2026-01-20",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -644,7 +644,7 @@
       "posted": "2026-01-25",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -659,7 +659,7 @@
       "posted": "2026-01-21",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -674,7 +674,7 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -689,7 +689,7 @@
       "posted": "2026-01-28",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -719,7 +719,7 @@
       "posted": "2026-01-15",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -749,7 +749,7 @@
       "posted": "2026-02-11",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -764,7 +764,7 @@
       "posted": "2026-02-06",
       "scraped": "2026-03-06",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "hybrid",
       "salary_type": "base"
     },
@@ -779,7 +779,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "unknown"
     },
@@ -809,7 +809,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -854,7 +854,7 @@
       "posted": "2026-01-17",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -869,7 +869,7 @@
       "posted": "2023-02-27",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -884,7 +884,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -899,7 +899,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -914,7 +914,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -944,7 +944,7 @@
       "posted": "2025-10-11",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -959,7 +959,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "unknown"
     },
@@ -974,7 +974,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -989,7 +989,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1004,7 +1004,7 @@
       "posted": "2023-06-26",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1019,7 +1019,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1034,7 +1034,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1049,7 +1049,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1064,7 +1064,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1079,7 +1079,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1094,7 +1094,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1109,7 +1109,7 @@
       "posted": "2026-02-24",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1124,7 +1124,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -1139,7 +1139,7 @@
       "posted": "2026-03-04",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1154,7 +1154,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1169,7 +1169,7 @@
       "posted": "2026-03-05",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1184,7 +1184,7 @@
       "posted": "2026-02-18",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1199,7 +1199,7 @@
       "posted": "2026-03-07",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1214,7 +1214,7 @@
       "posted": "2026-02-09",
       "scraped": "2026-03-07",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1229,7 +1229,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1244,7 +1244,7 @@
       "posted": "2026-02-16",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -1259,7 +1259,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3134,7 +3134,7 @@
       "posted": "2026-02-25",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3149,7 +3149,7 @@
       "posted": "2026-02-11",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3164,7 +3164,7 @@
       "posted": "2026-02-20",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3194,7 +3194,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "onsite",
       "salary_type": "base"
     },
@@ -3209,7 +3209,7 @@
       "posted": "2026-03-08",
       "scraped": "2026-03-08",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3224,7 +3224,7 @@
       "posted": "2026-03-09",
       "scraped": "2026-03-09",
       "status": "active",
-      "last_seen": "2026-03-09",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     },
@@ -3360,6 +3360,486 @@
       "scraped": "2026-03-09",
       "status": "active",
       "last_seen": "2026-03-09",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "228",
+      "role": "Business Operations Analyst",
+      "company": "TD Bank",
+      "min": 59500,
+      "max": 84000,
+      "location": "Toronto, ON",
+      "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Operations---Administration-Analyst_R_1475982",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "229",
+      "role": "Personal Banking Associate Trainee",
+      "company": "TD Bank",
+      "min": 45700,
+      "max": 61000,
+      "location": "Mississauga, ON",
+      "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Mississauga-Ontario/Personal-Banking-Associate-Trainee_R_1477566",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "230",
+      "role": "Actuarial Intern / Co-Op - Preferred Candidate",
+      "company": "TD Bank",
+      "min": 45700,
+      "max": 74400,
+      "location": "Toronto, ON",
+      "source_url": "https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Actuarial-Intern---Co-Op---Preferred-Candidate_R_1475474",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "231",
+      "role": "Personal Banking Association",
+      "company": "BMO",
+      "min": 36000,
+      "max": 54500,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Personal-Banking-Association_R260007545",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "232",
+      "role": "Audit Manager, Wealth Management",
+      "company": "BMO",
+      "min": 75900,
+      "max": 141900,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Audit-Manager--Wealth-Management_R260007638",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "233",
+      "role": "Audit Manager, Quantitative",
+      "company": "BMO",
+      "min": 75900,
+      "max": 141900,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Audit-Manager--Quantitative_R260004690",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "234",
+      "role": "Agile Delivery Manager - (Banking Industry / Scrum Master / PM)",
+      "company": "BMO",
+      "min": 86000,
+      "max": 160000,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Agile-Delivery-Manager----Banking-Industry-_R250026950",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "235",
+      "role": "Senior Manager, Model Validation",
+      "company": "BMO",
+      "min": 94600,
+      "max": 176000,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manager--Model-Validation_R260007556",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "236",
+      "role": "Director, SAMU National Accounts",
+      "company": "BMO",
+      "min": 86000,
+      "max": 160000,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--SAMU-National-Accounts_R260005834",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "237",
+      "role": "Senior Manager - Model Validation",
+      "company": "BMO",
+      "min": 94600,
+      "max": 176000,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manager---Model-Validation_R250024321-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "238",
+      "role": "Client Service Associate, Private Wealth",
+      "company": "BMO",
+      "min": 35900,
+      "max": 66300,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Client-Service-Associate--Private-Wealth_R260007564-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "239",
+      "role": "Credit Analyst - Commercial Banking (Income Property Finance (IPF)",
+      "company": "BMO",
+      "min": 53200,
+      "max": 98300,
+      "location": "Waterloo, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Waterloo-ON-CAN/Credit-Analyst---Commercial-Banking--Income-Property-Finance--IPF-_R260006671-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "240",
+      "role": "NAIMR Head of Canada Alternatives Distribution",
+      "company": "BMO",
+      "min": 147200,
+      "max": 197200,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/NAIMR-Head-of-Canada-Alternatives-Distribution_R260007598",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "241",
+      "role": "Specialist, Anti Money Laundering  User Acceptance Testing",
+      "company": "BMO",
+      "min": 56000,
+      "max": 103500,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Specialist--Anti-Money-Laundering--User-Acceptance-Testing_R260003342",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "242",
+      "role": "Manager, Portfolio Management Group, BMO Private Wealth",
+      "company": "BMO",
+      "min": 69000,
+      "max": 129000,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Portfolio-Management-Group_R260002657",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "243",
+      "role": "Senior Analyst, Market Risk",
+      "company": "BMO",
+      "min": 56000,
+      "max": 103500,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Analyst--Market-Risk_R260001709",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "244",
+      "role": "Senior Technologist, Risk Systems",
+      "company": "BMO",
+      "min": 75900,
+      "max": 141900,
+      "location": "Toronto, ON",
+      "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Technologist--Risk-Systems_R260006944",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "245",
+      "role": "Auditor, Spot Audit, Practice Audits, Professional Development &amp; Competence (Remote, Toronto)",
+      "company": "Law Society of Ontario",
+      "min": 90795,
+      "max": 113495,
+      "location": "Toronto, ON",
+      "source_url": "https://jobs.accaglobal.com/job/13754882/auditor-spot-audit-practice-audits-professional-development-and-competence-remote-toronto-/",
+      "posted": "2026-02-22",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "remote",
+      "salary_type": "base"
+    },
+    {
+      "id": "246",
+      "role": "Wealth Strategist",
+      "company": "CIBC",
+      "min": 92490,
+      "max": 127200,
+      "location": "Toronto, ON",
+      "source_url": "https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Wealth-Strategist_2605717",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "247",
+      "role": "Senior Underwriting Consultant, High Net Worth",
+      "company": "Manulife",
+      "min": 85300,
+      "max": 135300,
+      "location": "Ontario, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-Time-Remote/Senior-Underwriting-Consultant--High-Net-Worth_JR25121475-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "248",
+      "role": "Senior Business Analyst – Group Benefits Operations",
+      "company": "Manulife",
+      "min": 70500,
+      "max": 117500,
+      "location": "Waterloo, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Analyste-d-affaires-principal---Oprations--Assurances-Collectives_JR26030075-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "249",
+      "role": "Treasury Operations Specialist",
+      "company": "Manulife",
+      "min": 62850,
+      "max": 104750,
+      "location": "Toronto, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario-Toronto-200-Bloor-Street-East/Treasury-Operations-Specialist_JR26021595",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "250",
+      "role": "Associate Marketing Manager, Retention/Expansion Affinity Markets",
+      "company": "Manulife",
+      "min": 73725,
+      "max": 122875,
+      "location": "Toronto, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Associate-Marketing-Manager--Retention-Expansion-Affinity-Markets_JR26021737",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "251",
+      "role": "Senior Tax Analyst, Transfer Pricing",
+      "company": "Manulife",
+      "min": 73725,
+      "max": 122875,
+      "location": "Toronto, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Senior-Tax-Analyst--Transfer-Pricing_JR26030266-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "252",
+      "role": "Regional Recruit Analyst",
+      "company": "Manulife",
+      "min": 48450,
+      "max": 80750,
+      "location": "Ontario, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Burlington-Ontario/Regional-Recruit-Analyst_JR26030076-2",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "253",
+      "role": "Senior Release Train Engineer",
+      "company": "Manulife",
+      "min": 113000,
+      "max": 163000,
+      "location": "Waterloo, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Release-Train-Engineer_JR26020001",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "254",
+      "role": "Actuarial Manager, Global Retirement Finance - Pricing",
+      "company": "Manulife",
+      "min": 103270,
+      "max": 153270,
+      "location": "Toronto, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Actuarial-Manager_JR25051333-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "255",
+      "role": "Agent of Record Specialist",
+      "company": "Manulife",
+      "min": 43875,
+      "max": 73125,
+      "location": "Ontario, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-Time-Remote/Agent-of-Record-Specialist_JR26030082-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "256",
+      "role": "Business Intelligence Manager",
+      "company": "Manulife",
+      "min": 92900,
+      "max": 142900,
+      "location": "Toronto, ON",
+      "source_url": "https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Decision-Support-Manager_JR26021161",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "257",
+      "role": "Sr. Sourcing Analyst",
+      "company": "Brookfield",
+      "min": 85000,
+      "max": 100000,
+      "location": "Toronto, ON",
+      "source_url": "https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Sr-Sourcing-Analyst_R2048966-1",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "258",
+      "role": "Manager, Finance",
+      "company": "Brookfield",
+      "min": 120000,
+      "max": 140000,
+      "location": "Toronto, ON",
+      "source_url": "https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Manager--Finance_R2047620",
+      "posted": "2026-03-10",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
+      "work_mode": "unknown",
+      "salary_type": "base"
+    },
+    {
+      "id": "259",
+      "role": "Sr. Financial Analyst (FP&A)",
+      "company": "Medline",
+      "min": 81600,
+      "max": 122400,
+      "location": "Mississauga, ON",
+      "source_url": "https://jobs.accaglobal.com/job/13739483/sr-financial-analyst-fp-and-a-/",
+      "posted": "2026-02-12",
+      "scraped": "2026-03-10",
+      "status": "active",
+      "last_seen": "2026-03-10",
       "work_mode": "unknown",
       "salary_type": "base"
     }
