@@ -891,6 +891,10 @@ footer a { color: var(--accent); text-decoration: none; }
   color: var(--text);
   font-size: .74rem;
 }
+.hero-stat-cyan strong { color: var(--cyan); }
+.hero-stat-green strong { color: var(--green); }
+.hero-stat-purple strong { color: var(--purple); }
+.hero-stat-amber strong { color: var(--amber); }
 
 .mobile-filter-backdrop,
 .mobile-search-bar,
@@ -1371,11 +1375,21 @@ tbody tr:hover {
     gap: 8px;
   }
   .hero-stat {
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     width: 100%;
     border-radius: 14px;
-    padding: 10px 12px;
+    padding: 12px 12px 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 24px rgba(0,0,0,.08);
+    gap: 4px;
+  }
+  .hero-stat strong {
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: -.03em;
   }
   .market-metrics {
     grid-template-columns: 1fr;
@@ -1387,6 +1401,7 @@ tbody tr:hover {
 }
 @media(max-width:760px) {
   body.mobile-filters-open { overflow: hidden; }
+  .sidebar-live-data { display: none; }
   .mobile-search-bar {
     display: block;
     position: sticky;
@@ -1588,10 +1603,10 @@ tbody tr:hover {
           <span class="trust-pill">Save jobs and defaults locally</span>
         </div>
         <div class="hero-summary">
-          <span class="hero-stat"><strong id="heroCount">319</strong> tracked postings</span>
-          <span class="hero-stat"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
-          <span class="hero-stat"><strong id="heroTopEmployer">BMO</strong> most active employer</span>
-          <span class="hero-stat"><strong id="heroMedian">—</strong> median midpoint</span>
+          <span class="hero-stat hero-stat-cyan"><strong id="heroCount">319</strong> tracked postings</span>
+          <span class="hero-stat hero-stat-green"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
+          <span class="hero-stat hero-stat-purple"><strong id="heroTopEmployer">BMO</strong> most active employer</span>
+          <span class="hero-stat hero-stat-amber"><strong id="heroMedian">—</strong> median midpoint</span>
         </div>
       </div>
     </div>
@@ -1613,7 +1628,7 @@ tbody tr:hover {
       <button class="btn-icon" onclick="toggleMobileFilters(false)" aria-label="Close filters">✕</button>
     </div>
 
-    <div class="sidebar-section">
+    <div class="sidebar-section sidebar-live-data">
       <div class="sidebar-label">Live Data</div>
       <div class="sidebar-stats">
         <div class="sstat">
