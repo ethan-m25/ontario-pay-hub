@@ -1915,28 +1915,23 @@ tbody tr:hover {
 <div class="modal-overlay" id="authModal" onclick="closeAuth(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeAuth()">✕</button>
-    <div class="tab-bar">
-      <button class="tab-btn active" id="tabSign" onclick="switchTab('signin')">Sign In</button>
-      <button class="tab-btn" id="tabReg" onclick="switchTab('register')">Register</button>
+    <div style="margin-bottom:14px">
+      <div class="section-kicker">Account Access</div>
+      <h3 style="font-family:var(--font-display);font-size:1.35rem;line-height:1.1;margin:0 0 10px">Save jobs across devices, with real server-side sync.</h3>
+      <p class="modal-sub" style="margin-bottom:0">Use Google for one-click access, or get a secure sign-in link by email.</p>
     </div>
-    <div id="formSignin">
-      <p class="modal-sub">Welcome back — sign in to view saved jobs.</p>
-      <div class="error-msg" id="signinErr">Invalid email or password.</div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="siEmail" type="email" placeholder="you@example.com"></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="siPass" type="password" placeholder="••••••••"></div>
-      <button class="btn-primary" style="width:100%;margin-top:6px" onclick="doSignin()">Sign In</button>
-      <div class="modal-footer" style="margin-top:14px">No account? <a onclick="switchTab('register')">Register free</a></div>
+    <div class="error-msg" id="authErr"></div>
+    <div class="success-msg" id="authOk"></div>
+    <button class="btn-secondary" id="googleAuthBtn" style="width:100%;margin-bottom:10px" onclick="startGoogleAuth()">Continue with Google</button>
+    <div style="display:flex;align-items:center;gap:12px;margin:10px 0 14px;color:var(--text3);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">
+      <span style="height:1px;background:var(--border);flex:1 1 auto"></span>
+      <span>or</span>
+      <span style="height:1px;background:var(--border);flex:1 1 auto"></span>
     </div>
-    <div id="formRegister" style="display:none">
-      <p class="modal-sub">Free account — save jobs across sessions.</p>
-      <div class="error-msg" id="regErr"></div>
-      <div class="success-msg" id="regOk">Account created! You are now signed in.</div>
-      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="regName" type="text" placeholder="Your name"></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="regEmail" type="email" placeholder="you@example.com"></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="regPass" type="password" placeholder="Min 6 characters"></div>
-      <button class="btn-primary" style="width:100%;margin-top:6px" onclick="doRegister()">Create Free Account</button>
-      <div class="modal-footer" style="margin-top:14px">Already registered? <a onclick="switchTab('signin')">Sign in</a></div>
-    </div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="authName" type="text" placeholder="Optional for first-time sign-in"></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="authEmail" type="email" placeholder="you@example.com"></div>
+    <button class="btn-primary" id="emailAuthBtn" style="width:100%;margin-top:6px" onclick="sendMagicLink()">Email Me a Sign-In Link</button>
+    <div class="modal-footer" style="margin-top:14px">No password to remember. Your saved jobs and preferences live on the server now.</div>
   </div>
 </div>
 
@@ -2209,22 +2204,22 @@ async function loadData() {
   applyTheme();
   updateStats();
   populateFilters();
+  await initAuth();
   renderDiscovery();
+  applyAuthPrefsToState();
   applyFilters();
   syncInsightsPanel(true);
   updateUserUI();
+  handleAuthReturn();
 }
 
 // ===== STATE =====
 const S = {
   theme: localStorage.getItem("theme") || "dark",
-  user: JSON.parse(localStorage.getItem("user") || "null"),
-  saved: (()=>{
-    try{
-      const u=JSON.parse(localStorage.getItem("user")||"null");
-      return u?JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"):[];
-    }catch(e){ return []; }
-  })(),
+  user: null,
+  saved: [],
+  preferences: { cat:"", region:"", salMin:0 },
+  auth: { googleEnabled:false, emailEnabled:false },
   sort: "mid-desc",
   cat: "",
   region: "",
@@ -2358,6 +2353,86 @@ function toggleTheme(){ S.theme=S.theme==="dark"?"light":"dark"; applyTheme(); }
 
 // ===== AUTH =====
 function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+async function api(path, options = {}) {
+  const init = { credentials: "same-origin", ...options };
+  if (init.body && typeof init.body !== "string") {
+    init.headers = { ...(init.headers || {}), "Content-Type": "application/json" };
+    init.body = JSON.stringify(init.body);
+  }
+  const res = await fetch(path, init);
+  let data = null;
+  try { data = await res.json(); } catch {}
+  if (!res.ok) {
+    throw new Error(data?.error || `Request failed (${res.status})`);
+  }
+  return data;
+}
+function authRedirectPath() {
+  return window.location.pathname;
+}
+function setAuthMessage(type, text) {
+  const err = document.getElementById("authErr");
+  const ok = document.getElementById("authOk");
+  if (err) { err.style.display = "none"; err.textContent = ""; }
+  if (ok) { ok.style.display = "none"; ok.textContent = ""; }
+  if (!text) return;
+  const target = type === "error" ? err : ok;
+  if (!target) return;
+  target.textContent = text;
+  target.style.display = "block";
+}
+function syncAuthCapabilities() {
+  const googleBtn = document.getElementById("googleAuthBtn");
+  const emailBtn = document.getElementById("emailAuthBtn");
+  if (googleBtn) {
+    googleBtn.style.display = S.auth.googleEnabled ? "block" : "none";
+  }
+  if (emailBtn) {
+    emailBtn.disabled = !S.auth.emailEnabled;
+    emailBtn.textContent = S.auth.emailEnabled ? "Email Me a Sign-In Link" : "Email login not configured";
+  }
+}
+async function initAuth() {
+  try {
+    const payload = await api("/api/auth/me");
+    S.auth = payload.auth || S.auth;
+    S.user = payload.user;
+    S.saved = payload.saved || [];
+    S.preferences = payload.preferences || { cat:"", region:"", salMin:0 };
+  } catch (err) {
+    if (!String(err.message).includes("(404)")) {
+      console.warn("Auth bootstrap failed:", err.message);
+    }
+  }
+  syncAuthCapabilities();
+}
+function applyAuthPrefsToState() {
+  if (!S.user) return;
+  const prefs = S.preferences || { cat:"", region:"", salMin:0 };
+  if (!prefs.cat && !prefs.region && !prefs.salMin) return;
+  S.cat = prefs.cat || "";
+  S.region = prefs.region || "";
+  S.salMin = prefs.salMin || 0;
+  document.getElementById("catFilter").value = S.cat;
+  document.getElementById("regionFilter").value = S.region;
+  document.getElementById("salaryFilter").value = String(S.salMin);
+}
+function handleAuthReturn() {
+  const url = new URL(window.location.href);
+  const auth = url.searchParams.get("auth");
+  if (!auth) return;
+  const messages = {
+    email: "Signed in successfully. Your saved jobs and preferences are now synced.",
+    google: "Google sign-in complete. Your account is ready.",
+    "email-expired": "That sign-in link has expired. Request a new one.",
+    "email-invalid": "That sign-in link is invalid.",
+    "google-invalid": "Google sign-in could not be verified.",
+    "google-error": "Google sign-in failed. Try again.",
+  };
+  setAuthMessage(auth.includes("invalid") || auth.includes("expired") || auth.includes("error") ? "error" : "success", messages[auth] || "");
+  url.searchParams.delete("auth");
+  history.replaceState({}, "", url.toString());
+}
 function toggleMobileFilters(force){
   const shouldOpen = typeof force === "boolean"
     ? force
@@ -2384,58 +2459,48 @@ function focusMobileSearch(){
 }
 function openAuth(){
   toggleMobileFilters(false);
-  // Clear all fields and reset messages every time the modal opens
-  ["siEmail","siPass","regName","regEmail","regPass"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
-  ["signinErr","regErr","regOk"].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
-  switchTab("signin");
+  ["authName","authEmail"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  setAuthMessage("", "");
+  syncAuthCapabilities();
   document.getElementById("authModal").classList.add("open");
 }
 function closeAuth(e){ if(!e||e.target===document.getElementById("authModal")) document.getElementById("authModal").classList.remove("open"); }
-function switchTab(t){
-  document.getElementById("tabSign").className="tab-btn"+(t==="signin"?" active":"");
-  document.getElementById("tabReg").className="tab-btn"+(t==="register"?" active":"");
-  document.getElementById("formSignin").style.display=t==="signin"?"block":"none";
-  document.getElementById("formRegister").style.display=t==="register"?"block":"none";
+function startGoogleAuth() {
+  if (!S.auth.googleEnabled) {
+    setAuthMessage("error", "Google login is not configured yet.");
+    return;
+  }
+  window.location.href = `/api/auth/google/start?redirectTo=${encodeURIComponent(authRedirectPath())}`;
 }
-function doSignin(){
-  const email=document.getElementById("siEmail").value.trim();
-  const pass=document.getElementById("siPass").value;
-  const errEl=document.getElementById("signinErr");
-  if(!isValidEmail(email)){ errEl.textContent="Please enter a valid email address."; errEl.style.display="block"; return; }
-  const users=JSON.parse(localStorage.getItem("users")||"[]");
-  const u=users.find(x=>x.email===email&&x.pass===pass);
-  if(!u){ errEl.textContent="Invalid email or password."; errEl.style.display="block"; return; }
-  S.user=u; localStorage.setItem("user",JSON.stringify(u));
-  S.saved=JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"); updateSaveBadge();
-  updateUserUI(); closeAuth(); applyUserPrefs();
+async function sendMagicLink(){
+  const name=document.getElementById("authName").value.trim();
+  const email=document.getElementById("authEmail").value.trim().toLowerCase();
+  if(!isValidEmail(email)){ setAuthMessage("error", "Please enter a valid email address."); return; }
+  const btn = document.getElementById("emailAuthBtn");
+  btn.disabled = true;
+  try {
+    const res = await api("/api/auth/email/start", {
+      method: "POST",
+      body: { name, email, redirectTo: authRedirectPath() }
+    });
+    setAuthMessage("success", res.message || "Check your inbox for a sign-in link.");
+  } catch (err) {
+    setAuthMessage("error", err.message);
+  } finally {
+    btn.disabled = false;
+  }
 }
-function doRegister(){
-  const name=document.getElementById("regName").value.trim();
-  const email=document.getElementById("regEmail").value.trim();
-  const pass=document.getElementById("regPass").value;
-  const errEl=document.getElementById("regErr");
-  errEl.style.display="none";
-  if(!name){ errEl.textContent="Name is required."; errEl.style.display="block"; return; }
-  if(!isValidEmail(email)){ errEl.textContent="Please enter a valid email address."; errEl.style.display="block"; return; }
-  if(pass.length<6){ errEl.textContent="Password must be at least 6 characters."; errEl.style.display="block"; return; }
-  const users=JSON.parse(localStorage.getItem("users")||"[]");
-  if(users.find(x=>x.email===email)){ errEl.textContent="Email already registered."; errEl.style.display="block"; return; }
-  const u={name,email,pass};
-  users.push(u); localStorage.setItem("users",JSON.stringify(users));
-  S.user=u; localStorage.setItem("user",JSON.stringify(u));
-  S.saved=JSON.parse(localStorage.getItem("saved_"+u.email)||"[]"); updateSaveBadge();
-  document.getElementById("regOk").style.display="block";
-  setTimeout(()=>{ updateUserUI(); closeAuth(); applyUserPrefs(); },1200);
-}
-function doSignout(){
+async function doSignout(){
   // Reset filters and saved badge on sign-out
   S.cat=""; S.region=""; S.salMin=0; S.wm=""; S.age=""; setAge("");
   document.getElementById("catFilter").value="";
   document.getElementById("regionFilter").value="";
   document.getElementById("wmFilter").value="";
   document.getElementById("salaryFilter").value="0";
+  try { await api("/api/auth/logout", { method: "POST" }); } catch (err) { console.warn(err.message); }
   S.saved=[]; updateSaveBadge();
-  S.user=null; localStorage.removeItem("user");
+  S.preferences = { cat:"", region:"", salMin:0 };
+  S.user=null;
   document.getElementById("savedPanel").classList.remove("open");
   updateUserUI(); applyFilters();
 }
@@ -2458,42 +2523,50 @@ function openProfilePanel(){
 }
 function loadPreferences(){
   if(!S.user) return {cat:"",region:"",salMin:0};
-  return JSON.parse(localStorage.getItem("prefs_"+S.user.email)||'{"cat":"","region":"","salMin":0}');
+  return { ...(S.preferences || {cat:"",region:"",salMin:0}) };
 }
-function savePreferences(btn){
+async function savePreferences(btn){
   if(!S.user) return;
   const prefs={
     cat:    document.getElementById("prefCat").value,
     region: document.getElementById("prefRegion").value,
     salMin: parseInt(document.getElementById("prefSalMin").value)||0
   };
-  localStorage.setItem("prefs_"+S.user.email, JSON.stringify(prefs));
-  // Apply to active filters
-  S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
-  document.getElementById("catFilter").value=prefs.cat;
-  document.getElementById("regionFilter").value=prefs.region;
-  document.getElementById("salaryFilter").value=prefs.salMin;
-  applyFilters();
-  btn.textContent="✓ Saved & Applied!"; btn.disabled=true;
-  setTimeout(()=>{ btn.textContent="Apply & Save"; btn.disabled=false; },2000);
+  btn.disabled = true;
+  try {
+    const res = await api("/api/user/preferences", { method: "PUT", body: prefs });
+    S.preferences = res.preferences;
+    S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
+    document.getElementById("catFilter").value=prefs.cat;
+    document.getElementById("regionFilter").value=prefs.region;
+    document.getElementById("salaryFilter").value=String(prefs.salMin);
+    applyFilters();
+    btn.textContent="✓ Saved & Applied!";
+    setTimeout(()=>{ btn.textContent="Apply & Save"; btn.disabled=false; },2000);
+  } catch (err) {
+    btn.disabled = false;
+    setAuthMessage("error", err.message);
+  }
 }
 function applyUserPrefs(){
   if(!S.user) return;
-  const prefs=loadPreferences();
-  if(!prefs.cat&&!prefs.region&&!prefs.salMin) return;
-  S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
-  document.getElementById("catFilter").value=prefs.cat;
-  document.getElementById("regionFilter").value=prefs.region;
-  document.getElementById("salaryFilter").value=prefs.salMin;
+  applyAuthPrefsToState();
   applyFilters();
 }
 
 // ===== SAVE =====
-function toggleSave(id){
+async function toggleSave(id){
   if(!S.user){ openAuth(); return; }
   const idx=S.saved.indexOf(id);
-  if(idx===-1) S.saved.push(id); else S.saved.splice(idx,1);
-  localStorage.setItem("saved_"+S.user.email,JSON.stringify(S.saved));
+  try {
+    const payload = idx===-1
+      ? await api("/api/user/saved", { method:"POST", body:{ jobId:id } })
+      : await api("/api/user/saved", { method:"DELETE", body:{ jobId:id } });
+    S.saved = payload.saved || [];
+  } catch (err) {
+    setAuthMessage("error", err.message);
+    return;
+  }
   updateSaveBadge(); renderSaved();
   document.querySelectorAll("[data-save='"+id+"']").forEach(b=>{
     b.className="btn-save"+(S.saved.includes(id)?" saved":"");
@@ -2518,7 +2591,7 @@ function renderSaved(){
 
   if(!S.user){
     document.getElementById("panelTitle").textContent="🔖 Saved Jobs";
-    body.innerHTML=`<div class="login-prompt"><p>Sign in to save jobs and set your preferences.</p><button class="btn-primary" onclick="openAuth();toggleSaved()">Sign In / Register</button></div>`;
+    body.innerHTML=`<div class="login-prompt"><p>Sign in to save jobs and set your preferences.</p><button class="btn-primary" onclick="openAuth();toggleSaved()">Continue</button></div>`;
     foot.innerHTML=""; return;
   }
 
@@ -2556,7 +2629,7 @@ function renderSaved(){
     body.innerHTML=tabs+content;
     foot.innerHTML=items.length
       ? `<button class="btn-secondary" style="width:100%;font-size:.8rem;margin-bottom:8px"
-           onclick="if(confirm('Clear all saved?')&&S.user){S.saved=[];localStorage.setItem('saved_'+S.user.email,'[]');updateSaveBadge();renderSaved();renderTable();}">Clear all saved</button>
+           onclick="clearSavedJobs()">Clear all saved</button>
          <button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`
       : `<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
 
@@ -2588,6 +2661,18 @@ function renderSaved(){
       <button class="btn-primary" style="width:100%" onclick="savePreferences(this)">Apply & Save</button>
     `;
     foot.innerHTML=`<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
+  }
+}
+async function clearSavedJobs() {
+  if (!S.user || !confirm('Clear all saved?')) return;
+  try {
+    const payload = await api("/api/user/saved", { method:"DELETE", body:{} });
+    S.saved = payload.saved || [];
+    updateSaveBadge();
+    renderSaved();
+    renderTable();
+  } catch (err) {
+    setAuthMessage("error", err.message);
   }
 }
 

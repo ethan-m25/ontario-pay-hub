@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ontario-pay-hub",
+  "compatibility_date": "2026-03-13",
+  "pages_build_output_dir": ".",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ontario-pay-hub",
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+    }
+  ],
+  "vars": {
+    "APP_BASE_URL": "https://ontariopayhub.fyi",
+    "AUTH_FROM_EMAIL": "Ontario Pay Hub <auth@ontariopayhub.fyi>"
+  }
+}
