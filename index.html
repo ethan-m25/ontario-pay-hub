@@ -536,6 +536,9 @@ td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
     margin-top: 10px;
   }
   .mobile-job-card .src-link { max-width: 62%; }
+  .mobile-job-card {
+    cursor: pointer;
+  }
 }
 
 /* ===== COMP NOTE ===== */
@@ -2684,17 +2687,17 @@ function renderTable(){
       const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
       return `<tr>
         <td colspan="7" style="padding:0">
-          <div class="mobile-job-card">
+          <div class="mobile-job-card" onclick="openJobDetail(${j.id})">
           <div class="card-row-top">
             <div style="min-width:0;flex:1 1 auto;">
-              <div class="role-link role-title" onclick="openJobDetail(${j.id})" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
+              <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
               <div class="role-meta">
                 <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
                 ${isTop?'<span class="top-badge">Top Pay</span>':''}
                 ${archived?'<span style="font-size:.62rem;color:var(--text3)">Archived</span>':''}
               </div>
             </div>
-            <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
+            <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="event.stopPropagation();toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
           </div>
           <div>
             <span class="company-name">${j.company}</span>
@@ -2705,7 +2708,7 @@ function renderTable(){
             <div class="midpoint">${fmt(mid(j))}</div>
           </div>
           <div class="mobile-card-foot">
-            <a href="${j.src}" target="_blank" rel="noopener" class="src-link">${j.domain} ↗</a>
+            <a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a>
             <span class="date-rel">${relDate(j.date)}</span>
           </div>
           </div>
