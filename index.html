@@ -696,8 +696,10 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   z-index: 310; box-shadow: var(--shadow-lg);
   transform: translateX(100%); transition: transform .28s ease;
   display: flex; flex-direction: column; overflow: hidden;
+  touch-action: pan-y;
 }
 .job-detail-panel.open { transform:translateX(0); }
+.job-detail-panel.swiping { transition: none; }
 .jd-header {
   padding: 14px 18px;
   border-bottom: 2px solid var(--border2);
@@ -3005,6 +3007,7 @@ const CAT_LABELS = Object.fromEntries(Object.entries(CAT_META).map(([k,v])=>[k,v
 const CAT_COLORS = {eng:"#C8102E",data:"#0095D5",fin:"#10b981",pm:"#f59e0b",sales:"#8B5CF6",hr:"#00A0B2",ops:"#707070",legal:"#C87000",it:"#2060D0",exec:"#D04040",other:"#808080"};
 
 let _jdCurrentId = null;
+let _jdSwipe = { active:false, dragging:false, startX:0, startY:0, deltaX:0 };
 
 function getRangeSignal(job){
   const spread = job.max - job.min;
@@ -3211,6 +3214,57 @@ function jdToggleSave(){
   toggleSave(_jdCurrentId);
 }
 
+function bindJobDetailGestures() {
+  const panel = document.getElementById("jobDetailPanel");
+  if (!panel || panel.dataset.gestureBound === "1") return;
+  panel.dataset.gestureBound = "1";
+
+  panel.addEventListener("touchstart", (e) => {
+    if (window.innerWidth >= 700) return;
+    if (!panel.classList.contains("open")) return;
+    if (!e.touches || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    _jdSwipe = {
+      active: t.clientX <= 36,
+      dragging: false,
+      startX: t.clientX,
+      startY: t.clientY,
+      deltaX: 0,
+    };
+  }, { passive: true });
+
+  panel.addEventListener("touchmove", (e) => {
+    if (!_jdSwipe.active || !e.touches || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const dx = Math.max(0, t.clientX - _jdSwipe.startX);
+    const dy = Math.abs(t.clientY - _jdSwipe.startY);
+    if (!_jdSwipe.dragging) {
+      if (dy > 12 && dy > dx) {
+        _jdSwipe.active = false;
+        return;
+      }
+      if (dx < 10 || dx < dy) return;
+      _jdSwipe.dragging = true;
+      panel.classList.add("swiping");
+    }
+    _jdSwipe.deltaX = dx;
+    panel.style.transform = `translateX(${dx}px)`;
+    e.preventDefault();
+  }, { passive: false });
+
+  const endSwipe = () => {
+    if (!_jdSwipe.active) return;
+    const shouldClose = _jdSwipe.dragging && _jdSwipe.deltaX > Math.min(110, window.innerWidth * 0.24);
+    panel.classList.remove("swiping");
+    panel.style.transform = "";
+    _jdSwipe = { active:false, dragging:false, startX:0, startY:0, deltaX:0 };
+    if (shouldClose) closeJobDetail();
+  };
+
+  panel.addEventListener("touchend", endSwipe, { passive: true });
+  panel.addEventListener("touchcancel", endSwipe, { passive: true });
+}
+
 // ===== INIT =====
 window.addEventListener("resize",()=>{
   if(window.innerWidth > 760) toggleMobileFilters(false);
@@ -3226,6 +3280,7 @@ document.addEventListener("keydown",e=>{
     document.getElementById("savedPanel").classList.remove("open");
   }
 });
+bindJobDetailGestures();
 loadData(); // async: fetches data/jobs.json then initialises UI
 </script>
 <script>
