@@ -2120,7 +2120,7 @@ async function loadData() {
   populateFilters();
   renderDiscovery();
   applyFilters();
-  syncInsightsPanel();
+  syncInsightsPanel(true);
   updateUserUI();
 }
 
@@ -2785,13 +2785,18 @@ function drawChart(){
   });
 }
 
-function syncInsightsPanel(){
+let _insightsDesktopMode = null;
+
+function syncInsightsPanel(force=false){
   const panel=document.getElementById("insightsPanel");
   if(!panel) return;
-  const shouldOpen = window.innerWidth > 760;
+  const isDesktop = window.innerWidth > 760;
+  if(!force && _insightsDesktopMode === isDesktop) return;
+  const shouldOpen = isDesktop;
   panel.classList.toggle("insights-open", shouldOpen);
   const btn = panel.querySelector(".insights-chevron");
   if(btn) btn.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+  _insightsDesktopMode = isDesktop;
 }
 
 function toggleInsightsPanel(force){
