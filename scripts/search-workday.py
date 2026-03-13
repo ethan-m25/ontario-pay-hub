@@ -55,6 +55,22 @@ SEED_TENANTS = [
     ("walmart.wd5.myworkdayjobs.com",   "walmart",   "WalmartExternal",   "Walmart Canada"),
 ]
 
+# Known company_id → display name overrides for dynamically discovered tenants.
+# Keyed by the Workday subdomain (company_id, lowercase).
+# Add entries here when a new bad name appears in the data.
+KNOWN_COMPANY_OVERRIDES = {
+    "talentmanagementsolution": "Jonas Software Canada",
+    "intactfc":                 "Intact Financial Corporation",
+    "sdm":                      "Shoppers Drug Mart",
+    "myview":                   "Shoppers Drug Mart",
+    "colliers1":                "Colliers",
+    "ontarioteachers":          "Ontario Teachers' Pension Plan",
+    "cppinvestments":           "CPP Investments",
+    "canadalife":               "Canada Life",
+    "hydro1":                   "Hydro One",
+    "opg":                      "Ontario Power Generation",
+}
+
 # Exa queries to discover additional Workday tenants (Ontario employers)
 # Runs each nightly — finds newly indexed job URLs and extracts myworkdayjobs.com tenant IDs.
 # Queries target specific major Ontario employers and sectors to fill coverage gaps.
@@ -128,6 +144,33 @@ _WD_URL_RE = re.compile(
 _SKIP_TENANTS = {'job', 'jobs', 'search', 'en', 'en-us', 'en-gb', 'fr', 'fr-ca'}
 
 
+def format_tenant_name(company_id, tenant):
+    """Derive a human-readable company name from Workday identifiers.
+
+    Resolution order:
+    1. KNOWN_COMPANY_OVERRIDES dict (manual corrections for known bad names)
+    2. CamelCase-split of the tenant string (e.g. "JonasSoftwareCanada" → "Jonas Software Canada")
+    3. company_id title-cased as last resort
+    """
+    # Tier 1: known overrides
+    override = KNOWN_COMPANY_OVERRIDES.get(company_id.lower())
+    if override:
+        return override
+
+    # Tier 2: CamelCase-split the tenant name (skip generic single-word tenants)
+    # Strip common boilerplate suffixes first
+    clean = re.sub(r'(?i)(External|Careers?|Jobs?|_[A-Z]{2}$)', '', tenant)
+    clean = clean.replace('_', ' ').strip()
+    # Split on CamelCase boundaries
+    words = re.sub(r'([a-z])([A-Z])', r'\1 \2', clean).split()
+    if len(words) >= 2:
+        # Drop trailing generic words like "Canada" only if > 2 words
+        return ' '.join(words)
+
+    # Tier 3: company_id, title-cased and de-hyphenated
+    return company_id.replace('-', ' ').title()
+
+
 def parse_workday_tenant(url):
     """Extract (host, company_id, tenant) from a myworkdayjobs.com URL, or None."""
     m = _WD_URL_RE.match(url)
@@ -159,7 +202,7 @@ def discover_tenants():
             parsed = parse_workday_tenant(r.get("url", ""))
             if parsed and parsed[0] not in discovered:
                 host, company_id, tenant = parsed
-                discovered[host] = (host, company_id, tenant, company_id.upper())
+                discovered[host] = (host, company_id, tenant, format_tenant_name(company_id, tenant))
                 new += 1
         log(f"    → {len(results)} results, {new} new tenants")
         time.sleep(1.5)
@@ -272,6 +315,47 @@ def fetch_job_html(host, tenant, external_path):
         return None
 
 
+def extract_company_from_html(text):
+    """Try to extract the real hiring organization name from Workday job page HTML.
+
+    Workday embeds structured data in a <script type="application/ld+json"> block.
+    The hiringOrganization.name field holds the canonical company name.
+    Falls back to og:site_name meta tag. Returns None if not found.
+    """
+    if not text:
+        return None
+
+    # Try JSON-LD first (most reliable)
+    ld_blocks = re.findall(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        text, re.DOTALL | re.IGNORECASE
+    )
+    for block in ld_blocks:
+        try:
+            data = json.loads(block)
+            if isinstance(data, list):
+                data = data[0]
+            org = data.get("hiringOrganization", {})
+            name = org.get("name", "").strip()
+            if name and len(name) > 1:
+                return name
+        except (json.JSONDecodeError, AttributeError, IndexError):
+            continue
+
+    # Fallback: og:site_name meta tag
+    m = re.search(r'<meta[^>]+property=["\']og:site_name["\'][^>]+content=["\']([^"\']+)["\']',
+                  text, re.IGNORECASE)
+    if not m:
+        m = re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:site_name["\']',
+                      text, re.IGNORECASE)
+    if m:
+        name = m.group(1).strip()
+        if name and name.lower() not in ('workday', 'myworkdayjobs.com'):
+            return name
+
+    return None
+
+
 def extract_salary(text):
     """Try to extract min/max annual CAD salary from page HTML. Returns (min, max) or None."""
     if not text:
@@ -378,6 +462,11 @@ def main():
             location = parse_location(locations, ext_path)
             source_url = f"https://{host}/en-US/{tenant}{ext_path}"
 
+            # Resolve display company name: HTML JSON-LD > tenant-derived name
+            resolved_company = extract_company_from_html(text) or company_name
+            if resolved_company != company_name:
+                log(f"    → company resolved: {company_name!r} → {resolved_company!r}")
+
             # Parse posted date — Workday returns "Posted 30+ Days Ago", "Posted Today", or ISO date
             posted = TODAY
             date_match = re.search(r'(\d{4}-\d{2}-\d{2})', posted_on or "")
@@ -386,7 +475,7 @@ def main():
 
             job = {
                 "role":       title,
-                "company":    company_name,
+                "company":    resolved_company,
                 "min":        val_min,
                 "max":        val_max,
                 "location":   location,

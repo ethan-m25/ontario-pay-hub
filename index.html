@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -11,7 +11,7 @@
 <meta name="google-site-verification" content="Lnk75E9wdO33G-ytiEJ3AFIoMTtn5IDbqH1hXDZwZR4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ontario Pay Transparency Hub — Real Salary Ranges 2026">
@@ -43,159 +43,449 @@
 }
 </script>
 <style>
-/* ===== DESIGN TOKENS ===== */
+/* ===== ONTARIO FINANCIAL GAZETTE — Design System ===== */
+/* Aesthetic: Editorial data journalism. FT meets Bloomberg Terminal.  */
+/* Fonts: Playfair Display (headlines) · IBM Plex Sans (UI) · IBM Plex Mono (data) */
+
 :root {
-  --radius: 12px; --radius-sm: 8px; --radius-xs: 6px;
-  --transition: .2s ease;
-  --shadow: 0 4px 20px rgba(0,0,0,.18);
-  --shadow-lg: 0 8px 40px rgba(0,0,0,.25);
+  --radius: 2px; --radius-sm: 2px; --radius-xs: 2px;
+  --transition: .18s ease;
+  --shadow: 0 2px 12px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.16);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
 }
-[data-theme="dark"] {
-  --bg: #0d0f1a; --bg2: #131625; --surface: #181b2e; --surface2: #1f2340;
-  --border: #262b4a; --border2: #313761;
-  --text: #e2e8f0; --text2: #94a3b8; --text3: #64748b;
-  --accent: #6366f1; --accent-dim: rgba(99,102,241,.15); --accent-border: rgba(99,102,241,.35);
-  --green: #10b981; --green-dim: rgba(16,185,129,.12);
-  --amber: #f59e0b; --amber-dim: rgba(245,158,11,.12);
-  --red: #ef4444; --red-dim: rgba(239,68,68,.12);
-  --cyan: #22d3ee; --purple: #a78bfa;
-  --chart-grid: rgba(38,43,74,.9);
-  --nav-bg: rgba(13,15,26,.92);
-  --modal-overlay: rgba(0,0,0,.7);
-  --input-bg: #1f2340;
-  --dot-color: rgba(255,255,255,.045);
-}
+
+/* ===== LIGHT THEME (default — warm editorial paper) ===== */
 [data-theme="light"] {
-  --bg: #f1f5f9; --bg2: #e8edf5; --surface: #ffffff; --surface2: #f8fafc;
-  --border: #e2e8f0; --border2: #cbd5e1;
-  --text: #0f172a; --text2: #475569; --text3: #94a3b8;
-  --accent: #4f46e5; --accent-dim: rgba(79,70,229,.08); --accent-border: rgba(79,70,229,.25);
-  --green: #059669; --green-dim: rgba(5,150,105,.08);
-  --amber: #d97706; --amber-dim: rgba(217,119,6,.08);
-  --red: #dc2626; --red-dim: rgba(220,38,38,.08);
-  --cyan: #0891b2; --purple: #7c3aed;
-  --chart-grid: rgba(226,232,240,.9);
-  --nav-bg: rgba(255,255,255,.92);
-  --modal-overlay: rgba(15,23,42,.5);
-  --input-bg: #f8fafc;
-  --dot-color: rgba(79,70,229,.09);
+  --bg: #F5EFE2;
+  --bg2: #EDE6D4;
+  --surface: #FDFAF3;
+  --surface2: #F5EFE2;
+  --border: #D9CDB8;
+  --border2: #C4B49A;
+  --text: #1A1209;
+  --text2: #4A3F30;
+  --text3: #8C7E6A;
+  --accent: #C8102E;
+  --accent-dim: rgba(200,16,46,.07);
+  --accent-border: rgba(200,16,46,.25);
+  --green: #1A6B3C;
+  --green-dim: rgba(26,107,60,.08);
+  --amber: #9B6A00;
+  --amber-dim: rgba(155,106,0,.10);
+  --red: #C8102E;
+  --red-dim: rgba(200,16,46,.08);
+  --cyan: #005F87;
+  --purple: #6B3FA0;
+  --chart-grid: rgba(217,205,184,.8);
+  --nav-bg: rgba(253,250,243,.96);
+  --modal-overlay: rgba(26,18,9,.5);
+  --input-bg: #FDFAF3;
+  --dot-color: rgba(200,16,46,.06);
+  --rule-accent: #C8102E;
+  --masthead-bg: #1A1209;
+  --masthead-text: #F5EFE2;
 }
+
+/* ===== DARK THEME (modern neutral — GitHub dark / VS Code palette) ===== */
+[data-theme="dark"] {
+  --bg: #0D1117;
+  --bg2: #161B22;
+  --surface: #1C2128;
+  --surface2: #22272E;
+  --border: #30363D;
+  --border2: #484F58;
+  --text: #E6EDF3;
+  --text2: #8D96A0;
+  --text3: #545D68;
+  --accent: #E05252;
+  --accent-dim: rgba(224,82,82,.10);
+  --accent-border: rgba(224,82,82,.28);
+  --green: #3FB950;
+  --green-dim: rgba(63,185,80,.10);
+  --amber: #D29922;
+  --amber-dim: rgba(210,153,34,.10);
+  --red: #E05252;
+  --red-dim: rgba(224,82,82,.10);
+  --cyan: #39C5CF;
+  --purple: #BC8CFF;
+  --chart-grid: rgba(48,54,61,.9);
+  --nav-bg: rgba(13,17,23,.97);
+  --modal-overlay: rgba(0,0,0,.75);
+  --input-bg: #22272E;
+  --dot-color: rgba(63,185,80,.08);
+  --rule-accent: #E05252;
+  --masthead-bg: #E6EDF3;
+  --masthead-text: #0D1117;
+}
+
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html { scroll-behavior:smooth; }
-body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-feature-settings:'cv02','cv03','cv04','cv11'; background:var(--bg); color:var(--text); min-height:100vh; line-height:1.5; transition:background var(--transition),color var(--transition); -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+  transition: background var(--transition), color var(--transition);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
-/* ===== NAV ===== */
-nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bottom:1px solid var(--border); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); padding:0 24px; height:58px; display:flex; align-items:center; gap:16px; box-shadow:0 1px 0 var(--border); }
-.logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
-.logo-icon { width:34px; height:34px; background:linear-gradient(135deg,#6366f1 0%,#22d3ee 100%); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; box-shadow:0 0 16px rgba(99,102,241,.35); }
-.logo-name { font-size:.95rem; font-weight:700; color:var(--text); letter-spacing:-.02em; }
-.logo-badge { font-size:.65rem; background:var(--accent-dim); border:1px solid var(--accent-border); color:var(--accent); padding:2px 7px; border-radius:20px; font-weight:600; margin-left:4px; display:none; }
+/* ===== NAV — masthead newspaper style ===== */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--nav-bg);
+  border-bottom: 3px solid var(--text);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 16px;
+}
+[data-theme="light"] nav { border-bottom: 3px solid #1A1209; }
+[data-theme="dark"] nav { border-bottom: 3px solid var(--text); }
+
+.logo { display:flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
+.logo-icon {
+  width: 32px; height: 32px;
+  background: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.logo-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+.logo-badge {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 6px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  display: none;
+}
 @media(min-width:480px){ .logo-badge { display:inline; } }
-/* Mobile nav: hide search bar (use filter section instead), compact buttons */
 @media(max-width:540px){
   .nav-search { display:none; }
-  #userBtn { padding:6px 10px; font-size:.75rem; }
-  .logo-name { font-size:.85rem; }
+  #userBtn { padding:5px 10px; font-size:.73rem; }
+  .logo-name { font-size:.9rem; }
 }
-.nav-search { flex:1; max-width:340px; margin-left:auto; position:relative; }
-.nav-search input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 12px 8px 34px; color:var(--text); font-size:.85rem; outline:none; transition:border-color var(--transition); }
-.nav-search input:focus { border-color:var(--accent); }
-.nav-search input::placeholder { color:var(--text3); }
-.nav-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:15px; pointer-events:none; }
-.nav-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
-.btn-icon { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:background var(--transition),border-color var(--transition); color:var(--text2); position:relative; }
-.btn-icon:hover { background:var(--surface); border-color:var(--border2); }
-.save-badge { position:absolute; top:-4px; right:-4px; background:var(--red); color:#fff; font-size:.6rem; font-weight:700; min-width:16px; height:16px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0 3px; }
-.btn-primary { background:var(--accent); border:none; border-radius:var(--radius-sm); padding:8px 14px; color:#fff; font-size:.8rem; font-weight:600; cursor:pointer; transition:opacity var(--transition); white-space:nowrap; }
-.btn-primary:hover { opacity:.85; }
-.btn-secondary { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 14px; color:var(--text2); font-size:.8rem; font-weight:600; cursor:pointer; transition:background var(--transition); white-space:nowrap; }
-.btn-secondary:hover { background:var(--surface); }
-#userBtn { font-size:.8rem; padding:6px 14px; white-space:nowrap; }
 
-/* ===== HERO ===== */
-.hero { background:var(--bg2); background-image:radial-gradient(var(--dot-color) 1.5px, transparent 1.5px); background-size:24px 24px; border-bottom:1px solid var(--border); padding:40px 0 30px; position:relative; }
-.hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom, transparent 20%, var(--bg2) 100%); pointer-events:none; z-index:0; }
-@media(max-width:480px){ .hero { padding:26px 0 22px; } }
-.hero-inner { max-width:1300px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
-.hero-eyebrow { font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.14em; color:var(--accent); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
-.hero-eyebrow::before { content:''; display:inline-block; width:16px; height:1.5px; background:var(--accent); }
-.hero h2 { font-size:clamp(1.8rem,4vw,2.6rem); font-weight:800; letter-spacing:-.04em; line-height:1.15; margin-bottom:8px; }
-.hero p { color:var(--text2); font-size:.875rem; margin-bottom:28px; }
-.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
-@media(max-width:639px){ .stats-grid { grid-template-columns:repeat(2,1fr); } }
-.stat-card { background:transparent; border:none; border-right:1px solid var(--border); border-radius:0; padding:18px 22px; transition:background var(--transition); position:relative; overflow:hidden; }
-.stat-card:last-child { border-right:none; }
-.stat-card:hover { background:rgba(99,102,241,.06); }
-.stat-card.featured::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--green),var(--cyan)); }
-@media(max-width:639px){ .stat-card:nth-child(2){ border-right:none; } .stat-card:nth-child(3){ border-top:1px solid var(--border); } .stat-card:nth-child(4){ border-top:1px solid var(--border); border-right:none; } }
-.stat-label { font-size:.65rem; text-transform:uppercase; letter-spacing:.1em; color:var(--text3); font-weight:600; margin-bottom:8px; }
-.stat-num { font-size:1.65rem; font-weight:800; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
-.stat-sub { font-size:.7rem; color:var(--text3); margin-top:4px; }
-.c-green { color:var(--green); } .c-cyan { color:var(--cyan); } .c-purple { color:var(--purple); } .c-amber { color:var(--amber); }
+.nav-search { flex:1; max-width:360px; margin-left:auto; position:relative; }
+.nav-search input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 0;
+  padding: 7px 12px 7px 34px;
+  color: var(--text); font-family: var(--font-sans); font-size:.84rem;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.nav-search input:focus { border-color: var(--accent); }
+.nav-search input::placeholder { color: var(--text3); }
+.nav-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:14px; pointer-events:none; }
+
+.nav-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 0;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 15px;
+  transition: background var(--transition), border-color var(--transition);
+  color: var(--text2); position: relative;
+}
+.btn-icon:hover { background: var(--surface); border-color: var(--text3); }
+.save-badge {
+  position:absolute; top:-4px; right:-4px;
+  background: var(--accent); color:#fff;
+  font-family: var(--font-mono); font-size:.58rem; font-weight:600;
+  min-width:16px; height:16px; border-radius:0;
+  display:flex; align-items:center; justify-content:center; padding:0 3px;
+}
+.btn-primary {
+  background: var(--text);
+  border: none; border-radius: 0;
+  padding: 7px 14px;
+  color: var(--bg); font-family: var(--font-sans); font-size:.78rem; font-weight:700;
+  cursor: pointer; transition: opacity var(--transition); white-space: nowrap;
+  letter-spacing: .02em; text-transform: uppercase;
+}
+.btn-primary:hover { opacity:.82; }
+.btn-secondary {
+  background: transparent; border: 1px solid var(--border2); border-radius: 0;
+  padding: 7px 14px; color: var(--text2);
+  font-family: var(--font-sans); font-size:.78rem; font-weight:600;
+  cursor: pointer; transition: background var(--transition); white-space: nowrap;
+}
+.btn-secondary:hover { background: var(--surface); }
+#userBtn { font-size:.75rem; padding:6px 12px; white-space:nowrap; }
+
+/* ===== HERO — newspaper front page masthead ===== */
+.hero {
+  background: var(--bg2);
+  border-bottom: 3px solid var(--text);
+  padding: 36px 0 28px;
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent);
+}
+@media(max-width:480px){ .hero { padding:24px 0 20px; } }
+.hero-inner { max-width:1320px; margin:0 auto; padding:0 28px; }
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .65rem; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block; width: 24px; height: 2px;
+  background: var(--accent);
+}
+
+.hero h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -.02em; line-height: 1.08;
+  margin-bottom: 10px;
+}
+.hero p {
+  font-family: var(--font-sans);
+  color: var(--text2); font-size: .875rem;
+  margin-bottom: 28px; line-height: 1.6;
+}
+
+/* Stats — financial data ticker style */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-top: 3px solid var(--text);
+  overflow: hidden;
+}
+@media(max-width:639px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
+
+.stat-card {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: background var(--transition);
+}
+.stat-card:last-child { border-right: none; }
+.stat-card:hover { background: var(--accent-dim); }
+.stat-card.featured::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent);
+}
+@media(max-width:639px){
+  .stat-card:nth-child(2){ border-right:none; }
+  .stat-card:nth-child(3){ border-top:1px solid var(--border); }
+  .stat-card:nth-child(4){ border-top:1px solid var(--border); border-right:none; }
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: .6rem; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text3); font-weight: 500; margin-bottom: 10px;
+}
+.stat-num {
+  font-family: var(--font-mono);
+  font-size: 1.7rem; font-weight: 600;
+  letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.stat-sub {
+  font-family: var(--font-sans);
+  font-size: .68rem; color: var(--text3); margin-top: 6px;
+}
+.c-green { color: var(--green); }
+.c-cyan  { color: var(--cyan); }
+.c-purple{ color: var(--purple); }
+.c-amber { color: var(--amber); }
 
 /* ===== MAIN LAYOUT ===== */
-.main { max-width:1300px; margin:0 auto; padding:24px; }
-@media(max-width:480px){ .main { padding:12px; } }
+.main { max-width:1320px; margin:0 auto; padding:24px 28px; }
+@media(max-width:480px){ .main { padding:12px 14px; } }
 
-/* ===== CHART ===== */
-.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:20px; overflow:hidden; }
-#chartCard { background:linear-gradient(165deg,var(--surface2) 0%,var(--surface) 55%); }
-.card-header { padding:16px 20px 0; display:flex; align-items:center; gap:8px; }
-.card-title { font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--text2); }
-.card-title::before { content:''; display:inline-block; width:3px; height:14px; background:linear-gradient(180deg,var(--accent),var(--cyan)); border-radius:2px; vertical-align:middle; margin-right:8px; }
+/* ===== CARDS — sharp-cornered editorial panels ===== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border2);
+  margin-bottom: 20px; overflow: hidden;
+}
+#chartCard { background: var(--surface2); border-top-color: var(--text3); }
+.card-header { padding: 16px 20px 0; display:flex; align-items:center; gap:8px; }
+.card-title {
+  font-family: var(--font-mono);
+  font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text2);
+}
+.card-title::before {
+  content: '▮';
+  color: var(--accent);
+  margin-right: 8px; font-size: .65rem;
+}
 #chartCanvas { display:block; width:100%; padding:16px 20px 20px; }
 
 /* ===== FILTERS ===== */
-.filters { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-.filter-select { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:9px 12px; color:var(--text); font-size:.82rem; outline:none; cursor:pointer; transition:border-color var(--transition); min-width:130px; }
-.filter-select:focus { border-color:var(--accent); }
-.age-filter { display:flex; align-items:center; gap:5px; flex-wrap:wrap; padding:0 20px 16px; }
-.age-label { font-size:.65rem; font-weight:600; text-transform:uppercase; letter-spacing:.08em; color:var(--text3); margin-right:4px; white-space:nowrap; }
-.age-btn { font-size:.73rem; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; transition:all .15s; white-space:nowrap; letter-spacing:.01em; }
-.age-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
-.age-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(99,102,241,.3); }
-.result-info { margin-left:auto; font-size:.75rem; color:var(--text3); white-space:nowrap; }
+.filters { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+.filter-select {
+  background: var(--surface2);
+  border: 1px solid var(--border2); border-radius: 0;
+  padding: 8px 12px;
+  color: var(--text); font-family: var(--font-sans); font-size:.8rem;
+  outline: none; cursor: pointer;
+  transition: border-color var(--transition); min-width: 130px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238C7E6A'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 28px;
+}
+.filter-select:focus { border-color: var(--accent); }
+
+.age-filter { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:0 20px 16px; }
+.age-label {
+  font-family: var(--font-mono);
+  font-size: .6rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text3); margin-right: 6px; white-space: nowrap;
+}
+.age-btn {
+  font-family: var(--font-sans);
+  font-size: .72rem; font-weight: 600;
+  padding: 4px 12px; border-radius: 0;
+  border: 1px solid var(--border2);
+  background: transparent; color: var(--text2);
+  cursor: pointer; transition: all .14s; white-space: nowrap;
+}
+.age-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.age-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.result-info { margin-left:auto; font-family: var(--font-mono); font-size:.72rem; color:var(--text3); white-space:nowrap; }
+
 @media(max-width:500px){
   .filter-select { flex:1; min-width:0; }
   .result-info { width:100%; margin-left:0; margin-top:2px; }
 }
 
-/* ===== TABLE (desktop) ===== */
+/* ===== TABLE — editorial data table ===== */
 .table-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; font-size:.845rem; }
-thead th { background:transparent; padding:10px 14px; text-align:left; font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--text3); white-space:nowrap; border-bottom:2px solid var(--border2); cursor:pointer; user-select:none; }
-thead th:hover { color:var(--text2); }
-thead th.active-sort { color:var(--accent); }
-tbody tr { border-bottom:1px solid var(--border); transition:background var(--transition); }
-tbody tr:last-child { border-bottom:none; }
-tbody tr:hover { background:var(--accent-dim); }
-td { padding:12px 14px; vertical-align:middle; }
-.tag { display:inline-flex; align-items:center; padding:3px 9px; border-radius:20px; font-size:.68rem; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
-.tag-eng { background:rgba(99,102,241,.15); color:#a5b4fc; }
-.tag-data { background:rgba(34,211,238,.12); color:#67e8f9; }
-.tag-hr { background:rgba(16,185,129,.12); color:#6ee7b7; }
-.tag-pm { background:rgba(245,158,11,.12); color:#fcd34d; }
-.tag-mktg { background:rgba(239,68,68,.12); color:#fca5a5; }
-.company-name { font-weight:600; color:var(--text); }
-.range-nums { font-family:'SF Mono','Fira Code',monospace; font-size:.8rem; }
-.range-min { color:var(--text3); } .range-sep { color:var(--text3); padding:0 3px; } .range-max { color:var(--green); font-weight:700; }
-.range-bar-wrap { margin-top:4px; height:3px; background:var(--border); border-radius:2px; min-width:70px; }
-.range-bar { height:100%; background:linear-gradient(90deg,var(--accent),var(--green)); border-radius:2px; }
-.midpoint { font-weight:800; color:var(--cyan); font-size:.88rem; }
-.src-link { color:var(--accent); text-decoration:none; font-size:.78rem; }
-.src-link:hover { text-decoration:underline; }
-.date-cell { font-size:.75rem; color:var(--text3); white-space:nowrap; }
-.date-rel { color:var(--text2); font-weight:600; }
-.btn-save { background:none; border:1px solid var(--border); border-radius:var(--radius-xs); width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:var(--text3); transition:all var(--transition); }
-.btn-save:hover { border-color:var(--amber); color:var(--amber); }
-.btn-save.saved { border-color:var(--amber); color:var(--amber); background:var(--amber-dim); }
+table {
+  width: 100%; border-collapse: collapse; font-size: .79rem;
+  table-layout: fixed;
+}
+/* Column width distribution */
+#jobTable th:nth-child(1) { width:30%; } /* Role */
+#jobTable th:nth-child(2) { width:13%; } /* Company */
+#jobTable th:nth-child(3) { width:17%; } /* Comp Range */
+#jobTable th:nth-child(4) { width:9%;  } /* Midpoint */
+#jobTable th:nth-child(5) { width:13%; } /* Source */
+#jobTable th:nth-child(6) { width:11%; } /* Posted */
+#jobTable th:nth-child(7) { width:7%;  } /* Save */
+
+thead th {
+  background: var(--bg2);
+  padding: 8px 10px; text-align: left;
+  font-family: var(--font-mono);
+  font-size: .59rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .09em;
+  color: var(--text3); white-space: nowrap;
+  border-bottom: 2px solid var(--text);
+  cursor: pointer; user-select: none; overflow: hidden;
+}
+thead th:hover { color: var(--text2); }
+thead th.active-sort { color: var(--accent); }
+
+tbody tr { border-bottom: 1px solid var(--border); transition: background var(--transition); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--accent-dim); }
+td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
+
+/* Category tags — flat, typographic */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 7px; border-radius: 0;
+  font-family: var(--font-mono); font-size: .6rem; font-weight: 600;
+  letter-spacing: .06em; white-space: nowrap; text-transform: uppercase;
+}
+.tag-eng   { background: rgba(200,16,46,.08);   color: var(--accent); border: 1px solid rgba(200,16,46,.2); }
+.tag-data  { background: rgba(0,95,135,.08);    color: var(--cyan);   border: 1px solid rgba(0,95,135,.2); }
+.tag-fin   { background: rgba(16,110,60,.08);   color: var(--green);  border: 1px solid rgba(16,110,60,.2); }
+.tag-pm    { background: rgba(155,106,0,.08);   color: var(--amber);  border: 1px solid rgba(155,106,0,.2); }
+.tag-sales { background: rgba(107,63,160,.08);  color: var(--purple); border: 1px solid rgba(107,63,160,.2); }
+.tag-hr    { background: rgba(0,120,140,.08);   color: var(--cyan);   border: 1px solid rgba(0,120,140,.2); }
+.tag-ops   { background: rgba(80,80,80,.08);    color: var(--text2);  border: 1px solid rgba(80,80,80,.2); }
+.tag-legal { background: rgba(160,80,0,.08);    color: var(--amber);  border: 1px solid rgba(160,80,0,.2); }
+.tag-it    { background: rgba(0,80,180,.08);    color: var(--cyan);   border: 1px solid rgba(0,80,180,.2); }
+.tag-exec  { background: rgba(180,20,20,.08);   color: var(--accent); border: 1px solid rgba(180,20,20,.2); }
+.tag-other { background: rgba(100,100,100,.06); color: var(--text3);  border: 1px solid rgba(100,100,100,.15); }
+
+[data-theme="dark"] .tag-eng   { background:rgba(230,48,48,.10);   color:#F08080; border-color:rgba(230,48,48,.25); }
+[data-theme="dark"] .tag-data  { background:rgba(58,160,200,.10);  color:#7AC8E8; border-color:rgba(58,160,200,.25); }
+[data-theme="dark"] .tag-fin   { background:rgba(61,170,104,.10);  color:#7DD4A8; border-color:rgba(61,170,104,.25); }
+[data-theme="dark"] .tag-pm    { background:rgba(212,152,10,.10);  color:#E8C060; border-color:rgba(212,152,10,.25); }
+[data-theme="dark"] .tag-sales { background:rgba(155,122,212,.10); color:#C8A8F0; border-color:rgba(155,122,212,.25); }
+[data-theme="dark"] .tag-hr    { background:rgba(0,180,200,.10);   color:#70D0E8; border-color:rgba(0,180,200,.25); }
+[data-theme="dark"] .tag-ops   { background:rgba(140,140,140,.10); color:#A0A0A0; border-color:rgba(140,140,140,.25); }
+[data-theme="dark"] .tag-legal { background:rgba(212,130,10,.10);  color:#E8B060; border-color:rgba(212,130,10,.25); }
+[data-theme="dark"] .tag-it    { background:rgba(80,140,240,.10);  color:#90C0F8; border-color:rgba(80,140,240,.25); }
+[data-theme="dark"] .tag-exec  { background:rgba(240,80,80,.10);   color:#F8A0A0; border-color:rgba(240,80,80,.25); }
+[data-theme="dark"] .tag-other { background:rgba(160,160,160,.08); color:#808080; border-color:rgba(160,160,160,.18); }
+
+.company-name { font-family: var(--font-sans); font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.range-nums { font-family: var(--font-mono); font-size: .77rem; white-space: nowrap; }
+.range-min { color: var(--text3); }
+.range-sep { color: var(--text3); padding: 0 3px; }
+.range-max { color: var(--green); font-weight: 600; }
+/* Hide range bar in table — only show in detail panel */
+.range-bar-wrap { display: none; }
+.range-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); }
+.midpoint { font-family: var(--font-mono); font-weight: 600; color: var(--cyan); font-size: .82rem; white-space: nowrap; }
+.src-link { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size:.68rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.src-link:hover { text-decoration: underline; }
+.date-cell { font-family: var(--font-mono); font-size: .68rem; color: var(--text3); white-space: nowrap; }
+.date-rel { color: var(--text2); font-weight: 500; display: block; }
+/* Role cell: truncate long titles */
+.role-link { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.btn-save {
+  background: none; border: 1px solid var(--border);
+  border-radius: 0; width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 13px; color: var(--text3);
+  transition: all var(--transition);
+}
+.btn-save:hover { border-color: var(--amber); color: var(--amber); }
+.btn-save.saved { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
 
 /* ===== MOBILE CARDS (< 700px) ===== */
 @media(max-width:699px){
   table, thead, tbody, tr, th, td { display:block; }
   thead { display:none; }
-  tbody tr { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; padding:14px; }
-  tbody tr:hover { background:var(--accent-dim); border-color:var(--border2); }
+  tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border2);
+    margin-bottom: 10px; padding: 14px;
+  }
+  tbody tr:hover { background: var(--accent-dim); border-left-color: var(--accent); }
   td { padding:0; border:none; }
   td:before { display:none; }
   .card-row-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; gap:8px; }
@@ -205,57 +495,138 @@ td { padding:12px 14px; vertical-align:middle; }
   td.hide-mobile { display:none !important; }
 }
 
-/* ===== COMPENSATION NOTE ===== */
-.comp-note { background:var(--surface2); border:1px solid var(--accent-border); border-radius:var(--radius-sm); padding:12px 16px; margin:0 20px 12px; font-size:.78rem; color:var(--text2); display:none; }
-.comp-note strong { color:var(--accent); }
-.comp-note .comp-not-included { color:var(--text3); }
+/* ===== COMP NOTE ===== */
+.comp-note {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px; margin: 0 20px 12px;
+  font-size: .77rem; color: var(--text2); display: none;
+}
+.comp-note strong { color: var(--accent); }
+.comp-note .comp-not-included { color: var(--text3); }
+
 /* ===== WORK MODE BADGES ===== */
-.wm-badge { font-size:.6rem; font-weight:700; border-radius:10px; padding:1px 6px; margin-left:4px; white-space:nowrap; vertical-align:middle; }
-.wm-remote { background:rgba(16,185,129,.12); color:#10b981; border:1px solid rgba(16,185,129,.25); }
-.wm-hybrid { background:rgba(99,102,241,.12); color:#818cf8; border:1px solid rgba(99,102,241,.25); }
-.wm-onsite { background:rgba(245,158,11,.12); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
-/* ===== TOP PAYER BADGE ===== */
-.top-badge { font-size:.6rem; font-weight:800; background:rgba(245,158,11,.15); color:var(--amber); border:1px solid rgba(245,158,11,.3); border-radius:10px; padding:1px 6px; margin-left:5px; white-space:nowrap; }
-tr.top-row { border-left:3px solid var(--amber) !important; }
-tr.selected-row { background:rgba(99,102,241,.12) !important; border-left:3px solid var(--accent) !important; }
+.wm-badge {
+  font-family: var(--font-mono);
+  font-size: .58rem; font-weight: 600;
+  border-radius: 0; padding: 1px 5px;
+  margin-left: 5px; white-space: nowrap; vertical-align: middle;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.wm-remote { background: rgba(26,107,60,.09); color: var(--green); border: 1px solid rgba(26,107,60,.2); }
+.wm-hybrid { background: rgba(0,95,135,.09);  color: var(--cyan);  border: 1px solid rgba(0,95,135,.2); }
+.wm-onsite { background: rgba(155,106,0,.09); color: var(--amber); border: 1px solid rgba(155,106,0,.2); }
+
+[data-theme="dark"] .wm-remote { background:rgba(61,170,104,.10); color:#7DD4A8; border-color:rgba(61,170,104,.25); }
+[data-theme="dark"] .wm-hybrid { background:rgba(58,160,200,.10); color:#7AC8E8; border-color:rgba(58,160,200,.25); }
+[data-theme="dark"] .wm-onsite { background:rgba(212,152,10,.10); color:#E8C060; border-color:rgba(212,152,10,.25); }
+
+/* ===== TOP PAYER ===== */
+.top-badge {
+  font-family: var(--font-mono);
+  font-size: .58rem; font-weight: 700;
+  background: var(--amber-dim); color: var(--amber);
+  border: 1px solid rgba(155,106,0,.25);
+  border-radius: 0; padding: 1px 5px; margin-left: 5px; white-space: nowrap;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+tr.top-row { border-left: 3px solid var(--amber) !important; }
+tr.selected-row { background: var(--accent-dim) !important; border-left: 3px solid var(--accent) !important; }
+
 /* ===== EMPTY STATE ===== */
-.empty { text-align:center; padding:60px 20px; color:var(--text3); font-size:.9rem; }
+.empty {
+  text-align: center; padding: 60px 20px;
+  color: var(--text3); font-family: var(--font-sans); font-size: .9rem;
+}
 
 /* ===== MODAL ===== */
-.modal-overlay { position:fixed; inset:0; background:var(--modal-overlay); z-index:500; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .25s; }
+.modal-overlay {
+  position: fixed; inset: 0; background: var(--modal-overlay);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity .22s;
+}
 .modal-overlay.open { opacity:1; pointer-events:all; }
-.modal { background:var(--surface); border:1px solid var(--border2); border-radius:16px; width:100%; max-width:380px; padding:28px; box-shadow:var(--shadow-lg); transform:translateY(10px); transition:transform .25s; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-top: 3px solid var(--text);
+  width: 100%; max-width: 380px; padding: 28px;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(12px); transition: transform .22s;
+}
 .modal-overlay.open .modal { transform:translateY(0); }
-.modal-title { font-size:1.2rem; font-weight:700; margin-bottom:6px; }
-.modal-sub { font-size:.82rem; color:var(--text2); margin-bottom:22px; }
-.form-group { margin-bottom:14px; }
-.form-label { font-size:.75rem; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; display:block; }
-.form-input { width:100%; background:var(--input-bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; color:var(--text); font-size:.875rem; outline:none; transition:border-color var(--transition); }
-.form-input:focus { border-color:var(--accent); }
-.form-input::placeholder { color:var(--text3); }
-.modal-footer { margin-top:8px; text-align:center; font-size:.78rem; color:var(--text3); }
-.modal-footer a { color:var(--accent); cursor:pointer; text-decoration:none; }
-.modal-close { position:absolute; top:16px; right:18px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text3); line-height:1; }
-.modal { position:relative; }
-.tab-bar { display:flex; gap:0; background:var(--surface2); border-radius:var(--radius-sm); padding:3px; margin-bottom:20px; }
-.tab-btn { flex:1; background:none; border:none; border-radius:6px; padding:8px; font-size:.82rem; font-weight:600; cursor:pointer; color:var(--text3); transition:all var(--transition); }
-.tab-btn.active { background:var(--accent); color:#fff; }
-.error-msg { color:var(--red); font-size:.78rem; margin-bottom:10px; display:none; }
-.success-msg { color:var(--green); font-size:.78rem; margin-bottom:10px; display:none; }
+.modal-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; margin-bottom: 6px; }
+.modal-sub { font-size: .82rem; color: var(--text2); margin-bottom: 22px; }
+.form-group { margin-bottom: 14px; }
+.form-label {
+  font-family: var(--font-mono);
+  font-size: .65rem; font-weight: 600; color: var(--text2);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; display: block;
+}
+.form-input {
+  width: 100%; background: var(--input-bg);
+  border: 1px solid var(--border2); border-radius: 0;
+  padding: 10px 12px; color: var(--text);
+  font-family: var(--font-sans); font-size: .875rem;
+  outline: none; transition: border-color var(--transition);
+}
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text3); }
+.modal-footer { margin-top: 8px; text-align: center; font-size: .78rem; color: var(--text3); }
+.modal-footer a { color: var(--accent); cursor: pointer; text-decoration: none; }
+.modal-close {
+  position: absolute; top: 16px; right: 18px;
+  background: none; border: none; font-size: 18px;
+  cursor: pointer; color: var(--text3); line-height: 1;
+}
+.modal { position: relative; }
+.tab-bar {
+  display: flex;
+  border-bottom: 2px solid var(--border2);
+  margin-bottom: 20px; gap: 0;
+  background: transparent; padding: 0;
+}
+.tab-btn {
+  flex: 1; background: none; border: none; border-radius: 0;
+  padding: 10px; font-family: var(--font-sans); font-size: .8rem; font-weight: 600;
+  cursor: pointer; color: var(--text3);
+  transition: all var(--transition);
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+}
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.error-msg   { color: var(--red);   font-size: .78rem; margin-bottom: 10px; display: none; }
+.success-msg { color: var(--green); font-size: .78rem; margin-bottom: 10px; display: none; }
 
 /* ===== SAVED PANEL ===== */
-.saved-panel { position:fixed; right:0; top:0; bottom:0; width:100%; max-width:380px; background:var(--surface); border-left:1px solid var(--border); z-index:300; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s ease; display:flex; flex-direction:column; }
+.saved-panel {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: 100%; max-width: 380px;
+  background: var(--surface);
+  border-left: 3px solid var(--border2);
+  z-index: 300; box-shadow: var(--shadow-lg);
+  transform: translateX(100%); transition: transform .3s ease;
+  display: flex; flex-direction: column;
+}
 .saved-panel.open { transform:translateX(0); }
-.saved-header { padding:20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-.saved-header h3 { font-size:1rem; font-weight:700; }
+.saved-header {
+  padding: 18px 20px;
+  border-bottom: 2px solid var(--text);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.saved-header h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; }
 .saved-body { flex:1; overflow-y:auto; padding:16px; }
 .saved-empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:.875rem; }
-.saved-item { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:10px; }
+.saved-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border2);
+  padding: 12px 14px; margin-bottom: 10px;
+}
 .saved-item-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:4px; }
-.saved-item-role { font-weight:700; font-size:.875rem; }
-.saved-item-co { font-size:.78rem; color:var(--text2); }
-.saved-item-range { font-size:.82rem; color:var(--green); font-weight:700; }
-.saved-item-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:16px; line-height:1; padding:2px; }
+.saved-item-role { font-weight: 700; font-size: .875rem; }
+.saved-item-co { font-size: .78rem; color: var(--text2); }
+.saved-item-range { font-family: var(--font-mono); font-size: .82rem; color: var(--green); font-weight: 600; }
+.saved-item-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:15px; line-height:1; padding:2px; }
 .saved-item-remove:hover { color:var(--red); }
 .saved-footer { padding:16px; border-top:1px solid var(--border); }
 .login-prompt { text-align:center; padding:40px 20px; }
@@ -264,44 +635,349 @@ tr.selected-row { background:rgba(99,102,241,.12) !important; border-left:3px so
 /* ===== JOB DETAIL PANEL ===== */
 .jd-backdrop { position:fixed; inset:0; z-index:309; display:none; }
 .jd-backdrop.open { display:block; }
-.job-detail-panel { position:fixed; right:0; top:0; bottom:0; width:100%; max-width:440px; background:var(--surface); border-left:1px solid var(--border); z-index:310; box-shadow:var(--shadow-lg); transform:translateX(100%); transition:transform .3s ease; display:flex; flex-direction:column; overflow:hidden; }
+.job-detail-panel {
+  position: fixed; right: 0; top: 0; bottom: 0;
+  width: 100%; max-width: 440px;
+  background: var(--surface);
+  border-left: 3px solid var(--border2);
+  z-index: 310; box-shadow: var(--shadow-lg);
+  transform: translateX(100%); transition: transform .28s ease;
+  display: flex; flex-direction: column; overflow: hidden;
+}
 .job-detail-panel.open { transform:translateX(0); }
-.jd-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; gap:10px; }
+.jd-header {
+  padding: 14px 18px;
+  border-bottom: 2px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; gap: 10px;
+}
 .jd-header-left { display:flex; align-items:center; gap:8px; min-width:0; }
 .jd-body { flex:1; overflow-y:auto; padding:20px; }
-.jd-footer { padding:14px 18px; border-top:1px solid var(--border); display:flex; gap:10px; flex-shrink:0; }
-.jd-role { font-size:1.1rem; font-weight:800; letter-spacing:-.02em; margin:10px 0 3px; line-height:1.3; }
-.jd-company { font-size:.9rem; font-weight:600; color:var(--text); margin-bottom:3px; }
-.jd-meta { font-size:.72rem; color:var(--text3); margin-bottom:18px; }
-.jd-section { margin-bottom:20px; }
-.jd-section-title { font-size:.63rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--text3); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.jd-footer { padding:14px 18px; border-top:2px solid var(--border2); display:flex; gap:10px; flex-shrink:0; }
+.jd-role { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; margin: 10px 0 3px; line-height: 1.25; }
+.jd-company { font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.jd-meta { font-family: var(--font-mono); font-size: .68rem; color: var(--text3); margin-bottom: 18px; }
+
+.jd-section { margin-bottom: 20px; }
+.jd-section-title {
+  font-family: var(--font-mono);
+  font-size: .6rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text3);
+  margin-bottom: 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
 .jd-range-row { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
-.jd-range-min { font-size:1rem; font-family:'SF Mono','Fira Code',monospace; color:var(--text2); }
-.jd-range-sep { color:var(--text3); font-size:.9rem; }
-.jd-range-max { font-size:1.35rem; font-weight:800; font-family:'SF Mono','Fira Code',monospace; color:var(--green); }
-.jd-mid { font-size:.82rem; color:var(--cyan); font-weight:700; margin-bottom:12px; }
-.jd-pos-wrap { margin-top:4px; }
-.jd-pos-bar-bg { background:var(--border); border-radius:6px; height:10px; position:relative; margin:8px 0 5px; }
-.jd-pos-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent-dim),var(--accent)); border-radius:6px; }
-.jd-pos-dot { position:absolute; top:50%; width:16px; height:16px; border-radius:50%; background:var(--green); border:2px solid var(--surface); transform:translate(-50%,-50%); box-shadow:0 0 8px rgba(16,185,129,.5); }
-.jd-pos-labels { display:flex; justify-content:space-between; font-size:.65rem; color:var(--text3); }
-.jd-pct-label { font-size:.78rem; font-weight:700; margin-top:8px; color:var(--text); }
-.jd-similar-item { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:8px; cursor:pointer; transition:border-color var(--transition),background var(--transition); }
-.jd-similar-item:hover { border-color:var(--accent); background:var(--accent-dim); }
-.jd-similar-role { font-size:.8rem; font-weight:600; color:var(--text); line-height:1.3; }
-.jd-similar-co { font-size:.7rem; color:var(--text3); margin-top:1px; }
-.jd-similar-range { font-size:.78rem; font-weight:700; color:var(--green); white-space:nowrap; margin-left:10px; }
+.jd-range-min { font-family: var(--font-mono); font-size: 1rem; color: var(--text2); }
+.jd-range-sep { color: var(--text3); font-size: .9rem; }
+.jd-range-max { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 600; color: var(--green); }
+.jd-mid { font-family: var(--font-mono); font-size: .82rem; color: var(--cyan); font-weight: 600; margin-bottom: 12px; }
+
+.jd-pos-wrap { margin-top: 4px; }
+.jd-pos-bar-bg { background: var(--border); height: 8px; position: relative; margin: 8px 0 5px; }
+.jd-pos-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-dim), var(--accent)); }
+.jd-pos-dot {
+  position: absolute; top: 50%; width: 14px; height: 14px;
+  background: var(--green); border: 2px solid var(--surface);
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 6px rgba(26,107,60,.5);
+}
+.jd-pos-labels { display:flex; justify-content:space-between; font-family: var(--font-mono); font-size: .6rem; color: var(--text3); }
+.jd-pct-label { font-family: var(--font-mono); font-size: .75rem; font-weight: 600; margin-top: 8px; color: var(--text); }
+
+.jd-similar-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-left: 2px solid var(--border2);
+  margin-bottom: 8px; cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+}
+.jd-similar-item:hover { border-left-color: var(--accent); background: var(--accent-dim); }
+.jd-similar-role { font-size: .8rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+.jd-similar-co { font-size: .7rem; color: var(--text3); margin-top: 1px; }
+.jd-similar-range { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; color: var(--green); white-space: nowrap; margin-left: 10px; }
 .role-link { cursor:pointer; transition:opacity var(--transition); }
-.role-link:hover { opacity:.75; }
-/* ===== FOOTER ===== */
-footer { border-top:1px solid var(--border); padding:28px 24px; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; }
-footer p { font-size:.75rem; color:var(--text3); }
-footer a { color:var(--accent); text-decoration:none; }
-.footer-right { display:flex; align-items:center; gap:10px; }
-.law-tag { background:var(--amber-dim); border:1px solid rgba(245,158,11,.25); color:var(--amber); padding:5px 10px; border-radius:var(--radius-xs); font-size:.7rem; font-weight:600; }
-.update-tag { background:var(--green-dim); border:1px solid rgba(16,185,129,.25); color:var(--green); padding:5px 10px; border-radius:var(--radius-xs); font-size:.7rem; font-weight:600; display:flex; align-items:center; gap:5px; }
-.dot { width:6px; height:6px; border-radius:50%; background:var(--green); display:inline-block; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+.role-link:hover { opacity:.72; }
+
+/* ===== FOOTER — newspaper dateline ===== */
+footer {
+  border-top: 3px solid var(--text);
+  padding: 28px;
+  max-width: 1320px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: flex-start; flex-wrap: wrap; gap: 14px;
+}
+footer p { font-family: var(--font-sans); font-size: .74rem; color: var(--text3); line-height: 1.6; }
+footer a { color: var(--accent); text-decoration: none; }
+.footer-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.law-tag {
+  font-family: var(--font-mono);
+  background: var(--amber-dim);
+  border: 1px solid rgba(155,106,0,.25);
+  color: var(--amber);
+  padding: 5px 10px; border-radius: 0;
+  font-size: .65rem; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase;
+}
+.update-tag {
+  font-family: var(--font-mono);
+  background: var(--green-dim);
+  border: 1px solid rgba(26,107,60,.2);
+  color: var(--green);
+  padding: 5px 10px; border-radius: 0;
+  font-size: .65rem; font-weight: 600;
+  display: flex; align-items: center; gap: 6px;
+  letter-spacing: .05em; text-transform: uppercase;
+}
+.dot {
+  width: 6px; height: 6px;
+  background: var(--green); display: inline-block;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+/* ===== NEW LAYOUT: Sidebar + Content ===== */
+
+/* Masthead replaces old hero */
+.masthead {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 26px 0 20px;
+  position: relative;
+}
+.masthead::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent);
+}
+.masthead-inner {
+  max-width: 1400px; margin: 0 auto; padding: 0 28px;
+}
+.masthead .hero-eyebrow { margin-bottom: 10px; }
+.masthead h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -.02em; line-height: 1.1;
+  margin-bottom: 6px;
+}
+.masthead p {
+  font-size: .84rem; color: var(--text2); line-height: 1.55;
+}
+
+/* Two-column app layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 160px);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+/* Left sidebar */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 20px 18px;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+  background: var(--bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
+
+.sidebar-section { margin-bottom: 18px; }
+
+.sidebar-label {
+  font-family: var(--font-mono);
+  font-size: .58rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text3);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-divider { border-top: 1px solid var(--border); margin: 16px 0; }
+
+/* Sidebar stats — big typographic numbers */
+.sidebar-stats { display: flex; flex-direction: column; gap: 14px; }
+.sstat { display: flex; flex-direction: column; gap: 3px; }
+.sstat.featured {
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+}
+.sstat-num {
+  font-family: var(--font-mono);
+  font-size: 1.45rem; font-weight: 600;
+  letter-spacing: -.03em; line-height: 1;
+}
+.sstat-label {
+  font-family: var(--font-mono);
+  font-size: .56rem; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text3);
+}
+
+/* Sidebar filters */
+.sidebar-filters { display: flex; flex-direction: column; gap: 7px; }
+.sidebar-filters .filter-select { width: 100%; min-width: 0; }
+
+/* Age filter in sidebar — kept for JS compat (hidden, replaced by chips) */
+.age-filter-sidebar { display: none; }
+
+/* ===== MODERN CHIP / PILL SYSTEM ===== */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.chip {
+  font-family: var(--font-sans);
+  font-size: .72rem;
+  font-weight: 500;
+  padding: 4px 11px;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all .14s ease;
+  white-space: nowrap;
+  line-height: 1.5;
+  letter-spacing: .01em;
+}
+.chip:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--text3);
+}
+.chip.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+  font-weight: 600;
+}
+
+/* Modern select for region/salary (fewer options so keep as select) */
+.filter-select-modern {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 30px 7px 10px;
+  color: var(--text2);
+  font-family: var(--font-sans);
+  font-size: .78rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color .14s, color .14s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23545D68'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+.filter-select-modern:focus { border-color: var(--accent); color: var(--text); }
+
+/* Active filters bar */
+.active-filters {
+  background: var(--surface2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+.active-filters-label {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
+}
+.clear-all-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-family: var(--font-sans);
+  font-size: .68rem;
+  cursor: pointer;
+  padding: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.clear-all-btn:hover { opacity: .7; }
+.active-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.active-chip {
+  font-family: var(--font-sans);
+  font-size: .68rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.active-chip-x {
+  cursor: pointer;
+  opacity: .6;
+  font-size: .8rem;
+  line-height: 1;
+}
+
+.sidebar-result {
+  font-family: var(--font-mono);
+  font-size: .65rem; color: var(--text3);
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+/* Right content area */
+.content-area {
+  padding: 20px 24px;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Table card without top padding since filters moved to sidebar */
+.content-area .card { border-top: 2px solid var(--border2); }
+.content-area #chartCard { border-top: 2px solid var(--text3); }
+
+/* Mobile: sidebar becomes horizontal strip */
+@media(max-width:960px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static; height: auto;
+    border-right: none;
+    border-bottom: 2px solid var(--border);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 20px;
+  }
+  .sidebar-divider { display: none; }
+  .sidebar-stats { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+  .sstat-num { font-size: 1.1rem; }
+  .age-filter-sidebar { flex-direction: row; flex-wrap: wrap; }
+  .age-filter-sidebar .age-btn { width: auto; }
+}
+@media(max-width:580px) {
+  .sidebar { grid-template-columns: 1fr; }
+  .masthead h2 { font-size: 1.6rem; }
+}
 </style>
 </head>
 <body>
@@ -309,7 +985,7 @@ footer a { color:var(--accent); text-decoration:none; }
 <!-- NAV -->
 <nav>
   <a class="logo" href="#">
-    <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="11" width="4" height="6" rx="1" fill="rgba(255,255,255,0.8)"/><rect x="7" y="7" width="4" height="10" rx="1" fill="rgba(255,255,255,0.9)"/><rect x="13" y="3" width="4" height="14" rx="1" fill="white"/></svg></div>
+    <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="10" width="3" height="5" fill="currentColor" opacity=".6"/><rect x="6" y="6" width="3" height="9" fill="currentColor" opacity=".8"/><rect x="11" y="2" width="3" height="13" fill="currentColor"/></svg></div>
     <span class="logo-name">Ontario Pay Hub</span>
     <span class="logo-badge">2026</span>
   </a>
@@ -326,100 +1002,174 @@ footer a { color:var(--accent); text-decoration:none; }
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-inner">
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
     <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
     <h2>Ontario Pay Transparency Hub</h2>
     <p>Real compensation ranges from Ontario job postings · <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">ESA Pay Transparency Rules ↗</a> · Updated daily</p>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-label">Total Postings</div><div class="stat-num c-cyan" id="statTotal">—</div><div class="stat-sub">Ontario, 2026</div></div>
-      <div class="stat-card featured"><div class="stat-label">Median Compensation</div><div class="stat-num c-green" id="statMedian">—</div><div class="stat-sub">CAD midpoint</div></div>
-      <div class="stat-card"><div class="stat-label">Top Employer</div><div class="stat-num c-purple" id="statTop" style="font-size:1rem;padding-top:4px">—</div><div class="stat-sub">Most postings</div></div>
-      <div class="stat-card"><div class="stat-label">Avg Range Width</div><div class="stat-num c-amber" id="statSpread">—</div><div class="stat-sub">max − min</div></div>
-    </div>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main">
+<!-- APP LAYOUT: Sidebar + Content -->
+<div class="app-layout">
 
-  <!-- CHART -->
-  <div class="card" id="chartCard">
-    <div class="card-header"><span class="card-title">Average Range by Role</span></div>
-    <canvas id="chartCanvas"></canvas>
-  </div>
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
 
-  <!-- FILTERS + TABLE -->
-  <div class="card">
-    <div style="padding:16px 20px 0;">
-      <div class="filters">
-        <select class="filter-select" id="catFilter" onchange="applyFilters()">
-          <option value="">All Categories</option>
-          <option value="eng">Engineering</option>
-          <option value="data">Data & Analytics</option>
-          <option value="fin">Finance & Risk</option>
-          <option value="pm">Product & Project</option>
-          <option value="mktg">Marketing & Sales</option>
-          <option value="hr">People & HR</option>
-        </select>
-        <select class="filter-select" id="regionFilter" onchange="applyFilters()">
-          <option value="">All Regions</option>
-        </select>
-        <select class="filter-select" id="salaryFilter" onchange="applyFilters()">
-          <option value="0">Any Salary</option>
-          <option value="80000">$80K+ midpoint</option>
-          <option value="100000">$100K+ midpoint</option>
-          <option value="120000">$120K+ midpoint</option>
-          <option value="150000">$150K+ midpoint</option>
-        </select>
-        <select class="filter-select" id="wmFilter" onchange="applyFilters()">
-          <option value="">All Work Modes</option>
-          <option value="remote">🏠 Remote</option>
-          <option value="hybrid">🔀 Hybrid</option>
-          <option value="onsite">🏢 Onsite</option>
-        </select>
-        <select class="filter-select" id="sortSelect" onchange="applyFilters()">
-          <option value="mid-desc">↓ Highest Salary</option>
-          <option value="mid-asc">↑ Lowest Salary</option>
-          <option value="date-desc">↓ Newest First</option>
-          <option value="co-asc">Company A→Z</option>
-        </select>
-        <div class="result-info" id="resultInfo"></div>
-      </div>
-      <div class="age-filter">
-        <span class="age-label">Posted:</span>
-        <button class="age-btn active" id="age-all"   onclick="setAge('')">All time</button>
-        <button class="age-btn"        id="age-1m"    onclick="setAge('1m')">Last month</button>
-        <button class="age-btn"        id="age-3m"    onclick="setAge('3m')">3 months</button>
-        <button class="age-btn"        id="age-6m"    onclick="setAge('6m')">6 months</button>
-        <button class="age-btn"        id="age-old"   onclick="setAge('6m+')">6 months+</button>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Live Data</div>
+      <div class="sidebar-stats">
+        <div class="sstat">
+          <span class="sstat-num c-cyan" id="statTotal">—</span>
+          <span class="sstat-label">Total Postings</span>
+        </div>
+        <div class="sstat featured">
+          <span class="sstat-num c-green" id="statMedian">—</span>
+          <span class="sstat-label">Median Compensation</span>
+        </div>
+        <div class="sstat">
+          <span class="sstat-num c-purple" id="statTop" style="font-size:1rem">—</span>
+          <span class="sstat-label">Top Employer</span>
+        </div>
+        <div class="sstat">
+          <span class="sstat-num c-amber" id="statSpread">—</span>
+          <span class="sstat-label">Avg Range Width</span>
+        </div>
       </div>
     </div>
-    <div class="comp-note" id="compNote">
-      <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
-      ✅ <strong>Included:</strong> base wages (salary), commissions, guaranteed performance bonuses<br>
-      <span class="comp-not-included">❌ <strong>Not required:</strong> discretionary bonuses, stock/equity, employer benefit contributions, vacation pay amounts</span><br>
-      <span style="font-size:.72rem;margin-top:4px;display:block">Source: <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">Ontario ESA Job Posting Requirements ↗</a> — applies to employers with 25+ employees</span>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- Active filters bar (shown when any filter active) -->
+    <div class="active-filters" id="activeFilters" style="display:none">
+      <div class="active-filters-label">Active <button class="clear-all-btn" onclick="clearAllFilters()">Clear all</button></div>
+      <div class="active-chips" id="activeChips"></div>
     </div>
-    <div class="table-wrap">
-      <table id="jobTable">
-        <thead>
-          <tr>
-            <th onclick="setSort('role')">Role <span id="sort-role"></span></th>
-            <th onclick="setSort('company')">Company <span id="sort-company"></span></th>
-            <th>Compensation Range <span id="compInfoBtn" title="What's disclosed under Ontario's ESA Pay Transparency Rules" style="cursor:pointer;opacity:.6;font-size:.8em" onclick="toggleCompNote()">ⓘ</span></th>
-            <th onclick="setSort('mid')">Midpoint <span id="sort-mid"></span></th>
-            <th>Source</th>
-            <th onclick="setSort('date')">Posted <span id="sort-date"></span></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-      <div class="empty" id="emptyState" style="display:none">No matching postings found. Try adjusting your filters.</div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Category</div>
+      <!-- Hidden select — options populated dynamically by buildCategoryChips() -->
+      <select id="catFilter" style="display:none" onchange="applyFilters()">
+        <option value="">All Categories</option>
+      </select>
+      <!-- Chips populated by buildCategoryChips() after data loads -->
+      <div class="chip-group" id="catChips">
+        <button class="chip active" onclick="setChip('catFilter','',this)">All</button>
+      </div>
     </div>
-  </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Work Mode</div>
+      <select id="wmFilter" style="display:none" onchange="applyFilters()">
+        <option value="">All Work Modes</option>
+        <option value="remote">Remote</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="onsite">Onsite</option>
+      </select>
+      <div class="chip-group" id="wmChips">
+        <button class="chip active" onclick="setChip('wmFilter','',this)">All</button>
+        <button class="chip" onclick="setChip('wmFilter','remote',this)">🏠 Remote</button>
+        <button class="chip" onclick="setChip('wmFilter','hybrid',this)">🔀 Hybrid</button>
+        <button class="chip" onclick="setChip('wmFilter','onsite',this)">🏢 Onsite</button>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Min Salary</div>
+      <select class="filter-select-modern" id="salaryFilter" onchange="applyFilters()">
+        <option value="0">Any</option>
+        <option value="80000">$80K+</option>
+        <option value="100000">$100K+</option>
+        <option value="120000">$120K+</option>
+        <option value="150000">$150K+</option>
+      </select>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Region</div>
+      <select class="filter-select-modern" id="regionFilter" onchange="applyFilters()">
+        <option value="">All Regions</option>
+      </select>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sort By</div>
+      <select id="sortSelect" style="display:none" onchange="applyFilters()">
+        <option value="mid-desc">Highest Salary</option>
+        <option value="mid-asc">Lowest Salary</option>
+        <option value="date-desc">Newest First</option>
+        <option value="co-asc">Company A→Z</option>
+      </select>
+      <div class="chip-group" id="sortChips">
+        <button class="chip active" onclick="setChip('sortSelect','mid-desc',this)">↓ Highest</button>
+        <button class="chip" onclick="setChip('sortSelect','mid-asc',this)">↑ Lowest</button>
+        <button class="chip" onclick="setChip('sortSelect','date-desc',this)">Newest</button>
+        <button class="chip" onclick="setChip('sortSelect','co-asc',this)">A→Z</button>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Posted</div>
+      <div class="chip-group" id="ageChips">
+        <button class="chip age-btn active" id="age-all"   onclick="setAge('')">All</button>
+        <button class="chip age-btn"        id="age-1m"    onclick="setAge('1m')">1 mo</button>
+        <button class="chip age-btn"        id="age-3m"    onclick="setAge('3m')">3 mo</button>
+        <button class="chip age-btn"        id="age-6m"    onclick="setAge('6m')">6 mo</button>
+        <button class="chip age-btn"        id="age-old"   onclick="setAge('6m+')">6 mo+</button>
+      </div>
+      <div class="sidebar-result" id="resultInfo"></div>
+    </div>
+
+  </aside>
+
+  <!-- RIGHT CONTENT -->
+  <main class="content-area">
+
+    <!-- CHART -->
+    <div class="card" id="chartCard">
+      <div class="card-header"><span class="card-title">Average Range by Role</span></div>
+      <canvas id="chartCanvas"></canvas>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card">
+      <div class="comp-note" id="compNote">
+        <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
+        ✅ <strong>Included:</strong> base wages (salary), commissions, guaranteed performance bonuses<br>
+        <span class="comp-not-included">❌ <strong>Not required:</strong> discretionary bonuses, stock/equity, employer benefit contributions, vacation pay amounts</span><br>
+        <span style="font-size:.72rem;margin-top:4px;display:block">Source: <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">Ontario ESA Job Posting Requirements ↗</a> — applies to employers with 25+ employees</span>
+      </div>
+      <div class="table-wrap">
+        <table id="jobTable">
+          <thead>
+            <tr>
+              <th onclick="setSort('role')">Role <span id="sort-role"></span></th>
+              <th onclick="setSort('company')">Company <span id="sort-company"></span></th>
+              <th>Compensation Range <span id="compInfoBtn" title="What's disclosed under Ontario's ESA Pay Transparency Rules" style="cursor:pointer;opacity:.6;font-size:.8em" onclick="toggleCompNote()">ⓘ</span></th>
+              <th onclick="setSort('mid')">Midpoint <span id="sort-mid"></span></th>
+              <th>Source</th>
+              <th onclick="setSort('date')">Posted <span id="sort-date"></span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState" style="display:none">No matching postings found. Try adjusting your filters.</div>
+      </div>
+    </div>
+
+  </main>
 </div>
 
 <!-- FOOTER -->
@@ -492,16 +1242,191 @@ footer a { color:var(--accent); text-decoration:none; }
 
 <script>
 // ===== DATA (loaded from data/jobs.json, fallback inline) =====
-function getTag(role){
-  const r=(role||"").toLowerCase();
-  if(r.includes("engineer")||r.includes("developer")||r.includes("architect")||r.includes("devops")||r.includes("systems developer")||r.includes("security analyst")) return"eng";
-  if(r.includes("data scientist")||r.includes("data analyst")||r.includes("intelligence analyst")||r.includes("data science")||r.includes("business analyst")||r.includes("systems analyst")||r.includes("management analyst")||r.includes("operations analyst")||r.includes("applied data")) return"data";
-  if(r.includes("financial")||r.includes("treasury")||r.includes("actuarial")||r.includes("aml")||r.includes("credit")||r.includes("risk analyst")||r.includes("budget")||r.includes("accounting")||r.includes("settlements")||r.includes("capital markets")) return"fin";
-  if(r.includes("product manager")||r.includes("product owner")||r.includes("project manager")||r.includes("project coordinator")||r.includes("schedule manager")||r.includes("program manager")) return"pm";
-  if(r.includes("marketing")||r.includes("business development")||r.includes("merchandising")||r.includes("sales development")||r.includes("account director")) return"mktg";
-  if(r.includes("hr ")||r.includes("human resources")||r.includes("people business")||r.includes("talent")||r.includes("recruiter")||r.includes("office coordinator")||r.includes("benefits lead")) return"hr";
-  if(r.includes("manager")) return"pm";
-  return"eng";
+// ── Job classification ────────────────────────────────────────────────────────
+// Fixed taxonomy of 10 canonical categories. Order matters — first match wins.
+// Jobs that don't match any rule get tag "other".
+const TAG_RULES = [
+  // ── Leadership / Executive ────────────────────────────────────────────────
+  ["exec",  ["chief ","chief,","c.e.o","c.f.o","c.t.o","c.o.o",
+    "vp ","vp,","avp ","avp,","vice president",
+    "managing director","general manager","head of ","global head",
+    "executive director","senior director","director,","director ",
+    "regional manager","technology manager",
+    "software development manager"]],  // NOTE: "development manager" removed — matched "business development manager"
+  // ── Software & Systems Engineering ───────────────────────────────────────
+  ["eng",   ["software engineer","software developer",
+    "full stack","fullstack","full-stack","front-end","frontend","front end",
+    "backend","back-end",
+    "mobile developer","ios developer","android developer",
+    "site reliability","devops","platform engineer","cloud engineer",
+    "security engineer","cybersecurity engineer","network engineer","systems engineer",
+    "firmware","embedded engineer","ml engineer","machine learning engineer","ai engineer",
+    "solutions architect","solution architect","technical architect",
+    "infrastructure engineer","systems developer","systems solution developer","systems solution ",
+    "application developer","application engineer",
+    "qa engineer","quality engineer","test engineer","automation engineer",
+    "engineering lead","engineering manager","lead developer","lead engineer",
+    "process engineer","project engineer","manufacturing engineer",
+    "design systems","technologist","purview engineer",
+    " engineer,", " engineer "]],  // catch standalone "Engineer" and "Engineer, X"
+  // ── Data, Analytics & ML ─────────────────────────────────────────────────
+  ["data",  ["data scientist","data analyst","data engineer","data architect",
+    "data governance","data management","data technical","data specialist",
+    "data and information","data science","applied data",
+    "business analyst","business intelligence","business systems analysis","system analyst",
+    "analytics engineer","quantitative analyst","reporting analyst",
+    "machine learning","applied scientist","research scientist","ai researcher",
+    "intelligence analyst","systems analyst",
+    "insights analyst","insights manager","insights & measurement",
+    "behavioural insights","strategy analyst",
+    "statistical","econom","bi reporting","reporting developer","agentic"]],
+    // NOTE: removed "operations analyst" and "management analyst" — too broad
+  // ── Finance & Accounting ──────────────────────────────────────────────────
+  ["fin",   ["financial analyst","financial planner","financial planning","financial reporting",
+    "finance analyst","finance manager",
+    "treasury","actuarial","actuary",
+    "accounting","accountant","auditor","audit manager","audit director","audit &",
+    "tax analyst","tax manager","tax coordinator","tax specialist",
+    "credit analyst","credit risk","credit manager","credit strategy",
+    "risk analyst","risk manager","risk management","risk analytics",
+    "operational risk","market risk","model validation","model risk",
+    "investment analyst","investment banking","investment finance",
+    "investment research","investment operations","investment advisor",
+    "portfolio","capital markets","securities analyst","securities trader",
+    "underwriter","underwriting","controller","bookkeeper","payroll","settlements",
+    "fp&a","aml analyst","fraud analyst",
+    "financial advisor","wealth advisor",
+    "pension","fund accountant","fund analyst",
+    "wealth management","wealth strategist","private wealth",
+    "fixed income","multi-asset","hedging","derivatives","collateral","liquidity",
+    "valuations","valuation","investor relations","due diligence",
+    "pricing analyst","pricing manager","pricing &",
+    "accounts payable","accounts receivable","private asset","spv ","reinsurance",
+    " banker","banking analyst","senior banker",
+    "commercial banking","public markets","trade management","client operations",
+    "strategy & finance","financial performance","capital optimization",
+    "asset servicing","account management",
+    " finance,","finance & "," finance ",   // catch "Analyst, Finance" / "Manager, Finance"
+    " tax ","compliance analyst","budget analyst","budget &",
+    "anti-money laundering","aml testing"]],
+  // ── Product & Project Management ──────────────────────────────────────────
+  ["pm",    ["product manager","product owner","project manager","project coordinator",
+    "program manager","scrum master","agile coach",
+    "delivery manager","release manager","technical program manager",
+    "product analyst","portfolio manager","change manager","transformation",
+    "product delivery","delivery analyst","release train","release lead",
+    "online release","schedule manager","change risk","test manager"]],
+  // ── Legal, Compliance & Regulatory ───────────────────────────────────────
+  ["legal", ["lawyer","counsel","attorney","legal analyst","legal advisor","legal counsel",
+    "compliance officer","compliance specialist","compliance manager",
+    "compliance & ethics","compliance and ethics",
+    "regulatory","privacy officer","aml specialist","risk compliance","general counsel",
+    "paralegal","corporate secretary","law clerk",
+    "global investigations","investigations specialist",
+    "anti money laundering","anti-money laundering",
+    "insurance compliance","retail insurance","complaints officer","agent of record",
+    " patent "]],
+  // ── Operations, Admin & Support ───────────────────────────────────────────
+  ["ops",   ["operations manager","operations coordinator","operations specialist",
+    "operations analyst","manager, operations",
+    "supply chain","logistics","procurement","sourcing analyst","sourcing manager",
+    "facilities","office manager","office coordinator","administrative",
+    "business operations","service delivery","field operations",
+    "process improvement","quality assurance","quality control",
+    "continuous improvement","lean","six sigma",
+    "contact centre","contact center","fleet services",
+    "workflow optimization","business continuity",
+    "customer service","client service associate","client services associate",
+    "service representative","executive assistant",
+    "personal banking","banking associate","banking advisor","banking association",
+    "building operator","maintenance supervisor","receptionist",
+    "supervisor, contact","management analyst"]],
+  // ── Sales, Marketing & BD ────────────────────────────────────────────────
+  ["sales", ["marketing","sales representative","sales manager","sales specialist",
+    "business development","account manager","account executive","account director",
+    "digital marketing","content marketing","brand manager",
+    "communications","public relations","client success","customer success","merchandising",
+    "sales development","inside sales","channel sales",
+    "growth manager","demand generation","partnership",
+    "digital acquisition","campaign strategy","campaign optimization",
+    " commerce","vertical lead","mergers & acquisitions",
+    "client associate","associate, sales"]],
+    // NOTE: removed "commercial" — was catching "commercial banking" finance roles
+  // ── People & HR ───────────────────────────────────────────────────────────
+  ["hr",    ["human resources","hr business partner","hr manager","hr analyst","hr director",
+    "recruiter","recruiting","recruitment","recruit analyst",
+    "talent acquisition","talent management","compensation","total rewards","benefits specialist",
+    "learning and development","learning designer","learning & development","learning & media",
+    "organizational development","people operations","workforce planning",
+    "people business","people & culture","hr generalist",
+    "employee relations","labour relations",
+    "disability administrator","disability specialist",
+    "leadership development","team development","people development",
+    "business partner specialist"]],
+  // ── IT, Infrastructure & Enterprise Systems ───────────────────────────────
+  ["it",    [" it support"," it analyst"," it manager"," it specialist"," it operations",
+    "it controls","systems administrator","network administrator",
+    "help desk","service desk","desktop support",
+    "infrastructure analyst","database administrator","enterprise architect",
+    "erp ","sap analyst","salesforce"," cloud architect",
+    "cybersecurity","information security","network analyst",
+    "application support","product support","solutions it",
+    "servicenow","m365","business systems applications"]],
+];
+
+const CAT_META = {
+  eng:   { label: "Engineering",    shortLabel: "Eng" },
+  data:  { label: "Data & Analytics", shortLabel: "Data" },
+  fin:   { label: "Finance",        shortLabel: "Finance" },
+  pm:    { label: "Product & Project", shortLabel: "Product" },
+  sales: { label: "Sales & Mktg",   shortLabel: "Sales" },
+  hr:    { label: "People & HR",    shortLabel: "HR" },
+  ops:   { label: "Operations",     shortLabel: "Ops" },
+  legal: { label: "Legal",          shortLabel: "Legal" },
+  it:    { label: "IT & Infra",     shortLabel: "IT" },
+  exec:  { label: "Leadership",     shortLabel: "Leaders" },
+  other: { label: "Other",          shortLabel: "Other" },
+};
+
+// Canonical display order for filter chips
+const CAT_ORDER = ["eng","data","fin","pm","sales","hr","ops","legal","it","exec","other"];
+
+// Min jobs for a category to earn its own filter chip (small categories still visible under All)
+const MIN_CAT_CHIP = 3;
+
+function getTag(role) {
+  // Pad with spaces so keyword boundaries work: "audit manager" won't match "it manager"
+  const r = " " + (role || "").toLowerCase() + " ";
+  for (const [tag, keywords] of TAG_RULES) {
+    if (keywords.some(k => r.includes(k))) return tag;
+  }
+  return "other";
+}
+
+// Build category filter chips dynamically based on actual data distribution
+function buildCategoryChips() {
+  const counts = {};
+  JOBS.forEach(j => { counts[j.tag] = (counts[j.tag] || 0) + 1; });
+
+  const sel = document.getElementById("catFilter");
+  const group = document.getElementById("catChips");
+
+  sel.innerHTML = '<option value="">All Categories</option>';
+  group.innerHTML = '<button class="chip active" onclick="setChip(\'catFilter\',\'\',this)">All</button>';
+
+  CAT_ORDER.forEach(tag => {
+    const count = counts[tag] || 0;
+    if (count < MIN_CAT_CHIP) return;
+    const label = CAT_META[tag] ? CAT_META[tag].label : tag;
+    const opt = document.createElement("option");
+    opt.value = tag; opt.textContent = label;
+    sel.appendChild(opt);
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.textContent = label;
+    btn.setAttribute("onclick", `setChip('catFilter','${tag}',this)`);
+    group.appendChild(btn);
+  });
 }
 const FALLBACK_JOBS = [
   {id:1,role:"Software Engineer",tag:"eng",company:"Shopify",min:110000,max:160000,src:"shopify.com/careers",date:"2026-03-04"},
@@ -596,7 +1521,7 @@ function isArchived(j){
   const posted=new Date(j.date), now=new Date();
   return j.status==="archived"||(Math.round((now-posted)/86400000)>90);
 }
-function tagClass(t){ return{eng:"tag-eng",data:"tag-data",hr:"tag-hr",pm:"tag-pm",mktg:"tag-mktg"}[t]||""; }
+function tagClass(t){ return t?"tag-"+t:""; }
 function wmBadge(wm){
   const m={remote:'<span class="wm-badge wm-remote">🏠 Remote</span>',hybrid:'<span class="wm-badge wm-hybrid">🔀 Hybrid</span>',onsite:'<span class="wm-badge wm-onsite">🏢 Onsite</span>'};
   return m[wm]||"";
@@ -806,12 +1731,7 @@ function renderSaved(){
       <label class="form-label">Default Category</label>
       <select class="filter-select" id="prefCat" style="width:100%;margin-bottom:14px">
         <option value=""${!prefs.cat?" selected":""}>All Categories</option>
-        <option value="eng"${prefs.cat==="eng"?" selected":""}>Engineering</option>
-        <option value="data"${prefs.cat==="data"?" selected":""}>Data & Analytics</option>
-        <option value="fin"${prefs.cat==="fin"?" selected":""}>Finance & Risk</option>
-        <option value="pm"${prefs.cat==="pm"?" selected":""}>Product & Project</option>
-        <option value="mktg"${prefs.cat==="mktg"?" selected":""}>Marketing & Sales</option>
-        <option value="hr"${prefs.cat==="hr"?" selected":""}>People & HR</option>
+        ${CAT_ORDER.map(tag=>`<option value="${tag}"${prefs.cat===tag?" selected":""}>${(CAT_META[tag]||{label:tag}).label}</option>`).join("")}
       </select>
       <label class="form-label">Default Region</label>
       <select class="filter-select" id="prefRegion" style="width:100%;margin-bottom:14px">${regionOpts}</select>
@@ -847,6 +1767,8 @@ function populateFilters(){
   )].sort();
   sel.innerHTML='<option value="">All Regions</option>'+
     cities.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
+  // Build category chips from actual data
+  buildCategoryChips();
 }
 function setAge(val){
   S.age=val;
@@ -939,20 +1861,20 @@ function renderTable(){
       const archived=isArchived(j);
       const isTop=top3Ids.has(j.id);
       const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
-      return `<tr class="${isTop?'top-row':''}"${archived?' style="opacity:.7"':''}>
-        <td><span class="tag ${tagClass(j.tag)} role-link" onclick="openJobDetail(${j.id})" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
+      return `<tr class="${isTop?'top-row':''}" style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
+        <td><span class="tag ${tagClass(j.tag)}" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
         <td class="company-name">${j.company} ${wmBadge(j.work_mode)}</td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
           <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
         </td>
         <td class="midpoint">${fmt(mid(j))}</td>
-        <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link">${j.domain} ↗</a></td>
+        <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a></td>
         <td class="date-cell">
           ${archived?'<span style="font-size:.65rem;color:var(--text3)">📁 Archived</span><br>':""}
           <span class="date-rel">${relDate(j.date)}</span><br>${j.date}
         </td>
-        <td><button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id})" title="Save job">${isSaved?"★":"☆"}</button></td>
+        <td><button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id});event.stopPropagation()" title="Save job">${isSaved?"★":"☆"}</button></td>
       </tr>`;
     }).join("");
   }
@@ -978,16 +1900,6 @@ function drawChart(){
   const isMobile=window.innerWidth<600;
   const W=canvas.parentElement.clientWidth-(isMobile?16:40);
 
-  // Category config
-  const CAT={
-    "eng": {label:isMobile?"Engineering":"Engineering",     color:"#6366f1"},
-    "data":{label:isMobile?"Data & Analytics":"Data & Analytics",  color:"#22d3ee"},
-    "fin": {label:isMobile?"Finance":"Finance & Risk",      color:"#10b981"},
-    "pm":  {label:isMobile?"Prod/Proj":"Product & Project Mgmt", color:"#f59e0b"},
-    "mktg":{label:isMobile?"Marketing":"Marketing & Sales", color:"#ef4444"},
-    "hr":  {label:isMobile?"People/HR":"People & HR",       color:"#a78bfa"},
-  };
-
   // Aggregate JOBS by tag
   const agg={};
   JOBS.forEach(j=>{
@@ -997,14 +1909,14 @@ function drawChart(){
     agg[j.tag].maxSum+=j.max;
   });
 
-  // Sort by count desc, take top 5 known categories
+  // Sort by count desc, take top 6 (excluding "other")
   const displayCats=Object.entries(agg)
-    .filter(([k])=>CAT[k])
+    .filter(([k])=>k!=="other")
     .sort((a,b)=>b[1].count-a[1].count)
-    .slice(0,5)
+    .slice(0,6)
     .map(([tag,d])=>({
-      label:CAT[tag].label,
-      color:CAT[tag].color,
+      label: (CAT_META[tag]||{label:tag}).label,
+      color: CAT_COLORS[tag]||"#808080",
       count:d.count,
       avgMin:Math.round(d.minSum/d.count),
       avgMax:Math.round(d.maxSum/d.count),
@@ -1105,8 +2017,8 @@ function exportCSV(){
 }
 
 // ===== JOB DETAIL PANEL =====
-const CAT_LABELS = {eng:"Engineering",data:"Data & Analytics",fin:"Finance & Risk",pm:"Product & Project Mgmt",mktg:"Marketing & Sales",hr:"People & HR"};
-const CAT_COLORS = {eng:"#6366f1",data:"#22d3ee",fin:"#10b981",pm:"#f59e0b",mktg:"#ef4444",hr:"#a78bfa"};
+const CAT_LABELS = Object.fromEntries(Object.entries(CAT_META).map(([k,v])=>[k,v.label]));
+const CAT_COLORS = {eng:"#C8102E",data:"#0095D5",fin:"#10b981",pm:"#f59e0b",sales:"#8B5CF6",hr:"#00A0B2",ops:"#707070",legal:"#C87000",it:"#2060D0",exec:"#D04040",other:"#808080"};
 
 let _jdCurrentId = null;
 
@@ -1237,6 +2149,79 @@ function jdToggleSave(){
 window.addEventListener("resize",()=>{ drawChart(); renderTable(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeAuth(); closeJobDetail(); document.getElementById("savedPanel").classList.remove("open"); } });
 loadData(); // async: fetches data/jobs.json then initialises UI
+</script>
+<script>
+// Chip filter helper — syncs visible chips with hidden selects for JS compat
+function setChip(selectId, value, btn) {
+  document.getElementById(selectId).value = value;
+  btn.closest('.chip-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+  updateActiveFilters();
+}
+
+function clearAllFilters() {
+  ['catFilter','wmFilter','salaryFilter','regionFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = el.options[0].value;
+  });
+  document.getElementById('sortSelect').value = 'mid-desc';
+  // Reset all chip groups to first chip
+  document.querySelectorAll('.chip-group').forEach(group => {
+    const chips = group.querySelectorAll('.chip');
+    chips.forEach(c => c.classList.remove('active'));
+    if (chips[0]) chips[0].classList.add('active');
+  });
+  setAge('');
+  applyFilters();
+  updateActiveFilters();
+}
+
+function updateActiveFilters() {
+  const labels = {
+    catFilter: Object.fromEntries(Object.entries(CAT_META).map(([k,v])=>[k,v.label])),
+    wmFilter: {remote:'Remote',hybrid:'Hybrid',onsite:'Onsite'},
+    salaryFilter: {'80000':'$80K+','100000':'$100K+','120000':'$120K+','150000':'$150K+'},
+    regionFilter: {}
+  };
+  const active = [];
+  Object.entries(labels).forEach(([id, map]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.value;
+    if (val && val !== '0') {
+      const label = map[val] || (el.options[el.selectedIndex] && el.options[el.selectedIndex].text) || val;
+      active.push({id, val, label});
+    }
+  });
+  const bar = document.getElementById('activeFilters');
+  const chipsEl = document.getElementById('activeChips');
+  if (!bar || !chipsEl) return;
+  if (active.length === 0) { bar.style.display = 'none'; return; }
+  bar.style.display = 'block';
+  chipsEl.innerHTML = active.map(f =>
+    `<span class="active-chip">${f.label}<span class="active-chip-x" onclick="clearOneFilter('${f.id}')">×</span></span>`
+  ).join('');
+}
+
+function clearOneFilter(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.value = el.options[0].value;
+  // Reset corresponding chip group
+  const chipGroupMap = {catFilter:'catChips', wmFilter:'wmChips'};
+  const groupId = chipGroupMap[id];
+  if (groupId) {
+    const group = document.getElementById(groupId);
+    if (group) {
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      const first = group.querySelector('.chip');
+      if (first) first.classList.add('active');
+    }
+  }
+  applyFilters();
+  updateActiveFilters();
+}
 </script>
 </body>
 </html>

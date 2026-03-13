@@ -1791,7 +1791,7 @@
     {
       "id": "123",
       "role": "Administrative Assistant",
-      "company": "COLLIERS",
+      "company": "Colliers",
       "min": 51899,
       "max": 60000,
       "location": "Toronto, ON",
@@ -2781,7 +2781,7 @@
     {
       "id": "189",
       "role": "BI Reporting Developer Analyst",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 100000,
       "max": 115000,
       "location": "Markham, ON",
@@ -2796,7 +2796,7 @@
     {
       "id": "190",
       "role": "Senior Director of AI",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 130000,
       "max": 150000,
       "location": "Markham, ON",
@@ -2811,7 +2811,7 @@
     {
       "id": "191",
       "role": "Manager, Professional Services",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 75000,
       "max": 85000,
       "location": "Markham, ON",
@@ -2826,7 +2826,7 @@
     {
       "id": "192",
       "role": "Director of Finance",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 155000,
       "max": 165000,
       "location": "Markham, ON",
@@ -2841,7 +2841,7 @@
     {
       "id": "193",
       "role": "Accounts Payable Clerk",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 50000,
       "max": 55000,
       "location": "Markham, ON",
@@ -2856,7 +2856,7 @@
     {
       "id": "194",
       "role": "Product Support Technical Specialist",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 60000,
       "max": 70000,
       "location": "Markham, ON",
@@ -2871,7 +2871,7 @@
     {
       "id": "195",
       "role": "Junior Quality Assurance Analyst",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 50000,
       "max": 55000,
       "location": "Markham, ON",
@@ -2886,7 +2886,7 @@
     {
       "id": "196",
       "role": "Director of Software Development",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 155000,
       "max": 175000,
       "location": "Toronto, ON",
@@ -2901,7 +2901,7 @@
     {
       "id": "197",
       "role": "Senior Financial Analyst",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 85000,
       "max": 95000,
       "location": "Markham, ON",
@@ -2916,7 +2916,7 @@
     {
       "id": "198",
       "role": "Director of Development",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 130000,
       "max": 150000,
       "location": "Toronto, ON",
@@ -2931,7 +2931,7 @@
     {
       "id": "199",
       "role": "Marketing Manager",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 65000,
       "max": 75000,
       "location": "Toronto, ON",
@@ -2946,7 +2946,7 @@
     {
       "id": "200",
       "role": "Software Engineer",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 70000,
       "max": 80000,
       "location": "Toronto, ON",
@@ -2961,7 +2961,7 @@
     {
       "id": "201",
       "role": "Mergers & Acquisitions Business Development Associate",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 55000,
       "max": 65000,
       "location": "Markham, ON",
@@ -2976,7 +2976,7 @@
     {
       "id": "202",
       "role": "AI Transformation Lead",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 120000,
       "max": 140000,
       "location": "Toronto, ON",
@@ -2991,7 +2991,7 @@
     {
       "id": "203",
       "role": "Product Support Technician",
-      "company": "TALENTMANAGEMENTSOLUTION",
+      "company": "Jonas Software Canada",
       "min": 55000,
       "max": 60000,
       "location": "Markham, ON",
@@ -3006,7 +3006,7 @@
     {
       "id": "204",
       "role": "Senior Actuarial Analyst - Claims Data Analytics (CDAT)",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 89700,
       "max": 109700,
       "location": "Toronto, ON",
@@ -3021,7 +3021,7 @@
     {
       "id": "205",
       "role": "Customer Service Representative - Auto Claims",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 43600,
       "max": 53200,
       "location": "Ottawa, ON",
@@ -3036,7 +3036,7 @@
     {
       "id": "206",
       "role": "Accounting Operations Specialist",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 87200,
       "max": 106600,
       "location": "Toronto, ON",
@@ -3051,7 +3051,7 @@
     {
       "id": "207",
       "role": "Director, Actuarial, Commercial Lines",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 174500,
       "max": 213300,
       "location": "Toronto, ON",
@@ -3066,7 +3066,7 @@
     {
       "id": "208",
       "role": "Associate, Sales and Customer Service (May)",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 47100,
       "max": 57500,
       "location": "Toronto, ON",
@@ -3081,7 +3081,7 @@
     {
       "id": "209",
       "role": "Senior Communications Advisor",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 87200,
       "max": 106600,
       "location": "Toronto, ON",
@@ -3096,7 +3096,7 @@
     {
       "id": "210",
       "role": "Senior Underwriter Specialty Lines",
-      "company": "INTACTFC",
+      "company": "Intact Financial Corporation",
       "min": 94200,
       "max": 115200,
       "location": "Toronto, ON",
@@ -3111,7 +3111,7 @@
     {
       "id": "211",
       "role": "Program Manager",
-      "company": "MYVIEW",
+      "company": "Shoppers Drug Mart",
       "min": 100000,
       "max": 132000,
       "location": "Mississauga, ON",
