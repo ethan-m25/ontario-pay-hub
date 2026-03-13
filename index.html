@@ -1117,16 +1117,13 @@ footer a { color: var(--accent); text-decoration: none; }
   box-shadow: 0 16px 34px rgba(0,0,0,.10);
   overflow: hidden;
 }
-.insights-details summary {
-  list-style: none;
-  cursor: pointer;
+.insights-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   padding: 15px 18px;
 }
-.insights-details summary::-webkit-details-marker { display:none; }
 .insights-summary-copy { min-width: 0; }
 .insights-summary-kicker {
   font-family: var(--font-mono);
@@ -1158,8 +1155,10 @@ footer a { color: var(--accent); text-decoration: none; }
   border-radius: 999px;
   color: var(--text2);
   transition: transform var(--transition), color var(--transition), border-color var(--transition);
+  background: transparent;
+  cursor: pointer;
 }
-.insights-details[open] .insights-chevron {
+.insights-details.insights-open .insights-chevron {
   transform: rotate(180deg);
   color: var(--accent);
   border-color: var(--accent-border);
@@ -1167,6 +1166,9 @@ footer a { color: var(--accent); text-decoration: none; }
 .insights-body {
   padding: 0 16px 16px;
   border-top: 1px solid var(--border);
+}
+.insights-details:not(.insights-open) .insights-body {
+  display: none;
 }
 .market-card {
   background: var(--surface);
@@ -1736,16 +1738,16 @@ tbody tr:hover {
       </div>
     </div>
     <div class="insights-drawer">
-      <details class="insights-details" id="insightsPanel">
-        <summary>
+      <div class="insights-details" id="insightsPanel">
+        <div class="insights-header">
           <div class="insights-summary-copy">
             <div class="insights-summary-kicker">Insights</div>
             <div class="insights-summary-title">Market context and quick entry points.</div>
             <div class="insights-summary-sub">Open when you want extra context, then jump back to the listings.</div>
           </div>
-          <span class="insights-chevron">⌄</span>
-        </summary>
-        <div class="insights-body">
+          <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="toggleInsightsPanel()">⌄</button>
+        </div>
+        <div class="insights-body" id="insightsBody">
           <section class="market-grid">
             <div class="market-card featured">
               <div class="market-title">Market Snapshot</div>
@@ -1765,7 +1767,7 @@ tbody tr:hover {
             </div>
           </section>
         </div>
-      </details>
+      </div>
     </div>
 
     <div class="results-shell">
@@ -2786,7 +2788,19 @@ function drawChart(){
 function syncInsightsPanel(){
   const panel=document.getElementById("insightsPanel");
   if(!panel) return;
-  panel.open = window.innerWidth > 760;
+  const shouldOpen = window.innerWidth > 760;
+  panel.classList.toggle("insights-open", shouldOpen);
+  const btn = panel.querySelector(".insights-chevron");
+  if(btn) btn.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+}
+
+function toggleInsightsPanel(force){
+  const panel=document.getElementById("insightsPanel");
+  if(!panel) return;
+  const next = typeof force === "boolean" ? force : !panel.classList.contains("insights-open");
+  panel.classList.toggle("insights-open", next);
+  const btn = panel.querySelector(".insights-chevron");
+  if(btn) btn.setAttribute("aria-expanded", next ? "true" : "false");
 }
 
 // ===== COMPENSATION NOTE TOGGLE =====
