@@ -7,6 +7,7 @@
 <meta name="description" content="Browse real compensation ranges from Ontario job postings required by ESA Pay Transparency Rules (Jan 1, 2026). Free, updated daily. Research pay across tech, finance, healthcare, government and more.">
 <meta name="keywords" content="Ontario salary range, pay transparency Ontario, Ontario jobs salary 2026, compensation Ontario, Pay Transparency Act, Toronto salary data">
 <meta name="robots" content="index, follow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%231A1209'/%3E%3Crect x='10' y='34' width='10' height='20' fill='%23F5EFE2' opacity='.6'/%3E%3Crect x='27' y='24' width='10' height='30' fill='%23F5EFE2' opacity='.82'/%3E%3Crect x='44' y='14' width='10' height='40' fill='%23C8102E'/%3E%3C/svg%3E">
 <link rel="canonical" href="https://ontariopayhub.fyi/">
 <meta name="google-site-verification" content="Lnk75E9wdO33G-ytiEJ3AFIoMTtn5IDbqH1hXDZwZR4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +49,7 @@
 /* Fonts: Playfair Display (headlines) · IBM Plex Sans (UI) · IBM Plex Mono (data) */
 
 :root {
-  --radius: 2px; --radius-sm: 2px; --radius-xs: 2px;
+  --radius: 10px; --radius-sm: 8px; --radius-xs: 6px;
   --transition: .18s ease;
   --shadow: 0 2px 12px rgba(0,0,0,.10);
   --shadow-lg: 0 8px 32px rgba(0,0,0,.16);
@@ -138,18 +139,19 @@ body {
 nav {
   position: sticky; top: 0; z-index: 200;
   background: var(--nav-bg);
-  border-bottom: 3px solid var(--text);
+  border-bottom: 1px solid var(--border2);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   padding: 0 28px; height: 56px;
   display: flex; align-items: center; gap: 16px;
 }
-[data-theme="light"] nav { border-bottom: 3px solid #1A1209; }
-[data-theme="dark"] nav { border-bottom: 3px solid var(--text); }
+[data-theme="light"] nav { box-shadow: 0 8px 30px rgba(26,18,9,.05); }
+[data-theme="dark"] nav { box-shadow: 0 10px 30px rgba(0,0,0,.22); }
 
 .logo { display:flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
 .logo-icon {
   width: 32px; height: 32px;
   background: var(--text);
+  border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
   font-size: 15px;
 }
@@ -182,7 +184,7 @@ nav {
   width: 100%;
   background: var(--surface2);
   border: 1px solid var(--border2);
-  border-radius: 0;
+  border-radius: 8px;
   padding: 7px 12px 7px 34px;
   color: var(--text); font-family: var(--font-sans); font-size:.84rem;
   outline: none;
@@ -196,7 +198,7 @@ nav {
 .btn-icon {
   background: transparent;
   border: 1px solid var(--border2);
-  border-radius: 0;
+  border-radius: 8px;
   width: 34px; height: 34px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; font-size: 15px;
@@ -208,25 +210,25 @@ nav {
   position:absolute; top:-4px; right:-4px;
   background: var(--accent); color:#fff;
   font-family: var(--font-mono); font-size:.58rem; font-weight:600;
-  min-width:16px; height:16px; border-radius:0;
+  min-width:16px; height:16px; border-radius:999px;
   display:flex; align-items:center; justify-content:center; padding:0 3px;
 }
 .btn-primary {
   background: var(--text);
-  border: none; border-radius: 0;
-  padding: 7px 14px;
+  border: 1px solid rgba(255,255,255,.05); border-radius: 8px;
+  padding: 8px 14px;
   color: var(--bg); font-family: var(--font-sans); font-size:.78rem; font-weight:700;
-  cursor: pointer; transition: opacity var(--transition); white-space: nowrap;
+  cursor: pointer; transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition); white-space: nowrap;
   letter-spacing: .02em; text-transform: uppercase;
 }
-.btn-primary:hover { opacity:.82; }
+.btn-primary:hover { opacity:.92; transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0,0,0,.16); }
 .btn-secondary {
-  background: transparent; border: 1px solid var(--border2); border-radius: 0;
-  padding: 7px 14px; color: var(--text2);
+  background: transparent; border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 14px; color: var(--text2);
   font-family: var(--font-sans); font-size:.78rem; font-weight:600;
-  cursor: pointer; transition: background var(--transition); white-space: nowrap;
+  cursor: pointer; transition: background var(--transition), border-color var(--transition), transform var(--transition); white-space: nowrap;
 }
-.btn-secondary:hover { background: var(--surface); }
+.btn-secondary:hover { background: var(--surface); border-color: var(--text3); transform: translateY(-1px); }
 #userBtn { font-size:.75rem; padding:6px 12px; white-space:nowrap; }
 
 /* ===== HERO — newspaper front page masthead ===== */
@@ -329,6 +331,8 @@ nav {
   background: var(--surface);
   border: 1px solid var(--border);
   border-top: 3px solid var(--border2);
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
   margin-bottom: 20px; overflow: hidden;
 }
 #chartCard { background: var(--surface2); border-top-color: var(--text3); }
@@ -422,7 +426,7 @@ td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
 /* Category tags — flat, typographic */
 .tag {
   display: inline-flex; align-items: center;
-  padding: 2px 7px; border-radius: 0;
+  padding: 3px 8px; border-radius: 999px;
   font-family: var(--font-mono); font-size: .6rem; font-weight: 600;
   letter-spacing: .06em; white-space: nowrap; text-transform: uppercase;
 }
@@ -467,7 +471,7 @@ td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
 .role-link { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 .btn-save {
   background: none; border: 1px solid var(--border);
-  border-radius: 0; width: 28px; height: 28px;
+  border-radius: 999px; width: 30px; height: 30px;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; font-size: 13px; color: var(--text3);
   transition: all var(--transition);
@@ -602,10 +606,11 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   position: fixed; right: 0; top: 0; bottom: 0;
   width: 100%; max-width: 380px;
   background: var(--surface);
-  border-left: 3px solid var(--border2);
+  border-left: 1px solid var(--border2);
   z-index: 300; box-shadow: var(--shadow-lg);
   transform: translateX(100%); transition: transform .3s ease;
   display: flex; flex-direction: column;
+  overflow: hidden;
 }
 .saved-panel.open { transform:translateX(0); }
 .saved-header {
@@ -614,12 +619,13 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   display: flex; align-items: center; justify-content: space-between;
 }
 .saved-header h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; }
-.saved-body { flex:1; overflow-y:auto; padding:16px; }
+.saved-body { flex:1; min-height:0; overflow-y:auto; padding:16px; }
 .saved-empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:.875rem; }
 .saved-item {
   background: var(--surface2);
   border: 1px solid var(--border);
   border-left: 3px solid var(--border2);
+  border-radius: 12px;
   padding: 12px 14px; margin-bottom: 10px;
 }
 .saved-item-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:4px; }
@@ -628,7 +634,12 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .saved-item-range { font-family: var(--font-mono); font-size: .82rem; color: var(--green); font-weight: 600; }
 .saved-item-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:15px; line-height:1; padding:2px; }
 .saved-item-remove:hover { color:var(--red); }
-.saved-footer { padding:16px; border-top:1px solid var(--border); }
+.saved-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
 .login-prompt { text-align:center; padding:40px 20px; }
 .login-prompt p { color:var(--text2); font-size:.875rem; margin-bottom:16px; }
 
@@ -639,7 +650,7 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   position: fixed; right: 0; top: 0; bottom: 0;
   width: 100%; max-width: 440px;
   background: var(--surface);
-  border-left: 3px solid var(--border2);
+  border-left: 1px solid var(--border2);
   z-index: 310; box-shadow: var(--shadow-lg);
   transform: translateX(100%); transition: transform .28s ease;
   display: flex; flex-direction: column; overflow: hidden;
@@ -742,7 +753,7 @@ footer a { color: var(--accent); text-decoration: none; }
 .masthead {
   background: var(--bg2);
   border-bottom: 1px solid var(--border);
-  padding: 26px 0 20px;
+  padding: 30px 0 26px;
   position: relative;
 }
 .masthead::before {
@@ -764,11 +775,88 @@ footer a { color: var(--accent); text-decoration: none; }
 .masthead p {
   font-size: .84rem; color: var(--text2); line-height: 1.55;
 }
+.masthead-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: start;
+}
+.masthead-copy {
+  min-width: 0;
+  max-width: 860px;
+}
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+.hero-kicker strong { color: var(--accent); }
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.hero-action-btn {
+  padding: 10px 14px;
+  font-size: .75rem;
+}
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.trust-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--border2);
+  background: rgba(255,255,255,.025);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  color: var(--text2);
+  letter-spacing: .04em;
+}
+.hero-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.hero-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid var(--border2);
+  background: rgba(255,255,255,.025);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  color: var(--text2);
+}
+.hero-stat strong {
+  color: var(--text);
+  font-size: .74rem;
+}
 
 /* Two-column app layout */
 .app-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 236px 1fr;
   max-width: 1400px;
   margin: 0 auto;
   min-height: calc(100vh - 160px);
@@ -779,7 +867,7 @@ footer a { color: var(--accent); text-decoration: none; }
 /* Left sidebar */
 .sidebar {
   border-right: 1px solid var(--border);
-  padding: 20px 18px;
+  padding: 16px 14px;
   position: sticky;
   top: 56px;
   height: calc(100vh - 56px);
@@ -791,19 +879,30 @@ footer a { color: var(--accent); text-decoration: none; }
 .sidebar::-webkit-scrollbar { width: 4px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
 
-.sidebar-section { margin-bottom: 18px; }
+.sidebar-section { margin-bottom: 14px; }
+.sidebar-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.sidebar-box {
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
 
 .sidebar-label {
   font-family: var(--font-mono);
-  font-size: .58rem; font-weight: 600;
+  font-size: .54rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .12em;
   color: var(--text3);
-  margin-bottom: 12px;
-  padding-bottom: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
   border-bottom: 1px solid var(--border);
 }
 
-.sidebar-divider { border-top: 1px solid var(--border); margin: 16px 0; }
+.sidebar-divider { border-top: 1px solid var(--border); margin: 12px 0; }
 
 /* Sidebar stats — big typographic numbers */
 .sidebar-stats { display: flex; flex-direction: column; gap: 14px; }
@@ -834,14 +933,14 @@ footer a { color: var(--accent); text-decoration: none; }
 .chip-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px;
 }
 .chip {
   font-family: var(--font-sans);
-  font-size: .72rem;
+  font-size: .69rem;
   font-weight: 500;
-  padding: 4px 11px;
-  border-radius: 6px;
+  padding: 4px 9px;
+  border-radius: 999px;
   border: 1px solid var(--border2);
   background: transparent;
   color: var(--text3);
@@ -868,8 +967,8 @@ footer a { color: var(--accent); text-decoration: none; }
   width: 100%;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 7px 30px 7px 10px;
+  border-radius: 10px;
+  padding: 7px 30px 7px 9px;
   color: var(--text2);
   font-family: var(--font-sans);
   font-size: .78rem;
@@ -886,7 +985,7 @@ footer a { color: var(--accent); text-decoration: none; }
 /* Active filters bar */
 .active-filters {
   background: var(--surface2);
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 8px 10px;
   margin-bottom: 14px;
 }
@@ -922,7 +1021,7 @@ footer a { color: var(--accent); text-decoration: none; }
   font-family: var(--font-sans);
   font-size: .68rem;
   padding: 2px 8px;
-  border-radius: 4px;
+  border-radius: 999px;
   background: var(--accent-dim);
   color: var(--accent);
   border: 1px solid var(--accent-border);
@@ -955,9 +1054,176 @@ footer a { color: var(--accent); text-decoration: none; }
 /* Table card without top padding since filters moved to sidebar */
 .content-area .card { border-top: 2px solid var(--border2); }
 .content-area #chartCard { border-top: 2px solid var(--text3); }
+.market-grid {
+  display: grid;
+  grid-template-columns: 1.15fr .9fr .95fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.market-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border2);
+  border-radius: 14px;
+  box-shadow: 0 16px 36px rgba(0,0,0,.10);
+  padding: 16px;
+  min-width: 0;
+}
+.market-card.featured {
+  border-top-color: var(--accent);
+}
+.market-title {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text3);
+  margin-bottom: 10px;
+}
+.market-headline {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.market-copy {
+  font-size: .79rem;
+  color: var(--text2);
+  line-height: 1.55;
+}
+.market-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.market-metric {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  border-radius: 12px;
+}
+.market-metric strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.market-metric span {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text3);
+}
+.market-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.market-link {
+  display: block;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  transition: background var(--transition), border-color var(--transition);
+}
+.market-link:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent-border);
+}
+.market-link-role {
+  font-size: .8rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.market-link-meta {
+  font-size: .72rem;
+  color: var(--text3);
+  margin-top: 4px;
+}
+.results-shell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--text);
+  border-radius: 16px;
+  box-shadow: 0 18px 42px rgba(0,0,0,.12);
+  margin-bottom: 18px;
+}
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 14px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.results-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+.results-sub {
+  margin-top: 5px;
+  font-size: .78rem;
+  color: var(--text2);
+}
+.results-meta {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--text3);
+}
+.results-meta strong {
+  display: block;
+  font-size: .95rem;
+  color: var(--text);
+}
+.results-shell .table-wrap {
+  background: linear-gradient(180deg, var(--surface), var(--surface2));
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  border-left: 2px solid transparent;
+  transition: background var(--transition), border-left-color var(--transition), transform var(--transition);
+}
+tbody tr:hover {
+  background: var(--accent-dim);
+  border-left-color: var(--accent);
+  transform: translateX(2px);
+}
+.row-company-meta {
+  font-size: .7rem;
+  color: var(--text3);
+  display: block;
+  margin-top: 4px;
+  line-height: 1.45;
+}
+.role-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.role-title {
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 5px;
+}
 
 /* Mobile: sidebar becomes horizontal strip */
 @media(max-width:960px) {
+  .masthead-grid,
+  .market-grid {
+    grid-template-columns: 1fr;
+  }
   .app-layout { grid-template-columns: 1fr; }
   .sidebar {
     position: static; height: auto;
@@ -968,6 +1234,9 @@ footer a { color: var(--accent); text-decoration: none; }
     grid-template-columns: repeat(2, 1fr);
     gap: 0 20px;
   }
+  .sidebar-meta-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .sidebar-divider { display: none; }
   .sidebar-stats { flex-direction: row; flex-wrap: wrap; gap: 10px; }
   .sstat-num { font-size: 1.1rem; }
@@ -976,7 +1245,24 @@ footer a { color: var(--accent); text-decoration: none; }
 }
 @media(max-width:580px) {
   .sidebar { grid-template-columns: 1fr; }
+  .sidebar-meta-grid { grid-template-columns: 1fr; }
   .masthead h2 { font-size: 1.6rem; }
+  .masthead-inner,
+  .content-area {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .hero-actions,
+  .hero-summary {
+    flex-direction: column;
+  }
+  .market-metrics {
+    grid-template-columns: 1fr;
+  }
+  .results-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 </style>
 </head>
@@ -1005,9 +1291,30 @@ footer a { color: var(--accent); text-decoration: none; }
 <!-- MASTHEAD -->
 <div class="masthead">
   <div class="masthead-inner">
-    <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
-    <h2>Ontario Pay Transparency Hub</h2>
-    <p>Real compensation ranges from Ontario job postings · <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">ESA Pay Transparency Rules ↗</a> · Updated daily</p>
+    <div class="masthead-grid">
+      <div class="masthead-copy">
+        <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
+        <div class="hero-kicker"><strong id="heroUpdated">Updated daily</strong><span>Public Ontario job postings only</span></div>
+        <h2>Find Ontario jobs by real disclosed pay, not vague salary promises.</h2>
+        <p>Browse salary ranges from public Ontario job postings under the ESA disclosure rules. Search by category, region, work mode, and compensation band, then open the original posting when a role looks worth your time.</p>
+        <div class="hero-actions">
+          <button class="btn-primary hero-action-btn" onclick="presetFilter({sort:'date-desc'})">See Newest Jobs</button>
+          <button class="btn-secondary hero-action-btn" onclick="presetFilter({cat:'eng',sort:'mid-desc'})">Top Engineering Pay</button>
+          <button class="btn-secondary hero-action-btn" onclick="presetFilter({wm:'remote',sort:'mid-desc'})">Remote Roles</button>
+        </div>
+        <div class="hero-trust">
+          <span class="trust-pill">Daily dataset refresh</span>
+          <span class="trust-pill">Public-source links preserved</span>
+          <span class="trust-pill">Save jobs and defaults locally</span>
+        </div>
+        <div class="hero-summary">
+          <span class="hero-stat"><strong id="heroCount">319</strong> tracked postings</span>
+          <span class="hero-stat"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
+          <span class="hero-stat"><strong id="heroTopEmployer">BMO</strong> most active employer</span>
+          <span class="hero-stat"><strong id="heroMedian">—</strong> median midpoint</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1079,71 +1386,85 @@ footer a { color: var(--accent); text-decoration: none; }
 
     <div class="sidebar-divider"></div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-label">Min Salary</div>
-      <select class="filter-select-modern" id="salaryFilter" onchange="applyFilters()">
-        <option value="0">Any</option>
-        <option value="80000">$80K+</option>
-        <option value="100000">$100K+</option>
-        <option value="120000">$120K+</option>
-        <option value="150000">$150K+</option>
-      </select>
-    </div>
-
-    <div class="sidebar-divider"></div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Region</div>
-      <select class="filter-select-modern" id="regionFilter" onchange="applyFilters()">
-        <option value="">All Regions</option>
-      </select>
-    </div>
-
-    <div class="sidebar-divider"></div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Sort By</div>
-      <select id="sortSelect" style="display:none" onchange="applyFilters()">
-        <option value="mid-desc">Highest Salary</option>
-        <option value="mid-asc">Lowest Salary</option>
-        <option value="date-desc">Newest First</option>
-        <option value="co-asc">Company A→Z</option>
-      </select>
-      <div class="chip-group" id="sortChips">
-        <button class="chip active" onclick="setChip('sortSelect','mid-desc',this)">↓ Highest</button>
-        <button class="chip" onclick="setChip('sortSelect','mid-asc',this)">↑ Lowest</button>
-        <button class="chip" onclick="setChip('sortSelect','date-desc',this)">Newest</button>
-        <button class="chip" onclick="setChip('sortSelect','co-asc',this)">A→Z</button>
+    <div class="sidebar-meta-grid">
+      <div class="sidebar-section sidebar-box">
+        <div class="sidebar-label">Min Salary</div>
+        <select class="filter-select-modern" id="salaryFilter" onchange="applyFilters()">
+          <option value="0">Any</option>
+          <option value="80000">$80K+</option>
+          <option value="100000">$100K+</option>
+          <option value="120000">$120K+</option>
+          <option value="150000">$150K+</option>
+        </select>
       </div>
-    </div>
 
-    <div class="sidebar-divider"></div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-label">Posted</div>
-      <div class="chip-group" id="ageChips">
-        <button class="chip age-btn active" id="age-all"   onclick="setAge('')">All</button>
-        <button class="chip age-btn"        id="age-1m"    onclick="setAge('1m')">1 mo</button>
-        <button class="chip age-btn"        id="age-3m"    onclick="setAge('3m')">3 mo</button>
-        <button class="chip age-btn"        id="age-6m"    onclick="setAge('6m')">6 mo</button>
-        <button class="chip age-btn"        id="age-old"   onclick="setAge('6m+')">6 mo+</button>
+      <div class="sidebar-section sidebar-box">
+        <div class="sidebar-label">Region</div>
+        <select class="filter-select-modern" id="regionFilter" onchange="applyFilters()">
+          <option value="">All Regions</option>
+        </select>
       </div>
-      <div class="sidebar-result" id="resultInfo"></div>
+
+      <div class="sidebar-section sidebar-box">
+        <div class="sidebar-label">Sort By</div>
+        <select id="sortSelect" style="display:none" onchange="applyFilters()">
+          <option value="mid-desc">Highest Salary</option>
+          <option value="mid-asc">Lowest Salary</option>
+          <option value="date-desc">Newest First</option>
+          <option value="co-asc">Company A→Z</option>
+        </select>
+        <div class="chip-group" id="sortChips">
+          <button class="chip active" onclick="setChip('sortSelect','mid-desc',this)">↓ Highest</button>
+          <button class="chip" onclick="setChip('sortSelect','mid-asc',this)">↑ Lowest</button>
+          <button class="chip" onclick="setChip('sortSelect','date-desc',this)">Newest</button>
+          <button class="chip" onclick="setChip('sortSelect','co-asc',this)">A→Z</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section sidebar-box">
+        <div class="sidebar-label">Posted</div>
+        <div class="chip-group" id="ageChips">
+          <button class="chip age-btn active" id="age-all"   onclick="setAge('')">All</button>
+          <button class="chip age-btn"        id="age-1m"    onclick="setAge('1m')">1 mo</button>
+          <button class="chip age-btn"        id="age-3m"    onclick="setAge('3m')">3 mo</button>
+          <button class="chip age-btn"        id="age-6m"    onclick="setAge('6m')">6 mo</button>
+          <button class="chip age-btn"        id="age-old"   onclick="setAge('6m+')">6 mo+</button>
+        </div>
+        <div class="sidebar-result" id="resultInfo"></div>
+      </div>
     </div>
 
   </aside>
 
   <!-- RIGHT CONTENT -->
   <main class="content-area">
+    <section class="market-grid">
+      <div class="market-card featured">
+        <div class="market-title">Market Snapshot</div>
+        <div class="market-headline" id="marketSignalTitle">Ontario compensation signals, organized for decision-making.</div>
+        <div class="market-copy" id="marketSignalCopy">Use category, work mode, and salary filters to move from market scanning to a shortlist quickly.</div>
+        <div class="market-metrics" id="marketMetrics"></div>
+      </div>
+      <div class="market-card">
+        <div class="market-title">Quick Decisions</div>
+        <div class="market-copy">Start from a strong view instead of scanning the full market cold.</div>
+        <div class="market-list" id="quickStartList"></div>
+      </div>
+      <div class="market-card">
+        <div class="market-title">Top Paying Right Now</div>
+        <div class="market-copy">Highest disclosed midpoint ranges currently visible in the dataset.</div>
+        <div class="market-list" id="topPayList"></div>
+      </div>
+    </section>
 
-    <!-- CHART -->
-    <div class="card" id="chartCard">
-      <div class="card-header"><span class="card-title">Average Range by Role</span></div>
-      <canvas id="chartCanvas"></canvas>
-    </div>
-
-    <!-- TABLE -->
-    <div class="card">
+    <div class="results-shell">
+      <div class="results-header">
+        <div>
+          <div class="results-title">Browse Salary-Disclosed Jobs</div>
+          <div class="results-sub">Use the left-side controls to narrow down the market, then open a row for full details and the original source link.</div>
+        </div>
+        <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
+      </div>
       <div class="comp-note" id="compNote">
         <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
         ✅ <strong>Included:</strong> base wages (salary), commissions, guaranteed performance bonuses<br>
@@ -1167,6 +1488,11 @@ footer a { color: var(--accent); text-decoration: none; }
         </table>
         <div class="empty" id="emptyState" style="display:none">No matching postings found. Try adjusting your filters.</div>
       </div>
+    </div>
+
+    <div class="card" id="chartCard">
+      <div class="card-header"><span class="card-title">Average Range by Role</span></div>
+      <canvas id="chartCanvas"></canvas>
     </div>
 
   </main>
@@ -1438,6 +1764,7 @@ const FALLBACK_JOBS = [
   {id:21,role:"Marketing Manager",tag:"mktg",company:"Rogers Communications",min:90000,max:130000,src:"rogers.com/careers",date:"2026-03-04"},
 ];
 let JOBS = FALLBACK_JOBS;
+let SITE_META = null;
 
 function normalizeJob(j, i) {
   // Preserve the full specific job posting URL
@@ -1470,6 +1797,7 @@ async function loadData() {
     const d = await r.json();
     if (d.jobs && d.jobs.length) {
       JOBS = d.jobs.map(normalizeJob);
+      SITE_META = d.meta || null;
       if (d.meta && d.meta.updated) {
         const dt = new Date(d.meta.updated);
         const label = dt.toLocaleDateString("en-CA",{month:"short",day:"numeric",year:"numeric"});
@@ -1483,6 +1811,7 @@ async function loadData() {
   applyTheme();
   updateStats();
   populateFilters();
+  renderDiscovery();
   applyFilters();
   updateUserUI();
 }
@@ -1530,6 +1859,93 @@ function topCo(){
   const cnt={};
   JOBS.forEach(j=>{cnt[j.company]=(cnt[j.company]||0)+1;});
   return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+}
+function newestJobs(limit=3){
+  return [...JOBS].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,limit);
+}
+function topPayJobs(limit=3){
+  return [...JOBS].sort((a,b)=>mid(b)-mid(a)).slice(0,limit);
+}
+function byTagTop(tag, limit=1){
+  return [...JOBS].filter(j=>j.tag===tag).sort((a,b)=>mid(b)-mid(a)).slice(0,limit);
+}
+function topTagByCount(){
+  const counts = {};
+  JOBS.forEach(j=>{ counts[j.tag] = (counts[j.tag] || 0) + 1; });
+  const best = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  return best ? { tag: best[0], count: best[1], label: (CAT_META[best[0]]||{label:best[0]}).label } : null;
+}
+function renderDiscovery(){
+  const updatedText = SITE_META && SITE_META.updated
+    ? new Date(SITE_META.updated).toLocaleDateString("en-CA",{month:"short",day:"numeric"})
+    : "Latest refresh";
+  const heroUpdated = document.getElementById("heroUpdated");
+  const heroCount = document.getElementById("heroCount");
+  const heroNewToday = document.getElementById("heroNewToday");
+  const heroTopEmployer = document.getElementById("heroTopEmployer");
+  const heroMedian = document.getElementById("heroMedian");
+  const marketSignalTitle = document.getElementById("marketSignalTitle");
+  const marketSignalCopy = document.getElementById("marketSignalCopy");
+  if(heroUpdated) heroUpdated.textContent = `Updated ${updatedText}`;
+  if(heroCount) heroCount.textContent = String(JOBS.length);
+  if(heroNewToday) heroNewToday.textContent = SITE_META && SITE_META.new_today ? `${SITE_META.new_today} newly added today` : "Fresh roles available";
+  if(heroTopEmployer) heroTopEmployer.textContent = topCo();
+  const mids = JOBS.map(mid).sort((a,b)=>a-b);
+  const median = mids[Math.floor(mids.length/2)];
+  if(heroMedian) heroMedian.textContent = fmt(median);
+  const leadTag = topTagByCount();
+  if(marketSignalTitle) {
+    marketSignalTitle.textContent = leadTag
+      ? `${leadTag.label} currently leads the Ontario disclosure mix.`
+      : "Ontario compensation signals, organized for decision-making.";
+  }
+  if(marketSignalCopy) {
+    const active = SITE_META && SITE_META.active ? SITE_META.active : JOBS.length;
+    const archived = SITE_META && SITE_META.archived ? SITE_META.archived : JOBS.filter(isArchived).length;
+    const newest = newestJobs(1)[0];
+    const recency = newest ? `Newest visible posting: ${relDate(newest.date)}.` : "";
+    marketSignalCopy.textContent = `${active} active postings and ${archived} archived records are preserved for calibration and comparison. ${recency}`.trim();
+  }
+  const marketMetrics = document.getElementById("marketMetrics");
+  if(marketMetrics){
+    const remoteCount = JOBS.filter(j=>j.work_mode === "remote").length;
+    const highPayCount = JOBS.filter(j=>mid(j) >= 150000).length;
+    marketMetrics.innerHTML = `
+      <div class="market-metric"><strong>${SITE_META && SITE_META.new_today ? SITE_META.new_today : newestJobs(10).length}</strong><span>new in latest refresh</span></div>
+      <div class="market-metric"><strong>${leadTag ? leadTag.label : "Mixed"}</strong><span>largest category by volume</span></div>
+      <div class="market-metric"><strong>${remoteCount}</strong><span>remote roles in dataset</span></div>
+      <div class="market-metric"><strong>${highPayCount}</strong><span>roles with $150k+ midpoint</span></div>
+    `;
+  }
+  const topPayList = document.getElementById("topPayList");
+  if(topPayList){
+    topPayList.innerHTML = topPayJobs(3).map(j=>`
+      <a class="market-link" href="#" onclick="event.preventDefault(); openJobDetail(${j.id})">
+        <div class="market-link-role">${j.role}</div>
+        <div class="market-link-meta">${j.company} · ${fmt(mid(j))} midpoint · ${relDate(j.date)}</div>
+      </a>
+    `).join("");
+  }
+  const quickStartList = document.getElementById("quickStartList");
+  if(quickStartList){
+    const freshHighPay = [...JOBS]
+      .filter(j=>mid(j)>=150000)
+      .sort((a,b)=>b.date.localeCompare(a.date)||mid(b)-mid(a))[0];
+    const starts = [
+      {label:"Newest postings", action:"presetFilter({sort:'date-desc'})", text: newestJobs(1)[0]},
+      {label:"Engineering pay leaders", action:"presetFilter({cat:'eng',sort:'mid-desc'})", text: byTagTop('eng',1)[0]},
+      {label:"Fresh $150k+ roles", action:"presetFilter({salMin:150000,sort:'date-desc'})", text: freshHighPay}
+    ];
+    quickStartList.innerHTML = starts.map(item=>{
+      const j = item.text;
+      const company = j && j.company && j.company !== "Not specified" ? j.company : "Ontario employer";
+      const meta = j ? `${j.role} · ${company}` : `Open this view and scan the current market quickly`;
+      return `<a class="market-link" href="#" onclick="event.preventDefault(); ${item.action}">
+        <div class="market-link-role">${item.label}</div>
+        <div class="market-link-meta">${meta}</div>
+      </a>`;
+    }).join("");
+  }
 }
 
 // ===== THEME =====
@@ -1714,7 +2130,7 @@ function renderSaved(){
     body.innerHTML=tabs+content;
     foot.innerHTML=items.length
       ? `<button class="btn-secondary" style="width:100%;font-size:.8rem;margin-bottom:8px"
-           onclick="if(confirm('Clear all saved?')){S.saved=[];localStorage.setItem('saved','[]');updateSaveBadge();renderSaved();}">Clear all saved</button>
+           onclick="if(confirm('Clear all saved?')&&S.user){S.saved=[];localStorage.setItem('saved_'+S.user.email,'[]');updateSaveBadge();renderSaved();renderTable();}">Clear all saved</button>
          <button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`
       : `<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
 
@@ -1769,6 +2185,7 @@ function populateFilters(){
     cities.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');
   // Build category chips from actual data
   buildCategoryChips();
+  syncControlState();
 }
 function setAge(val){
   S.age=val;
@@ -1785,6 +2202,7 @@ function applyFilters(){
   S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
   S.wm=document.getElementById("wmFilter").value;
   S.sort=document.getElementById("sortSelect").value;
+  syncControlState();
   renderTable();
 }
 function renderTable(){
@@ -1811,6 +2229,14 @@ function renderTable(){
   });
   const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
+  const headlineBits = [];
+  if(S.cat) headlineBits.push((CAT_META[S.cat]||{label:S.cat}).label);
+  if(S.wm) headlineBits.push(S.wm[0].toUpperCase()+S.wm.slice(1));
+  if(S.region) headlineBits.push(S.region);
+  if(S.salMin) headlineBits.push(`${fmt(S.salMin)}+ midpoint`);
+  if(S.age) headlineBits.push(`posted ${S.age}`);
+  const resultsHeadline = document.getElementById("resultsHeadline");
+  if(resultsHeadline) resultsHeadline.textContent = headlineBits.length ? headlineBits.join(" · ") : "All postings";
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
     ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,1).map(j=>j.id))
@@ -1862,8 +2288,15 @@ function renderTable(){
       const isTop=top3Ids.has(j.id);
       const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
       return `<tr class="${isTop?'top-row':''}" style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
-        <td><span class="tag ${tagClass(j.tag)}" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</span>${isTop?'<span class="top-badge">🏆 Top Pay</span>':''}</td>
-        <td class="company-name">${j.company} ${wmBadge(j.work_mode)}</td>
+        <td>
+          <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
+          <div class="role-meta">
+            <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
+            ${isTop?'<span class="top-badge">Top Pay</span>':''}
+            ${archived?'<span style="font-size:.62rem;color:var(--text3)">Archived</span>':''}
+          </div>
+        </td>
+        <td><span class="company-name">${j.company}</span><span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
           <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
@@ -1879,6 +2312,7 @@ function renderTable(){
     }).join("");
   }
   updateSaveBadge();
+  updateActiveFilters();
 }
 function updateStats(){
   const mids=JOBS.map(mid).sort((a,b)=>a-b);
@@ -1889,6 +2323,12 @@ function updateStats(){
   document.getElementById("statMedian").textContent=fmt(median);
   document.getElementById("statTop").textContent=topCo();
   document.getElementById("statSpread").textContent=fmt(spread);
+  const heroCount = document.getElementById("heroCount");
+  if(heroCount) heroCount.textContent = String(JOBS.length);
+  const heroTopEmployer = document.getElementById("heroTopEmployer");
+  if(heroTopEmployer) heroTopEmployer.textContent = topCo();
+  const heroMedian = document.getElementById("heroMedian");
+  if(heroMedian) heroMedian.textContent = fmt(median);
 }
 
 // ===== CHART — dynamic categories from actual data =====
@@ -2152,15 +2592,39 @@ loadData(); // async: fetches data/jobs.json then initialises UI
 </script>
 <script>
 // Chip filter helper — syncs visible chips with hidden selects for JS compat
+function syncChipGroup(groupId, value) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  const chips = group.querySelectorAll('.chip');
+  let matched = false;
+  chips.forEach(chip => {
+    const handler = chip.getAttribute('onclick') || "";
+    const isMatch = handler.includes(`'${value}'`) || (value === "" && handler.includes(",'',"));
+    chip.classList.toggle('active', isMatch);
+    if (isMatch) matched = true;
+  });
+  if (!matched && chips[0]) {
+    chips.forEach(c => c.classList.remove('active'));
+    chips[0].classList.add('active');
+  }
+}
+
+function syncControlState() {
+  syncChipGroup('catChips', document.getElementById('catFilter').value);
+  syncChipGroup('wmChips', document.getElementById('wmFilter').value);
+  syncChipGroup('sortChips', document.getElementById('sortSelect').value);
+  updateActiveFilters();
+}
+
 function setChip(selectId, value, btn) {
   document.getElementById(selectId).value = value;
   btn.closest('.chip-group').querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
   applyFilters();
-  updateActiveFilters();
 }
 
 function clearAllFilters() {
+  document.getElementById('searchInput').value = '';
   ['catFilter','wmFilter','salaryFilter','regionFilter'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = el.options[0].value;
@@ -2174,7 +2638,6 @@ function clearAllFilters() {
   });
   setAge('');
   applyFilters();
-  updateActiveFilters();
 }
 
 function updateActiveFilters() {
@@ -2182,18 +2645,19 @@ function updateActiveFilters() {
     catFilter: Object.fromEntries(Object.entries(CAT_META).map(([k,v])=>[k,v.label])),
     wmFilter: {remote:'Remote',hybrid:'Hybrid',onsite:'Onsite'},
     salaryFilter: {'80000':'$80K+','100000':'$100K+','120000':'$120K+','150000':'$150K+'},
-    regionFilter: {}
+    regionFilter: {},
+    ageFilter: {'1m':'Posted 1 mo','3m':'Posted 3 mo','6m':'Posted 6 mo','6m+':'Posted 6 mo+'}
   };
   const active = [];
   Object.entries(labels).forEach(([id, map]) => {
     const el = document.getElementById(id);
-    if (!el) return;
-    const val = el.value;
+    const val = id === 'ageFilter' ? S.age : (el && el.value);
     if (val && val !== '0') {
-      const label = map[val] || (el.options[el.selectedIndex] && el.options[el.selectedIndex].text) || val;
+      const label = map[val] || (el && el.options[el.selectedIndex] && el.options[el.selectedIndex].text) || val;
       active.push({id, val, label});
     }
   });
+  if (S.q) active.push({id:'searchInput', val:S.q, label:`Search: ${S.q}`});
   const bar = document.getElementById('activeFilters');
   const chipsEl = document.getElementById('activeChips');
   if (!bar || !chipsEl) return;
@@ -2205,11 +2669,20 @@ function updateActiveFilters() {
 }
 
 function clearOneFilter(id) {
+  if (id === 'searchInput') {
+    document.getElementById('searchInput').value = '';
+    applyFilters();
+    return;
+  }
+  if (id === 'ageFilter') {
+    setAge('');
+    return;
+  }
   const el = document.getElementById(id);
   if (!el) return;
   el.value = el.options[0].value;
   // Reset corresponding chip group
-  const chipGroupMap = {catFilter:'catChips', wmFilter:'wmChips'};
+  const chipGroupMap = {catFilter:'catChips', wmFilter:'wmChips', sortSelect:'sortChips'};
   const groupId = chipGroupMap[id];
   if (groupId) {
     const group = document.getElementById(groupId);
@@ -2220,7 +2693,18 @@ function clearOneFilter(id) {
     }
   }
   applyFilters();
-  updateActiveFilters();
+}
+
+function presetFilter(opts = {}) {
+  if (opts.q !== undefined) document.getElementById('searchInput').value = opts.q;
+  if (opts.cat !== undefined) document.getElementById('catFilter').value = opts.cat;
+  if (opts.wm !== undefined) document.getElementById('wmFilter').value = opts.wm;
+  if (opts.region !== undefined) document.getElementById('regionFilter').value = opts.region;
+  if (opts.salMin !== undefined) document.getElementById('salaryFilter').value = String(opts.salMin);
+  if (opts.sort !== undefined) document.getElementById('sortSelect').value = opts.sort;
+  if (opts.age !== undefined) setAge(opts.age);
+  applyFilters();
+  window.scrollTo({top: document.querySelector('.results-shell').offsetTop - 72, behavior: 'smooth'});
 }
 </script>
 </body>
