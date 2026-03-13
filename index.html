@@ -899,7 +899,7 @@ footer a { color: var(--accent); text-decoration: none; }
 .mobile-filter-backdrop,
 .mobile-search-bar,
 .sidebar-mobile-head,
-.mobile-utility-bar {
+.mobile-filter-btn {
   display: none;
 }
 
@@ -1403,7 +1403,9 @@ tbody tr:hover {
   body.mobile-filters-open { overflow: hidden; }
   .sidebar-live-data { display: none; }
   .mobile-search-bar {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     position: sticky;
     top: 56px;
     z-index: 120;
@@ -1415,6 +1417,8 @@ tbody tr:hover {
   }
   .mobile-search-shell {
     position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
   }
   .mobile-search-shell input {
     width: 100%;
@@ -1432,6 +1436,46 @@ tbody tr:hover {
   }
   .mobile-search-shell .nav-search-icon {
     left: 12px;
+  }
+  .mobile-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    min-width: 88px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text2);
+    font-family: var(--font-sans);
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    cursor: pointer;
+  }
+  .mobile-filter-btn.active {
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+  .mobile-filter-badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-filter-btn.active .mobile-filter-badge {
+    display: inline-flex;
   }
   .mobile-filter-backdrop {
     display: block;
@@ -1509,46 +1553,8 @@ tbody tr:hover {
     gap: 14px;
     padding-top: 14px;
   }
-  .mobile-utility-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: linear-gradient(180deg, var(--surface), var(--surface2));
-    box-shadow: 0 14px 30px rgba(0,0,0,.08);
-  }
-  .mobile-utility-copy {
-    min-width: 0;
-  }
-  .mobile-utility-label {
-    font-family: var(--font-mono);
-    font-size: .56rem;
-    text-transform: uppercase;
-    letter-spacing: .11em;
-    color: var(--text3);
-    margin-bottom: 4px;
-  }
-  .mobile-utility-title {
-    font-size: .82rem;
-    color: var(--text);
-    line-height: 1.35;
-    font-weight: 600;
-  }
-  .mobile-utility-actions {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-  .mobile-utility-actions .btn-secondary {
-    padding: 8px 10px;
-    font-size: .72rem;
-  }
   .insights-drawer { order: 1; margin-bottom: 0; }
-  .mobile-utility-bar { order: 2; }
-  .results-shell { order: 3; }
+  .results-shell { order: 2; }
   .market-grid { grid-template-columns: 1fr; margin-bottom: 0; }
   .results-sub { display: none; }
 }
@@ -1581,6 +1587,10 @@ tbody tr:hover {
     <span class="nav-search-icon">⌕</span>
     <input type="text" id="mobileSearchInput" placeholder="Search roles, companies…" oninput="applyFilters('mobileSearchInput')">
   </div>
+  <button class="mobile-filter-btn" id="mobileFilterBtn" type="button" onclick="toggleMobileFilters(true)">
+    Filters
+    <span class="mobile-filter-badge" id="mobileFilterBadge">0</span>
+  </button>
 </div>
 
 <!-- MASTHEAD -->
@@ -1742,16 +1752,6 @@ tbody tr:hover {
 
   <!-- RIGHT CONTENT -->
   <main class="content-area">
-    <div class="mobile-utility-bar">
-      <div class="mobile-utility-copy">
-        <div class="mobile-utility-label">Mobile View</div>
-        <div class="mobile-utility-title" id="mobileResultInfo">Jump into roles first, then open filters when needed.</div>
-      </div>
-      <div class="mobile-utility-actions">
-        <button class="btn-secondary" onclick="toggleMobileFilters(true)">Filters</button>
-        <button class="btn-secondary" onclick="focusMobileSearch()">Search</button>
-      </div>
-    </div>
     <div class="insights-drawer">
       <div class="insights-details" id="insightsPanel">
         <div class="insights-header">
@@ -2581,12 +2581,6 @@ function renderTable(){
   });
   const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
-  const mobileResultInfo = document.getElementById("mobileResultInfo");
-  if(mobileResultInfo){
-    mobileResultInfo.textContent = isFiltered
-      ? `${data.length} matching roles ready to scan.`
-      : `${JOBS.length} roles ready to scan.`;
-  }
   const headlineBits = [];
   if(S.cat) headlineBits.push((CAT_META[S.cat]||{label:S.cat}).label);
   if(S.wm) headlineBits.push(S.wm[0].toUpperCase()+S.wm.slice(1));
@@ -3064,7 +3058,11 @@ function updateActiveFilters() {
   if (S.q) active.push({id:'searchInput', val:S.q, label:`Search: ${S.q}`});
   const bar = document.getElementById('activeFilters');
   const chipsEl = document.getElementById('activeChips');
+  const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+  const mobileFilterBadge = document.getElementById('mobileFilterBadge');
   if (!bar || !chipsEl) return;
+  if (mobileFilterBtn) mobileFilterBtn.classList.toggle('active', active.length > 0);
+  if (mobileFilterBadge) mobileFilterBadge.textContent = String(active.length);
   if (active.length === 0) { bar.style.display = 'none'; return; }
   bar.style.display = 'block';
   chipsEl.innerHTML = active.map(f =>
