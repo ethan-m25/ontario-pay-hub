@@ -170,7 +170,7 @@ export async function destroySession(context) {
 
 export async function getUserBundle(context, userId) {
   const savedRows = await context.env.DB.prepare(
-    "SELECT job_id FROM saved_jobs WHERE user_id = ?1 ORDER BY created_at DESC",
+    "SELECT job_id, label FROM saved_jobs WHERE user_id = ?1 ORDER BY created_at DESC",
   )
     .bind(userId)
     .all();
@@ -181,6 +181,7 @@ export async function getUserBundle(context, userId) {
     .first();
   return {
     saved: (savedRows.results || []).map((row) => row.job_id),
+    savedMeta: Object.fromEntries((savedRows.results || []).map((row) => [row.job_id, { label: row.label || "" }])),
     preferences: {
       cat: prefRow?.category || "",
       region: prefRow?.region || "",

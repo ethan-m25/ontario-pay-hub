@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS preferences (
 CREATE TABLE IF NOT EXISTS saved_jobs (
   user_id INTEGER NOT NULL,
   job_id INTEGER NOT NULL,
+  label TEXT DEFAULT '',
   created_at TEXT NOT NULL,
   PRIMARY KEY (user_id, job_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

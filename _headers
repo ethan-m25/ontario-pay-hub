@@ -1,0 +1,3 @@
+/data/*
+  X-Robots-Tag: noindex, noarchive, nosnippet
+  Cache-Control: public, max-age=300

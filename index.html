@@ -192,7 +192,7 @@ nav {
   background: var(--surface2);
   border: 1px solid var(--border2);
   border-radius: 8px;
-  padding: 7px 12px 7px 34px;
+  padding: 7px 36px 7px 34px;
   color: var(--text); font-family: var(--font-sans); font-size:.84rem;
   outline: none;
   transition: border-color var(--transition);
@@ -200,6 +200,23 @@ nav {
 .nav-search input:focus { border-color: var(--accent); }
 .nav-search input::placeholder { color: var(--text3); }
 .nav-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:14px; pointer-events:none; }
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  color: var(--text3);
+  font-size: 15px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.search-clear-btn.visible { display: inline-flex; }
 
 .nav-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
 .btn-icon {
@@ -1503,7 +1520,7 @@ tbody tr:hover {
     background: var(--surface2);
     border: 1px solid var(--border2);
     border-radius: 10px;
-    padding: 10px 12px 10px 36px;
+    padding: 10px 38px 10px 36px;
     color: var(--text);
     font-family: var(--font-sans);
     font-size: .9rem;
@@ -1650,6 +1667,7 @@ tbody tr:hover {
   <div class="nav-search">
     <span class="nav-search-icon">⌕</span>
     <input type="text" id="searchInput" placeholder="Search roles, companies…" oninput="applyFilters('searchInput')">
+    <button class="search-clear-btn" id="searchClearBtn" type="button" onclick="clearSearch()">✕</button>
   </div>
   <div class="nav-actions">
     <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs">
@@ -1664,6 +1682,7 @@ tbody tr:hover {
   <div class="mobile-search-shell">
     <span class="nav-search-icon">⌕</span>
     <input type="text" id="mobileSearchInput" placeholder="Search roles, companies…" oninput="applyFilters('mobileSearchInput')">
+    <button class="search-clear-btn" id="mobileSearchClearBtn" type="button" onclick="clearSearch()">✕</button>
   </div>
   <button class="mobile-filter-btn" id="mobileFilterBtn" type="button" onclick="toggleMobileFilters(true)">
     Filters
@@ -1832,13 +1851,13 @@ tbody tr:hover {
   <main class="content-area">
     <div class="insights-drawer">
       <div class="insights-details" id="insightsPanel">
-        <div class="insights-header">
+        <div class="insights-header" onclick="expandInsightsFromHeader(event)">
           <div class="insights-summary-copy">
             <div class="insights-summary-kicker">Insights</div>
             <div class="insights-summary-title">Market context and quick entry points.</div>
             <div class="insights-summary-sub">Open when you want extra context, then jump back to the listings.</div>
           </div>
-          <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="toggleInsightsPanel()">⌄</button>
+          <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="event.stopPropagation();toggleInsightsPanel()">⌄</button>
         </div>
         <div class="insights-body" id="insightsBody">
           <section class="market-grid">
@@ -1902,9 +1921,8 @@ tbody tr:hover {
 <!-- FOOTER -->
 <footer>
   <div>
-    <p>Compensation ranges aggregated from publicly advertised Ontario job postings per <strong><a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:inherit">Ontario ESA — Job Posting Requirements</a></strong> (in force Jan 1, 2026 · Bill 149, Working for Workers Four Act, 2024).</p>
-    <p style="margin-top:4px">Disclosed compensation includes base wages, commissions &amp; guaranteed bonuses. Discretionary bonuses, equity, and benefits are not required to be disclosed. · <a href="https://github.com/ethan-m25/ontario-pay-hub" target="_blank" rel="noopener">Open Source (MIT) ↗</a></p>
-    <p style="margin-top:4px">Data sourced from publicly accessible job posting pages (company career sites, Lever, Greenhouse, Workday, Ontario government portals). Postings behind login walls are not included.</p>
+    <p>Compensation ranges aggregated from publicly advertised Ontario job postings under <strong><a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:inherit">Ontario ESA job posting requirements</a></strong>. Data comes from public company career sites and job platforms; postings behind login walls are not included.</p>
+    <p style="margin-top:4px"><a href="https://github.com/ethan-m25/ontario-pay-hub" target="_blank" rel="noopener">Open Source (MIT) ↗</a></p>
   </div>
   <div class="footer-right">
     <button onclick="exportCSV()" class="law-tag" style="cursor:pointer;border:none;background:var(--green-dim);border:1px solid rgba(16,185,129,.25);color:var(--green)" hidden>⬇ Export CSV</button>
@@ -2220,6 +2238,7 @@ const S = {
   theme: localStorage.getItem("theme") || "dark",
   user: null,
   saved: [],
+  savedMeta: {},
   preferences: { cat:"", region:"", salMin:0 },
   auth: { googleEnabled:false, emailEnabled:false },
   sort: "mid-desc",
@@ -2234,6 +2253,44 @@ const S = {
 // ===== HELPERS =====
 function fmt(n){ return "$"+(n/1000).toFixed(0)+"k"; }
 function mid(j){ return Math.round((j.min+j.max)/2); }
+function normalizeSearchText(text){
+  return String(text || "").toLowerCase().normalize("NFKD").replace(/[^\w\s]+/g, " ").replace(/\s+/g, " ").trim();
+}
+function fuzzyIncludes(haystack, needle){
+  if(!needle) return true;
+  let i = 0;
+  for(const ch of haystack){
+    if(ch === needle[i]) i++;
+    if(i === needle.length) return true;
+  }
+  return false;
+}
+function searchScore(job, query){
+  if(!query) return 0;
+  const q = normalizeSearchText(query);
+  if(!q) return 0;
+  const fields = [
+    normalizeSearchText(job.role),
+    normalizeSearchText(job.company),
+    normalizeSearchText(job.location),
+    normalizeSearchText((CAT_META[job.tag]||{label:""}).label),
+  ];
+  const haystack = fields.join(" ");
+  const compactQ = q.replace(/\s+/g, "");
+  let score = 0;
+  if(fields[0].includes(q)) score = Math.max(score, 120);
+  if(fields[1].includes(q)) score = Math.max(score, 104);
+  if(fields[2].includes(q)) score = Math.max(score, 82);
+  if(haystack.includes(q)) score = Math.max(score, 72);
+  const tokens = q.split(" ").filter(Boolean);
+  if(tokens.length && tokens.every(token => haystack.includes(token))) {
+    score = Math.max(score, 60 + Math.min(tokens.length * 5, 20));
+  }
+  if(compactQ.length >= 3 && fuzzyIncludes(haystack.replace(/\s+/g, ""), compactQ)) {
+    score = Math.max(score, 40);
+  }
+  return score;
+}
 function relDate(s){
   const d=new Date(s), now=new Date();
   const diff=Math.round((now-d)/86400000);
@@ -2399,7 +2456,7 @@ async function initAuth() {
     const payload = await api("/api/auth/me");
     S.auth = payload.auth || S.auth;
     S.user = payload.user;
-    S.saved = payload.saved || [];
+    normaliseSavedPayload(payload);
     S.preferences = payload.preferences || { cat:"", region:"", salMin:0 };
   } catch (err) {
     if (!String(err.message).includes("(404)")) {
@@ -2435,6 +2492,12 @@ function handleAuthReturn() {
   url.searchParams.delete("auth");
   history.replaceState({}, "", url.toString());
 }
+function normaliseSavedPayload(payload) {
+  S.saved = (payload.saved || []).map(String);
+  S.savedMeta = Object.fromEntries(
+    Object.entries(payload.savedMeta || {}).map(([jobId, meta]) => [String(jobId), meta || { label:"" }])
+  );
+}
 function toggleMobileFilters(force){
   const shouldOpen = typeof force === "boolean"
     ? force
@@ -2458,6 +2521,19 @@ function focusMobileSearch(){
     return;
   }
   target.focus();
+}
+function syncSearchClearButtons(){
+  const hasQuery = !!String(S.q || "").trim();
+  ["searchClearBtn","mobileSearchClearBtn"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.toggle("visible", hasQuery);
+  });
+}
+function clearSearch(){
+  document.getElementById("searchInput").value = "";
+  const mobile = document.getElementById("mobileSearchInput");
+  if(mobile) mobile.value = "";
+  applyFilters();
 }
 function openAuth(){
   toggleMobileFilters(false);
@@ -2501,6 +2577,7 @@ async function doSignout(){
   document.getElementById("salaryFilter").value="0";
   try { await api("/api/auth/logout", { method: "POST" }); } catch (err) { console.warn(err.message); }
   S.saved=[]; updateSaveBadge();
+  S.savedMeta={};
   S.preferences = { cat:"", region:"", salMin:0 };
   S.user=null;
   document.getElementById("savedPanel").classList.remove("open");
@@ -2518,6 +2595,7 @@ function updateUserUI(){
 }
 // Profile panel helpers
 let _profileTab="saved";
+let _savedLabelFilter = "";
 function openProfilePanel(){
   toggleMobileFilters(false);
   document.getElementById("savedPanel").classList.add("open");
@@ -2559,20 +2637,21 @@ function applyUserPrefs(){
 // ===== SAVE =====
 async function toggleSave(id){
   if(!S.user){ openAuth(); return; }
-  const idx=S.saved.indexOf(id);
+  const jobId = String(id);
+  const idx=S.saved.indexOf(jobId);
   try {
     const payload = idx===-1
       ? await api("/api/user/saved", { method:"POST", body:{ jobId:id } })
       : await api("/api/user/saved", { method:"DELETE", body:{ jobId:id } });
-    S.saved = payload.saved || [];
+    normaliseSavedPayload(payload);
   } catch (err) {
     setAuthMessage("error", err.message);
     return;
   }
   updateSaveBadge(); renderSaved();
   document.querySelectorAll("[data-save='"+id+"']").forEach(b=>{
-    b.className="btn-save"+(S.saved.includes(id)?" saved":"");
-    b.textContent=S.saved.includes(id)?"★":"☆";
+    b.className="btn-save"+(S.saved.includes(jobId)?" saved":"");
+    b.textContent=S.saved.includes(jobId)?"★":"☆";
   });
 }
 function updateSaveBadge(){
@@ -2611,7 +2690,16 @@ function renderSaved(){
     </div>`;
 
   if(_profileTab==="saved"){
-    const items=JOBS.filter(j=>S.saved.includes(j.id));
+    const labels = [...new Set(Object.values(S.savedMeta||{}).map(meta=>meta.label).filter(Boolean))].sort();
+    const items=JOBS.filter(j=>S.saved.includes(String(j.id))).filter(j=>{
+      if(!_savedLabelFilter) return true;
+      return (S.savedMeta[String(j.id)]?.label || "") === _savedLabelFilter;
+    });
+    const filterBar = labels.length ? `
+      <div class="chip-group" style="margin-bottom:14px">
+        <button class="chip${!_savedLabelFilter?' active':''}" onclick="_savedLabelFilter='';renderSaved()">All saved</button>
+        ${labels.map(label=>`<button class="chip${_savedLabelFilter===label?' active':''}" onclick="_savedLabelFilter=${JSON.stringify(label)};renderSaved()">${label}</button>`).join("")}
+      </div>` : "";
     const content=items.length
       ? items.map(j=>`
           <div class="saved-item">
@@ -2623,12 +2711,16 @@ function renderSaved(){
               <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
             </div>
             <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px">
+              ${S.savedMeta[String(j.id)]?.label ? `<span class="tag tag-other">${S.savedMeta[String(j.id)].label}</span>` : ""}
+              <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">${S.savedMeta[String(j.id)]?.label ? 'Edit label' : 'Add label'}</button>
+            </div>
             <div style="font-size:.72rem;color:var(--text3);margin-top:4px">
               <a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}
             </div>
           </div>`).join("")
-      : `<div class="saved-empty">No saved jobs yet.<br>Click ☆ on any posting to save it.</div>`;
-    body.innerHTML=tabs+content;
+      : `<div class="saved-empty">${_savedLabelFilter ? `No saved jobs in "${_savedLabelFilter}" yet.` : 'No saved jobs yet.'}<br>Click ☆ on any posting to save it.</div>`;
+    body.innerHTML=tabs+filterBar+content;
     foot.innerHTML=items.length
       ? `<button class="btn-secondary" style="width:100%;font-size:.8rem;margin-bottom:8px"
            onclick="clearSavedJobs()">Clear all saved</button>
@@ -2669,10 +2761,25 @@ async function clearSavedJobs() {
   if (!S.user || !confirm('Clear all saved?')) return;
   try {
     const payload = await api("/api/user/saved", { method:"DELETE", body:{} });
-    S.saved = payload.saved || [];
+    normaliseSavedPayload(payload);
+    _savedLabelFilter = "";
     updateSaveBadge();
     renderSaved();
     renderTable();
+  } catch (err) {
+    setAuthMessage("error", err.message);
+  }
+}
+async function setSavedLabel(jobId) {
+  const key = String(jobId);
+  if(!S.user || !S.saved.includes(key)) return;
+  const current = S.savedMeta[key]?.label || "";
+  const next = prompt("Add a short label for this saved job.", current);
+  if(next === null) return;
+  try {
+    const payload = await api("/api/user/saved", { method:"PUT", body:{ jobId, label: next } });
+    normaliseSavedPayload(payload);
+    renderSaved();
   } catch (err) {
     setAuthMessage("error", err.message);
   }
@@ -2711,18 +2818,20 @@ function setAge(val){
 function applyFilters(sourceId){
   const sourceEl = sourceId ? document.getElementById(sourceId) : null;
   if(sourceEl) setSearchInputs(sourceEl.value, sourceId);
-  S.q=document.getElementById("searchInput").value.toLowerCase();
+  S.q=normalizeSearchText(document.getElementById("searchInput").value);
   S.cat=document.getElementById("catFilter").value;
   S.region=document.getElementById("regionFilter").value;
   S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
   S.wm=document.getElementById("wmFilter").value;
   S.sort=document.getElementById("sortSelect").value;
+  syncSearchClearButtons();
   syncControlState();
   renderTable();
 }
 function renderTable(){
   let data=JOBS.filter(j=>{
-    const mq=!S.q||j.role.toLowerCase().includes(S.q)||j.company.toLowerCase().includes(S.q);
+    j._searchScore = searchScore(j, S.q);
+    const mq=!S.q||j._searchScore>0;
     const mc=!S.cat||j.tag===S.cat;
     const mr=!S.region||(j.location||"").startsWith(S.region);
     const ms=!S.salMin||mid(j)>=S.salMin;
@@ -2734,6 +2843,7 @@ function renderTable(){
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
+    if(S.q && (b._searchScore||0)!==(a._searchScore||0)) return (b._searchScore||0)-(a._searchScore||0);
     let v;
     if(sk==="mid") v=mid(a)-mid(b);
     else if(sk==="date") v=a.date.localeCompare(b.date);
@@ -2768,7 +2878,7 @@ function renderTable(){
   if(isSmall){
     // CARD LAYOUT for mobile
     document.getElementById("tableBody").innerHTML=data.map(j=>{
-      const isSaved=S.saved.includes(j.id);
+      const isSaved=S.saved.includes(String(j.id));
       const archived=isArchived(j);
       const isTop=top3Ids.has(j.id);
       const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
@@ -2804,7 +2914,7 @@ function renderTable(){
   } else {
     // TABLE LAYOUT for desktop
     document.getElementById("tableBody").innerHTML=data.map(j=>{
-      const isSaved=S.saved.includes(j.id);
+      const isSaved=S.saved.includes(String(j.id));
       const barW=Math.round((j.max/mxMax)*100);
       const archived=isArchived(j);
       const isTop=top3Ids.has(j.id);
@@ -2979,6 +3089,12 @@ function toggleInsightsPanel(force){
   const btn = panel.querySelector(".insights-chevron");
   if(btn) btn.setAttribute("aria-expanded", next ? "true" : "false");
 }
+function expandInsightsFromHeader(){
+  if(window.innerWidth > 760) return;
+  const panel=document.getElementById("insightsPanel");
+  if(!panel || panel.classList.contains("insights-open")) return;
+  toggleInsightsPanel(true);
+}
 
 // ===== COMPENSATION NOTE TOGGLE =====
 function toggleCompNote(){
@@ -3075,7 +3191,7 @@ function openJobDetail(id){
   document.getElementById("savedPanel").classList.remove("open");
 
   const archived = isArchived(j);
-  const isSaved = S.saved.includes(j.id);
+  const isSaved = S.saved.includes(String(j.id));
   const catLabel = CAT_LABELS[j.tag]||j.tag;
 
   // Category peers (same tag)
@@ -3097,6 +3213,7 @@ function openJobDetail(id){
         ? "Within the common <= $50k disclosure width often seen for sub-$200k postings."
         : "Broader than the common <= $50k disclosure width often seen for sub-$200k postings.")
     : "Above the sub-$200k range where narrower bands are more commonly expected.";
+  const rangeReadCopy = `${rangeSignal.copy} ${rangeContext} ${legalContext}`.trim();
 
   let pctLabel;
   if(pctile>=75)      pctLabel="Top 25% in "+catLabel;
@@ -3136,23 +3253,13 @@ function openJobDetail(id){
       <div class="jd-signal-grid">
         <div class="jd-signal-card jd-signal-emph-${rangeSignal.tone}">
           <div class="jd-signal-kicker">Range Read</div>
-          <div class="jd-signal-value">${rangeSignal.label}</div>
-          <div class="jd-signal-copy">${rangeSignal.copy}</div>
+          <div class="jd-signal-value">${rangeSignal.label} · ${spreadRatio}% width</div>
+          <div class="jd-signal-copy">${rangeReadCopy}</div>
         </div>
         <div class="jd-signal-card jd-signal-emph-${freshnessSignal.tone}">
           <div class="jd-signal-kicker">Posting Timing</div>
           <div class="jd-signal-value">${freshnessSignal.label}</div>
           <div class="jd-signal-copy">${freshnessSignal.copy}</div>
-        </div>
-        <div class="jd-signal-card jd-signal-emph-purple">
-          <div class="jd-signal-kicker">Width vs Midpoint</div>
-          <div class="jd-signal-value">${spreadRatio}% band width</div>
-          <div class="jd-signal-copy">${rangeContext}</div>
-        </div>
-        <div class="jd-signal-card jd-signal-emph-amber">
-          <div class="jd-signal-kicker">Disclosure Context</div>
-          <div class="jd-signal-value">${spread <= 50000 ? "Tighter disclosure" : "Broader disclosure"}</div>
-          <div class="jd-signal-copy">${legalContext}</div>
         </div>
       </div>
     </div>
@@ -3225,7 +3332,7 @@ function bindJobDetailGestures() {
     if (!e.touches || e.touches.length !== 1) return;
     const t = e.touches[0];
     _jdSwipe = {
-      active: t.clientX <= 36,
+      active: t.clientX <= 96,
       dragging: false,
       startX: t.clientX,
       startY: t.clientY,
@@ -3254,7 +3361,7 @@ function bindJobDetailGestures() {
 
   const endSwipe = () => {
     if (!_jdSwipe.active) return;
-    const shouldClose = _jdSwipe.dragging && _jdSwipe.deltaX > Math.min(110, window.innerWidth * 0.24);
+    const shouldClose = _jdSwipe.dragging && _jdSwipe.deltaX > Math.min(72, window.innerWidth * 0.18);
     panel.classList.remove("swiping");
     panel.style.transform = "";
     _jdSwipe = { active:false, dragging:false, startX:0, startY:0, deltaX:0 };

@@ -214,8 +214,8 @@ all_jobs = existing + new_jobs
 # Rules:
 #   - Already-archived jobs: skip (preserve state, do not re-check)
 #   - New jobs added this run: skip (just scraped, assume active)
-#   - Workday (*.myworkdayjobs.com): always returns 200 SPA shell,
-#     cannot detect closed jobs without JS rendering → mark as "unverifiable"
+#   - Workday (*.myworkdayjobs.com): often returns a 200 SPA shell even for dead links.
+#     Try a GET and look for expired/not-found copy; otherwise leave as unverifiable.
 #   - Lever (jobs.lever.co): 404 = job closed → archive
 #   - Greenhouse (job-boards.greenhouse.io / boards.greenhouse.io): 404 = closed → archive
 #   - jobs.toronto.ca: 200 but body contains "posting has ended" → archive
@@ -234,10 +234,22 @@ def validate_url(url):
     """Returns: 'active', 'archived', or 'skip'."""
     if not url:
         return "skip"
-    # Workday: unverifiable without browser JS
-    if "myworkdayjobs.com" in url:
-        return "skip"
     try:
+        if "myworkdayjobs.com" in url:
+            with _fetch(url, method="GET", timeout=10) as r:
+                body = r.read().decode("utf-8", errors="ignore").lower()
+            dead_markers = (
+                "job posting is no longer available",
+                "this job is no longer available",
+                "job requisition is no longer available",
+                "the job has been filled",
+                "page not found",
+                "error 404",
+                "not found"
+            )
+            if any(marker in body for marker in dead_markers):
+                return "archived"
+            return "skip"
         if "jobs.toronto.ca" in url:
             # Must check body — returns 200 even for ended postings
             with _fetch(url, method="GET", timeout=10) as r:
