@@ -721,6 +721,53 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .jd-range-sep { color: var(--text3); font-size: .9rem; }
 .jd-range-max { font-family: var(--font-mono); font-size: 1.4rem; font-weight: 600; color: var(--green); }
 .jd-mid { font-family: var(--font-mono); font-size: .82rem; color: var(--cyan); font-weight: 600; margin-bottom: 12px; }
+.jd-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.jd-signal-card {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface2);
+}
+.jd-signal-kicker {
+  font-family: var(--font-mono);
+  font-size: .56rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.jd-signal-value {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+.jd-signal-copy {
+  margin-top: 4px;
+  font-size: .7rem;
+  color: var(--text2);
+  line-height: 1.45;
+}
+.jd-signal-emph-cyan .jd-signal-value { color: var(--cyan); }
+.jd-signal-emph-green .jd-signal-value { color: var(--green); }
+.jd-signal-emph-amber .jd-signal-value { color: var(--amber); }
+.jd-signal-emph-purple .jd-signal-value { color: var(--purple); }
+.jd-note {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  font-size: .72rem;
+  color: var(--text2);
+  line-height: 1.45;
+}
+.jd-note strong { color: var(--text); }
 
 .jd-pos-wrap { margin-top: 4px; }
 .jd-pos-bar-bg { background: var(--border); height: 8px; position: relative; margin: 8px 0 5px; }
@@ -745,7 +792,33 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .jd-similar-item:hover { border-left-color: var(--accent); background: var(--accent-dim); }
 .jd-similar-role { font-size: .8rem; font-weight: 600; color: var(--text); line-height: 1.3; }
 .jd-similar-co { font-size: .7rem; color: var(--text3); margin-top: 1px; }
-.jd-similar-range { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; color: var(--green); white-space: nowrap; margin-left: 10px; }
+.jd-similar-range { font-family: var(--font-mono); font-size: .78rem; font-weight: 600; color: var(--green); white-space: nowrap; margin-left: 10px; text-align:right; }
+.jd-similar-meta {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  color: var(--text3);
+}
+.jd-footer-note {
+  font-size: .7rem;
+  color: var(--text3);
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+.jd-footer-note strong { color: var(--text2); }
+@media(max-width:700px) {
+  .jd-signal-grid { grid-template-columns: 1fr; }
+  .jd-similar-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .jd-similar-range {
+    margin-left: 0;
+    text-align: left;
+  }
+  .jd-footer { display: block; }
+}
 .role-link { cursor:pointer; transition:opacity var(--transition); }
 .role-link:hover { opacity:.72; }
 
@@ -2845,6 +2918,55 @@ const CAT_COLORS = {eng:"#C8102E",data:"#0095D5",fin:"#10b981",pm:"#f59e0b",sale
 
 let _jdCurrentId = null;
 
+function getRangeSignal(job){
+  const spread = job.max - job.min;
+  const midpoint = mid(job) || 1;
+  const ratio = spread / midpoint;
+  if(ratio <= 0.18) return {
+    label: "Narrow band",
+    tone: "green",
+    copy: "The disclosed range is relatively tight for this midpoint, so pricing looks more specific."
+  };
+  if(ratio <= 0.32) return {
+    label: "Moderate band",
+    tone: "cyan",
+    copy: "The disclosed range leaves room for leveling, but it is still reasonably bounded."
+  };
+  return {
+    label: "Wide band",
+    tone: "amber",
+    copy: "The disclosed range covers a broader pricing window, so the final offer may depend more on level and fit."
+  };
+}
+
+function getFreshnessSignal(job){
+  const days = Math.round((new Date() - new Date(job.date)) / 86400000);
+  if(days <= 3) return {
+    label: "Fresh posting",
+    tone: "green",
+    copy: "Recently posted roles are more likely to still be in active review."
+  };
+  if(days <= 14) return {
+    label: "Recent posting",
+    tone: "cyan",
+    copy: "Still timely, but worth opening the source quickly if you are interested."
+  };
+  return {
+    label: "Older posting",
+    tone: "amber",
+    copy: "Use the source link to confirm it is still open before investing much time."
+  };
+}
+
+function getRangeContext(job, catJobs){
+  const spread = job.max - job.min;
+  const catSpreads = catJobs.map(x=>x.max-x.min).sort((a,b)=>a-b);
+  const medianSpread = catSpreads[Math.floor(catSpreads.length/2)] || spread;
+  if(spread <= medianSpread * 0.8) return "Tighter than the typical range width in this category.";
+  if(spread >= medianSpread * 1.2) return "Wider than the typical range width in this category.";
+  return "Close to the typical range width in this category.";
+}
+
 function openJobDetail(id){
   toggleMobileFilters(false);
   const j = JOBS.find(x=>x.id===id);
@@ -2863,7 +2985,6 @@ function openJobDetail(id){
 
   const archived = isArchived(j);
   const isSaved = S.saved.includes(j.id);
-  const color = CAT_COLORS[j.tag]||"#6366f1";
   const catLabel = CAT_LABELS[j.tag]||j.tag;
 
   // Category peers (same tag)
@@ -2875,6 +2996,16 @@ function openJobDetail(id){
   const catCeil  = Math.max(...allInCat.map(x=>x.max));
   const pctile   = Math.round(peerMids.filter(m=>m<=myMid).length/peerMids.length*100);
   const posPos   = Math.min(Math.round((myMid-catFloor)/(catCeil-catFloor||1)*100),100);
+  const spread = j.max - j.min;
+  const spreadRatio = Math.round((spread / (myMid || 1)) * 100);
+  const rangeSignal = getRangeSignal(j);
+  const freshnessSignal = getFreshnessSignal(j);
+  const rangeContext = getRangeContext(j, allInCat);
+  const legalContext = j.max <= 200000
+    ? (spread <= 50000
+        ? "Within the common <= $50k disclosure width often seen for sub-$200k postings."
+        : "Broader than the common <= $50k disclosure width often seen for sub-$200k postings.")
+    : "Above the sub-$200k range where narrower bands are more commonly expected.";
 
   let pctLabel;
   if(pctile>=75)      pctLabel="Top 25% in "+catLabel;
@@ -2897,7 +3028,6 @@ function openJobDetail(id){
 
   // Body
   document.getElementById("jdBody").innerHTML=`
-    ${archived?`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:14px;font-size:.73rem;color:var(--text3)">📁 This posting is archived — the original job ad may no longer be active, but the salary data is preserved.</div>`:""}
     <div class="jd-role">${j.role}</div>
     <div class="jd-company">${j.company}</div>
     <div class="jd-meta">${j.location||"Ontario, ON"} · Posted ${relDate(j.date)}</div>
@@ -2912,6 +3042,28 @@ function openJobDetail(id){
       <div class="jd-mid">Midpoint: ${fmt(myMid)} &nbsp;·&nbsp; Spread: ${fmt(j.max-j.min)}</div>
       ${j.salary_type==="total_comp"?'<div style="margin-top:6px;font-size:.72rem;color:#f59e0b;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:var(--radius-xs);padding:5px 10px;">⚠️ Likely <strong>total compensation</strong> (base + equity/bonus) — not base salary alone</div>':""}
       ${j.salary_type==="base"?'<div style="margin-top:6px;font-size:.72rem;color:var(--text3)">💼 Base salary range</div>':""}
+      <div class="jd-signal-grid">
+        <div class="jd-signal-card jd-signal-emph-${rangeSignal.tone}">
+          <div class="jd-signal-kicker">Range Read</div>
+          <div class="jd-signal-value">${rangeSignal.label}</div>
+          <div class="jd-signal-copy">${rangeSignal.copy}</div>
+        </div>
+        <div class="jd-signal-card jd-signal-emph-${freshnessSignal.tone}">
+          <div class="jd-signal-kicker">Posting Timing</div>
+          <div class="jd-signal-value">${freshnessSignal.label}</div>
+          <div class="jd-signal-copy">${freshnessSignal.copy}</div>
+        </div>
+        <div class="jd-signal-card jd-signal-emph-purple">
+          <div class="jd-signal-kicker">Width vs Midpoint</div>
+          <div class="jd-signal-value">${spreadRatio}% band width</div>
+          <div class="jd-signal-copy">${rangeContext}</div>
+        </div>
+        <div class="jd-signal-card jd-signal-emph-amber">
+          <div class="jd-signal-kicker">Disclosure Context</div>
+          <div class="jd-signal-value">${spread <= 50000 ? "Tighter disclosure" : "Broader disclosure"}</div>
+          <div class="jd-signal-copy">${legalContext}</div>
+        </div>
+      </div>
     </div>
 
     ${allInCat.length>1?`
@@ -2935,6 +3087,7 @@ function openJobDetail(id){
           <div style="min-width:0">
             <div class="jd-similar-role">${s.role}</div>
             <div class="jd-similar-co">${s.company} · ${s.location||"Ontario"}</div>
+            <div class="jd-similar-meta">${relDate(s.date)} · ${fmt(mid(s))} midpoint</div>
           </div>
           <div class="jd-similar-range">${fmt(s.min)}–${fmt(s.max)}</div>
         </div>`).join("")}
@@ -2943,10 +3096,11 @@ function openJobDetail(id){
 
   // Footer
   document.getElementById("jdFooter").innerHTML=`
+    ${archived?`<div class="jd-footer-note"><strong>Archived posting:</strong> this source page may no longer be live even though the salary data is still useful for calibration.</div>`:""}
     <a href="${j.src}" target="_blank" rel="noopener"
        class="btn-primary" style="flex:1;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;${archived?"opacity:.55":""}"
        ${archived?'title="Posting may no longer be active"':""}>
-      ${archived?"📁 View Original":"View Full Posting ↗"}
+      ${archived?"📁 Open Archived Source":"View Full Posting ↗"}
     </a>
   `;
 
