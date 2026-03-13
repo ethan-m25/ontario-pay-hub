@@ -853,6 +853,12 @@ footer a { color: var(--accent); text-decoration: none; }
   font-size: .74rem;
 }
 
+.mobile-filter-backdrop,
+.sidebar-mobile-head,
+.mobile-utility-bar {
+  display: none;
+}
+
 /* Two-column app layout */
 .app-layout {
   display: grid;
@@ -1252,10 +1258,15 @@ tbody tr:hover {
     padding-left: 16px;
     padding-right: 16px;
   }
-  .hero-actions,
+  .hero-actions { gap: 8px; }
+  .hero-action-btn { flex: 1 1 100%; }
+  .hero-trust { display: none; }
   .hero-summary {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
+  .hero-stat { justify-content: space-between; width: 100%; }
   .market-metrics {
     grid-template-columns: 1fr;
   }
@@ -1263,6 +1274,129 @@ tbody tr:hover {
     align-items: flex-start;
     flex-direction: column;
   }
+}
+@media(max-width:760px) {
+  body.mobile-filters-open { overflow: hidden; }
+  .mobile-filter-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,17,23,.38);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition);
+    z-index: 214;
+  }
+  body.mobile-filters-open .mobile-filter-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .app-layout {
+    border-left: none;
+    border-right: none;
+  }
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    height: auto;
+    max-height: min(82vh, 760px);
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid var(--border2);
+    border-radius: 22px 22px 0 0;
+    padding: 14px 16px 18px;
+    background: var(--surface);
+    transform: translateY(calc(100% + 24px));
+    transition: transform .24s ease;
+    z-index: 215;
+    box-shadow: 0 -18px 44px rgba(0,0,0,.18);
+    overflow-y: auto;
+    display: block;
+  }
+  body.mobile-filters-open .sidebar {
+    transform: translateY(0);
+  }
+  .sidebar-mobile-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+  }
+  .sidebar-mobile-kicker {
+    font-family: var(--font-mono);
+    font-size: .58rem;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+  .sidebar-mobile-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    line-height: 1.1;
+  }
+  .sidebar-meta-grid,
+  .sidebar { grid-template-columns: 1fr; }
+  .content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 14px;
+  }
+  .mobile-utility-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: linear-gradient(180deg, var(--surface), var(--surface2));
+    box-shadow: 0 14px 30px rgba(0,0,0,.08);
+    position: sticky;
+    top: 64px;
+    z-index: 30;
+  }
+  .mobile-utility-copy {
+    min-width: 0;
+  }
+  .mobile-utility-label {
+    font-family: var(--font-mono);
+    font-size: .56rem;
+    text-transform: uppercase;
+    letter-spacing: .11em;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+  .mobile-utility-title {
+    font-size: .82rem;
+    color: var(--text);
+    line-height: 1.35;
+    font-weight: 600;
+  }
+  .mobile-utility-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .mobile-utility-actions .btn-secondary {
+    padding: 8px 10px;
+    font-size: .72rem;
+  }
+  .results-shell { order: 1; }
+  .market-grid { order: 2; grid-template-columns: 1fr; margin-bottom: 0; }
+  #chartCard { order: 3; }
+  .results-sub { display: none; }
 }
 </style>
 </head>
@@ -1318,11 +1452,20 @@ tbody tr:hover {
   </div>
 </div>
 
+<div class="mobile-filter-backdrop" id="mobileFilterBackdrop" onclick="toggleMobileFilters(false)"></div>
+
 <!-- APP LAYOUT: Sidebar + Content -->
 <div class="app-layout">
 
   <!-- LEFT SIDEBAR -->
   <aside class="sidebar">
+    <div class="sidebar-mobile-head">
+      <div>
+        <div class="sidebar-mobile-kicker">Mobile Filters</div>
+        <div class="sidebar-mobile-title">Narrow the market, then jump back to results.</div>
+      </div>
+      <button class="btn-icon" onclick="toggleMobileFilters(false)" aria-label="Close filters">✕</button>
+    </div>
 
     <div class="sidebar-section">
       <div class="sidebar-label">Live Data</div>
@@ -1438,6 +1581,16 @@ tbody tr:hover {
 
   <!-- RIGHT CONTENT -->
   <main class="content-area">
+    <div class="mobile-utility-bar">
+      <div class="mobile-utility-copy">
+        <div class="mobile-utility-label">Mobile View</div>
+        <div class="mobile-utility-title" id="mobileResultInfo">Jump into roles first, then open filters when needed.</div>
+      </div>
+      <div class="mobile-utility-actions">
+        <button class="btn-secondary" onclick="toggleMobileFilters(true)">Filters</button>
+        <button class="btn-secondary" onclick="scrollToInsights()">Insights</button>
+      </div>
+    </div>
     <section class="market-grid">
       <div class="market-card featured">
         <div class="market-title">Market Snapshot</div>
@@ -1959,7 +2112,18 @@ function toggleTheme(){ S.theme=S.theme==="dark"?"light":"dark"; applyTheme(); }
 
 // ===== AUTH =====
 function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function toggleMobileFilters(force){
+  const shouldOpen = typeof force === "boolean"
+    ? force
+    : !document.body.classList.contains("mobile-filters-open");
+  document.body.classList.toggle("mobile-filters-open", shouldOpen);
+}
+function scrollToInsights(){
+  const target = document.querySelector(".market-grid");
+  if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+}
 function openAuth(){
+  toggleMobileFilters(false);
   // Clear all fields and reset messages every time the modal opens
   ["siEmail","siPass","regName","regEmail","regPass"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
   ["signinErr","regErr","regOk"].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
@@ -2028,6 +2192,7 @@ function updateUserUI(){
 // Profile panel helpers
 let _profileTab="saved";
 function openProfilePanel(){
+  toggleMobileFilters(false);
   document.getElementById("savedPanel").classList.add("open");
   renderSaved();
 }
@@ -2081,6 +2246,7 @@ function updateSaveBadge(){
   badge.textContent=S.saved.length;
 }
 function toggleSaved(){
+  toggleMobileFilters(false);
   _profileTab="saved";
   const p=document.getElementById("savedPanel");
   p.classList.toggle("open");
@@ -2229,6 +2395,12 @@ function renderTable(){
   });
   const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
+  const mobileResultInfo = document.getElementById("mobileResultInfo");
+  if(mobileResultInfo){
+    mobileResultInfo.textContent = isFiltered
+      ? `${data.length} matching roles ready to scan.`
+      : `${JOBS.length} roles ready to scan.`;
+  }
   const headlineBits = [];
   if(S.cat) headlineBits.push((CAT_META[S.cat]||{label:S.cat}).label);
   if(S.wm) headlineBits.push(S.wm[0].toUpperCase()+S.wm.slice(1));
@@ -2463,6 +2635,7 @@ const CAT_COLORS = {eng:"#C8102E",data:"#0095D5",fin:"#10b981",pm:"#f59e0b",sale
 let _jdCurrentId = null;
 
 function openJobDetail(id){
+  toggleMobileFilters(false);
   const j = JOBS.find(x=>x.id===id);
   if(!j) return;
   _jdCurrentId = id;
@@ -2586,8 +2759,19 @@ function jdToggleSave(){
 }
 
 // ===== INIT =====
-window.addEventListener("resize",()=>{ drawChart(); renderTable(); });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeAuth(); closeJobDetail(); document.getElementById("savedPanel").classList.remove("open"); } });
+window.addEventListener("resize",()=>{
+  if(window.innerWidth > 760) toggleMobileFilters(false);
+  drawChart();
+  renderTable();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeAuth();
+    closeJobDetail();
+    toggleMobileFilters(false);
+    document.getElementById("savedPanel").classList.remove("open");
+  }
+});
 loadData(); // async: fetches data/jobs.json then initialises UI
 </script>
 <script>
