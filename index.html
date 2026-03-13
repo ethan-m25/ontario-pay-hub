@@ -854,6 +854,7 @@ footer a { color: var(--accent); text-decoration: none; }
 }
 
 .mobile-filter-backdrop,
+.mobile-search-bar,
 .sidebar-mobile-head,
 .mobile-utility-bar {
   display: none;
@@ -1266,7 +1267,13 @@ tbody tr:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
-  .hero-stat { justify-content: space-between; width: 100%; }
+  .hero-stat {
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    border-radius: 14px;
+    padding: 10px 12px;
+  }
   .market-metrics {
     grid-template-columns: 1fr;
   }
@@ -1277,6 +1284,37 @@ tbody tr:hover {
 }
 @media(max-width:760px) {
   body.mobile-filters-open { overflow: hidden; }
+  .mobile-search-bar {
+    display: block;
+    position: sticky;
+    top: 56px;
+    z-index: 120;
+    padding: 10px 14px 12px;
+    background: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .mobile-search-shell {
+    position: relative;
+  }
+  .mobile-search-shell input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 10px 12px 10px 36px;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: .9rem;
+    outline: none;
+  }
+  .mobile-search-shell input:focus {
+    border-color: var(--accent);
+  }
+  .mobile-search-shell .nav-search-icon {
+    left: 12px;
+  }
   .mobile-filter-backdrop {
     display: block;
     position: fixed;
@@ -1411,7 +1449,7 @@ tbody tr:hover {
   </a>
   <div class="nav-search">
     <span class="nav-search-icon">⌕</span>
-    <input type="text" id="searchInput" placeholder="Search roles, companies…" oninput="applyFilters()">
+    <input type="text" id="searchInput" placeholder="Search roles, companies…" oninput="applyFilters('searchInput')">
   </div>
   <div class="nav-actions">
     <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs">
@@ -1421,6 +1459,13 @@ tbody tr:hover {
     <button class="btn-primary" id="userBtn" onclick="openAuth()">Sign in</button>
   </div>
 </nav>
+
+<div class="mobile-search-bar">
+  <div class="mobile-search-shell">
+    <span class="nav-search-icon">⌕</span>
+    <input type="text" id="mobileSearchInput" placeholder="Search roles, companies…" oninput="applyFilters('mobileSearchInput')">
+  </div>
+</div>
 
 <!-- MASTHEAD -->
 <div class="masthead">
@@ -1588,7 +1633,7 @@ tbody tr:hover {
       </div>
       <div class="mobile-utility-actions">
         <button class="btn-secondary" onclick="toggleMobileFilters(true)">Filters</button>
-        <button class="btn-secondary" onclick="scrollToInsights()">Insights</button>
+        <button class="btn-secondary" onclick="focusMobileSearch()">Search</button>
       </div>
     </div>
     <section class="market-grid">
@@ -2118,9 +2163,23 @@ function toggleMobileFilters(force){
     : !document.body.classList.contains("mobile-filters-open");
   document.body.classList.toggle("mobile-filters-open", shouldOpen);
 }
-function scrollToInsights(){
-  const target = document.querySelector(".market-grid");
-  if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+function setSearchInputs(value, sourceId){
+  ["searchInput","mobileSearchInput"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && id!==sourceId) el.value=value;
+  });
+}
+function focusMobileSearch(){
+  toggleMobileFilters(false);
+  const target = document.getElementById("mobileSearchInput") || document.getElementById("searchInput");
+  if(!target) return;
+  const bar = document.querySelector(".mobile-search-bar");
+  if(bar && window.innerWidth <= 760){
+    window.scrollTo({top: 0, behavior:"smooth"});
+    setTimeout(()=>target.focus(), 160);
+    return;
+  }
+  target.focus();
 }
 function openAuth(){
   toggleMobileFilters(false);
@@ -2361,7 +2420,9 @@ function setAge(val){
   if(el) el.classList.add('active');
   renderTable();
 }
-function applyFilters(){
+function applyFilters(sourceId){
+  const sourceEl = sourceId ? document.getElementById(sourceId) : null;
+  if(sourceEl) setSearchInputs(sourceEl.value, sourceId);
   S.q=document.getElementById("searchInput").value.toLowerCase();
   S.cat=document.getElementById("catFilter").value;
   S.region=document.getElementById("regionFilter").value;
@@ -2809,6 +2870,8 @@ function setChip(selectId, value, btn) {
 
 function clearAllFilters() {
   document.getElementById('searchInput').value = '';
+  const mobileSearch = document.getElementById('mobileSearchInput');
+  if (mobileSearch) mobileSearch.value = '';
   ['catFilter','wmFilter','salaryFilter','regionFilter'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = el.options[0].value;
@@ -2855,6 +2918,8 @@ function updateActiveFilters() {
 function clearOneFilter(id) {
   if (id === 'searchInput') {
     document.getElementById('searchInput').value = '';
+    const mobileSearch = document.getElementById('mobileSearchInput');
+    if (mobileSearch) mobileSearch.value = '';
     applyFilters();
     return;
   }
@@ -2880,7 +2945,11 @@ function clearOneFilter(id) {
 }
 
 function presetFilter(opts = {}) {
-  if (opts.q !== undefined) document.getElementById('searchInput').value = opts.q;
+  if (opts.q !== undefined) {
+    document.getElementById('searchInput').value = opts.q;
+    const mobileSearch = document.getElementById('mobileSearchInput');
+    if (mobileSearch) mobileSearch.value = opts.q;
+  }
   if (opts.cat !== undefined) document.getElementById('catFilter').value = opts.cat;
   if (opts.wm !== undefined) document.getElementById('wmFilter').value = opts.wm;
   if (opts.region !== undefined) document.getElementById('regionFilter').value = opts.region;
