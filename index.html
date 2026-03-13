@@ -1730,39 +1730,6 @@ tbody tr:hover {
         <button class="btn-secondary" onclick="focusMobileSearch()">Search</button>
       </div>
     </div>
-    <div class="results-shell">
-      <div class="results-header">
-        <div>
-          <div class="results-title">Browse Salary-Disclosed Jobs</div>
-          <div class="results-sub">Use the left-side controls to narrow down the market, then open a row for full details and the original source link.</div>
-        </div>
-        <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
-      </div>
-      <div class="comp-note" id="compNote">
-        <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
-        ✅ <strong>Included:</strong> base wages (salary), commissions, guaranteed performance bonuses<br>
-        <span class="comp-not-included">❌ <strong>Not required:</strong> discretionary bonuses, stock/equity, employer benefit contributions, vacation pay amounts</span><br>
-        <span style="font-size:.72rem;margin-top:4px;display:block">Source: <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">Ontario ESA Job Posting Requirements ↗</a> — applies to employers with 25+ employees</span>
-      </div>
-      <div class="table-wrap">
-        <table id="jobTable">
-          <thead>
-            <tr>
-              <th onclick="setSort('role')">Role <span id="sort-role"></span></th>
-              <th onclick="setSort('company')">Company <span id="sort-company"></span></th>
-              <th>Compensation Range <span id="compInfoBtn" title="What's disclosed under Ontario's ESA Pay Transparency Rules" style="cursor:pointer;opacity:.6;font-size:.8em" onclick="toggleCompNote()">ⓘ</span></th>
-              <th onclick="setSort('mid')">Midpoint <span id="sort-mid"></span></th>
-              <th>Source</th>
-              <th onclick="setSort('date')">Posted <span id="sort-date"></span></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-        <div class="empty" id="emptyState" style="display:none">No matching postings found. Try adjusting your filters.</div>
-      </div>
-    </div>
-
     <div class="insights-drawer">
       <details class="insights-details" id="insightsPanel">
         <summary>
@@ -1794,6 +1761,39 @@ tbody tr:hover {
           </section>
         </div>
       </details>
+    </div>
+
+    <div class="results-shell">
+      <div class="results-header">
+        <div>
+          <div class="results-title">Browse Salary-Disclosed Jobs</div>
+          <div class="results-sub">Use the left-side controls to narrow down the market, then open a row for full details and the original source link.</div>
+        </div>
+        <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
+      </div>
+      <div class="comp-note" id="compNote">
+        <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
+        ✅ <strong>Included:</strong> base wages (salary), commissions, guaranteed performance bonuses<br>
+        <span class="comp-not-included">❌ <strong>Not required:</strong> discretionary bonuses, stock/equity, employer benefit contributions, vacation pay amounts</span><br>
+        <span style="font-size:.72rem;margin-top:4px;display:block">Source: <a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:var(--accent)">Ontario ESA Job Posting Requirements ↗</a> — applies to employers with 25+ employees</span>
+      </div>
+      <div class="table-wrap">
+        <table id="jobTable">
+          <thead>
+            <tr>
+              <th onclick="setSort('role')">Role <span id="sort-role"></span></th>
+              <th onclick="setSort('company')">Company <span id="sort-company"></span></th>
+              <th>Compensation Range <span id="compInfoBtn" title="What's disclosed under Ontario's ESA Pay Transparency Rules" style="cursor:pointer;opacity:.6;font-size:.8em" onclick="toggleCompNote()">ⓘ</span></th>
+              <th onclick="setSort('mid')">Midpoint <span id="sort-mid"></span></th>
+              <th>Source</th>
+              <th onclick="setSort('date')">Posted <span id="sort-date"></span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState" style="display:none">No matching postings found. Try adjusting your filters.</div>
+      </div>
     </div>
 
   </main>
@@ -2113,6 +2113,7 @@ async function loadData() {
   populateFilters();
   renderDiscovery();
   applyFilters();
+  syncInsightsPanel();
   updateUserUI();
 }
 
@@ -2777,6 +2778,12 @@ function drawChart(){
   });
 }
 
+function syncInsightsPanel(){
+  const panel=document.getElementById("insightsPanel");
+  if(!panel) return;
+  panel.open = window.innerWidth > 760;
+}
+
 // ===== COMPENSATION NOTE TOGGLE =====
 function toggleCompNote(){
   const n=document.getElementById("compNote");
@@ -2932,6 +2939,7 @@ function jdToggleSave(){
 // ===== INIT =====
 window.addEventListener("resize",()=>{
   if(window.innerWidth > 760) toggleMobileFilters(false);
+  syncInsightsPanel();
   drawChart();
   renderTable();
 });
