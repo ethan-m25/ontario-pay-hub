@@ -51,8 +51,8 @@
 :root {
   --radius: 10px; --radius-sm: 8px; --radius-xs: 6px;
   --transition: .18s ease;
-  --shadow: 0 2px 12px rgba(0,0,0,.10);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,.16);
+  --shadow: 0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
   --font-display: 'Playfair Display', Georgia, serif;
   --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
@@ -69,23 +69,23 @@
   --text: #14202B;
   --text2: #445364;
   --text3: #748294;
-  --accent: #C8102E;
-  --accent-dim: rgba(200,16,46,.07);
-  --accent-border: rgba(200,16,46,.25);
+  --accent: #BA223D;
+  --accent-dim: rgba(186,34,61,.05);
+  --accent-border: rgba(186,34,61,.18);
   --green: #1D6C49;
   --green-dim: rgba(29,108,73,.08);
   --amber: #9A6A14;
   --amber-dim: rgba(154,106,20,.10);
-  --red: #C8102E;
-  --red-dim: rgba(200,16,46,.08);
+  --red: #BA223D;
+  --red-dim: rgba(186,34,61,.07);
   --cyan: #0F5E87;
   --purple: #6A4AA3;
   --chart-grid: rgba(213,220,229,.92);
   --nav-bg: rgba(248,250,252,.96);
   --modal-overlay: rgba(20,32,43,.42);
   --input-bg: #F8FAFC;
-  --dot-color: rgba(200,16,46,.06);
-  --rule-accent: #C8102E;
+  --dot-color: rgba(186,34,61,.05);
+  --rule-accent: #BA223D;
   --masthead-bg: #18222D;
   --masthead-text: #F5F7FA;
 }
@@ -144,7 +144,7 @@ nav {
   padding: 0 28px; height: 56px;
   display: flex; align-items: center; gap: 16px;
 }
-[data-theme="light"] nav { box-shadow: 0 8px 30px rgba(26,18,9,.05); }
+[data-theme="light"] nav { box-shadow: 0 8px 26px rgba(20,32,43,.045); }
 [data-theme="dark"] nav { box-shadow: 0 10px 30px rgba(0,0,0,.22); }
 
 .logo { display:flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
@@ -245,7 +245,7 @@ nav {
   cursor: pointer; transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition); white-space: nowrap;
   letter-spacing: .02em; text-transform: uppercase;
 }
-.btn-primary:hover { opacity:.92; transform: translateY(-1px); box-shadow: 0 10px 20px rgba(0,0,0,.16); }
+.btn-primary:hover { opacity:.94; transform: translateY(-1px); box-shadow: 0 10px 18px rgba(20,32,43,.12); }
 .btn-secondary {
   background: transparent; border: 1px solid var(--border2); border-radius: 8px;
   padding: 8px 14px; color: var(--text2);
@@ -358,6 +358,9 @@ nav {
   border-radius: 14px;
   box-shadow: 0 18px 40px rgba(0,0,0,.12);
   margin-bottom: 20px; overflow: hidden;
+}
+[data-theme="light"] .card {
+  box-shadow: 0 14px 28px rgba(17,24,39,.06);
 }
 #chartCard { background: var(--surface2); border-top-color: var(--text3); }
 .card-header { padding: 16px 20px 0; display:flex; align-items:center; gap:8px; }
