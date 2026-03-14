@@ -33,7 +33,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product owner product manager td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "phrase:product owner",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "2",
@@ -49,7 +57,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "machine learning engineer ii td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:machine learning engineer",
+        "token:engineer"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "3",
@@ -65,7 +80,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "digital marketing manager td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:digital marketing",
+        "token:marketing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "4",
@@ -81,7 +103,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior business intelligence analyst td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:business intelligence"
+      ],
+      "category_alt": ""
     },
     {
       "id": "5",
@@ -97,7 +125,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "account manager ii business banking td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:banking",
+        "rule:finance relationship/account manager"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "6",
@@ -113,7 +148,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager behavioural insights td bank toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:insights"
+      ],
+      "category_alt": ""
     },
     {
       "id": "7",
@@ -129,7 +170,15 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "risk analyst credit exceptions td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "8",
@@ -145,7 +194,14 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager data science td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data science",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "9",
@@ -161,7 +217,14 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager patent engineering td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:patent engineering",
+        "token:patent"
+      ],
+      "category_alt": ""
     },
     {
       "id": "10",
@@ -177,7 +240,15 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior analyst aml testing quality assurance td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:aml",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "11",
@@ -193,7 +264,15 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior information security analyst td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:information security",
+        "token:security",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "12",
@@ -209,7 +288,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior solution architect bmo financial group toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:solution architect",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "13",
@@ -225,7 +312,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager project change risk bmo financial group toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "14",
@@ -242,7 +337,14 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "manager ai agentic workflows wealthsimple toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:workflows",
+        "rule:workflow orchestration"
+      ],
+      "category_alt": ""
     },
     {
       "id": "15",
@@ -259,7 +361,13 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager workflow optimization wealthsimple toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "rule:workflow orchestration"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "16",
@@ -276,7 +384,15 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data scientist marketing wealthsimple toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "17",
@@ -293,7 +409,15 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data scientist valuations wealthsimple toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "18",
@@ -310,7 +434,15 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior associate treasury settlements wealthsimple toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "19",
@@ -327,7 +459,17 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager treasury capital markets wealthsimple toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:capital markets",
+        "phrase:treasury",
+        "token:treasury",
+        "token:capital",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "20",
@@ -344,7 +486,16 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software engineer full stack owner toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "phrase:full stack",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "21",
@@ -361,7 +512,14 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "people business partner owner toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:people business partner",
+        "token:people"
+      ],
+      "category_alt": ""
     },
     {
       "id": "22",
@@ -378,7 +536,13 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "business development representative owner toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:business development"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "23",
@@ -394,7 +558,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "office coordinator owner toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:office coordinator",
+        "token:coordinator"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "24",
@@ -411,7 +582,16 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software engineer developer experience pointclickcare mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:developer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "25",
@@ -427,7 +607,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software engineer java react pointclickcare mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "26",
@@ -443,7 +631,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "ai systems developer pointclickcare mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:systems developer",
+        "token:developer"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "27",
@@ -459,7 +654,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software engineer waabi toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "28",
@@ -476,7 +679,15 @@
       "salary_type": "base",
       "last_seen": "2026-03-11",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "staff software engineer achievers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "29",
@@ -492,7 +703,14 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior full stack engineer teleport toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:full stack",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "30",
@@ -508,7 +726,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "applied data scientist caseware toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "31",
@@ -524,7 +750,13 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "schedule manager infrastructure ontario toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:infrastructure"
+      ],
+      "category_alt": ""
     },
     {
       "id": "32",
@@ -540,7 +772,16 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "project coordinator project delivery infrastructure ontario toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:project",
+        "token:delivery",
+        "weak:coordinator",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "33",
@@ -557,7 +798,13 @@
       "salary_type": "base",
       "last_seen": "2026-03-09",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior manager strategy finance fullscript toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:finance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "34",
@@ -574,7 +821,13 @@
       "salary_type": "base",
       "last_seen": "2026-03-14",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "strategic merchandising manager fullscript toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:merchandising"
+      ],
+      "category_alt": ""
     },
     {
       "id": "35",
@@ -590,7 +843,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "project manager business solutions city of toronto toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:project manager",
+        "token:project"
+      ],
+      "category_alt": ""
     },
     {
       "id": "36",
@@ -606,7 +866,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior business systems analyst city of toronto toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "37",
@@ -622,7 +888,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "project manager transportation services city of toronto toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:project manager",
+        "token:project"
+      ],
+      "category_alt": ""
     },
     {
       "id": "38",
@@ -639,7 +912,11 @@
       "salary_type": "base",
       "last_seen": "2026-03-12",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "business management analyst city of toronto toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "39",
@@ -655,7 +932,13 @@
       "work_mode": "unknown",
       "salary_type": "unknown",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "engineer city of toronto toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "40",
@@ -671,7 +954,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "budget operations analyst city of toronto toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:operations analyst",
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "41",
@@ -688,7 +978,16 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data scientist finance market risk wealthsimple toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data",
+        "rule:risk title but data function"
+      ],
+      "category_alt": "Legal"
     },
     {
       "id": "42",
@@ -705,7 +1004,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst investment research wealthsimple toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "43",
@@ -722,7 +1027,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "hr business partner contract wealthsimple toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:hr business partner",
+        "token:hr"
+      ],
+      "category_alt": ""
     },
     {
       "id": "44",
@@ -739,7 +1051,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "product marketing manager active trader wealthsimple toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:product"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "45",
@@ -756,7 +1074,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager care mode fullscript ottawa on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "46",
@@ -773,7 +1098,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "senior digital marketing manager fullscript ottawa on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:digital marketing",
+        "token:marketing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "47",
@@ -790,7 +1122,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst fp a pointclickcare mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "48",
@@ -807,7 +1146,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "senior hr business partner caseware toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:hr business partner",
+        "token:hr"
+      ],
+      "category_alt": ""
     },
     {
       "id": "49",
@@ -824,7 +1170,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager policyme toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "50",
@@ -841,7 +1194,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "regional manager ontario maritimes arc teryx toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:regional manager",
+        "title:leadership"
+      ],
+      "category_alt": ""
     },
     {
       "id": "51",
@@ -858,7 +1218,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data technical analyst stackadapt toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "52",
@@ -875,7 +1241,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "vertical lead commerce stackadapt toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:commerce"
+      ],
+      "category_alt": ""
     },
     {
       "id": "53",
@@ -892,7 +1264,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software development manager amazon toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software development",
+        "phrase:development manager",
+        "token:software",
+        "weak:development"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "54",
@@ -909,7 +1290,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data engineer databricks teema toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data engineer",
+        "token:data"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "55",
@@ -926,7 +1314,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior site reliability engineer buildops toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:site reliability"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "56",
@@ -943,7 +1337,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software engineer gen ai and web apps benchsci toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "57",
@@ -960,7 +1362,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "director appropriate use cadth toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": ""
     },
     {
       "id": "58",
@@ -977,7 +1386,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software engineer product engineering canada ashby southwestern ontario",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "59",
@@ -994,7 +1411,15 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "database administrator alcohol and gaming commission of ontario toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:database administrator",
+        "token:database",
+        "weak:administrator"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "60",
@@ -1011,7 +1436,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "senior business analyst capital one greater toronto area",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": ""
     },
     {
       "id": "61",
@@ -1028,7 +1460,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "senior product delivery analyst wealth technology john hancock manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:product",
+        "token:delivery",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "62",
@@ -1045,7 +1485,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior infrastructure engineer evenup toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:infrastructure"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "63",
@@ -1062,7 +1508,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software engineering manager supplier advertising experience wayfair toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineering",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "64",
@@ -1079,7 +1532,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "regional territory account executive pointclickcare mississauga on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:account executive"
+      ],
+      "category_alt": ""
     },
     {
       "id": "65",
@@ -1096,7 +1555,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager shopify greater toronto area",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "66",
@@ -1113,7 +1579,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "senior specialist compensation projects university health network toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:compensation"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "67",
@@ -1130,7 +1602,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "registered nurse weeneebayko area health authority waha moose factory ontario",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "68",
@@ -1147,7 +1623,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "clinical manager inpatient oncology trillium health partners mississauga on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "69",
@@ -1164,7 +1644,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "human resources business advisor ontario public service toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:human resources"
+      ],
+      "category_alt": ""
     },
     {
       "id": "70",
@@ -1181,7 +1667,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "financial data analyst robert half toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data analyst",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "71",
@@ -1198,7 +1691,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "specialist data and information cmhc ottawa on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "72",
@@ -1215,7 +1714,14 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "backend engineer embroker toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:backend",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "73",
@@ -1232,7 +1738,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "manufacturing project engineer innio welland on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:engineer"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "74",
@@ -1249,7 +1761,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager fleet services operations ornge mississauga on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "75",
@@ -1266,7 +1784,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "aviation safety specialist ornge mississauga on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "76",
@@ -1283,7 +1805,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "registered nurse rn von canada brantford on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "77",
@@ -1300,7 +1826,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "director technology delivery canada life toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:technology delivery",
+        "token:delivery",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "78",
@@ -1317,7 +1851,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior full stack developer devops go react betstamp toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:full stack",
+        "token:developer"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "79",
@@ -1334,7 +1875,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "test developing manager ii xr google waterloo on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "80",
@@ -1351,7 +1896,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "lead developer design systems teema toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:lead developer",
+        "phrase:design systems",
+        "token:developer"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "81",
@@ -1368,7 +1921,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "insights measurement lead amazon advertising canada inc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:insights",
+        "token:measurement"
+      ],
+      "category_alt": ""
     },
     {
       "id": "82",
@@ -1385,7 +1945,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "operations financial analyst amazon toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "83",
@@ -1402,7 +1969,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "lead developer design systems not specified toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:lead developer",
+        "phrase:design systems",
+        "token:developer"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "84",
@@ -1419,7 +1994,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software developer iii google waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "85",
@@ -1436,7 +2019,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst global trade management public markets operations 12 month contract versafi toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "86",
@@ -1453,7 +2042,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "career event financial planning cambridge td bank ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:financial planning",
+        "token:financial"
+      ],
+      "category_alt": "Other"
     },
     {
       "id": "87",
@@ -1470,7 +2066,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "online release lead td bank toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:release"
+      ],
+      "category_alt": ""
     },
     {
       "id": "88",
@@ -1487,7 +2089,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate vice president ontario gta tds and cna td equipment finance canadian business banking td bank ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:finance",
+        "token:banking"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "89",
@@ -1504,7 +2113,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior java software engineer td securities td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "90",
@@ -1521,7 +2139,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "developing investment advisor durham region td bank ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "91",
@@ -1538,7 +2162,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "microsoft purview engineer engineer ii b3617 td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:purview"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "92",
@@ -1555,7 +2185,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "developing investment advisor yorkville td bank toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "93",
@@ -1572,7 +2208,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager business banking credit strategy risk management bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:risk management",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "94",
@@ -1589,7 +2234,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior pricing analyst bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:pricing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "95",
@@ -1606,7 +2257,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager canadian commercial banking strategy bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:commercial banking",
+        "token:banking"
+      ],
+      "category_alt": ""
     },
     {
       "id": "96",
@@ -1623,7 +2281,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior cloud engineer azure bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:cloud",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "97",
@@ -1640,7 +2305,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "vice president ai engineer bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:ai engineer",
+        "token:engineer"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "98",
@@ -1657,7 +2329,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "vice president internal commercialization bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:vice president",
+        "title:leadership",
+        "rule:senior leadership title"
+      ],
+      "category_alt": ""
     },
     {
       "id": "99",
@@ -1674,7 +2354,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "vice president ai strategy and change management bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:change",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "100",
@@ -1691,7 +2378,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "analyst full stack engineer bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:full stack",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "101",
@@ -1708,7 +2402,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "associate ai devops engineer bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:devops"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "102",
@@ -1725,7 +2425,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "associate full stack engineer bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:full stack",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "103",
@@ -1742,7 +2449,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "associate data engineer bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data engineer",
+        "token:data"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "105",
@@ -1759,7 +2473,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "associate manager audit advisory services manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:audit",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "106",
@@ -1776,7 +2498,17 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager operational risk management group functions manulife waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:risk management",
+        "phrase:operational risk",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "107",
@@ -1793,7 +2525,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager credit cards manulife waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "108",
@@ -1810,7 +2549,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "intermediate servicenow developer manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:servicenow"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "109",
@@ -1827,7 +2572,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "assistant vice president sales enablement manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:sales enablement",
+        "token:sales",
+        "weak:enablement"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "110",
@@ -1844,7 +2597,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior disability administrator file copy manulife ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:administrator"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "111",
@@ -1861,7 +2620,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "director procurement strategy and transformation manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:transformation",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "112",
@@ -1878,7 +2644,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product support specialist retail product manulife waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product support",
+        "token:product",
+        "neg:product support",
+        "rule:product support"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "114",
@@ -1895,7 +2670,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "director canada ai manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": ""
     },
     {
       "id": "115",
@@ -1912,7 +2694,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "assistant vice president global ai technology platforms and solutions manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:vice president",
+        "title:leadership",
+        "rule:senior leadership title"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "116",
@@ -1929,7 +2719,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software developer otppb toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "117",
@@ -1946,7 +2744,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "business partner specialist 12 month mat leave otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "118",
@@ -1963,7 +2765,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software developer otppb toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "119",
@@ -1980,7 +2790,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "engineering lead network security tools otppb toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:security",
+        "token:network",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "120",
@@ -1997,7 +2815,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "tax coordinator otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:tax"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "121",
@@ -2014,7 +2838,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "associate systems analyst 12 month contract otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "122",
@@ -2031,7 +2861,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "solution architect microsoft power platform otppb toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:solution architect",
+        "token:platform",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "123",
@@ -2048,7 +2887,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "administrative assistant colliers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "124",
@@ -2065,7 +2910,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior c engineer td securities td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:engineer",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "125",
@@ -2082,7 +2934,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior net c engineer td securities td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:engineer",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "126",
@@ -2099,7 +2958,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data scientist iii b3617 td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "127",
@@ -2116,7 +2983,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "transparency pricing risk developer td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "128",
@@ -2133,7 +3008,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "developing investment advisor td bank waterloo on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "129",
@@ -2150,7 +3031,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "developing investment advisor downtown toronto td bank toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "130",
@@ -2167,7 +3054,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate planner future opportunity ontario south west td bank ontario on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "131",
@@ -2184,7 +3075,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "investment banking analyst power utilities td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:investment banking",
+        "token:banking",
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "132",
@@ -2201,7 +3100,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "personal banking associate bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:banking"
+      ],
+      "category_alt": ""
     },
     {
       "id": "133",
@@ -2218,7 +3123,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director commercial banking corporate finance group bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:commercial banking",
+        "token:finance",
+        "token:banking"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "134",
@@ -2235,7 +3148,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data architect artificial intelligence aws cloud bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:data architect",
+        "token:cloud",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "135",
@@ -2252,7 +3174,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior cloud engineer bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:cloud",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "136",
@@ -2269,7 +3198,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate capital optimization financial performance corporate banking bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:financial",
+        "token:banking",
+        "token:capital"
+      ],
+      "category_alt": ""
     },
     {
       "id": "137",
@@ -2286,7 +3223,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "development manager bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:development manager",
+        "weak:development"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "138",
@@ -2303,7 +3247,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior manager resl account management strategy analytics bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:account management"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "139",
@@ -2320,7 +3270,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "vice president business resilience capital markets bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:capital markets",
+        "token:capital"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "140",
@@ -2337,7 +3294,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "customer service representative bmo ontario on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:service representative",
+        "phrase:customer service"
+      ],
+      "category_alt": ""
     },
     {
       "id": "141",
@@ -2354,7 +3318,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "supervisor contact centre global asset management bmo ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:asset management"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "142",
@@ -2371,7 +3341,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "application developer java isam bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:application developer",
+        "token:developer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "143",
@@ -2388,7 +3365,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "private wealth senior consultant learning designer cibc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:private wealth",
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "144",
@@ -2405,7 +3390,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "lead solution architect ai ml manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:solution architect",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "145",
@@ -2422,7 +3415,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior compliance analyst manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:compliance analyst",
+        "token:compliance",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "146",
@@ -2439,7 +3441,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data analyst l c strategy and operations data analytics and technology focus manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:data analyst",
+        "token:analytics",
+        "token:data",
+        "neg:strategy and operations"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "147",
@@ -2456,7 +3467,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "business analyst 12 month contract omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": ""
     },
     {
       "id": "148",
@@ -2473,7 +3491,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst accounting omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial",
+        "token:accounting"
+      ],
+      "category_alt": ""
     },
     {
       "id": "149",
@@ -2490,7 +3516,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst consolidations management reporting omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "150",
@@ -2507,7 +3540,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "systems solution developer omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "151",
@@ -2524,7 +3563,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "lead product delivery 12 months contract omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:product",
+        "token:delivery",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": ""
     },
     {
       "id": "152",
@@ -2541,7 +3588,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "site reliability engineer identity and platform services omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:site reliability",
+        "token:platform",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "153",
@@ -2558,7 +3613,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager operations omers ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "154",
@@ -2575,7 +3636,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior front end web developer 12 months contract omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:front end",
+        "token:developer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "155",
@@ -2592,7 +3660,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst performance valuations omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "156",
@@ -2609,7 +3681,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "maintenance supervisor omers mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:maintenance supervisor",
+        "rule:domain phrase"
+      ],
+      "category_alt": ""
     },
     {
       "id": "157",
@@ -2626,7 +3705,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "senior business analyst 12 month contract omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": ""
     },
     {
       "id": "158",
@@ -2643,7 +3729,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "coordinator accounts payable 12 month contract omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:coordinator"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "159",
@@ -2660,7 +3752,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst investment finance valuations omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "160",
@@ -2677,7 +3776,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst fixed income global multi asset strategies omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "161",
@@ -2694,7 +3797,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "associate director environmental risk management omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:risk management",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "162",
@@ -2711,7 +3823,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior business analyst data integration performance platform 12 month contract omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "163",
@@ -2728,7 +3847,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst funding and collateral operations omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "164",
@@ -2745,7 +3870,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager investment finance contract end january 2027 omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "165",
@@ -2762,7 +3894,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior business analyst investment data operations 12 month direct contract omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "166",
@@ -2779,7 +3918,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst investment finance g a omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "167",
@@ -2796,7 +3942,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst financial planning analysis omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial planning",
+        "token:financial"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "168",
@@ -2813,7 +3966,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst finance treasury omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:finance",
+        "token:treasury",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "169",
@@ -2830,7 +3992,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "specialist pension accounting omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:accounting"
+      ],
+      "category_alt": ""
     },
     {
       "id": "170",
@@ -2847,7 +4015,17 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "business analyst trading platform omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:trading platform",
+        "token:platform",
+        "neg:business analyst",
+        "rule:business analyst + technology/platform",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "171",
@@ -2864,7 +4042,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "lead process engineer intelligent automation and ai omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:engineer",
+        "weak:automation"
+      ],
+      "category_alt": ""
     },
     {
       "id": "172",
@@ -2881,7 +4066,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "junior building operator omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "173",
@@ -2898,7 +4087,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "lead learning media designer omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:learning"
+      ],
+      "category_alt": ""
     },
     {
       "id": "174",
@@ -2915,7 +4110,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "manager leadership team development omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:development"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "175",
@@ -2932,7 +4133,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "associate director business continuity program omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "176",
@@ -2949,7 +4157,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior analyst pension policy and legal technical writer omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:legal",
+        "token:policy"
+      ],
+      "category_alt": ""
     },
     {
       "id": "177",
@@ -2966,7 +4181,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst finance and accounting omers toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "token:accounting"
+      ],
+      "category_alt": ""
     },
     {
       "id": "178",
@@ -2983,7 +4205,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "technical analyst valuations analytics omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:analytics"
+      ],
+      "category_alt": ""
     },
     {
       "id": "179",
@@ -3000,7 +4228,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst brookfield toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "180",
@@ -3017,7 +4252,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "receptionist brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "181",
@@ -3034,7 +4273,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager tax brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:tax"
+      ],
+      "category_alt": ""
     },
     {
       "id": "182",
@@ -3051,7 +4296,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "executive assistant brookfield toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "183",
@@ -3068,7 +4320,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "finance manager brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:finance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "184",
@@ -3085,7 +4343,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst finance brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:finance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "185",
@@ -3102,7 +4366,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "associate investor relations brookfield toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:investor relations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "186",
@@ -3119,7 +4389,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior specialist private asset servicing brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "187",
@@ -3136,7 +4410,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior specialist spv operations brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "188",
@@ -3153,7 +4433,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "manager business systems applications brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "189",
@@ -3170,7 +4456,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "bi reporting developer analyst jonas software canada markham on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:bi reporting",
+        "phrase:reporting developer",
+        "token:reporting",
+        "token:bi"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "190",
@@ -3187,7 +4482,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Leadership",
-      "category_tag": "exec"
+      "category_tag": "exec",
+      "normalized_title": "senior director of ai jonas software canada markham on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "191",
@@ -3204,7 +4506,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager professional services jonas software canada markham on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "192",
@@ -3221,7 +4529,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director of finance jonas software canada markham on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "rule:senior finance title"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "193",
@@ -3238,7 +4553,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "accounts payable clerk jonas software canada markham on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "194",
@@ -3255,7 +4576,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product support technical specialist jonas software canada markham on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product support",
+        "token:product",
+        "neg:product support",
+        "rule:product support"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "195",
@@ -3272,7 +4602,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "junior quality assurance analyst jonas software canada markham on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "196",
@@ -3289,7 +4625,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "director of software development jonas software canada toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software development",
+        "token:software",
+        "weak:development"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "197",
@@ -3306,7 +4650,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst jonas software canada markham on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "198",
@@ -3323,7 +4674,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "director of development jonas software canada toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:director of development",
+        "token:software",
+        "weak:development"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "199",
@@ -3340,7 +4699,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "marketing manager jonas software canada toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:software"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "200",
@@ -3357,7 +4722,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software engineer jonas software canada toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "201",
@@ -3374,7 +4747,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "mergers acquisitions business development associate jonas software canada markham on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:business development"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "202",
@@ -3391,7 +4770,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "ai transformation lead jonas software canada toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:transformation",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "203",
@@ -3408,7 +4794,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product support technician jonas software canada markham on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product support",
+        "token:product",
+        "neg:product support",
+        "rule:product support"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "204",
@@ -3425,7 +4820,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior actuarial analyst claims data analytics cdat intact financial corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:actuarial",
+        "token:financial",
+        "weak:claims"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "205",
@@ -3442,7 +4845,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "customer service representative auto claims intact financial corporation ottawa on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:service representative",
+        "phrase:customer service"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "206",
@@ -3459,7 +4869,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "accounting operations specialist intact financial corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:financial",
+        "token:accounting"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "207",
@@ -3476,7 +4893,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director actuarial commercial lines intact financial corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:actuarial",
+        "token:financial"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "208",
@@ -3493,7 +4917,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "associate sales and customer service may intact financial corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:customer service"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "209",
@@ -3510,7 +4940,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "senior communications advisor intact financial corporation toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:financial"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "210",
@@ -3527,7 +4963,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior underwriter specialty lines intact financial corporation toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:underwriter",
+        "token:financial",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "211",
@@ -3544,7 +4988,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "program manager shoppers drug mart mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:program manager",
+        "token:program"
+      ],
+      "category_alt": ""
     },
     {
       "id": "212",
@@ -3561,7 +5012,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "front end engineer amazon toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:front end",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "213",
@@ -3578,7 +5036,15 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "principal software engineering finance reinsurance intact toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineering",
+        "token:software",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "214",
@@ -3595,7 +5061,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "infrastructure engineer data encryption layer 6 ai toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:infrastructure"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "215",
@@ -3612,7 +5084,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior application developer alcohol and gaming commission of ontario a toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:application developer",
+        "token:developer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "216",
@@ -3629,7 +5108,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "nurse practitioner waha moosonee on fort albany on attawapiskat on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "217",
@@ -3646,7 +5129,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "research machine learning scientist td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:research",
+        "token:scientist"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "218",
@@ -3663,7 +5153,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "manufacturing project engineer machining innio welland ontario",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:engineer"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "219",
@@ -3680,7 +5176,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "director business management td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": ""
     },
     {
       "id": "220",
@@ -3697,7 +5200,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior analyst payroll accounting omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:payroll"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "221",
@@ -3714,7 +5223,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior associate treasury operations otppb toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "222",
@@ -3731,7 +5247,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "executive assistant teachers venture growth tvg 15 month contract otppb toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "223",
@@ -3748,7 +5271,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior associate total fund risk analytics otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "224",
@@ -3765,7 +5295,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager collateral liquidity operations 12 month contract otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "225",
@@ -3782,7 +5318,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior executive assistant otppb toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "226",
@@ -3799,7 +5342,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager due diligence otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "227",
@@ -3816,7 +5363,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "law clerk corporate and investments otppb toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "228",
@@ -3833,7 +5384,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "business operations analyst td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:operations analyst",
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "229",
@@ -3850,7 +5408,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "personal banking associate trainee td bank mississauga on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:banking"
+      ],
+      "category_alt": ""
     },
     {
       "id": "230",
@@ -3867,7 +5431,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "actuarial intern co op preferred candidate td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:actuarial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "231",
@@ -3884,7 +5454,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "personal banking association bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:banking"
+      ],
+      "category_alt": ""
     },
     {
       "id": "232",
@@ -3901,7 +5477,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "audit manager wealth management bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:audit",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "233",
@@ -3918,7 +5502,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "audit manager quantitative bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:audit",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "234",
@@ -3935,7 +5527,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "agile delivery manager banking industry scrum master pm bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:delivery manager",
+        "phrase:scrum master",
+        "token:delivery",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "235",
@@ -3952,7 +5553,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager model validation bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:model validation"
+      ],
+      "category_alt": ""
     },
     {
       "id": "236",
@@ -3969,7 +5576,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "director samu national accounts bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "rule:domain phrase"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "237",
@@ -3986,7 +5599,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager model validation bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:model validation"
+      ],
+      "category_alt": ""
     },
     {
       "id": "238",
@@ -4003,7 +5622,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "client service associate private wealth bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:private wealth",
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "239",
@@ -4020,7 +5647,17 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "credit analyst commercial banking income property finance ipf bmo waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:commercial banking",
+        "token:finance",
+        "token:banking",
+        "token:credit",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "240",
@@ -4037,7 +5674,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "naimr head of canada alternatives distribution bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:alternatives distribution",
+        "token:distribution"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "241",
@@ -4054,7 +5698,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "specialist anti money laundering user acceptance testing bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:anti money laundering"
+      ],
+      "category_alt": ""
     },
     {
       "id": "242",
@@ -4071,7 +5721,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager portfolio management group bmo private wealth bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:private wealth",
+        "token:portfolio",
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "243",
@@ -4088,7 +5747,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior analyst market risk bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:market risk",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "244",
@@ -4105,7 +5773,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior technologist risk systems bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "245",
@@ -4122,7 +5798,14 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "auditor spot audit practice audits professional development amp competence remote toronto law society of ontario toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:audit",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "246",
@@ -4139,7 +5822,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "wealth strategist cibc toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "247",
@@ -4156,7 +5846,14 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior underwriting consultant high net worth manulife ontario on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:underwriting",
+        "rule:senior finance title"
+      ],
+      "category_alt": ""
     },
     {
       "id": "248",
@@ -4173,7 +5870,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior business analyst group benefits operations manulife waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "249",
@@ -4190,7 +5894,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "treasury operations specialist manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury",
+        "company:finance_org"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "250",
@@ -4207,7 +5919,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "associate marketing manager retention expansion affinity markets manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:marketing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "251",
@@ -4224,7 +5942,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior tax analyst transfer pricing manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:tax",
+        "weak:pricing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "252",
@@ -4241,7 +5966,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "regional recruit analyst manulife ontario on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "253",
@@ -4258,7 +5987,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "senior release train engineer manulife waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:release train engineer",
+        "token:release",
+        "rule:release train"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "254",
@@ -4275,7 +6012,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "actuarial manager global retirement finance pricing manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:actuarial",
+        "token:finance",
+        "weak:pricing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "255",
@@ -4292,7 +6037,11 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "agent of record specialist manulife ontario on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "256",
@@ -4309,7 +6058,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "business intelligence manager manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:business intelligence"
+      ],
+      "category_alt": ""
     },
     {
       "id": "257",
@@ -4326,7 +6081,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior sourcing analyst brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "258",
@@ -4343,7 +6102,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager finance brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:finance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "259",
@@ -4360,7 +6125,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior financial analyst fp a medline mississauga on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial analyst",
+        "token:financial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "260",
@@ -4377,7 +6149,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "auditor spot audit practice audits professional development amp competence law society of ontario toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:audit",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "261",
@@ -4394,7 +6173,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "hr director eastgen guelph on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "262",
@@ -4411,7 +6197,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "administrative assistant rbc toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "263",
@@ -4428,7 +6220,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "administrator institutional client operations rbc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:operations",
+        "token:administrator"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "264",
@@ -4445,7 +6244,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "quality assurance specialist automation contact centre applications bmo ontario on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:contact centre"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "265",
@@ -4462,7 +6267,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior technology manager development api design aws payment systems bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:systems",
+        "token:api",
+        "weak:technology"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "266",
@@ -4479,7 +6292,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software developer java linux aws wire payments bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "267",
@@ -4496,7 +6317,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "business development specialist inside sales segregated funds annuities bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business development",
+        "token:sales"
+      ],
+      "category_alt": "People & HR"
     },
     {
       "id": "268",
@@ -4513,7 +6341,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "financial planner bmo hamilton on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:financial"
+      ],
+      "category_alt": ""
     },
     {
       "id": "269",
@@ -4530,7 +6364,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "manager digital acquisition bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "270",
@@ -4547,7 +6385,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager data science bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data science",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "271",
@@ -4564,7 +6409,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "marketing specialist marketing planning bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:marketing"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "272",
@@ -4581,7 +6432,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "partner marketing specialist 12 month contract bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:marketing"
+      ],
+      "category_alt": ""
     },
     {
       "id": "273",
@@ -4598,7 +6455,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager commercial banking controls governance bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:governance",
+        "token:controls",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "274",
@@ -4615,7 +6480,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "regulatory integrator and governance lead bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:governance",
+        "token:regulatory",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "275",
@@ -4632,7 +6505,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior manager pm financial planning and analysis bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:financial planning",
+        "token:financial"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "276",
@@ -4649,7 +6529,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "client associate ir licensed mandarin cantonese speaking 12 month contract cibc wood gundy cibc toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "277",
@@ -4666,7 +6550,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "senior consultant events cibc toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:events"
+      ],
+      "category_alt": ""
     },
     {
       "id": "278",
@@ -4683,7 +6573,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst strategy global hedging variable and indexed linked products manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "279",
@@ -4700,7 +6594,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager procurement strategy manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:procurement"
+      ],
+      "category_alt": ""
     },
     {
       "id": "280",
@@ -4717,7 +6617,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior travel claims specialist manulife ontario on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:claims specialist"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "281",
@@ -4734,7 +6640,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "client portfolio management specialist manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:portfolio",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "282",
@@ -4751,7 +6664,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "application support analyst omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:support"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "283",
@@ -4768,7 +6687,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "analyst data management brookfield toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data management",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "284",
@@ -4785,7 +6711,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior analyst application engineering brookfield toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:application engineering"
+      ],
+      "category_alt": ""
     },
     {
       "id": "285",
@@ -4802,7 +6734,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior analyst business systems analysis brookfield toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "286",
@@ -4819,7 +6757,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "strategy and operations principal lead google toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "287",
@@ -4836,7 +6780,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "designer design systems not specified toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:design systems"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "288",
@@ -4853,7 +6803,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "java engineer td securities td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:engineer",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "289",
@@ -4870,7 +6827,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior java engineer td securities td bank toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:engineer",
+        "rule:engineering terms override finance domain"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "290",
@@ -4887,7 +6851,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "solutions it designer td bank toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:it"
+      ],
+      "category_alt": ""
     },
     {
       "id": "291",
@@ -4904,7 +6874,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior practice consultant private wealth management td bank toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:private wealth",
+        "phrase:wealth management",
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "292",
@@ -4921,7 +6900,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager it controls testing bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:controls",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "293",
@@ -4938,7 +6924,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "manager business management bmo mississauga on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "294",
@@ -4955,7 +6945,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior manager global markets operational risk bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:operational risk",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "295",
@@ -4972,7 +6971,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "retail insurance compliance specialist bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:retail insurance compliance",
+        "token:compliance",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "296",
@@ -4989,7 +6997,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "bilingual french insurance consumer complaints officer bmo toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:complaints officer"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "297",
@@ -5006,7 +7020,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "business development manager segregated funds annuities bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:development manager",
+        "weak:development"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "298",
@@ -5023,7 +7044,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior compliance officer equity trade surveillance bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:compliance officer",
+        "token:compliance",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "299",
@@ -5040,7 +7070,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager wealth data management governance bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data management",
+        "token:data",
+        "token:governance"
+      ],
+      "category_alt": "Legal"
     },
     {
       "id": "300",
@@ -5058,7 +7096,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "m365 engineering specialist bmo ontario on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:m365"
+      ],
+      "category_alt": ""
     },
     {
       "id": "301",
@@ -5075,7 +7119,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior banker bmo ontario on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "302",
@@ -5092,7 +7140,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior specialist global investigations bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "303",
@@ -5109,7 +7161,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "measurement lead nacb initiative communications bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:measurement"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "304",
@@ -5126,7 +7184,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "senior manager campaign strategy and optimization narp and business banking bmo toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:campaign strategy",
+        "token:campaign"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "305",
@@ -5143,7 +7208,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "bilingual client services associate bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "306",
@@ -5160,7 +7229,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager investment and client operations gam bmo ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "307",
@@ -5177,7 +7252,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "credit manager bmo toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:credit",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "308",
@@ -5194,7 +7276,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "executive director wealth brand experiences and events cibc toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:brand",
+        "token:events"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "309",
@@ -5211,7 +7300,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior business system analyst manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "310",
@@ -5228,7 +7321,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "executive assistant manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "311",
@@ -5245,7 +7345,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director derivatives middle office operation manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:director",
+        "title:leadership"
+      ],
+      "category_alt": ""
     },
     {
       "id": "312",
@@ -5262,7 +7369,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "cybersecurity delivery manager manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:delivery manager",
+        "token:delivery",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "313",
@@ -5279,7 +7394,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data engineer manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data engineer",
+        "token:data"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "314",
@@ -5296,7 +7418,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "new business medical administration specialist manulife waterloo on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "315",
@@ -5313,7 +7439,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager data governance and quality manulife toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data governance",
+        "token:data",
+        "token:governance"
+      ],
+      "category_alt": "Legal"
     },
     {
       "id": "316",
@@ -5330,7 +7464,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "strategy analyst manulife toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "317",
@@ -5347,7 +7485,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager treasury systems and transformation manulife toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury",
+        "company:finance_org"
+      ],
+      "category_alt": "Product & Project"
     },
     {
       "id": "318",
@@ -5364,7 +7510,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "analyst senior analyst total plan risk management omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:risk management",
+        "token:risk",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "319",
@@ -5381,7 +7536,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior analyst compliance ethics omers toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:compliance",
+        "weak:ethics",
+        "rule:risk/compliance/audit/governance",
+        "company:finance_org"
+      ],
+      "category_alt": ""
     },
     {
       "id": "320",
@@ -5398,7 +7562,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "analyst derivatives operations omers toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "321",
@@ -5415,7 +7585,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "business analyst oxford properties group toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": ""
     },
     {
       "id": "322",
@@ -5432,7 +7609,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager data amp analytics city of leduc kitchener on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:analytics",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "323",
@@ -5449,7 +7633,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "business systems analyst microsoft 365 copilot copilot studio the toronto dominion bank canada toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "324",
@@ -5466,7 +7656,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "m365 copilot engineer engineer ii the toronto dominion bank canada toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:m365"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "325",
@@ -5483,7 +7679,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software engineer ii the toronto dominion bank canada toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software engineer",
+        "token:engineer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "326",
@@ -5500,7 +7704,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager real estate secured lending resl account management bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:account management",
+        "token:lending"
+      ],
+      "category_alt": ""
     },
     {
       "id": "327",
@@ -5517,7 +7728,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior manager real estate secured lending acquisition bank of montreal toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:lending"
+      ],
+      "category_alt": ""
     },
     {
       "id": "328",
@@ -5534,7 +7751,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager business banking lending acquisition bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:banking",
+        "token:lending"
+      ],
+      "category_alt": ""
     },
     {
       "id": "329",
@@ -5551,7 +7775,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior manager business banking lending acquisition bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:banking",
+        "token:lending"
+      ],
+      "category_alt": ""
     },
     {
       "id": "330",
@@ -5568,7 +7799,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director business banking lending acquisition account management bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:account management",
+        "token:banking",
+        "token:lending"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "331",
@@ -5585,7 +7824,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "intermediate application developer bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:application developer",
+        "token:developer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "332",
@@ -5602,7 +7848,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "director commercial banking technology innovation group bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:commercial banking",
+        "token:banking"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "333",
@@ -5619,7 +7872,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "administrative assistant private wealth bmo nesbitt burns inc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:private wealth",
+        "weak:wealth",
+        "company:finance_org"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "334",
@@ -5636,7 +7897,14 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "associate product owner bank of montreal ontario on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product owner",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "335",
@@ -5653,7 +7921,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "director vendor management office bank of montreal toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "rule:domain phrase"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "336",
@@ -5670,7 +7944,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "investment associate bmo nesbitt burns inc ottawa on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:investment"
+      ],
+      "category_alt": ""
     },
     {
       "id": "337",
@@ -5687,7 +7967,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "bilingual eng fr client service associate bmo nesbitt burns inc ottawa on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:client service"
+      ],
+      "category_alt": ""
     },
     {
       "id": "338",
@@ -5704,7 +7990,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager savings bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "339",
@@ -5721,7 +8014,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "analyst associate institutional client experience cibc asset management inc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:asset management"
+      ],
+      "category_alt": ""
     },
     {
       "id": "340",
@@ -5738,7 +8037,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data architect company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:data architect",
+        "token:data",
+        "rule:data + platform/architect"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "341",
@@ -5755,7 +8062,13 @@
       "work_mode": "remote",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "functional rehabilitation specialist company 1 the manufacturers life insurance company ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:insurance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "342",
@@ -5772,7 +8085,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "global ai platforms program manager company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:program manager",
+        "token:program"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "343",
@@ -5789,7 +8109,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "crm enablement tools manager company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:insurance"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "344",
@@ -5806,7 +8132,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager retail products company 58 manulife bank of canada waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "345",
@@ -5823,7 +8156,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "financial controls analyst company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:controls",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "346",
@@ -5840,7 +8180,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "head of digital business development company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:business development"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "347",
@@ -5857,7 +8203,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate investor relations and fp a brookfield corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:investor relations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "348",
@@ -5874,7 +8226,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior analyst itsm governance service assurance brookfield asset management llc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:governance",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "349",
@@ -5891,7 +8250,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data scientist ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "350",
@@ -5908,7 +8275,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior associate treasury operations ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "351",
@@ -5925,7 +8299,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software developer ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "352",
@@ -5942,7 +8324,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "business partner specialist 12 month mat leave ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "353",
@@ -5959,7 +8345,15 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software developer ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "354",
@@ -5976,7 +8370,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "engineering lead network security tools ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:security",
+        "token:network",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "355",
@@ -5993,7 +8395,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "tax coordinator ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:tax"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "356",
@@ -6010,7 +8418,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "associate systems analyst 12 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "357",
@@ -6027,7 +8441,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "solution architect microsoft power platform ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:solution architect",
+        "token:platform",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "358",
@@ -6044,7 +8467,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "executive assistant teachers venture growth tvg 15 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "359",
@@ -6061,7 +8491,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior associate total fund risk analytics ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "360",
@@ -6078,7 +8515,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager collateral liquidity operations 12 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "361",
@@ -6095,7 +8538,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior executive assistant ontario teachers pension plan board toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "362",
@@ -6112,7 +8562,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager due diligence ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "363",
@@ -6129,7 +8583,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "law clerk corporate and investments ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "364",
@@ -6146,7 +8604,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "manager data analytics city of leduc kitchener on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:analytics",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "365",
@@ -6163,7 +8628,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "business analyst 12 month contract oxford properties group toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:business analyst",
+        "rule:business analyst default"
+      ],
+      "category_alt": ""
     },
     {
       "id": "366",
@@ -6180,7 +8652,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "contact center rep london credit card td bank london on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:contact center"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "367",
@@ -6197,7 +8675,14 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior security advisor intact financial corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:security",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "368",
@@ -6214,7 +8699,13 @@
       "work_mode": "hybrid",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior it specialist buildops toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:it"
+      ],
+      "category_alt": ""
     },
     {
       "id": "369",
@@ -6231,7 +8722,11 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "specialist quality water region of peel brampton on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "370",
@@ -6248,7 +8743,14 @@
       "work_mode": "hybrid",
       "salary_type": "unknown",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "senior product manager intact toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "371",
@@ -6265,7 +8767,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "bilingual contact center representative the toronto dominion bank canada toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:contact center"
+      ],
+      "category_alt": ""
     },
     {
       "id": "372",
@@ -6282,7 +8790,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "business systems analyst microsoft 365 copilot copilot studio the toronto dominion bank canada toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "373",
@@ -6299,7 +8813,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "m365 copilot engineer engineer ii the toronto dominion bank canada toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:m365"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "374",
@@ -6316,7 +8836,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate vice president portfolio risk analysis bmo global asset management operations bank of montreal toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:asset management",
+        "token:portfolio"
+      ],
+      "category_alt": "Legal"
     },
     {
       "id": "375",
@@ -6333,7 +8860,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior enterprise architect digital core banking bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:enterprise architect",
+        "token:architect",
+        "weak:enterprise",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "376",
@@ -6350,7 +8886,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager digital investing bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "377",
@@ -6367,7 +8910,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data engineer bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data engineer",
+        "token:data"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "378",
@@ -6384,7 +8934,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "ai engineer bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:ai engineer",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "379",
@@ -6401,7 +8958,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior ai engineer bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:ai engineer",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "380",
@@ -6418,7 +8982,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior azure cloud ai engineer bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:ai engineer",
+        "token:engineer"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "381",
@@ -6435,7 +9006,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "applied ai evaluation engineer bank of montreal toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "382",
@@ -6452,7 +9029,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "multimodal voice visual ai engineer bank of montreal toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:ai engineer",
+        "token:engineer"
+      ],
+      "category_alt": ""
     },
     {
       "id": "383",
@@ -6469,7 +9053,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "managing director senior relationship manager real estate finance bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:finance",
+        "rule:finance relationship/account manager"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "384",
@@ -6486,7 +9077,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior relationship manager commercial banking diversified industries bank of montreal ontario on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:commercial banking",
+        "token:banking",
+        "rule:finance relationship/account manager"
+      ],
+      "category_alt": ""
     },
     {
       "id": "385",
@@ -6503,7 +9102,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager liquidity risk reporting bank of montreal toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "386",
@@ -6520,7 +9126,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "client associate ir licensed cibc wood gundy cibc world markets inc canada oakville on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "387",
@@ -6537,7 +9147,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "project manager executive reporting and communications digital transformation company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:project manager",
+        "token:project",
+        "token:transformation",
+        "rule:delivery/transformation/change"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "388",
@@ -6554,7 +9173,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "assistant vice president hnw underwriting company 1 the manufacturers life insurance company waterloo on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:underwriting",
+        "weak:insurance",
+        "rule:senior finance title"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "389",
@@ -6571,7 +9198,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data scientist genai company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "390",
@@ -6588,7 +9223,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "director third party information security management company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:information security",
+        "token:security",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "391",
@@ -6605,7 +9248,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "manager procurement risk platforms management company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "392",
@@ -6622,7 +9272,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior staff cyber threat exposure management ctem engineer company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:cyber threat",
+        "phrase:threat exposure"
+      ],
+      "category_alt": "Engineering"
     },
     {
       "id": "393",
@@ -6639,7 +9296,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "associate data scientist genai company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "394",
@@ -6656,7 +9321,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager governance and control company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:governance",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "395",
@@ -6673,7 +9345,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "business unit security officer manager company 1 the manufacturers life insurance company waterloo on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:security",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "396",
@@ -6690,7 +9369,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data architect company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:data architect",
+        "token:data",
+        "rule:data + platform/architect"
+      ],
+      "category_alt": "IT & Infra"
     },
     {
       "id": "397",
@@ -6707,7 +9394,13 @@
       "work_mode": "remote",
       "salary_type": "unknown",
       "category": "Other",
-      "category_tag": "other"
+      "category_tag": "other",
+      "normalized_title": "functional rehabilitation specialist company 1 the manufacturers life insurance company ontario on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:insurance"
+      ],
+      "category_alt": ""
     },
     {
       "id": "398",
@@ -6724,7 +9417,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "global ai platforms program manager company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:program manager",
+        "token:program"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "399",
@@ -6741,7 +9441,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "crm enablement tools manager company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "weak:insurance"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "400",
@@ -6758,7 +9464,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Product & Project",
-      "category_tag": "pm"
+      "category_tag": "pm",
+      "normalized_title": "product manager retail products company 58 manulife bank of canada waterloo on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:product manager",
+        "token:product"
+      ],
+      "category_alt": ""
     },
     {
       "id": "401",
@@ -6775,7 +9488,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "financial controls analyst company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:controls",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "402",
@@ -6792,7 +9512,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Sales & Mktg",
-      "category_tag": "sales"
+      "category_tag": "sales",
+      "normalized_title": "head of digital business development company 1 the manufacturers life insurance company toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "phrase:business development"
+      ],
+      "category_alt": "Leadership"
     },
     {
       "id": "403",
@@ -6809,7 +9535,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "associate investor relations and fp a brookfield corporation toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:investor relations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "404",
@@ -6826,7 +9558,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "senior analyst itsm governance service assurance brookfield asset management llc toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "token:governance",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Finance"
     },
     {
       "id": "405",
@@ -6843,7 +9582,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "data scientist ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data scientist",
+        "token:scientist",
+        "token:data"
+      ],
+      "category_alt": ""
     },
     {
       "id": "406",
@@ -6860,7 +9607,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "senior associate treasury operations ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:treasury",
+        "token:treasury"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "407",
@@ -6877,7 +9631,15 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "senior software developer ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "408",
@@ -6894,7 +9656,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "People & HR",
-      "category_tag": "hr"
+      "category_tag": "hr",
+      "normalized_title": "business partner specialist 12 month mat leave ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "409",
@@ -6911,7 +9677,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Engineering",
-      "category_tag": "eng"
+      "category_tag": "eng",
+      "normalized_title": "software developer ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:software developer",
+        "token:developer",
+        "token:software"
+      ],
+      "category_alt": ""
     },
     {
       "id": "410",
@@ -6928,7 +9702,15 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "engineering lead network security tools ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "token:security",
+        "token:network",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "411",
@@ -6945,7 +9727,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "tax coordinator ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:tax"
+      ],
+      "category_alt": "Operations"
     },
     {
       "id": "412",
@@ -6962,7 +9750,13 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "associate systems analyst 12 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:systems"
+      ],
+      "category_alt": ""
     },
     {
       "id": "413",
@@ -6979,7 +9773,16 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "IT & Infra",
-      "category_tag": "it"
+      "category_tag": "it",
+      "normalized_title": "solution architect microsoft power platform ontario teachers pension plan board toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:solution architect",
+        "token:platform",
+        "token:architect",
+        "rule:platform/cloud/security/architecture"
+      ],
+      "category_alt": ""
     },
     {
       "id": "414",
@@ -6996,7 +9799,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "executive assistant teachers venture growth tvg 15 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": "Sales & Mktg"
     },
     {
       "id": "415",
@@ -7013,7 +9823,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "senior associate total fund risk analytics ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:risk",
+        "rule:risk/compliance/audit/governance"
+      ],
+      "category_alt": "Data & Analytics"
     },
     {
       "id": "416",
@@ -7030,7 +9847,13 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Finance",
-      "category_tag": "fin"
+      "category_tag": "fin",
+      "normalized_title": "manager collateral liquidity operations 12 month contract ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [
+        "token:operations"
+      ],
+      "category_alt": ""
     },
     {
       "id": "417",
@@ -7047,7 +9870,14 @@
       "work_mode": "onsite",
       "salary_type": "base",
       "category": "Operations",
-      "category_tag": "ops"
+      "category_tag": "ops",
+      "normalized_title": "senior executive assistant ontario teachers pension plan board toronto on",
+      "category_confidence": "medium",
+      "category_signals": [
+        "phrase:executive assistant",
+        "weak:assistant"
+      ],
+      "category_alt": ""
     },
     {
       "id": "418",
@@ -7064,7 +9894,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "manager due diligence ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "419",
@@ -7081,7 +9915,11 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Legal",
-      "category_tag": "legal"
+      "category_tag": "legal",
+      "normalized_title": "law clerk corporate and investments ontario teachers pension plan board toronto on",
+      "category_confidence": "low",
+      "category_signals": [],
+      "category_alt": ""
     },
     {
       "id": "420",
@@ -7098,7 +9936,14 @@
       "work_mode": "unknown",
       "salary_type": "base",
       "category": "Data & Analytics",
-      "category_tag": "data"
+      "category_tag": "data",
+      "normalized_title": "senior data engineer databricks teema group toronto on",
+      "category_confidence": "high",
+      "category_signals": [
+        "phrase:data engineer",
+        "token:data"
+      ],
+      "category_alt": "Engineering"
     }
   ]
 }

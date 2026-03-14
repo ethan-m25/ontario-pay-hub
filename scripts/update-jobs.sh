@@ -76,13 +76,22 @@ fi
 
 # ---- 3. Parse & merge ----
 python3 - <<PYEOF
-import json, os, re, urllib.request, urllib.error, html, time
+import json, os, re, urllib.request, urllib.error, html, time, sys
 
 data_file = "$DATA_FILE"
 overrides_file = "$OVERRIDES_FILE"
 category_overrides_file = "$CATEGORY_OVERRIDES_FILE"
 raw_file = "$RAW_FILE"
 today = "$TODAY"
+repo_dir = "$REPO_DIR"
+
+sys.path.insert(0, os.path.join(repo_dir, "scripts"))
+
+from category_classifier import (
+    CATEGORY_TO_TAG,
+    normalize_category as _normalize_category,
+    classify_category as _classify_category_rule,
+)
 
 # Load existing data
 with open(data_file) as f:
@@ -213,23 +222,29 @@ Rules:
 - If the posting says multiple possible arrangements, choose hybrid
 """
 
+_CATEGORY_TIEBREAKER_PROMPT = """Classify this Ontario job into exactly one category.
+
+Role: {role}
+Company: {company}
+Location: {location}
+Top rule candidates: {candidates}
+Normalized title: {normalized_title}
+Rule signals: {signals}
+
+Return ONLY JSON:
+{{"category":"Engineering|Data & Analytics|Finance|Product & Project|Sales & Mktg|People & HR|Operations|Legal|IT & Infra|Leadership|Other"}}
+
+Rules:
+- Prioritize actual job function over seniority
+- Leadership only if the role is clearly senior and the function is still unclear
+- Other only as a last resort
+- Business Analyst defaults to Product & Project unless the title clearly says data/analytics or finance
+- Risk / compliance / audit / governance / AML / controls should usually map to Legal
+- Platform / cloud / security / architecture should usually map to IT & Infra
+- Delivery / transformation / change / implementation should usually map to Product & Project
+"""
+
 OLLAMA_API = os.environ.get("OLLAMA_API", "http://127.0.0.1:11434/api/generate")
-
-CATEGORY_TO_TAG = {
-    "Engineering": "eng",
-    "Data & Analytics": "data",
-    "Finance": "fin",
-    "Product & Project": "pm",
-    "Sales & Mktg": "sales",
-    "People & HR": "hr",
-    "Operations": "ops",
-    "Legal": "legal",
-    "IT & Infra": "it",
-    "Leadership": "exec",
-    "Other": "other",
-}
-
-VALID_CATEGORIES = set(CATEGORY_TO_TAG)
 
 def _call_ollama(prompt, num_predict=128):
     payload = json.dumps({
@@ -257,112 +272,6 @@ def _infer_work_mode_fast(job):
     if any(k in text for k in ("onsite", "on-site", "on site", "in-office", "in office")):
         return "onsite"
     return "unknown"
-
-def _normalize_category(value):
-    value = str(value or "").strip()
-    aliases = {
-        "Engineering": "Engineering",
-        "Data & Analytics": "Data & Analytics",
-        "Finance": "Finance",
-        "Product & Project": "Product & Project",
-        "Sales & Mktg": "Sales & Mktg",
-        "People & HR": "People & HR",
-        "Operations": "Operations",
-        "Legal": "Legal",
-        "IT & Infra": "IT & Infra",
-        "Leadership": "Leadership",
-        "Other": "Other",
-        "Sales & Marketing": "Sales & Mktg",
-        "People and HR": "People & HR",
-        "IT & Infrastructure": "IT & Infra",
-    }
-    return aliases.get(value, "Other")
-
-def _infer_category_fast(job):
-    text = " ".join([
-        str(job.get("role", "")),
-        str(job.get("company", "")),
-        str(job.get("location", "")),
-    ]).lower()
-
-    if any(k in text for k in (
-        "chief ", "vice president", "vp ", "managing director", "general manager",
-        "head of ", "executive director", "regional manager"
-    )):
-        return "Leadership"
-
-    if any(k in text for k in (
-        "legal", "counsel", "attorney", "compliance", "regulatory", "privacy",
-        "paralegal", "law clerk", "complaints officer", "investigations", "aml specialist"
-    )):
-        return "Legal"
-
-    if any(k in text for k in (
-        "human resources", "hr ", "hrbp", "recruit", "talent ", "compensation",
-        "total rewards", "benefits", "learning and development", "people business partner",
-        "people & culture", "employee relations", "labour relations"
-    )):
-        return "People & HR"
-
-    if any(k in text for k in (
-        "marketing", "brand", "communications", "business development", "account executive",
-        "account manager", "sales ", "growth ", "partnership", "campaign ", "distribution",
-        "investor relations", "client success", "customer success"
-    )):
-        return "Sales & Mktg"
-
-    if any(k in text for k in (
-        "product manager", "product owner", "project manager", "project coordinator",
-        "program manager", "scrum master", "agile coach", "release manager",
-        "business analyst", "delivery manager", "pmo", "change manager", "portfolio manager"
-    )):
-        return "Product & Project"
-
-    if any(k in text for k in (
-        "cloud", "platform", "infrastructure", "sre", "site reliability", "database administrator",
-        "systems administrator", "network administrator", "network engineer", "information security",
-        "cybersecurity", "security engineer", "solution architect", "solutions architect",
-        "enterprise architect", "m365", "servicenow", "help desk", "service desk",
-        "desktop support", "it support", "it analyst", "it specialist", "application support"
-    )):
-        return "IT & Infra"
-
-    if any(k in text for k in (
-        "software engineer", "software developer", "developer", "full stack", "frontend",
-        "front end", "backend", "back end", "mobile developer", "ios developer",
-        "android developer", "qa engineer", "automation engineer", "machine learning engineer",
-        "ml engineer", "ai engineer", "application engineer", "technologist", "engineer"
-    )):
-        return "Engineering"
-
-    if any(k in text for k in (
-        "data ", "analytics", "data science", "data scientist", "data analyst",
-        "business intelligence", "insights", "reporting", "research scientist",
-        "researcher", "applied scientist", "quantitative analyst", "data governance",
-        "data management", "bi "
-    )):
-        return "Data & Analytics"
-
-    if any(k in text for k in (
-        "finance", "financial", "banking", "wealth", "credit", "treasury", "actuarial",
-        "actuary", "accountant", "accounting", "tax ", "underwriter", "underwriting",
-        "portfolio", "capital markets", "investment", "audit", "controller", "bookkeeper",
-        "payroll", "fund ", "claims ", "pricing ", "risk ", "insurance"
-    )):
-        return "Finance"
-
-    if any(k in text for k in (
-        "operations", "procurement", "supply chain", "logistics", "facilities",
-        "office manager", "office coordinator", "administrative", "executive assistant",
-        "customer service", "client service", "service representative", "contact center",
-        "contact centre", "workflow", "continuous improvement", "lean", "six sigma"
-    )):
-        return "Operations"
-
-    if "director" in text:
-        return "Leadership"
-
-    return "Other"
 
 def _extract_plain_text(raw_html):
     if not raw_html:
@@ -405,16 +314,57 @@ def _infer_work_mode_from_text(text, url=""):
         return "onsite"
     return "unknown"
 
+def _classify_category_with_tiebreak(job):
+    rule = _classify_category_rule(job)
+    category = rule["predicted_category"]
+    if rule["confidence_level"] != "low":
+        return category, rule
+
+    candidates = [category]
+    alt = rule.get("alternative_category_candidate", "")
+    if alt and alt not in candidates:
+        candidates.append(alt)
+    extra = [cat for cat, score in sorted(rule["scores"].items(), key=lambda item: -item[1]) if score > 0 and cat not in candidates]
+    candidates.extend(extra[:2])
+
+    prompt = _CATEGORY_TIEBREAKER_PROMPT.format(
+        role=job.get("role", ""),
+        company=job.get("company", ""),
+        location=job.get("location", "Ontario, ON"),
+        candidates=", ".join(candidates) if candidates else "Other",
+        normalized_title=rule.get("normalized_title", ""),
+        signals=", ".join(rule.get("matched_signals", [])[:8]) or "none",
+    )
+    for attempt in range(2):
+        try:
+            output = _call_ollama(prompt, num_predict=48)
+            m = re.search(r'\{[^{}]*"category"[^{}]*\}', output)
+            if not m:
+                break
+            d = json.loads(m.group())
+            llm_cat = _normalize_category(d.get("category", category))
+            if llm_cat in CATEGORY_TO_TAG:
+                if llm_cat != category:
+                    rule["alternative_category_candidate"] = category
+                    rule["matched_signals"] = (rule.get("matched_signals", []) + [f"llm:{llm_cat}"])[:8]
+                    rule["confidence_level"] = "medium" if rule["confidence_level"] == "low" else rule["confidence_level"]
+                return llm_cat, rule
+            break
+        except Exception:
+            if attempt == 0:
+                time.sleep(2)
+    return category, rule
+
 def _classify_job(job):
     fast_wm = _infer_work_mode_fast(job)
-    fast_cat = _infer_category_fast(job)
+    category, rule = _classify_category_with_tiebreak(job)
     if fast_wm != "unknown":
         salary_type = str(job.get("salary_type", "unknown")).lower()
         if salary_type not in ("base", "total_comp", "unknown"):
             salary_type = "unknown"
         if salary_type == "unknown" and job.get("company", "").lower() in {"td bank", "bmo", "rbc", "cibc", "scotiabank"}:
             salary_type = "base"
-        return fast_wm, salary_type, fast_cat
+        return fast_wm, salary_type, category, rule
 
     prompt = _CLASSIFY_PROMPT.format(
         role=job["role"], company=job["company"],
@@ -430,15 +380,15 @@ def _classify_job(job):
                 d = json.loads(m.group())
                 wm = d.get("work_mode", "unknown").lower()
                 st = d.get("salary_type", "unknown").lower()
-                cat = _normalize_category(d.get("category", fast_cat))
+                cat = _normalize_category(d.get("category", category))
                 if wm not in ("remote", "hybrid", "onsite", "unknown"): wm = "unknown"
                 if st not in ("base", "total_comp", "unknown"): st = "unknown"
-                return wm, st, cat
+                return wm, st, cat, rule
             break
         except Exception:
             if attempt == 0:
                 time.sleep(2)
-    return "unknown", "unknown", fast_cat
+    return "unknown", "unknown", category, rule
 
 def _classify_work_mode_from_page(job, page_text):
     if not page_text:
@@ -469,12 +419,16 @@ def _classify_work_mode_from_page(job, page_text):
 if new_jobs:
     print(f"Classifying {len(new_jobs)} new jobs...")
     for job in new_jobs:
-        wm, st, cat = _classify_job(job)
+        wm, st, cat, rule = _classify_job(job)
         job["work_mode"] = wm
         job["salary_type"] = st
         job["category"] = cat
         job["category_tag"] = CATEGORY_TO_TAG.get(cat, "other")
-        print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → category={cat} work_mode={wm} salary_type={st}")
+        job["category_confidence"] = rule.get("confidence_level", "low")
+        job["category_signals"] = rule.get("matched_signals", [])
+        job["category_alt"] = rule.get("alternative_category_candidate", "")
+        job["normalized_title"] = rule.get("normalized_title", "")
+        print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → category={cat} ({job['category_confidence']}) work_mode={wm} salary_type={st}")
 
 # Ensure existing jobs have work_mode/salary_type/category fields (schema consistency)
 for job in existing:
@@ -486,6 +440,14 @@ for job in existing:
         job["category"] = "Other"
     if "category_tag" not in job:
         job["category_tag"] = "other"
+    if "category_confidence" not in job:
+        job["category_confidence"] = ""
+    if "category_signals" not in job:
+        job["category_signals"] = []
+    if "category_alt" not in job:
+        job["category_alt"] = ""
+    if "normalized_title" not in job:
+        job["normalized_title"] = ""
 
 # ---- 3.3. Backfill work_mode for historical active jobs with unknown mode ----
 BACKFILL_LIMIT = max(1, int(os.environ.get("WORK_MODE_BACKFILL_LIMIT", "120")))
@@ -510,7 +472,7 @@ if backfill_candidates:
     )
     for job in batch:
         backfill_attempted += 1
-        wm, st, cat = _classify_job(job)
+        wm, st, cat, rule = _classify_job(job)
         if wm == "unknown":
             page_html = _fetch_page_html(job.get("source_url", ""))
             page_text = _extract_plain_text(page_html)[:12000]
@@ -529,6 +491,11 @@ if backfill_candidates:
         if job.get("category", "Other") in ("", "Other", None):
             job["category"] = cat
             job["category_tag"] = CATEGORY_TO_TAG.get(cat, "other")
+        if not job.get("category_confidence"):
+            job["category_confidence"] = rule.get("confidence_level", "")
+            job["category_signals"] = rule.get("matched_signals", [])
+            job["category_alt"] = rule.get("alternative_category_candidate", "")
+            job["normalized_title"] = rule.get("normalized_title", "")
     backfill_cursor = (backfill_cursor + len(batch)) % len(backfill_candidates)
     print(f"  BACKFILL work_mode updated: {backfilled_work_modes} / attempted {backfill_attempted}")
 else:
@@ -555,6 +522,15 @@ category_override_map = {
 category_overrides_applied = 0
 for job in all_jobs:
     override = category_override_map.get(str(job.get("id", "")).strip())
+    base_rule = _classify_category_rule(job)
+    if not job.get("normalized_title"):
+        job["normalized_title"] = base_rule.get("normalized_title", "")
+    if not job.get("category_confidence"):
+        job["category_confidence"] = base_rule.get("confidence_level", "")
+    if not job.get("category_signals"):
+        job["category_signals"] = base_rule.get("matched_signals", [])
+    if not job.get("category_alt"):
+        job["category_alt"] = base_rule.get("alternative_category_candidate", "")
     if override:
         if job.get("category") != override:
             category_overrides_applied += 1
@@ -563,7 +539,7 @@ for job in all_jobs:
         continue
     current = _normalize_category(job.get("category", "Other"))
     if current == "Other":
-        current = _infer_category_fast(job)
+        current = base_rule.get("predicted_category", "Other")
     job["category"] = current
     job["category_tag"] = CATEGORY_TO_TAG.get(current, "other")
 
