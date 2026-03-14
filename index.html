@@ -622,6 +622,30 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .modal-overlay.open .modal { transform:translateY(0); }
 .modal-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; margin-bottom: 6px; }
 .modal-sub { font-size: .82rem; color: var(--text2); margin-bottom: 22px; }
+.auth-divider {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:12px 0 14px;
+  color:var(--text3);
+  font-size:.72rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content:"";
+  height:1px;
+  background:var(--border);
+  flex:1 1 auto;
+}
+.auth-note {
+  margin-top: 14px;
+  text-align: center;
+  font-size: .76rem;
+  color: var(--text3);
+  line-height: 1.5;
+}
 .form-group { margin-bottom: 14px; }
 .form-label {
   font-family: var(--font-mono);
@@ -2041,21 +2065,16 @@ tbody tr:hover {
     <button class="modal-close" onclick="closeAuth()">✕</button>
     <div style="margin-bottom:14px">
       <div class="section-kicker">Account Access</div>
-      <h3 style="font-family:var(--font-display);font-size:1.35rem;line-height:1.1;margin:0 0 10px">Save jobs across devices, with real server-side sync.</h3>
-      <p class="modal-sub" style="margin-bottom:0">Use Google for one-click access, or email yourself a one-time sign-in link. Using the same email later brings you back to the same account.</p>
+      <h3 style="font-family:var(--font-display);font-size:1.45rem;line-height:1.05;margin:0 0 10px">Sign in to Ontario Pay Hub</h3>
+      <p class="modal-sub" style="margin-bottom:0">Use Google or a magic link. The same email always brings you back to the same account.</p>
     </div>
     <div class="error-msg" id="authErr"></div>
     <div class="success-msg" id="authOk"></div>
     <button class="btn-secondary" id="googleAuthBtn" style="width:100%;margin-bottom:10px" onclick="startGoogleAuth()">Continue with Google</button>
-    <div style="display:flex;align-items:center;gap:12px;margin:10px 0 14px;color:var(--text3);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em">
-      <span style="height:1px;background:var(--border);flex:1 1 auto"></span>
-      <span>or</span>
-      <span style="height:1px;background:var(--border);flex:1 1 auto"></span>
-    </div>
-    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="authName" type="text" placeholder="Only needed the first time"></div>
+    <div class="auth-divider">or use magic link</div>
     <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="authEmail" type="email" placeholder="you@example.com"></div>
-    <button class="btn-primary" id="emailAuthBtn" style="width:100%;margin-top:6px" onclick="sendMagicLink()">Email Me a One-Time Sign-In Link</button>
-    <div class="modal-footer" style="margin-top:14px">No password to remember. This is sign-in, not re-registration. The same browser usually stays signed in for about 30 days; a new browser or device will ask for a fresh email link.</div>
+    <button class="btn-primary" id="emailAuthBtn" style="width:100%;margin-top:6px" onclick="sendMagicLink()">Send Magic Link</button>
+    <div class="auth-note">No password to remember. The same browser usually stays signed in for about 30 days; a new browser or device will ask for a fresh link.</div>
   </div>
 </div>
 
@@ -2657,7 +2676,7 @@ function clearSearch(){
 }
 function openAuth(){
   toggleMobileFilters(false);
-  ["authName","authEmail"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
+  ["authEmail"].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=""; });
   setAuthMessage("", "");
   syncAuthCapabilities();
   document.getElementById("authModal").classList.add("open");
@@ -2671,7 +2690,8 @@ function startGoogleAuth() {
   window.location.href = `/api/auth/google/start?redirectTo=${encodeURIComponent(authRedirectPath())}`;
 }
 async function sendMagicLink(){
-  const name=document.getElementById("authName").value.trim();
+  const nameEl=document.getElementById("authName");
+  const name=nameEl ? nameEl.value.trim() : "";
   const email=document.getElementById("authEmail").value.trim().toLowerCase();
   if(!isValidEmail(email)){ setAuthMessage("error", "Please enter a valid email address."); return; }
   const btn = document.getElementById("emailAuthBtn");
