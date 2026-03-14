@@ -2748,9 +2748,26 @@ function savedGroupMeta(items){
   const topEmployer = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || "";
   return `${items.length} jobs · avg ${fmt(avgMid)} midpoint${topEmployer ? ` · ${topEmployer}` : ""}`;
 }
+function savedLabelChoices(currentLabel=""){
+  const fromMeta = Object.values(S.savedMeta||{}).map(meta => (meta?.label || "").trim()).filter(Boolean);
+  return [...new Set([...DEFAULT_SAVED_GROUPS, ...fromMeta])]
+    .filter(Boolean)
+    .sort((a,b)=>{
+      const ai = DEFAULT_SAVED_GROUPS.indexOf(a);
+      const bi = DEFAULT_SAVED_GROUPS.indexOf(b);
+      if (ai !== -1 || bi !== -1) {
+        if (ai === -1) return 1;
+        if (bi === -1) return -1;
+        return ai - bi;
+      }
+      if (a === currentLabel) return -1;
+      if (b === currentLabel) return 1;
+      return a.localeCompare(b);
+    });
+}
 function renderSavedItem(j){
   const label = savedLabelFor(j.id);
-  const quickOptions = DEFAULT_SAVED_GROUPS.filter(x=>x!==label).slice(0,3);
+  const choices = savedLabelChoices(label);
   return `
     <div class="saved-item">
       <div class="saved-item-top">
@@ -2764,8 +2781,9 @@ function renderSavedItem(j){
       <div class="saved-label-row">
         ${label ? `<span class="tag tag-other">${label}</span>` : '<span class="tag tag-other">Unsorted</span>'}
         <div class="saved-label-actions">
-          ${quickOptions.map(option=>`<button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id}, ${JSON.stringify(option)})">${option}</button>`).join("")}
-          <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">${label ? 'Move' : 'Assign'}</button>
+          <button class="chip${!label ? ' active' : ''}" style="padding:4px 8px" onclick="setSavedLabelDirect(${j.id}, '')">Unsorted</button>
+          ${choices.map(option=>`<button class="chip${label===option?' active':''}" style="padding:4px 8px" onclick="setSavedLabelDirect(${j.id}, ${JSON.stringify(option)})">${option}</button>`).join("")}
+          <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">New label</button>
         </div>
       </div>
       <div style="font-size:.72rem;color:var(--text3);margin-top:6px">
@@ -2873,8 +2891,13 @@ async function setSavedLabel(jobId, suggestedLabel) {
   const current = S.savedMeta[key]?.label || "";
   const next = prompt("Assign a group label for this saved job.", suggestedLabel || current);
   if(next === null) return;
+  return setSavedLabelDirect(jobId, next);
+}
+async function setSavedLabelDirect(jobId, nextLabel) {
+  const key = String(jobId);
+  if(!S.user || !S.saved.includes(key)) return;
   try {
-    const payload = await api("/api/user/saved", { method:"PUT", body:{ jobId, label: next } });
+    const payload = await api("/api/user/saved", { method:"PUT", body:{ jobId, label: String(nextLabel || "").trim() } });
     normaliseSavedPayload(payload);
     renderSaved();
   } catch (err) {
