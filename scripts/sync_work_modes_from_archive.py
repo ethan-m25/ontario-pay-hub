@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import json
 from collections import Counter
@@ -21,9 +22,39 @@ def load_json(path: Path):
         return json.load(fh)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Sync archived work_mode extractions back into jobs.json.")
+    parser.add_argument("--job-ids-file", help="Optional file with one job id per line. Limits sync to this set.")
+    parser.add_argument(
+        "--allow-unknown-overwrite",
+        action="store_true",
+        help="Allow archive unknown results to overwrite existing website labels for the selected jobs.",
+    )
+    return parser.parse_args()
+
+
+def load_selected_ids(path_str):
+    if not path_str:
+        return None
+    selected = set()
+    path = Path(path_str)
+    with path.open() as fh:
+        for raw in fh:
+            raw = raw.strip()
+            if not raw:
+                continue
+            if "," in raw:
+                selected.add(raw.split(",", 1)[0].strip())
+            else:
+                selected.add(raw)
+    return selected
+
+
 def main():
+    args = parse_args()
     db = load_json(DATA_FILE)
     jobs = db.get("jobs", [])
+    selected_ids = load_selected_ids(args.job_ids_file)
 
     extracted = {}
     for path in ARCHIVE_JOBS.glob("*/extractions/work_mode.v1.json"):
@@ -44,6 +75,8 @@ def main():
     unknown_review_rows = []
 
     for job in jobs:
+        if selected_ids is not None and str(job.get("id")) not in selected_ids:
+            continue
         payload = extracted.get(str(job.get("id")))
         if not payload:
             continue
@@ -53,7 +86,7 @@ def main():
 
         # Never let a low-signal archive extraction erase an existing explicit label.
         new = extracted_value
-        if extracted_value == "unknown" and old != "unknown":
+        if extracted_value == "unknown" and old != "unknown" and not args.allow_unknown_overwrite:
             new = old
             preserved_existing += 1
 
@@ -83,18 +116,24 @@ def main():
 
     meta = db.setdefault("meta", {})
     meta["updated"] = utc_now()
-    meta["work_modes_synced_from_archive"] = synced
-    meta["work_modes_changed_from_archive"] = changed
-    meta["work_modes_preserved_existing_labels"] = preserved_existing
-    meta["work_modes_backfilled"] = non_unknown
-    meta["work_modes_unknown_after_archive_sync"] = active_counts.get("unknown", 0)
+    if selected_ids is None:
+        meta["work_modes_synced_from_archive"] = synced
+        meta["work_modes_changed_from_archive"] = changed
+        meta["work_modes_preserved_existing_labels"] = preserved_existing
+        meta["work_modes_backfilled"] = non_unknown
+        meta["work_modes_unknown_after_archive_sync"] = active_counts.get("unknown", 0)
+        meta["work_mode_archive_sync_run"] = utc_now()
+    else:
+        meta["work_mode_targeted_sync_run"] = utc_now()
+        meta["work_mode_targeted_sync_count"] = synced
+        meta["work_mode_targeted_sync_changed"] = changed
+        meta["work_modes_unknown_after_archive_sync"] = active_counts.get("unknown", 0)
     meta["work_mode_distribution_active"] = {
         "remote": active_counts.get("remote", 0),
         "hybrid": active_counts.get("hybrid", 0),
         "onsite": active_counts.get("onsite", 0),
         "unknown": active_counts.get("unknown", 0),
     }
-    meta["work_mode_archive_sync_run"] = utc_now()
 
     with DATA_FILE.open("w") as fh:
         json.dump(db, fh, indent=2, ensure_ascii=False)
@@ -141,6 +180,8 @@ def main():
                 "changed": changed,
                 "preserved_existing": preserved_existing,
                 "non_unknown": non_unknown,
+                "selected_ids": len(selected_ids) if selected_ids is not None else None,
+                "allow_unknown_overwrite": args.allow_unknown_overwrite,
                 "active_distribution": meta["work_mode_distribution_active"],
                 "unknown_review_csv": str(csv_path),
             },

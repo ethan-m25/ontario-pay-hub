@@ -61,7 +61,7 @@ def parse_args():
     parser.add_argument("--model", default=DEFAULT_MODEL, help="Ollama model to use for low-confidence extraction.")
     parser.add_argument("--force", action="store_true", help="Overwrite existing extraction files.")
     parser.add_argument("--job-ids-file", help="Optional file containing job ids (one per line or CSV with id column).")
-    parser.add_argument("--only-when-existing-value", choices=["unknown"], help="Only rerun jobs whose current extraction file has this value.")
+    parser.add_argument("--only-when-existing-value", choices=["unknown", "remote", "hybrid", "onsite"], help="Only rerun jobs whose current extraction file has this value.")
     return parser.parse_args()
 
 
@@ -103,19 +103,19 @@ def infer_work_mode_fast(text, aux_text=""):
     if any(k in lowered for k in (
         "hybrid", "remote and in-office", "remote and onsite", "in office 2-3 days",
         "flexible work model", "mix of remote", "split between home and office",
-        "#li-hybrid", "hybrid work guideline", "in office collaboration and remote working",
-        "come to the office a minimum", "combining in office collaboration and remote working"
+        "#li-hybrid", "hybrid work guideline", "come to the office a minimum",
+        "work arrangement is hybrid", "work arrangement: hybrid", "this is a hybrid role"
     )):
         return {"value": "hybrid", "confidence": "high", "evidence": ["explicit hybrid wording"]}
     if any(k in lowered for k in (
         "fully remote", "100% remote", "work from home", "work-from-home", "remote-first", "remote role",
-        "full-time remote", "full time remote", "remote working"
+        "full-time remote", "full time remote", "remote position", "position is remote"
     )):
         return {"value": "remote", "confidence": "high", "evidence": ["explicit remote wording"]}
-    if re.search(r'(^|\W)remote(\W|$)', lowered) and "hybrid" not in lowered:
-        return {"value": "remote", "confidence": "medium", "evidence": ["standalone remote label in posting text"]}
+    if re.search(r'(location|role|position|job|work arrangement|work mode)\s*[:\-]?\s*remote\b', lowered):
+        return {"value": "remote", "confidence": "medium", "evidence": ["remote stated as role or location label"]}
     if any(k in lowered for k in (
-        "onsite", "on-site", "on site", "in office", "in-office", "office based",
+        "onsite", "on-site", "on site", "office based",
         "must be in office", "primary work location", "head office", "toronto office",
         "based in our office", "based in brookfield", "located in our head office",
         "located in our toronto office", "based in brookfield’s toronto office",
