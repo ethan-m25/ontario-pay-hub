@@ -1980,7 +1980,7 @@ tbody tr:hover {
     <div style="margin-bottom:14px">
       <div class="section-kicker">Account Access</div>
       <h3 style="font-family:var(--font-display);font-size:1.35rem;line-height:1.1;margin:0 0 10px">Save jobs across devices, with real server-side sync.</h3>
-      <p class="modal-sub" style="margin-bottom:0">Use Google for one-click access, or get a secure sign-in link by email.</p>
+      <p class="modal-sub" style="margin-bottom:0">Use Google for one-click access, or email yourself a one-time sign-in link. Using the same email later brings you back to the same account.</p>
     </div>
     <div class="error-msg" id="authErr"></div>
     <div class="success-msg" id="authOk"></div>
@@ -1990,10 +1990,10 @@ tbody tr:hover {
       <span>or</span>
       <span style="height:1px;background:var(--border);flex:1 1 auto"></span>
     </div>
-    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="authName" type="text" placeholder="Optional for first-time sign-in"></div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="authName" type="text" placeholder="Only needed the first time"></div>
     <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="authEmail" type="email" placeholder="you@example.com"></div>
-    <button class="btn-primary" id="emailAuthBtn" style="width:100%;margin-top:6px" onclick="sendMagicLink()">Email Me a Sign-In Link</button>
-    <div class="modal-footer" style="margin-top:14px">No password to remember. Your saved jobs and preferences live on the server now.</div>
+    <button class="btn-primary" id="emailAuthBtn" style="width:100%;margin-top:6px" onclick="sendMagicLink()">Email Me a One-Time Sign-In Link</button>
+    <div class="modal-footer" style="margin-top:14px">No password to remember. This is sign-in, not re-registration. Old email links work once; request a fresh link any time.</div>
   </div>
 </div>
 
@@ -2526,17 +2526,24 @@ function applyAuthPrefsToState() {
 function handleAuthReturn() {
   const url = new URL(window.location.href);
   const auth = url.searchParams.get("auth");
+  const shouldOpenAuth = url.searchParams.get("openAuth") === "1";
   if (!auth) return;
   const messages = {
     email: "Signed in successfully. Your saved jobs and preferences are now synced.",
     google: "Google sign-in complete. Your account is ready.",
-    "email-expired": "That sign-in link has expired. Request a new one.",
-    "email-invalid": "That sign-in link is invalid.",
+    "email-expired": "That email link has already been used or expired. Request a fresh one-time link with the same email.",
+    "email-invalid": "That sign-in link is invalid. Request a fresh one-time link and try again.",
     "google-invalid": "Google sign-in could not be verified.",
     "google-error": "Google sign-in failed. Try again.",
   };
-  setAuthMessage(auth.includes("invalid") || auth.includes("expired") || auth.includes("error") ? "error" : "success", messages[auth] || "");
+  const isError = auth.includes("invalid") || auth.includes("expired") || auth.includes("error");
+  if (isError || shouldOpenAuth) {
+    syncAuthCapabilities();
+    document.getElementById("authModal").classList.add("open");
+  }
+  setAuthMessage(isError ? "error" : "success", messages[auth] || "");
   url.searchParams.delete("auth");
+  url.searchParams.delete("openAuth");
   history.replaceState({}, "", url.toString());
 }
 function normaliseSavedPayload(payload) {

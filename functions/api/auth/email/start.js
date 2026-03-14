@@ -8,7 +8,8 @@ function emailHtml(link, name) {
       <p>${intro}</p>
       <p>Use this secure link to sign in to Ontario Pay Hub and restore your saved jobs and preferences.</p>
       <p><a href="${link}" style="display:inline-block;padding:12px 18px;background:#111827;color:#fff;text-decoration:none;border-radius:8px">Sign in to Ontario Pay Hub</a></p>
-      <p>This link expires in 20 minutes.</p>
+      <p>This one-time link expires in 20 minutes. Use the same email whenever you want to sign back in to the same account.</p>
+      <p style="color:#475569;font-size:14px">If this opens inside your mail app, use your browser's Open in Browser action for the smoothest sign-in experience.</p>
     </div>
   `;
 }
@@ -44,5 +45,5 @@ export async function onRequestPost(context) {
     const text = await resendResp.text();
     return serverError(`Email delivery failed: ${text}`);
   }
-  return json({ ok: true, message: "Check your inbox for a secure sign-in link." });
+  return json({ ok: true, message: "Check your inbox for a one-time sign-in link. Using the same email later signs you back into the same account." });
 }
