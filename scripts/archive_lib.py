@@ -114,6 +114,34 @@ def strip_html_to_text(raw_html):
     return "\n".join(lines)
 
 
+def _flatten_json_text(value, chunks):
+    if isinstance(value, str):
+        text = strip_html_to_text(value)
+        if text:
+            chunks.append(text)
+        return
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key in {"bulletFields", "image", "icon", "externalUrl"}:
+                continue
+            _flatten_json_text(child, chunks)
+        return
+    if isinstance(value, list):
+        for child in value:
+            _flatten_json_text(child, chunks)
+        return
+
+
+def workday_payload_to_text(payload):
+    chunks = []
+    _flatten_json_text(payload, chunks)
+    seen = []
+    for chunk in chunks:
+        if chunk not in seen:
+            seen.append(chunk)
+    return "\n".join(seen)
+
+
 def looks_like_shell_page(url, raw_html, clean_text):
     lowered_url = (url or "").lower()
     lowered_html = (raw_html or "").lower()
@@ -161,6 +189,22 @@ with sync_playwright() as p:
         ignore_https_errors=True,
     )
     page = context.new_page()
+    workday_payloads = []
+    def on_response(resp):
+        try:
+            if "/wday/cxs/" in resp.url and "/job/" in resp.url and resp.status == 200:
+                ctype = resp.headers.get("content-type", "")
+                if "application/json" in ctype or ctype.startswith("text/plain") or not ctype:
+                    text = resp.text()
+                    try:
+                        payload = json.loads(text)
+                    except Exception:
+                        payload = None
+                    if payload:
+                        workday_payloads.append(payload)
+        except Exception:
+            pass
+    page.on("response", on_response)
     page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
     try:
         page.wait_for_load_state("networkidle", timeout=5000)
@@ -171,6 +215,7 @@ with sync_playwright() as p:
         "final_url": page.url,
         "html": page.content(),
         "text": body_text,
+        "workday_payloads": workday_payloads,
     }
     print(json.dumps(payload))
     browser.close()
@@ -196,11 +241,21 @@ with sync_playwright() as p:
         }
         rendered_html = payload.get("html", "")
         rendered_text = payload.get("text", "")
+        aux_payloads = {}
+        workday_payloads = payload.get("workday_payloads") or []
+        if workday_payloads:
+            aux_payloads["workday_job.json"] = workday_payloads[0]
+            workday_text = workday_payload_to_text(workday_payloads[0]).strip()
+            if len(workday_text) >= 200:
+                rendered_text = workday_text
+            meta["workday_payload_detected"] = True
+        else:
+            meta["workday_payload_detected"] = False
         quality = classify_document_quality(rendered_text)
         meta["document_quality"] = quality
         if quality != "full":
             meta["fetch_status"] = "shell"
-        return rendered_html, rendered_text, meta
+        return rendered_html, rendered_text, meta, aux_payloads
     except Exception as exc:
         return "", "", {
             "fetch_mode": "rendered",
@@ -210,7 +265,7 @@ with sync_playwright() as p:
             "content_type": "",
             "error": f"{type(exc).__name__}: {exc}",
             "elapsed_ms": int((time.time() - started) * 1000),
-        }
+        }, {}
 
 
 def fetch_page_snapshot(url, timeout=20):
@@ -237,10 +292,10 @@ def fetch_page_snapshot(url, timeout=20):
             meta["content_type"] = response.headers.get("Content-Type", "")
             clean_text = strip_html_to_text(raw_html)
             if looks_like_shell_page(url, raw_html, clean_text):
-                rendered_html, rendered_text, rendered_meta = render_page_snapshot(url, timeout=timeout)
+                rendered_html, rendered_text, rendered_meta, aux_payloads = render_page_snapshot(url, timeout=timeout)
                 if rendered_html:
                     rendered_meta["requested_url"] = url
-                    return rendered_html, rendered_text.strip(), rendered_meta
+                    return rendered_html, rendered_text.strip(), rendered_meta, aux_payloads
                 meta["fetch_status"] = "shell"
                 meta["document_quality"] = classify_document_quality(clean_text)
                 meta["error"] = rendered_meta.get("error", "")
@@ -248,7 +303,7 @@ def fetch_page_snapshot(url, timeout=20):
                 meta["fetch_status"] = "ok"
                 meta["document_quality"] = classify_document_quality(clean_text)
             meta["elapsed_ms"] = int((time.time() - started) * 1000)
-            return raw_html, clean_text, meta
+            return raw_html, clean_text, meta, {}
     except urllib.error.HTTPError as exc:
         meta["http_status"] = exc.code
         meta["error"] = str(exc)
@@ -256,7 +311,7 @@ def fetch_page_snapshot(url, timeout=20):
         meta["error"] = f"{type(exc).__name__}: {exc}"
     meta["elapsed_ms"] = int((time.time() - started) * 1000)
     meta["document_quality"] = "error"
-    return "", "", meta
+    return "", "", meta, {}
 
 
 def snapshot_id():

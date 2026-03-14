@@ -115,7 +115,7 @@ def main():
             save_state(STATE_FILE, state)
             continue
 
-        raw_html, clean_text, fetch_meta = fetch_page_snapshot(job.get("source_url", ""))
+        raw_html, clean_text, fetch_meta, aux_payloads = fetch_page_snapshot(job.get("source_url", ""))
         fetch_meta["job_id"] = job_id
         fetch_meta["fetched_at"] = utc_now()
         fetch_meta["role"] = job.get("role", "")
@@ -175,6 +175,8 @@ def main():
 
         raw_path.write_text(raw_html)
         text_path.write_text(clean_text)
+        for name, payload in aux_payloads.items():
+            write_json(snap_dir / name, payload)
         fetch_meta.update({
             "snapshot_id": snap_id,
             "raw_html_path": str(raw_path.relative_to(ARCHIVE_JOBS_DIR.parent)),
@@ -182,6 +184,7 @@ def main():
             "content_hash": content_hash,
             "text_chars": len(clean_text),
             "html_chars": len(raw_html),
+            "auxiliary_files": sorted(aux_payloads.keys()),
         })
         write_json(meta_path, fetch_meta)
 

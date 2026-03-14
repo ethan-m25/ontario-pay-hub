@@ -164,7 +164,7 @@ def main():
             "processed": 0,
             "written": 0,
             "skipped": 0,
-            "queue": [job_id for job_id, meta in job_items if meta.get("latest_snapshot_id")],
+            "queue": [job_id for job_id, meta in job_items if meta.get("latest_snapshot_id") and meta.get("latest_document_quality") == "full"],
         })
     else:
         state = {
@@ -174,7 +174,7 @@ def main():
             "processed": 0,
             "written": 0,
             "skipped": 0,
-            "queue": [job_id for job_id, meta in job_items if meta.get("latest_snapshot_id")],
+            "queue": [job_id for job_id, meta in job_items if meta.get("latest_snapshot_id") and meta.get("latest_document_quality") == "full"],
         }
         save_state(STATE_FILE, state)
 
