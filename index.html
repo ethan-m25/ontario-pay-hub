@@ -2739,6 +2739,10 @@ function groupedSavedItems() {
   }
   return groups;
 }
+function orderedSavedItems(){
+  const byId = new Map(JOBS.map(j => [String(j.id), j]));
+  return S.saved.map(id => byId.get(String(id))).filter(Boolean);
+}
 function savedGroupMeta(items){
   if(!items.length) return "0 jobs";
   const mids = items.map(mid);
@@ -2816,24 +2820,26 @@ function renderSaved(){
 
   if(_profileTab==="saved"){
     const labels = [...new Set([...DEFAULT_SAVED_GROUPS, ...Object.values(S.savedMeta||{}).map(meta=>meta.label).filter(Boolean)])];
-    const groups = groupedSavedItems();
-    const totalSaved = JOBS.filter(j=>S.saved.includes(String(j.id)));
+    const totalSaved = orderedSavedItems();
     const filterBar = labels.length ? `
       <div class="chip-group" style="margin-bottom:14px">
         <button class="chip${!_savedLabelFilter?' active':''}" onclick="_savedLabelFilter='';renderSaved()">All saved</button>
         ${labels.map(label=>`<button class="chip${_savedLabelFilter===label?' active':''}" onclick='_savedLabelFilter=${JSON.stringify(label)};renderSaved()'>${label}</button>`).join("")}
       </div>` : "";
+    const visibleSaved = _savedLabelFilter
+      ? totalSaved.filter(j => savedLabelFor(j.id) === _savedLabelFilter)
+      : totalSaved;
     const content=totalSaved.length
-      ? groups.map(group=>`
+      ? `
           <div class="saved-group">
             <div class="saved-group-head">
-              <div class="saved-group-title">${group.label}</div>
-              <div class="saved-group-meta">${savedGroupMeta(group.items)}</div>
+              <div class="saved-group-title">${_savedLabelFilter || "All saved"}</div>
+              <div class="saved-group-meta">${savedGroupMeta(visibleSaved)}</div>
             </div>
-            ${group.items.length
-              ? group.items.map(renderSavedItem).join("")
+            ${visibleSaved.length
+              ? visibleSaved.map(renderSavedItem).join("")
               : `<div class="saved-group-empty">No jobs in this group yet.</div>`}
-          </div>`).join("")
+          </div>`
       : `<div class="saved-empty">No saved jobs yet.<br>Click ☆ on any posting to save it.</div>`;
     body.innerHTML=tabs+filterBar+content;
     foot.innerHTML=totalSaved.length
