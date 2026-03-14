@@ -172,7 +172,31 @@ Rules:
 - Most Canadian job postings list base salary only → default salary_type to base
 - Only total_comp if range explicitly bundles base+equity together as one number"""
 
-def _classify_new_job(job):
+def _infer_work_mode_fast(job):
+    text = " ".join([
+        str(job.get("role", "")),
+        str(job.get("company", "")),
+        str(job.get("location", "")),
+        str(job.get("source_url", "")),
+    ]).lower()
+    if any(k in text for k in ("remote", "teletravail", "work from home", "work-from-home", "wfh", "/remote")):
+        return "remote"
+    if "hybrid" in text:
+        return "hybrid"
+    if any(k in text for k in ("onsite", "on-site", "on site", "in-office", "in office")):
+        return "onsite"
+    return "unknown"
+
+def _classify_job(job):
+    fast_wm = _infer_work_mode_fast(job)
+    if fast_wm != "unknown":
+        salary_type = str(job.get("salary_type", "unknown")).lower()
+        if salary_type not in ("base", "total_comp", "unknown"):
+            salary_type = "unknown"
+        if salary_type == "unknown" and job.get("company", "").lower() in {"td bank", "bmo", "rbc", "cibc", "scotiabank"}:
+            salary_type = "base"
+        return fast_wm, salary_type
+
     prompt = _CLASSIFY_PROMPT.format(
         role=job["role"], company=job["company"],
         location=job.get("location", "Ontario, ON"),
@@ -197,7 +221,7 @@ def _classify_new_job(job):
 if new_jobs:
     print(f"Classifying {len(new_jobs)} new jobs...")
     for job in new_jobs:
-        wm, st = _classify_new_job(job)
+        wm, st = _classify_job(job)
         job["work_mode"] = wm
         job["salary_type"] = st
         print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → work_mode={wm} salary_type={st}")
@@ -208,6 +232,26 @@ for job in existing:
         job["work_mode"] = "unknown"
     if "salary_type" not in job:
         job["salary_type"] = "unknown"
+
+# ---- 3.3. Backfill work_mode for historical active jobs with unknown mode ----
+BACKFILL_LIMIT = 40
+backfilled_work_modes = 0
+backfill_candidates = [
+    job for job in existing
+    if job.get("status") != "archived"
+    and job.get("source_url")
+    and job.get("work_mode", "unknown") == "unknown"
+]
+if backfill_candidates:
+    print(f"Backfilling work_mode for up to {BACKFILL_LIMIT} active historical jobs...")
+    for job in backfill_candidates[:BACKFILL_LIMIT]:
+        wm, st = _classify_job(job)
+        if wm != "unknown":
+            job["work_mode"] = wm
+            backfilled_work_modes += 1
+        if job.get("salary_type", "unknown") == "unknown" and st in ("base", "total_comp"):
+            job["salary_type"] = st
+    print(f"  BACKFILL work_mode updated: {backfilled_work_modes}")
 
 # Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
@@ -332,6 +376,7 @@ db["meta"] = {
     "last_run": today,
     "new_today": len(new_jobs),
     "parse_errors": errors,
+    "work_modes_backfilled": backfilled_work_modes,
     "manual_overrides_applied": overrides_applied,
     "links_validated": val_active,
     "links_newly_archived": val_archived,
