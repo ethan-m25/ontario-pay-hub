@@ -12,18 +12,27 @@
       --font-display: Georgia, "Times New Roman", serif;
       --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+      --topbar-bg:#0f1318;
+      --sidebar-bg:#131820;
+    }
+    body[data-theme="light"]{
+      --bg:#eef1f4; --surface:#f8fafb; --surface2:#ffffff; --border:#d6dde5; --text:#12161b; --text2:#4a5563;
+      --text3:#748091; --accent:#0f6bcf; --green:#15803d; --amber:#b45309; --red:#c2410c;
+      --shadow:0 14px 32px rgba(15,23,42,.08);
+      --topbar-bg:#fbfcfd;
+      --sidebar-bg:#f3f6f8;
     }
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans)}
     a{color:inherit}
     .topbar{
       display:flex;align-items:center;justify-content:space-between;gap:16px;
-      padding:16px 22px;border-bottom:1px solid var(--border);background:#0f1318;position:sticky;top:0;z-index:20;
+      padding:16px 22px;border-bottom:1px solid var(--border);background:var(--topbar-bg);position:sticky;top:0;z-index:20;
     }
     .brand{display:flex;align-items:center;gap:10px;font-weight:700}
     .brand-badge{font-size:.66rem;font-family:var(--font-mono);letter-spacing:.08em;color:var(--text3);text-transform:uppercase}
     .layout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:calc(100vh - 72px)}
-    .sidebar{border-right:1px solid var(--border);padding:18px;background:#131820}
+    .sidebar{border-right:1px solid var(--border);padding:18px;background:var(--sidebar-bg)}
     .main{padding:20px 22px}
     .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
     .panel + .panel{margin-top:16px}
@@ -83,6 +92,12 @@
     .auth-divider::before,.auth-divider::after{content:"";height:1px;background:var(--border);flex:1 1 auto}
     .auth-actions{display:flex;flex-direction:column;gap:10px}
     .auth-help{margin-top:12px}
+    .theme-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      width:42px;height:42px;border-radius:12px;border:1px solid var(--border);
+      background:var(--surface2);color:var(--text);cursor:pointer;box-shadow:var(--shadow)
+    }
+    .theme-btn svg{width:18px;height:18px;display:block}
     @media (max-width: 980px){
       .layout,.split{grid-template-columns:1fr}
       .toolbar{grid-template-columns:1fr}
@@ -96,7 +111,10 @@
       <span>Ontario Pay Hub</span>
       <span class="brand-badge">Admin</span>
     </div>
-    <div class="row wrap tiny" id="adminIdentity">Checking access…</div>
+    <div class="row wrap">
+      <button class="theme-btn" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+      <div class="tiny" id="adminIdentity">Checking access…</div>
+    </div>
   </div>
 
   <div class="layout">
@@ -225,6 +243,7 @@
 
   <script>
     const S = {
+      theme: localStorage.getItem("theme") || "dark",
       auth: null,
       admin: false,
       tab: "users",
@@ -235,6 +254,25 @@
       selectedJob: null,
       me: null,
     };
+
+    function applyTheme() {
+      document.body.dataset.theme = S.theme === "light" ? "light" : "dark";
+      const btn = document.getElementById("themeToggle");
+      if (!btn) return;
+      if (S.theme === "light") {
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>';
+        btn.title = "Switch to dark mode";
+      } else {
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.2M12 19.3v2.2M4.7 4.7l1.6 1.6M17.7 17.7l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.7 19.3l1.6-1.6M17.7 6.3l1.6-1.6"/></svg>';
+        btn.title = "Switch to light mode";
+      }
+    }
+
+    function toggleTheme() {
+      S.theme = S.theme === "light" ? "dark" : "light";
+      localStorage.setItem("theme", S.theme);
+      applyTheme();
+    }
 
     function api(path, init = {}) {
       return fetch(path, {
@@ -316,6 +354,7 @@
     }
 
     async function bootstrap() {
+      applyTheme();
       try {
         const me = await api("/api/auth/me");
         S.auth = me;
