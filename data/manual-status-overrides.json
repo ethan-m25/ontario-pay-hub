@@ -1,0 +1,10 @@
+{
+  "jobs": [
+    {
+      "id": "300",
+      "status": "archived",
+      "reason": "Verified manually: source link no longer resolves to a live posting.",
+      "note": "BMO M365 Engineering Specialist"
+    }
+  ]
+}

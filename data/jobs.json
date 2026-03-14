@@ -4453,8 +4453,9 @@
       "source_url": "https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/M365-Engineering-Specialist_R260003129",
       "posted": "2026-03-12",
       "scraped": "2026-03-12",
-      "status": "active",
+      "status": "archived",
       "last_seen": "2026-03-12",
+      "manual_status_note": "Verified manually: source link no longer resolves to a live posting.",
       "work_mode": "remote",
       "salary_type": "base"
     },

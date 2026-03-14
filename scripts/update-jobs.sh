@@ -23,6 +23,7 @@ set -euo pipefail
 
 REPO_DIR="$HOME/ontario-pay-hub"
 DATA_FILE="$REPO_DIR/data/jobs.json"
+OVERRIDES_FILE="$REPO_DIR/data/manual-status-overrides.json"
 LOG_FILE="$REPO_DIR/scripts/update.log"
 DISCORD_CHANNEL="channel:1476773906038919168"
 TODAY=$(date +%Y-%m-%d)
@@ -70,6 +71,7 @@ python3 - <<PYEOF
 import json, os, re, subprocess, urllib.request, urllib.error
 
 data_file = "$DATA_FILE"
+overrides_file = "$OVERRIDES_FILE"
 raw_file = "$RAW_FILE"
 today = "$TODAY"
 
@@ -210,6 +212,34 @@ for job in existing:
 # Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
 
+# ---- 3.4. Manual status overrides — human-reviewed exceptions ----
+manual_overrides = []
+if os.path.exists(overrides_file):
+    try:
+        with open(overrides_file) as f:
+            manual_overrides = json.load(f).get("jobs", [])
+    except Exception:
+        manual_overrides = []
+
+overrides_applied = 0
+if manual_overrides:
+    by_id = {str(j.get("id")): j for j in all_jobs}
+    for rule in manual_overrides:
+        job_id = str(rule.get("id", "")).strip()
+        status = str(rule.get("status", "")).strip().lower()
+        if not job_id or status not in {"active", "archived"}:
+            continue
+        job = by_id.get(job_id)
+        if not job:
+            continue
+        job["status"] = status
+        if status == "active":
+            job["last_seen"] = today
+        note = str(rule.get("reason") or rule.get("note") or "").strip()
+        if note:
+            job["manual_status_note"] = note
+        overrides_applied += 1
+
 # ---- 3.5. Link validation — HTTP check all active jobs ----
 # Rules:
 #   - Already-archived jobs: skip (preserve state, do not re-check)
@@ -302,6 +332,7 @@ db["meta"] = {
     "last_run": today,
     "new_today": len(new_jobs),
     "parse_errors": errors,
+    "manual_overrides_applied": overrides_applied,
     "links_validated": val_active,
     "links_newly_archived": val_archived,
     "links_unverifiable": val_skipped
