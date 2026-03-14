@@ -695,6 +695,47 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .saved-item-range { font-family: var(--font-mono); font-size: .82rem; color: var(--green); font-weight: 600; }
 .saved-item-remove { background:none; border:none; color:var(--text3); cursor:pointer; font-size:15px; line-height:1; padding:2px; }
 .saved-item-remove:hover { color:var(--red); }
+.saved-group {
+  margin-bottom: 18px;
+  padding-top: 4px;
+}
+.saved-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.saved-group-title {
+  font-family: var(--font-display);
+  font-size: .96rem;
+  line-height: 1.05;
+}
+.saved-group-meta {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.saved-group-empty {
+  font-size: .76rem;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.saved-label-row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.saved-label-actions {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
 .saved-footer {
   padding: 16px;
   border-top: 1px solid var(--border);
@@ -2602,6 +2643,7 @@ function updateUserUI(){
 // Profile panel helpers
 let _profileTab="saved";
 let _savedLabelFilter = "";
+const DEFAULT_SAVED_GROUPS = ["High priority","Applied","Interviewing","Comp benchmark","Long shot"];
 function openProfilePanel(){
   toggleMobileFilters(false);
   document.getElementById("savedPanel").classList.add("open");
@@ -2672,6 +2714,58 @@ function toggleSaved(){
   p.classList.toggle("open");
   renderSaved();
 }
+function savedLabelFor(jobId){
+  return S.savedMeta[String(jobId)]?.label || "";
+}
+function groupedSavedItems() {
+  const baseItems = JOBS.filter(j=>S.saved.includes(String(j.id)));
+  const labels = [...new Set(baseItems.map(j=>savedLabelFor(j.id)).filter(Boolean))].sort();
+  const ordered = [...DEFAULT_SAVED_GROUPS, ...labels.filter(label=>!DEFAULT_SAVED_GROUPS.includes(label))];
+  const groups = ordered.map(label=>{
+    const items = baseItems.filter(j=>savedLabelFor(j.id) === label);
+    return { label, items };
+  }).filter(group => group.items.length || !_savedLabelFilter || _savedLabelFilter === group.label);
+  const ungrouped = baseItems.filter(j=>!savedLabelFor(j.id));
+  if(ungrouped.length || !_savedLabelFilter) groups.unshift({ label:"Unsorted", items: ungrouped });
+  if(_savedLabelFilter){
+    return groups.filter(group=>group.label===_savedLabelFilter);
+  }
+  return groups;
+}
+function savedGroupMeta(items){
+  if(!items.length) return "0 jobs";
+  const mids = items.map(mid);
+  const avgMid = Math.round(mids.reduce((a,b)=>a+b,0) / mids.length);
+  const counts = {};
+  items.forEach(j=>{ counts[j.company] = (counts[j.company] || 0) + 1; });
+  const topEmployer = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || "";
+  return `${items.length} jobs · avg ${fmt(avgMid)} midpoint${topEmployer ? ` · ${topEmployer}` : ""}`;
+}
+function renderSavedItem(j){
+  const label = savedLabelFor(j.id);
+  const quickOptions = DEFAULT_SAVED_GROUPS.filter(x=>x!==label).slice(0,3);
+  return `
+    <div class="saved-item">
+      <div class="saved-item-top">
+        <div>
+          <div class="saved-item-role" style="cursor:pointer" onclick="openJobDetail(${j.id});toggleSaved()">${j.role}</div>
+          <div class="saved-item-co">${j.company}</div>
+        </div>
+        <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
+      </div>
+      <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
+      <div class="saved-label-row">
+        ${label ? `<span class="tag tag-other">${label}</span>` : '<span class="tag tag-other">Unsorted</span>'}
+        <div class="saved-label-actions">
+          ${quickOptions.map(option=>`<button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id}, ${JSON.stringify(option)})">${option}</button>`).join("")}
+          <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">${label ? 'Move' : 'Assign'}</button>
+        </div>
+      </div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:6px">
+        <a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}
+      </div>
+    </div>`;
+}
 function renderSaved(){
   const body=document.getElementById("savedBody");
   const foot=document.getElementById("savedFooter");
@@ -2696,38 +2790,28 @@ function renderSaved(){
     </div>`;
 
   if(_profileTab==="saved"){
-    const labels = [...new Set(Object.values(S.savedMeta||{}).map(meta=>meta.label).filter(Boolean))].sort();
-    const items=JOBS.filter(j=>S.saved.includes(String(j.id))).filter(j=>{
-      if(!_savedLabelFilter) return true;
-      return (S.savedMeta[String(j.id)]?.label || "") === _savedLabelFilter;
-    });
+    const labels = [...new Set([...DEFAULT_SAVED_GROUPS, ...Object.values(S.savedMeta||{}).map(meta=>meta.label).filter(Boolean)])];
+    const groups = groupedSavedItems();
+    const totalSaved = JOBS.filter(j=>S.saved.includes(String(j.id)));
     const filterBar = labels.length ? `
       <div class="chip-group" style="margin-bottom:14px">
         <button class="chip${!_savedLabelFilter?' active':''}" onclick="_savedLabelFilter='';renderSaved()">All saved</button>
         ${labels.map(label=>`<button class="chip${_savedLabelFilter===label?' active':''}" onclick="_savedLabelFilter=${JSON.stringify(label)};renderSaved()">${label}</button>`).join("")}
       </div>` : "";
-    const content=items.length
-      ? items.map(j=>`
-          <div class="saved-item">
-            <div class="saved-item-top">
-              <div>
-                <div class="saved-item-role" style="cursor:pointer" onclick="openJobDetail(${j.id});toggleSaved()">${j.role}</div>
-                <div class="saved-item-co">${j.company}</div>
-              </div>
-              <button class="saved-item-remove" onclick="toggleSave(${j.id})">✕</button>
+    const content=totalSaved.length
+      ? groups.map(group=>`
+          <div class="saved-group">
+            <div class="saved-group-head">
+              <div class="saved-group-title">${group.label}</div>
+              <div class="saved-group-meta">${savedGroupMeta(group.items)}</div>
             </div>
-            <div class="saved-item-range">${fmt(j.min)} – ${fmt(j.max)}</div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px">
-              ${S.savedMeta[String(j.id)]?.label ? `<span class="tag tag-other">${S.savedMeta[String(j.id)].label}</span>` : ""}
-              <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">${S.savedMeta[String(j.id)]?.label ? 'Edit label' : 'Add label'}</button>
-            </div>
-            <div style="font-size:.72rem;color:var(--text3);margin-top:4px">
-              <a href="${j.src}" target="_blank" rel="noopener" style="color:var(--accent)">${j.domain} ↗</a> · ${relDate(j.date)}
-            </div>
+            ${group.items.length
+              ? group.items.map(renderSavedItem).join("")
+              : `<div class="saved-group-empty">No jobs in this group yet.</div>`}
           </div>`).join("")
-      : `<div class="saved-empty">${_savedLabelFilter ? `No saved jobs in "${_savedLabelFilter}" yet.` : 'No saved jobs yet.'}<br>Click ☆ on any posting to save it.</div>`;
+      : `<div class="saved-empty">No saved jobs yet.<br>Click ☆ on any posting to save it.</div>`;
     body.innerHTML=tabs+filterBar+content;
-    foot.innerHTML=items.length
+    foot.innerHTML=totalSaved.length
       ? `<button class="btn-secondary" style="width:100%;font-size:.8rem;margin-bottom:8px"
            onclick="clearSavedJobs()">Clear all saved</button>
          <button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`
@@ -2776,11 +2860,11 @@ async function clearSavedJobs() {
     setAuthMessage("error", err.message);
   }
 }
-async function setSavedLabel(jobId) {
+async function setSavedLabel(jobId, suggestedLabel) {
   const key = String(jobId);
   if(!S.user || !S.saved.includes(key)) return;
   const current = S.savedMeta[key]?.label || "";
-  const next = prompt("Add a short label for this saved job.", current);
+  const next = prompt("Assign a group label for this saved job.", suggestedLabel || current);
   if(next === null) return;
   try {
     const payload = await api("/api/user/saved", { method:"PUT", body:{ jobId, label: next } });
