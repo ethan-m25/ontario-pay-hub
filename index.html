@@ -2782,7 +2782,7 @@ function renderSavedItem(j){
         ${label ? `<span class="tag tag-other">${label}</span>` : '<span class="tag tag-other">Unsorted</span>'}
         <div class="saved-label-actions">
           <button class="chip${!label ? ' active' : ''}" style="padding:4px 8px" onclick="setSavedLabelDirect(${j.id}, '')">Unsorted</button>
-          ${choices.map(option=>`<button class="chip${label===option?' active':''}" style="padding:4px 8px" onclick="setSavedLabelDirect(${j.id}, ${JSON.stringify(option)})">${option}</button>`).join("")}
+          ${choices.map(option=>`<button class="chip${label===option?' active':''}" style="padding:4px 8px" onclick='setSavedLabelDirect(${j.id}, ${JSON.stringify(option)})'>${option}</button>`).join("")}
           <button class="chip" style="padding:4px 8px" onclick="setSavedLabel(${j.id})">New label</button>
         </div>
       </div>
@@ -2821,7 +2821,7 @@ function renderSaved(){
     const filterBar = labels.length ? `
       <div class="chip-group" style="margin-bottom:14px">
         <button class="chip${!_savedLabelFilter?' active':''}" onclick="_savedLabelFilter='';renderSaved()">All saved</button>
-        ${labels.map(label=>`<button class="chip${_savedLabelFilter===label?' active':''}" onclick="_savedLabelFilter=${JSON.stringify(label)};renderSaved()">${label}</button>`).join("")}
+        ${labels.map(label=>`<button class="chip${_savedLabelFilter===label?' active':''}" onclick='_savedLabelFilter=${JSON.stringify(label)};renderSaved()'>${label}</button>`).join("")}
       </div>` : "";
     const content=totalSaved.length
       ? groups.map(group=>`
