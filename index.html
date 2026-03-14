@@ -1741,7 +1741,7 @@ tbody tr:hover {
         <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
         <div class="hero-kicker"><strong id="heroUpdated">Updated daily</strong><span>Public Ontario job postings only</span></div>
         <h2>Find Ontario jobs by real disclosed pay, not vague salary promises.</h2>
-        <p>Browse salary ranges from public Ontario job postings under the ESA disclosure rules. Search by category, region, work mode, and compensation band, then open the original posting when a role looks worth your time.</p>
+        <p>Search public Ontario job postings with disclosed pay. Narrow by category, region, work mode, and midpoint, then open the original posting only when a role looks worth your time.</p>
         <div class="hero-actions">
           <button class="btn-primary hero-action-btn" onclick="presetFilter({sort:'date-desc'})">See Newest Jobs</button>
           <button class="btn-secondary hero-action-btn" onclick="presetFilter({cat:'eng',sort:'mid-desc'})">Top Engineering Pay</button>
@@ -1750,13 +1750,12 @@ tbody tr:hover {
         <div class="hero-trust">
           <span class="trust-pill">Daily dataset refresh</span>
           <span class="trust-pill">Public-source links preserved</span>
-          <span class="trust-pill">Save jobs and defaults locally</span>
+          <span class="trust-pill">Server-side saved jobs and defaults</span>
         </div>
         <div class="hero-summary">
-          <span class="hero-stat hero-stat-cyan"><strong id="heroCount">319</strong> tracked postings</span>
           <span class="hero-stat hero-stat-green"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
-          <span class="hero-stat hero-stat-purple"><strong id="heroTopEmployer">BMO</strong> most active employer</span>
-          <span class="hero-stat hero-stat-amber"><strong id="heroMedian">—</strong> median midpoint</span>
+          <span class="hero-stat hero-stat-cyan">Sign in to keep saved jobs and default filters in sync</span>
+          <span class="hero-stat hero-stat-amber">Open any row for detail, source, and range context</span>
         </div>
       </div>
     </div>
@@ -1897,8 +1896,8 @@ tbody tr:hover {
         <div class="insights-header" onclick="expandInsightsFromHeader(event)">
           <div class="insights-summary-copy">
             <div class="insights-summary-kicker">Insights</div>
-            <div class="insights-summary-title">Market context and quick entry points.</div>
-            <div class="insights-summary-sub">Open when you want extra context, then jump back to the listings.</div>
+            <div class="insights-summary-title">Optional context and fast starting points.</div>
+            <div class="insights-summary-sub">Use this when you want a shortcut into the market, then jump back to the listings.</div>
           </div>
           <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="event.stopPropagation();toggleInsightsPanel()">⌄</button>
         </div>
@@ -1906,18 +1905,18 @@ tbody tr:hover {
           <section class="market-grid">
             <div class="market-card featured">
               <div class="market-title">Market Snapshot</div>
-              <div class="market-headline" id="marketSignalTitle">Ontario compensation signals, organized for decision-making.</div>
-              <div class="market-copy" id="marketSignalCopy">Use category, work mode, and salary filters to move from market scanning to a shortlist quickly.</div>
+              <div class="market-headline" id="marketSignalTitle">A quick read on what stands out in the current dataset.</div>
+              <div class="market-copy" id="marketSignalCopy">Use this to orient yourself fast, then narrow with filters once you know where to look.</div>
               <div class="market-metrics" id="marketMetrics"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Quick Decisions</div>
-              <div class="market-copy">Start from a strong view instead of scanning the full market cold.</div>
+              <div class="market-copy">Jump into a focused slice of the market instead of starting from a blank view.</div>
               <div class="market-list" id="quickStartList"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Top Paying Right Now</div>
-              <div class="market-copy">Highest disclosed midpoint ranges currently visible in the dataset.</div>
+              <div class="market-copy">The highest disclosed midpoint ranges currently visible in the dataset.</div>
               <div class="market-list" id="topPayList"></div>
             </div>
           </section>
@@ -1929,7 +1928,7 @@ tbody tr:hover {
       <div class="results-header">
         <div>
           <div class="results-title">Browse Salary-Disclosed Jobs</div>
-          <div class="results-sub">Use the left-side controls to narrow down the market, then open a row for full details and the original source link.</div>
+          <div class="results-sub">Use the left-side controls to narrow the market, then open a row for details and the original source link.</div>
         </div>
         <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
       </div>
