@@ -1,0 +1,2 @@
+ALTER TABLE preferences
+ADD COLUMN show_archived INTEGER NOT NULL DEFAULT 1;

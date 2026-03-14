@@ -5,7 +5,7 @@ export async function onRequestGet(context) {
   const config = authConfig(context.env);
   const session = await getSession(context);
   if (!session) {
-    return json({ ok: true, user: null, saved: [], savedMeta: {}, preferences: { cat: "", region: "", salMin: 0 }, auth: config });
+    return json({ ok: true, user: null, saved: [], savedMeta: {}, preferences: { cat: "", region: "", salMin: 0, showArchived: true }, auth: config });
   }
   const bundle = await getUserBundle(context, session.user.id);
   return json({ ok: true, user: session.user, ...bundle, auth: config });

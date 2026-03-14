@@ -1740,7 +1740,7 @@ tbody tr:hover {
       <div class="masthead-copy">
         <div class="hero-eyebrow">Ontario · Pay Transparency Act 2026</div>
         <div class="hero-kicker"><strong id="heroUpdated">Updated daily</strong><span>Public Ontario job postings only</span></div>
-        <h2>Find Ontario jobs by real disclosed pay, not vague salary promises.</h2>
+        <h2>Find Ontario jobs by real disclosed pay.</h2>
         <p>Search public Ontario job postings with disclosed pay. Narrow by category, region, work mode, and midpoint, then open the original posting only when a role looks worth your time.</p>
         <div class="hero-actions">
           <button class="btn-primary hero-action-btn" onclick="presetFilter({sort:'date-desc'})">See Newest Jobs</button>
@@ -1878,6 +1878,18 @@ tbody tr:hover {
           <button class="chip age-btn"        id="age-old"   onclick="setAge('6m+')">6 mo+</button>
         </div>
         <div class="sidebar-result" id="resultInfo"></div>
+      </div>
+
+      <div class="sidebar-section sidebar-box">
+        <div class="sidebar-label">Archived</div>
+        <select id="archiveFilter" style="display:none" onchange="applyFilters()">
+          <option value="">Show archived</option>
+          <option value="hide">Hide archived</option>
+        </select>
+        <div class="chip-group" id="archiveChips">
+          <button class="chip active" onclick="setChip('archiveFilter','',this)">Show</button>
+          <button class="chip" onclick="setChip('archiveFilter','hide',this)">Hide</button>
+        </div>
       </div>
     </div>
 
@@ -2274,12 +2286,13 @@ const S = {
   user: null,
   saved: [],
   savedMeta: {},
-  preferences: { cat:"", region:"", salMin:0 },
+  preferences: { cat:"", region:"", salMin:0, showArchived:true },
   auth: { googleEnabled:false, emailEnabled:false },
   sort: "mid-desc",
   cat: "",
   region: "",
   salMin: 0,
+  showArchived: true,
   wm: "",
   age: "",
   q: "",
@@ -2497,7 +2510,7 @@ async function initAuth() {
     S.auth = payload.auth || S.auth;
     S.user = payload.user;
     normaliseSavedPayload(payload);
-    S.preferences = payload.preferences || { cat:"", region:"", salMin:0 };
+    S.preferences = payload.preferences || { cat:"", region:"", salMin:0, showArchived:true };
   } catch (err) {
     if (!String(err.message).includes("(404)")) {
       console.warn("Auth bootstrap failed:", err.message);
@@ -2507,14 +2520,17 @@ async function initAuth() {
 }
 function applyAuthPrefsToState() {
   if (!S.user) return;
-  const prefs = S.preferences || { cat:"", region:"", salMin:0 };
-  if (!prefs.cat && !prefs.region && !prefs.salMin) return;
+  const prefs = S.preferences || { cat:"", region:"", salMin:0, showArchived:true };
+  if (!prefs.cat && !prefs.region && !prefs.salMin && prefs.showArchived !== false) return;
   S.cat = prefs.cat || "";
   S.region = prefs.region || "";
   S.salMin = prefs.salMin || 0;
+  S.showArchived = prefs.showArchived !== false;
   document.getElementById("catFilter").value = S.cat;
   document.getElementById("regionFilter").value = S.region;
   document.getElementById("salaryFilter").value = String(S.salMin);
+  document.getElementById("archiveFilter").value = S.showArchived ? "" : "hide";
+  syncControlState();
 }
 function handleAuthReturn() {
   const url = new URL(window.location.href);
@@ -2617,15 +2633,16 @@ async function sendMagicLink(){
 }
 async function doSignout(){
   // Reset filters and saved badge on sign-out
-  S.cat=""; S.region=""; S.salMin=0; S.wm=""; S.age=""; setAge("");
+  S.cat=""; S.region=""; S.salMin=0; S.showArchived=true; S.wm=""; S.age=""; setAge("");
   document.getElementById("catFilter").value="";
   document.getElementById("regionFilter").value="";
   document.getElementById("wmFilter").value="";
   document.getElementById("salaryFilter").value="0";
+  document.getElementById("archiveFilter").value="";
   try { await api("/api/auth/logout", { method: "POST" }); } catch (err) { console.warn(err.message); }
   S.saved=[]; updateSaveBadge();
   S.savedMeta={};
-  S.preferences = { cat:"", region:"", salMin:0 };
+  S.preferences = { cat:"", region:"", salMin:0, showArchived:true };
   S.user=null;
   document.getElementById("savedPanel").classList.remove("open");
   updateUserUI(); applyFilters();
@@ -2650,24 +2667,26 @@ function openProfilePanel(){
   renderSaved();
 }
 function loadPreferences(){
-  if(!S.user) return {cat:"",region:"",salMin:0};
-  return { ...(S.preferences || {cat:"",region:"",salMin:0}) };
+  if(!S.user) return {cat:"",region:"",salMin:0,showArchived:true};
+  return { ...(S.preferences || {cat:"",region:"",salMin:0,showArchived:true}) };
 }
 async function savePreferences(btn){
   if(!S.user) return;
   const prefs={
     cat:    document.getElementById("prefCat").value,
     region: document.getElementById("prefRegion").value,
-    salMin: parseInt(document.getElementById("prefSalMin").value)||0
+    salMin: parseInt(document.getElementById("prefSalMin").value)||0,
+    showArchived: document.getElementById("prefShowArchived").checked
   };
   btn.disabled = true;
   try {
     const res = await api("/api/user/preferences", { method: "PUT", body: prefs });
     S.preferences = res.preferences;
-    S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin;
+    S.cat=prefs.cat; S.region=prefs.region; S.salMin=prefs.salMin; S.showArchived=prefs.showArchived;
     document.getElementById("catFilter").value=prefs.cat;
     document.getElementById("regionFilter").value=prefs.region;
     document.getElementById("salaryFilter").value=String(prefs.salMin);
+    document.getElementById("archiveFilter").value=prefs.showArchived ? "" : "hide";
     applyFilters();
     btn.textContent="✓ Saved & Applied!";
     setTimeout(()=>{ btn.textContent="Apply & Save"; btn.disabled=false; },2000);
@@ -2866,6 +2885,10 @@ function renderSaved(){
         <option value="120000"${prefs.salMin===120000?" selected":""}>$120K+</option>
         <option value="150000"${prefs.salMin===150000?" selected":""}>$150K+</option>
       </select>
+      <label class="form-label" style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+        <input type="checkbox" id="prefShowArchived"${prefs.showArchived !== false ? " checked" : ""}>
+        <span>Show archived postings by default</span>
+      </label>
       <button class="btn-primary" style="width:100%" onclick="savePreferences(this)">Apply & Save</button>
     `;
     foot.innerHTML=`<button class="btn-secondary" style="width:100%;font-size:.8rem" onclick="doSignout()">Sign Out</button>`;
@@ -2941,6 +2964,7 @@ function applyFilters(sourceId){
   S.cat=document.getElementById("catFilter").value;
   S.region=document.getElementById("regionFilter").value;
   S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
+  S.showArchived=document.getElementById("archiveFilter").value !== "hide";
   S.wm=document.getElementById("wmFilter").value;
   S.sort=document.getElementById("sortSelect").value;
   syncSearchClearButtons();
@@ -2954,11 +2978,12 @@ function renderTable(){
     const mc=!S.cat||j.tag===S.cat;
     const mr=!S.region||(j.location||"").startsWith(S.region);
     const ms=!S.salMin||mid(j)>=S.salMin;
+    const mh=S.showArchived||!isArchived(j);
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
     const posted=j.date||"";
     const cutoff=(days)=>{const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);};
     const ma=!S.age||!posted||(S.age==='1m'?posted>=cutoff(30):S.age==='3m'?posted>=cutoff(90):S.age==='6m'?posted>=cutoff(180):posted<cutoff(180));
-    return mq&&mc&&mr&&ms&&mw&&ma;
+    return mq&&mc&&mr&&ms&&mh&&mw&&ma;
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
@@ -2971,13 +2996,14 @@ function renderTable(){
     else v=0;
     return sd==="desc"?-v:v;
   });
-  const isFiltered=!!(S.q||S.cat||S.region||S.salMin||S.wm||S.age);
+  const isFiltered=!!(S.q||S.cat||S.region||S.salMin||!S.showArchived||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   const headlineBits = [];
   if(S.cat) headlineBits.push((CAT_META[S.cat]||{label:S.cat}).label);
   if(S.wm) headlineBits.push(S.wm[0].toUpperCase()+S.wm.slice(1));
   if(S.region) headlineBits.push(S.region);
   if(S.salMin) headlineBits.push(`${fmt(S.salMin)}+ midpoint`);
+  if(!S.showArchived) headlineBits.push("Hide archived");
   if(S.age) headlineBits.push(`posted ${S.age}`);
   const resultsHeadline = document.getElementById("resultsHeadline");
   if(resultsHeadline) resultsHeadline.textContent = headlineBits.length ? headlineBits.join(" · ") : "All postings";
@@ -3533,6 +3559,7 @@ function syncControlState() {
   syncChipGroup('catChips', document.getElementById('catFilter').value);
   syncChipGroup('wmChips', document.getElementById('wmFilter').value);
   syncChipGroup('sortChips', document.getElementById('sortSelect').value);
+  syncChipGroup('archiveChips', document.getElementById('archiveFilter').value);
   updateActiveFilters();
 }
 
@@ -3547,7 +3574,7 @@ function clearAllFilters() {
   document.getElementById('searchInput').value = '';
   const mobileSearch = document.getElementById('mobileSearchInput');
   if (mobileSearch) mobileSearch.value = '';
-  ['catFilter','wmFilter','salaryFilter','regionFilter'].forEach(id => {
+  ['catFilter','wmFilter','salaryFilter','regionFilter','archiveFilter'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = el.options[0].value;
   });
@@ -3567,6 +3594,7 @@ function updateActiveFilters() {
     catFilter: Object.fromEntries(Object.entries(CAT_META).map(([k,v])=>[k,v.label])),
     wmFilter: {remote:'Remote',hybrid:'Hybrid',onsite:'Onsite'},
     salaryFilter: {'80000':'$80K+','100000':'$100K+','120000':'$120K+','150000':'$150K+'},
+    archiveFilter: {hide:'Hide archived'},
     regionFilter: {},
     ageFilter: {'1m':'Posted 1 mo','3m':'Posted 3 mo','6m':'Posted 6 mo','6m+':'Posted 6 mo+'}
   };
@@ -3610,7 +3638,7 @@ function clearOneFilter(id) {
   if (!el) return;
   el.value = el.options[0].value;
   // Reset corresponding chip group
-  const chipGroupMap = {catFilter:'catChips', wmFilter:'wmChips', sortSelect:'sortChips'};
+  const chipGroupMap = {catFilter:'catChips', wmFilter:'wmChips', sortSelect:'sortChips', archiveFilter:'archiveChips'};
   const groupId = chipGroupMap[id];
   if (groupId) {
     const group = document.getElementById(groupId);
@@ -3633,6 +3661,7 @@ function presetFilter(opts = {}) {
   if (opts.wm !== undefined) document.getElementById('wmFilter').value = opts.wm;
   if (opts.region !== undefined) document.getElementById('regionFilter').value = opts.region;
   if (opts.salMin !== undefined) document.getElementById('salaryFilter').value = String(opts.salMin);
+  if (opts.showArchived !== undefined) document.getElementById('archiveFilter').value = opts.showArchived ? '' : 'hide';
   if (opts.sort !== undefined) document.getElementById('sortSelect').value = opts.sort;
   if (opts.age !== undefined) setAge(opts.age);
   applyFilters();

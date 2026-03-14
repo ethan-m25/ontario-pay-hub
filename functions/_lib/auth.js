@@ -168,14 +168,23 @@ export async function destroySession(context) {
   await context.env.DB.prepare("DELETE FROM sessions WHERE token_hash = ?1").bind(tokenHash).run();
 }
 
+export async function ensurePreferencesSchema(context) {
+  try {
+    await context.env.DB.prepare("ALTER TABLE preferences ADD COLUMN show_archived INTEGER NOT NULL DEFAULT 1").run();
+  } catch (err) {
+    if (!String(err.message || "").includes("duplicate column name")) throw err;
+  }
+}
+
 export async function getUserBundle(context, userId) {
+  await ensurePreferencesSchema(context);
   const savedRows = await context.env.DB.prepare(
     "SELECT job_id, label FROM saved_jobs WHERE user_id = ?1 ORDER BY created_at DESC",
   )
     .bind(userId)
     .all();
   const prefRow = await context.env.DB.prepare(
-    "SELECT category, region, salary_min FROM preferences WHERE user_id = ?1",
+    "SELECT category, region, salary_min, show_archived FROM preferences WHERE user_id = ?1",
   )
     .bind(userId)
     .first();
@@ -186,6 +195,7 @@ export async function getUserBundle(context, userId) {
       cat: prefRow?.category || "",
       region: prefRow?.region || "",
       salMin: prefRow?.salary_min || 0,
+      showArchived: prefRow?.show_archived !== 0,
     },
   };
 }
