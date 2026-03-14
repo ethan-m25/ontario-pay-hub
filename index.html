@@ -185,6 +185,8 @@ nav {
   #userBtn { padding:5px 10px; font-size:.73rem; }
   .logo-name { font-size:.9rem; }
 }
+.nav-search-toggle { display:none; font-size:1.1rem; }
+@media(max-width:540px){ .nav-search-toggle { display:inline-flex; } }
 
 .nav-search { flex:1; max-width:360px; margin-left:auto; position:relative; }
 .nav-search input {
@@ -1812,6 +1814,7 @@ tbody tr:hover {
     <button class="search-clear-btn" id="searchClearBtn" type="button" onclick="clearSearch()">✕</button>
   </div>
   <div class="nav-actions">
+    <button class="btn-icon nav-search-toggle" onclick="focusMobileSearch()" title="Search" aria-label="Search">⌕</button>
     <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs">
       🔖<span class="save-badge" id="savedBadge" style="display:none">0</span>
     </button>
