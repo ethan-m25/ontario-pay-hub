@@ -76,6 +76,12 @@
     .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .notice{padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--text2)}
     .danger{color:var(--red)}
+    .auth-shell{max-width:520px;margin:36px auto 0}
+    .auth-shell .panel-head h2{margin-top:2px}
+    .auth-divider{display:flex;align-items:center;gap:12px;margin:12px 0 14px;color:var(--text3);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+    .auth-divider::before,.auth-divider::after{content:"";height:1px;background:var(--border);flex:1 1 auto}
+    .auth-actions{display:flex;flex-direction:column;gap:10px}
+    .auth-help{margin-top:12px}
     @media (max-width: 980px){
       .layout,.split{grid-template-columns:1fr}
       .toolbar{grid-template-columns:1fr}
@@ -125,6 +131,26 @@
 
     <main class="main">
       <div id="adminMessage" class="notice" style="display:none"></div>
+      <section id="adminAuthGate" class="auth-shell" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Admin access</div>
+            <h2 id="adminGateTitle">Sign in to continue</h2>
+          </div>
+          <div class="panel-body">
+            <p class="muted" id="adminGateCopy">Use your admin email to continue to the Ontario Pay Hub admin console.</p>
+            <div class="error" id="adminAuthError" style="display:none;color:var(--red);font-size:.84rem;margin:12px 0 0"></div>
+            <div class="success" id="adminAuthSuccess" style="display:none;color:var(--green);font-size:.84rem;margin:12px 0 0"></div>
+            <div class="auth-actions" style="margin-top:16px">
+              <button class="btn primary" id="adminGoogleBtn" onclick="startAdminGoogleAuth()">Continue with Google</button>
+              <div class="auth-divider">or use magic link</div>
+              <input class="input" id="adminEmailInput" type="email" placeholder="you@example.com">
+              <button class="btn" id="adminMagicBtn" onclick="sendAdminMagicLink()">Send Magic Link</button>
+            </div>
+            <p class="tiny auth-help">This page only opens for emails listed in <code>ADMIN_EMAILS</code>. If you already signed in on the main site but still see access denied, your admin email probably is not whitelisted yet.</p>
+          </div>
+        </div>
+      </section>
 
       <section id="usersView" class="split">
         <div class="panel">
@@ -205,6 +231,7 @@
       jobs: [],
       overrides: {},
       selectedJob: null,
+      me: null,
     };
 
     function api(path, init = {}) {
@@ -248,6 +275,34 @@
       el.className = "notice" + (tone ? ` ${tone}` : "");
     }
 
+    function setAuthFeedback(type, text) {
+      const err = document.getElementById("adminAuthError");
+      const ok = document.getElementById("adminAuthSuccess");
+      err.style.display = "none";
+      ok.style.display = "none";
+      err.textContent = "";
+      ok.textContent = "";
+      if (!text) return;
+      const target = type === "error" ? err : ok;
+      target.textContent = text;
+      target.style.display = "block";
+    }
+
+    function showAdminGate(mode, email = "") {
+      document.getElementById("adminAuthGate").style.display = "block";
+      document.getElementById("usersView").style.display = "none";
+      document.getElementById("jobsView").style.display = "none";
+      if (mode === "forbidden") {
+        document.getElementById("adminGateTitle").textContent = "Admin access required";
+        document.getElementById("adminGateCopy").textContent = email
+          ? `${email} is signed in, but that address is not currently allowed to open the admin console.`
+          : "This signed-in account is not allowed to open the admin console.";
+      } else {
+        document.getElementById("adminGateTitle").textContent = "Sign in to continue";
+        document.getElementById("adminGateCopy").textContent = "Use your admin email to continue to the Ontario Pay Hub admin console.";
+      }
+    }
+
     function setAdminTab(tab) {
       S.tab = tab;
       document.getElementById("usersView").style.display = tab === "users" ? "grid" : "none";
@@ -259,19 +314,21 @@
     async function bootstrap() {
       try {
         const me = await api("/api/auth/me");
+        S.auth = me;
+        S.me = me.user || null;
+        document.getElementById("adminIdentity").textContent = me.user ? `${me.user.email}` : "Not signed in";
         if (!me.user) {
-          showMessage("Sign in first, then open /admin again.", "danger");
-          document.getElementById("adminIdentity").textContent = "Not signed in";
+          showAdminGate("auth");
           return;
         }
-        S.auth = me;
-        document.getElementById("adminIdentity").textContent = `${me.user.email}`;
         const [users, overrides, jobsData] = await Promise.all([
           api("/api/admin/users"),
           api("/api/admin/job-overrides"),
           fetch("./data/jobs.json?_=" + Date.now()).then(r => r.json()),
         ]);
         S.admin = true;
+        document.getElementById("adminAuthGate").style.display = "none";
+        document.getElementById("usersView").style.display = "grid";
         S.users = users.users || [];
         S.overrides = Object.fromEntries((overrides.overrides || []).map(row => [String(row.job_id), row]));
         S.jobs = (jobsData.jobs || []).map((job) => ({
@@ -291,8 +348,44 @@
         renderUsers();
         renderJobs();
       } catch (err) {
-        showMessage(err.message, "danger");
-        document.getElementById("adminIdentity").textContent = "Access denied";
+        if (String(err.message).includes("Admin access required")) {
+          showAdminGate("forbidden", S.me?.email || "");
+          showMessage("This email is not currently allowed to open the admin console.", "danger");
+          document.getElementById("adminIdentity").textContent = S.me?.email || "Access denied";
+        } else {
+          showMessage(err.message, "danger");
+          if (!S.me) showAdminGate("auth");
+          document.getElementById("adminIdentity").textContent = S.me?.email || "Access denied";
+        }
+      }
+    }
+
+    function startAdminGoogleAuth() {
+      if (!S.auth?.auth?.googleEnabled) {
+        setAuthFeedback("error", "Google login is not configured.");
+        return;
+      }
+      window.location.href = `/api/auth/google/start?redirectTo=${encodeURIComponent("/admin.html")}`;
+    }
+
+    async function sendAdminMagicLink() {
+      const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setAuthFeedback("error", "Enter a valid email address.");
+        return;
+      }
+      const btn = document.getElementById("adminMagicBtn");
+      btn.disabled = true;
+      try {
+        const res = await api("/api/auth/email/start", {
+          method: "POST",
+          body: { email, redirectTo: "/admin.html" },
+        });
+        setAuthFeedback("success", res.message || "Check your inbox for a magic link.");
+      } catch (err) {
+        setAuthFeedback("error", err.message);
+      } finally {
+        btn.disabled = false;
       }
     }
 
