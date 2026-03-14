@@ -1747,15 +1747,9 @@ tbody tr:hover {
           <button class="btn-secondary hero-action-btn" onclick="presetFilter({cat:'eng',sort:'mid-desc'})">Top Engineering Pay</button>
           <button class="btn-secondary hero-action-btn" onclick="presetFilter({wm:'remote',sort:'mid-desc'})">Remote Roles</button>
         </div>
-        <div class="hero-trust">
-          <span class="trust-pill">Daily dataset refresh</span>
-          <span class="trust-pill">Public-source links preserved</span>
-          <span class="trust-pill">Server-side saved jobs and defaults</span>
-        </div>
         <div class="hero-summary">
           <span class="hero-stat hero-stat-green"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
-          <span class="hero-stat hero-stat-cyan">Sign in to keep saved jobs and default filters in sync</span>
-          <span class="hero-stat hero-stat-amber">Open any row for detail, source, and range context</span>
+          <span class="hero-stat hero-stat-cyan">Sign in to sync saved jobs and filters</span>
         </div>
       </div>
     </div>
@@ -1771,8 +1765,8 @@ tbody tr:hover {
   <aside class="sidebar">
     <div class="sidebar-mobile-head">
       <div>
-        <div class="sidebar-mobile-kicker">Mobile Filters</div>
-        <div class="sidebar-mobile-title">Narrow the market, then jump back to results.</div>
+        <div class="sidebar-mobile-kicker">Filters</div>
+        <div class="sidebar-mobile-title">Narrow the market.</div>
       </div>
       <button class="btn-icon" onclick="toggleMobileFilters(false)" aria-label="Close filters">✕</button>
     </div>
@@ -1896,8 +1890,8 @@ tbody tr:hover {
         <div class="insights-header" onclick="expandInsightsFromHeader(event)">
           <div class="insights-summary-copy">
             <div class="insights-summary-kicker">Insights</div>
-            <div class="insights-summary-title">Optional context and fast starting points.</div>
-            <div class="insights-summary-sub">Use this when you want a shortcut into the market, then jump back to the listings.</div>
+            <div class="insights-summary-title">Optional context.</div>
+            <div class="insights-summary-sub">Shortcuts and market context.</div>
           </div>
           <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="event.stopPropagation();toggleInsightsPanel()">⌄</button>
         </div>
@@ -1906,17 +1900,17 @@ tbody tr:hover {
             <div class="market-card featured">
               <div class="market-title">Market Snapshot</div>
               <div class="market-headline" id="marketSignalTitle">A quick read on what stands out in the current dataset.</div>
-              <div class="market-copy" id="marketSignalCopy">Use this to orient yourself fast, then narrow with filters once you know where to look.</div>
+              <div class="market-copy" id="marketSignalCopy">A quick read before you start filtering.</div>
               <div class="market-metrics" id="marketMetrics"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Quick Decisions</div>
-              <div class="market-copy">Jump into a focused slice of the market instead of starting from a blank view.</div>
+              <div class="market-copy">Jump straight into a useful slice.</div>
               <div class="market-list" id="quickStartList"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Top Paying Right Now</div>
-              <div class="market-copy">The highest disclosed midpoint ranges currently visible in the dataset.</div>
+              <div class="market-copy">Highest disclosed midpoint ranges in view.</div>
               <div class="market-list" id="topPayList"></div>
             </div>
           </section>
@@ -1928,7 +1922,7 @@ tbody tr:hover {
       <div class="results-header">
         <div>
           <div class="results-title">Browse Salary-Disclosed Jobs</div>
-          <div class="results-sub">Use the left-side controls to narrow the market, then open a row for details and the original source link.</div>
+          <div class="results-sub">Filter, scan, open.</div>
         </div>
         <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
       </div>
