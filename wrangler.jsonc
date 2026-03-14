@@ -6,5 +6,12 @@
   "vars": {
     "APP_BASE_URL": "https://ontariopayhub.fyi",
     "AUTH_FROM_EMAIL": "Ontario Pay Hub <auth@ontariopayhub.fyi>"
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ontario-pay-hub-db",
+      "database_id": "a7b0597f-8d84-4cd4-9450-f1fa347d19e0"
+    }
+  ]
 }
