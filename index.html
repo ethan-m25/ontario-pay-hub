@@ -628,6 +628,63 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   font-size: .65rem; font-weight: 600; color: var(--text2);
   text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; display: block;
 }
+.pref-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.pref-toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  background: var(--input-bg);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+.pref-toggle input[type="checkbox"]::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--bg);
+  transform: scale(0);
+  transition: transform var(--transition);
+}
+.pref-toggle input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.pref-toggle input[type="checkbox"]:checked::after {
+  transform: scale(1);
+}
+.pref-toggle-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.pref-toggle-title {
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.pref-toggle-sub {
+  font-size: .72rem;
+  color: var(--text3);
+  line-height: 1.45;
+}
 .form-input {
   width: 100%; background: var(--input-bg);
   border: 1px solid var(--border2); border-radius: 0;
@@ -2885,9 +2942,12 @@ function renderSaved(){
         <option value="120000"${prefs.salMin===120000?" selected":""}>$120K+</option>
         <option value="150000"${prefs.salMin===150000?" selected":""}>$150K+</option>
       </select>
-      <label class="form-label" style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <label class="pref-toggle">
         <input type="checkbox" id="prefShowArchived"${prefs.showArchived !== false ? " checked" : ""}>
-        <span>Show archived postings by default</span>
+        <span class="pref-toggle-copy">
+          <span class="pref-toggle-title">Show archived postings by default</span>
+          <span class="pref-toggle-sub">Keep older or inactive postings visible when you sign in.</span>
+        </span>
       </label>
       <button class="btn-primary" style="width:100%" onclick="savePreferences(this)">Apply & Save</button>
     `;
