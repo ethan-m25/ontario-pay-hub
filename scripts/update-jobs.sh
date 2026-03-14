@@ -30,10 +30,15 @@ DISCORD_CHANNEL="channel:1476773906038919168"
 TODAY=$(date +%Y-%m-%d)
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 ALLOW_EMPTY_RAW="${ALLOW_EMPTY_RAW:-0}"
+SKIP_GIT_PUBLISH="${SKIP_GIT_PUBLISH:-0}"
+SKIP_NOTIFY="${SKIP_NOTIFY:-0}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
 
 notify_discord() {
+  if [[ "$SKIP_NOTIFY" == "1" ]]; then
+    return 0
+  fi
   local msg="$1"
   /Users/clawii/.npm-global/bin/openclaw message send \
     --channel discord \
@@ -689,52 +694,16 @@ print(m.get('count',0), m.get('active',0), m.get('new_today',0), m.get('links_ne
 log "Total: $NEW_COUNT | Active: $ACTIVE_COUNT | +$NEW_TODAY new | $NEWLY_ARCHIVED links newly archived"
 
 # ---- 5. Git commit & push ----
-cd "$REPO_DIR"
-git add data/jobs.json
-if git diff --cached --quiet; then
-  log "No changes to commit"
-  notify_discord "ℹ️ Ontario Pay Hub [$TODAY]: no new postings found ($NEW_COUNT total)"
+if [[ "$SKIP_GIT_PUBLISH" == "1" ]]; then
+  log "SKIP_GIT_PUBLISH=1 — merge/update complete, deferring publish to outer pipeline"
+  rm -f "$RAW_FILE"
+  log "=== Update complete ==="
   exit 0
 fi
 
-git commit -m "data: daily update $TODAY (+$NEW_TODAY new postings, $NEW_COUNT total)"
-git push origin main
+cd "$REPO_DIR"
+bash "$REPO_DIR/scripts/publish_jobs.sh"
 
-log "Pushed to GitHub → Cloudflare Pages rebuilding"
-
-# ---- 6. Discord notification ----
-# Build new jobs list if any were added
-NEW_JOBS_LIST=""
-if [ "$NEW_TODAY" -gt 0 ] 2>/dev/null; then
-  NEW_JOBS_LIST=$(python3 -c "
-import json
-d=json.load(open('$DATA_FILE'))
-jobs=d.get('jobs',[])
-# Get the last NEW_TODAY active jobs (most recently added)
-new_ones=[j for j in jobs if j.get('status')!='archived'][-${NEW_TODAY}:]
-lines=[]
-for j in new_ones:
-    wm={'remote':'🏠','hybrid':'🔀','onsite':'🏢'}.get(j.get('work_mode',''),'')
-    lines.append(f\"  • {j['role']} @ {j['company']} — \${j['min']:,}–\${j['max']:,} CAD {wm}\")
-print('\n'.join(lines))
-" 2>/dev/null || echo "")
-fi
-
-DISCORD_MSG="✅ Ontario Pay Hub updated [$TODAY]
-📊 +$NEW_TODAY new | $ACTIVE_COUNT active | $NEW_COUNT total in DB
-🔗 $NEWLY_ARCHIVED links newly archived (dead links detected)
-🔄 Cloudflare Pages rebuilding now (~2 min)
-🌐 https://ontariopayhub.fyi"
-
-if [ -n "$NEW_JOBS_LIST" ]; then
-  DISCORD_MSG="$DISCORD_MSG
-
-🆕 New today:
-$NEW_JOBS_LIST"
-fi
-
-notify_discord "$DISCORD_MSG"
-
-# ---- 7. Cleanup ----
+# ---- 6. Cleanup ----
 rm -f "$RAW_FILE"
 log "=== Update complete ==="

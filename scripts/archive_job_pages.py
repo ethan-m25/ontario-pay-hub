@@ -43,6 +43,7 @@ def parse_args():
     parser.add_argument("--limit", type=int, default=25, help="Max jobs to process in this invocation.")
     parser.add_argument("--status", action="append", dest="statuses", help="Job status to include (default: active).")
     parser.add_argument("--job-id", action="append", dest="job_ids", help="Archive only specific job ids.")
+    parser.add_argument("--job-ids-file", help="Optional file containing job ids (one per line or CSV with id column).")
     parser.add_argument("--force", action="store_true", help="Capture a new snapshot even if content hash is unchanged.")
     return parser.parse_args()
 
@@ -62,6 +63,23 @@ def main():
     jobs_by_id = existing_jobs_by_id(db)
     statuses = tuple(args.statuses or ["active"])
 
+    file_job_ids = []
+    if args.job_ids_file:
+        if args.job_ids_file.endswith(".csv"):
+            import csv
+            with open(args.job_ids_file, newline="") as fh:
+                reader = csv.DictReader(fh)
+                for row in reader:
+                    job_id = str(row.get("id", "")).strip()
+                    if job_id:
+                        file_job_ids.append(job_id)
+        else:
+            with open(args.job_ids_file) as fh:
+                for line in fh:
+                    job_id = line.strip()
+                    if job_id:
+                        file_job_ids.append(job_id)
+
     if args.resume:
         default_state = {
             "run_id": snapshot_id(),
@@ -80,7 +98,8 @@ def main():
         if not state.get("queue"):
             state["queue"] = build_queue(db, statuses=statuses)
     else:
-        queue = [str(job_id) for job_id in (args.job_ids or [])] or build_queue(db, statuses=statuses)
+        explicit_ids = [str(job_id) for job_id in (args.job_ids or [])] + file_job_ids
+        queue = explicit_ids or build_queue(db, statuses=statuses)
         state = {
             "run_id": snapshot_id(),
             "started_at": utc_now(),
