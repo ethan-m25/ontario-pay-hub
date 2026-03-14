@@ -3762,18 +3762,16 @@ function clearOneFilter(id) {
 }
 
 function presetFilter(opts = {}) {
-  if (opts.q !== undefined) {
-    document.getElementById('searchInput').value = opts.q;
-    const mobileSearch = document.getElementById('mobileSearchInput');
-    if (mobileSearch) mobileSearch.value = opts.q;
-  }
-  if (opts.cat !== undefined) document.getElementById('catFilter').value = opts.cat;
-  if (opts.wm !== undefined) document.getElementById('wmFilter').value = opts.wm;
-  if (opts.region !== undefined) document.getElementById('regionFilter').value = opts.region;
-  if (opts.salMin !== undefined) document.getElementById('salaryFilter').value = String(opts.salMin);
-  if (opts.showArchived !== undefined) document.getElementById('archiveFilter').value = opts.showArchived ? '' : 'hide';
-  if (opts.sort !== undefined) document.getElementById('sortSelect').value = opts.sort;
-  if (opts.age !== undefined) setAge(opts.age);
+  document.getElementById('searchInput').value = opts.q || '';
+  const mobileSearch = document.getElementById('mobileSearchInput');
+  if (mobileSearch) mobileSearch.value = opts.q || '';
+  document.getElementById('catFilter').value = opts.cat || '';
+  document.getElementById('wmFilter').value = opts.wm || '';
+  document.getElementById('regionFilter').value = opts.region || '';
+  document.getElementById('salaryFilter').value = String(opts.salMin || 0);
+  document.getElementById('archiveFilter').value = opts.showArchived === false ? 'hide' : '';
+  document.getElementById('sortSelect').value = opts.sort || 'mid-desc';
+  setAge(opts.age || '');
   applyFilters();
   window.scrollTo({top: document.querySelector('.results-shell').offsetTop - 72, behavior: 'smooth'});
 }
