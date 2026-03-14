@@ -2277,9 +2277,29 @@ const CAT_ORDER = ["eng","data","fin","pm","sales","hr","ops","legal","it","exec
 // Min jobs for a category to earn its own filter chip (small categories still visible under All)
 const MIN_CAT_CHIP = 3;
 
-function getTag(role) {
+function categoryToTag(category){
+  const map = {
+    "Engineering":"eng",
+    "Data & Analytics":"data",
+    "Finance":"fin",
+    "Product & Project":"pm",
+    "Sales & Mktg":"sales",
+    "People & HR":"hr",
+    "Operations":"ops",
+    "Legal":"legal",
+    "IT & Infra":"it",
+    "Leadership":"exec",
+    "Other":"other",
+  };
+  return map[category] || "other";
+}
+
+function getTag(jobOrRole, company = "", location = "") {
+  const role = typeof jobOrRole === "object" ? (jobOrRole.role || "") : (jobOrRole || "");
+  const category = typeof jobOrRole === "object" ? (jobOrRole.category || "") : "";
+  if(category) return categoryToTag(category);
   // Pad with spaces so keyword boundaries work: "audit manager" won't match "it manager"
-  const r = " " + (role || "").toLowerCase() + " ";
+  const r = " " + [role, company, location].join(" ").toLowerCase() + " ";
   for (const [tag, keywords] of TAG_RULES) {
     if (keywords.some(k => r.includes(k))) return tag;
   }
@@ -2332,7 +2352,8 @@ function normalizeJob(j, i) {
   return {
     id: parseInt(j.id) || i+1,
     role: j.role,
-    tag: getTag(j.role),
+    category: j.category || "",
+    tag: j.category_tag || getTag(j, j.company, j.location),
     company: j.company,
     min: j.min,
     max: j.max,

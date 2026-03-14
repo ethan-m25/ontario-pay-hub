@@ -24,10 +24,12 @@ set -euo pipefail
 REPO_DIR="$HOME/ontario-pay-hub"
 DATA_FILE="$REPO_DIR/data/jobs.json"
 OVERRIDES_FILE="$REPO_DIR/data/manual-status-overrides.json"
+CATEGORY_OVERRIDES_FILE="$REPO_DIR/data/manual-category-overrides.json"
 LOG_FILE="$REPO_DIR/scripts/update.log"
 DISCORD_CHANNEL="channel:1476773906038919168"
 TODAY=$(date +%Y-%m-%d)
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+ALLOW_EMPTY_RAW="${ALLOW_EMPTY_RAW:-0}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
 
@@ -61,17 +63,24 @@ elif [[ -f "$TMP_RAW_FILE" ]]; then
   RAW_FILE="$TMP_RAW_FILE"
   log "Using /tmp raw file: $TMP_RAW_FILE"
 else
-  log "No raw search results found (checked shared/ and /tmp) — zetsu may not have run yet"
-  notify_discord "⚠️ Ontario Pay Hub daily update: no raw data from zetsu. Check zetsu search cron."
-  exit 1
+  if [[ "$ALLOW_EMPTY_RAW" == "1" ]]; then
+    RAW_FILE="/tmp/ontario-pay-hub-empty-raw-$TODAY.txt"
+    : > "$RAW_FILE"
+    log "No raw search results found — continuing in backfill-only mode"
+  else
+    log "No raw search results found (checked shared/ and /tmp) — zetsu may not have run yet"
+    notify_discord "⚠️ Ontario Pay Hub daily update: no raw data from zetsu. Check zetsu search cron."
+    exit 1
+  fi
 fi
 
 # ---- 3. Parse & merge ----
 python3 - <<PYEOF
-import json, os, re, subprocess, urllib.request, urllib.error, html
+import json, os, re, urllib.request, urllib.error, html, time
 
 data_file = "$DATA_FILE"
 overrides_file = "$OVERRIDES_FILE"
+category_overrides_file = "$CATEGORY_OVERRIDES_FILE"
 raw_file = "$RAW_FILE"
 today = "$TODAY"
 
@@ -162,15 +171,77 @@ Salary: \${min_s} - \${max_s} CAD/year
 URL: {url}
 
 Return ONLY JSON, no other text:
-{{"work_mode": "remote|hybrid|onsite|unknown", "salary_type": "base|total_comp|unknown"}}
+{{"work_mode": "remote|hybrid|onsite|unknown", "salary_type": "base|total_comp|unknown", "category": "Engineering|Data & Analytics|Finance|Product & Project|Sales & Mktg|People & HR|Operations|Legal|IT & Infra|Leadership|Other"}}
 
 Rules:
 - work_mode: remote=fully remote; hybrid=mix of remote+office; onsite=office required; unknown=unclear
 - salary_type: base=base salary only; total_comp=bundled base+equity+bonus as one figure; unknown=unclear
+- category must use this taxonomy exactly:
+  - Engineering: software/app/ML/AI/product engineering, QA automation, code-first builder roles
+  - IT & Infra: cloud/platform/infrastructure/SRE/database/security/architecture/enterprise tools/support
+  - Data & Analytics: data science/BI/analytics/reporting/research/data governance
+  - Finance: banking/wealth/investment/accounting/tax/actuarial/underwriting/treasury/credit
+  - Product & Project: product/program/project/release/PMO/business analysis
+  - Sales & Mktg: marketing/brand/comms/growth/business development/sales/investor relations
+  - People & HR: recruiting/HRBP/talent/compensation/L&D/people ops
+  - Operations: operations/admin/support/client service/procurement/logistics/general business support
+  - Legal: legal/compliance/privacy/regulatory/investigations
+  - Leadership: org-level heads, VPs, directors with broad ownership
+  - Other: only if none fit
 - Canadian government/public sector → work_mode=onsite, salary_type=base
 - Canadian banks (TD,BMO,RBC,CIBC,Scotiabank) → salary_type=base (bonus always separate in Canada)
 - Most Canadian job postings list base salary only → default salary_type to base
 - Only total_comp if range explicitly bundles base+equity together as one number"""
+
+_PAGE_WORK_MODE_PROMPT = """Classify the work arrangement for this Ontario job posting.
+
+Role: {role}
+Company: {company}
+Location: {location}
+URL: {url}
+Page text: {page_text}
+
+Return ONLY valid JSON:
+{{"work_mode":"remote|hybrid|onsite|unknown"}}
+
+Rules:
+- remote = fully remote / work from home / remote-first
+- hybrid = split between home and office
+- onsite = office/site/location presence is expected
+- unknown = not clear enough from the posting
+- Prefer explicit wording in the page text over assumptions from the title
+- If the posting says multiple possible arrangements, choose hybrid
+"""
+
+OLLAMA_API = os.environ.get("OLLAMA_API", "http://127.0.0.1:11434/api/generate")
+
+CATEGORY_TO_TAG = {
+    "Engineering": "eng",
+    "Data & Analytics": "data",
+    "Finance": "fin",
+    "Product & Project": "pm",
+    "Sales & Mktg": "sales",
+    "People & HR": "hr",
+    "Operations": "ops",
+    "Legal": "legal",
+    "IT & Infra": "it",
+    "Leadership": "exec",
+    "Other": "other",
+}
+
+VALID_CATEGORIES = set(CATEGORY_TO_TAG)
+
+def _call_ollama(prompt, num_predict=128):
+    payload = json.dumps({
+        "model": "qwen2.5:14b",
+        "prompt": prompt,
+        "stream": False,
+        "options": {"temperature": 0, "num_predict": num_predict},
+    }).encode()
+    req = urllib.request.Request(OLLAMA_API, data=payload, method="POST")
+    req.add_header("Content-Type", "application/json")
+    with urllib.request.urlopen(req, timeout=120) as r:
+        return json.loads(r.read()).get("response", "").strip()
 
 def _infer_work_mode_fast(job):
     text = " ".join([
@@ -186,6 +257,112 @@ def _infer_work_mode_fast(job):
     if any(k in text for k in ("onsite", "on-site", "on site", "in-office", "in office")):
         return "onsite"
     return "unknown"
+
+def _normalize_category(value):
+    value = str(value or "").strip()
+    aliases = {
+        "Engineering": "Engineering",
+        "Data & Analytics": "Data & Analytics",
+        "Finance": "Finance",
+        "Product & Project": "Product & Project",
+        "Sales & Mktg": "Sales & Mktg",
+        "People & HR": "People & HR",
+        "Operations": "Operations",
+        "Legal": "Legal",
+        "IT & Infra": "IT & Infra",
+        "Leadership": "Leadership",
+        "Other": "Other",
+        "Sales & Marketing": "Sales & Mktg",
+        "People and HR": "People & HR",
+        "IT & Infrastructure": "IT & Infra",
+    }
+    return aliases.get(value, "Other")
+
+def _infer_category_fast(job):
+    text = " ".join([
+        str(job.get("role", "")),
+        str(job.get("company", "")),
+        str(job.get("location", "")),
+    ]).lower()
+
+    if any(k in text for k in (
+        "chief ", "vice president", "vp ", "managing director", "general manager",
+        "head of ", "executive director", "regional manager"
+    )):
+        return "Leadership"
+
+    if any(k in text for k in (
+        "legal", "counsel", "attorney", "compliance", "regulatory", "privacy",
+        "paralegal", "law clerk", "complaints officer", "investigations", "aml specialist"
+    )):
+        return "Legal"
+
+    if any(k in text for k in (
+        "human resources", "hr ", "hrbp", "recruit", "talent ", "compensation",
+        "total rewards", "benefits", "learning and development", "people business partner",
+        "people & culture", "employee relations", "labour relations"
+    )):
+        return "People & HR"
+
+    if any(k in text for k in (
+        "marketing", "brand", "communications", "business development", "account executive",
+        "account manager", "sales ", "growth ", "partnership", "campaign ", "distribution",
+        "investor relations", "client success", "customer success"
+    )):
+        return "Sales & Mktg"
+
+    if any(k in text for k in (
+        "product manager", "product owner", "project manager", "project coordinator",
+        "program manager", "scrum master", "agile coach", "release manager",
+        "business analyst", "delivery manager", "pmo", "change manager", "portfolio manager"
+    )):
+        return "Product & Project"
+
+    if any(k in text for k in (
+        "cloud", "platform", "infrastructure", "sre", "site reliability", "database administrator",
+        "systems administrator", "network administrator", "network engineer", "information security",
+        "cybersecurity", "security engineer", "solution architect", "solutions architect",
+        "enterprise architect", "m365", "servicenow", "help desk", "service desk",
+        "desktop support", "it support", "it analyst", "it specialist", "application support"
+    )):
+        return "IT & Infra"
+
+    if any(k in text for k in (
+        "software engineer", "software developer", "developer", "full stack", "frontend",
+        "front end", "backend", "back end", "mobile developer", "ios developer",
+        "android developer", "qa engineer", "automation engineer", "machine learning engineer",
+        "ml engineer", "ai engineer", "application engineer", "technologist", "engineer"
+    )):
+        return "Engineering"
+
+    if any(k in text for k in (
+        "data ", "analytics", "data science", "data scientist", "data analyst",
+        "business intelligence", "insights", "reporting", "research scientist",
+        "researcher", "applied scientist", "quantitative analyst", "data governance",
+        "data management", "bi "
+    )):
+        return "Data & Analytics"
+
+    if any(k in text for k in (
+        "finance", "financial", "banking", "wealth", "credit", "treasury", "actuarial",
+        "actuary", "accountant", "accounting", "tax ", "underwriter", "underwriting",
+        "portfolio", "capital markets", "investment", "audit", "controller", "bookkeeper",
+        "payroll", "fund ", "claims ", "pricing ", "risk ", "insurance"
+    )):
+        return "Finance"
+
+    if any(k in text for k in (
+        "operations", "procurement", "supply chain", "logistics", "facilities",
+        "office manager", "office coordinator", "administrative", "executive assistant",
+        "customer service", "client service", "service representative", "contact center",
+        "contact centre", "workflow", "continuous improvement", "lean", "six sigma"
+    )):
+        return "Operations"
+
+    if "director" in text:
+        return "Leadership"
+
+    return "Other"
 
 def _extract_plain_text(raw_html):
     if not raw_html:
@@ -230,13 +407,14 @@ def _infer_work_mode_from_text(text, url=""):
 
 def _classify_job(job):
     fast_wm = _infer_work_mode_fast(job)
+    fast_cat = _infer_category_fast(job)
     if fast_wm != "unknown":
         salary_type = str(job.get("salary_type", "unknown")).lower()
         if salary_type not in ("base", "total_comp", "unknown"):
             salary_type = "unknown"
         if salary_type == "unknown" and job.get("company", "").lower() in {"td bank", "bmo", "rbc", "cibc", "scotiabank"}:
             salary_type = "base"
-        return fast_wm, salary_type
+        return fast_wm, salary_type, fast_cat
 
     prompt = _CLASSIFY_PROMPT.format(
         role=job["role"], company=job["company"],
@@ -244,35 +422,70 @@ def _classify_job(job):
         min_s=f"{job['min']:,}", max_s=f"{job['max']:,}",
         url=job.get("source_url", "")[:80]
     )
-    try:
-        r = subprocess.run(["/Users/clawii/.local/bin/ollama", "run", "qwen2.5:14b"],
-                           input=prompt, capture_output=True, text=True, timeout=90)
-        m = re.search(r'\{[^{}]*"work_mode"[^{}]*\}', r.stdout)
-        if m:
+    for attempt in range(2):
+        try:
+            output = _call_ollama(prompt, num_predict=128)
+            m = re.search(r'\{[^{}]*"work_mode"[^{}]*\}', output)
+            if m:
+                d = json.loads(m.group())
+                wm = d.get("work_mode", "unknown").lower()
+                st = d.get("salary_type", "unknown").lower()
+                cat = _normalize_category(d.get("category", fast_cat))
+                if wm not in ("remote", "hybrid", "onsite", "unknown"): wm = "unknown"
+                if st not in ("base", "total_comp", "unknown"): st = "unknown"
+                return wm, st, cat
+            break
+        except Exception:
+            if attempt == 0:
+                time.sleep(2)
+    return "unknown", "unknown", fast_cat
+
+def _classify_work_mode_from_page(job, page_text):
+    if not page_text:
+        return "unknown"
+    prompt = _PAGE_WORK_MODE_PROMPT.format(
+        role=job.get("role", ""),
+        company=job.get("company", ""),
+        location=job.get("location", "Ontario, ON"),
+        url=job.get("source_url", "")[:160],
+        page_text=page_text[:6000],
+    )
+    for attempt in range(2):
+        try:
+            output = _call_ollama(prompt, num_predict=48)
+            m = re.search(r'\{[^{}]*"work_mode"[^{}]*\}', output)
+            if not m:
+                break
             d = json.loads(m.group())
-            wm = d.get("work_mode", "unknown").lower()
-            st = d.get("salary_type", "unknown").lower()
-            if wm not in ("remote", "hybrid", "onsite", "unknown"): wm = "unknown"
-            if st not in ("base", "total_comp", "unknown"): st = "unknown"
-            return wm, st
-    except Exception:
-        pass
-    return "unknown", "unknown"
+            wm = str(d.get("work_mode", "unknown")).lower()
+            if wm in ("remote", "hybrid", "onsite", "unknown"):
+                return wm
+            break
+        except Exception:
+            if attempt == 0:
+                time.sleep(2)
+    return "unknown"
 
 if new_jobs:
     print(f"Classifying {len(new_jobs)} new jobs...")
     for job in new_jobs:
-        wm, st = _classify_job(job)
+        wm, st, cat = _classify_job(job)
         job["work_mode"] = wm
         job["salary_type"] = st
-        print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → work_mode={wm} salary_type={st}")
+        job["category"] = cat
+        job["category_tag"] = CATEGORY_TO_TAG.get(cat, "other")
+        print(f"  CLASSIFY [{job['id']}] {job['role'][:35]} → category={cat} work_mode={wm} salary_type={st}")
 
-# Ensure existing jobs have work_mode/salary_type fields (schema consistency)
+# Ensure existing jobs have work_mode/salary_type/category fields (schema consistency)
 for job in existing:
     if "work_mode" not in job:
         job["work_mode"] = "unknown"
     if "salary_type" not in job:
         job["salary_type"] = "unknown"
+    if "category" not in job:
+        job["category"] = "Other"
+    if "category_tag" not in job:
+        job["category_tag"] = "other"
 
 # ---- 3.3. Backfill work_mode for historical active jobs with unknown mode ----
 BACKFILL_LIMIT = max(1, int(os.environ.get("WORK_MODE_BACKFILL_LIMIT", "120")))
@@ -297,18 +510,25 @@ if backfill_candidates:
     )
     for job in batch:
         backfill_attempted += 1
-        wm, st = _classify_job(job)
+        wm, st, cat = _classify_job(job)
         if wm == "unknown":
             page_html = _fetch_page_html(job.get("source_url", ""))
             page_text = _extract_plain_text(page_html)[:12000]
             text_wm = _infer_work_mode_from_text(page_text, job.get("source_url", ""))
             if text_wm != "unknown":
                 wm = text_wm
+            else:
+                llm_wm = _classify_work_mode_from_page(job, page_text)
+                if llm_wm != "unknown":
+                    wm = llm_wm
         if wm != "unknown":
             job["work_mode"] = wm
             backfilled_work_modes += 1
         if job.get("salary_type", "unknown") == "unknown" and st in ("base", "total_comp"):
             job["salary_type"] = st
+        if job.get("category", "Other") in ("", "Other", None):
+            job["category"] = cat
+            job["category_tag"] = CATEGORY_TO_TAG.get(cat, "other")
     backfill_cursor = (backfill_cursor + len(batch)) % len(backfill_candidates)
     print(f"  BACKFILL work_mode updated: {backfilled_work_modes} / attempted {backfill_attempted}")
 else:
@@ -316,6 +536,36 @@ else:
 
 # Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
+
+# ---- 3.3b. Category normalization + manual category overrides ----
+category_overrides = []
+if os.path.exists(category_overrides_file):
+    try:
+        with open(category_overrides_file) as f:
+            category_overrides = json.load(f).get("jobs", [])
+    except Exception:
+        category_overrides = []
+
+category_override_map = {
+    str(row.get("id", "")).strip(): _normalize_category(row.get("category", "Other"))
+    for row in category_overrides
+    if str(row.get("id", "")).strip()
+}
+
+category_overrides_applied = 0
+for job in all_jobs:
+    override = category_override_map.get(str(job.get("id", "")).strip())
+    if override:
+        if job.get("category") != override:
+            category_overrides_applied += 1
+        job["category"] = override
+        job["category_tag"] = CATEGORY_TO_TAG.get(override, "other")
+        continue
+    current = _normalize_category(job.get("category", "Other"))
+    if current == "Other":
+        current = _infer_category_fast(job)
+    job["category"] = current
+    job["category_tag"] = CATEGORY_TO_TAG.get(current, "other")
 
 # ---- 3.4. Manual status overrides — human-reviewed exceptions ----
 manual_overrides = []
@@ -440,6 +690,7 @@ db["meta"] = {
     "work_modes_backfilled": backfilled_work_modes,
     "work_modes_backfill_attempted": backfill_attempted,
     "work_mode_backfill_cursor": backfill_cursor,
+    "category_overrides_applied": category_overrides_applied,
     "manual_overrides_applied": overrides_applied,
     "links_validated": val_active,
     "links_newly_archived": val_archived,

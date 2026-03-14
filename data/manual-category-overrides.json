@@ -1,0 +1,2931 @@
+{
+  "updated_from": "job_category_review_revised.xlsx",
+  "jobs": [
+    {
+      "id": "59",
+      "role": "Database Administrator",
+      "company": "Alcohol and Gaming Commission of Ontario",
+      "category": "IT & Infra",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "296",
+      "role": "Bilingual (French) Insurance Consumer Complaints Officer",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "270",
+      "role": "Manager, Data Science",
+      "company": "BMO",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "299",
+      "role": "Manager, Wealth Data Management & Governance",
+      "company": "BMO",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "240",
+      "role": "NAIMR Head of Canada Alternatives Distribution",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "295",
+      "role": "Retail Insurance Compliance Specialist",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "134",
+      "role": "Senior Data Architect, Artificial Intelligence / AWS Cloud",
+      "company": "BMO",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "304",
+      "role": "Senior Manager Campaign Strategy and Optimization, NARP and Business Banking",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "138",
+      "role": "Senior Manager, RESL Account Management Strategy & Analytics",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "99",
+      "role": "Vice President, AI Strategy and Change Management",
+      "company": "BMO",
+      "category": "Leadership",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "283",
+      "role": "Analyst, Data Management",
+      "company": "Brookfield",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "30",
+      "role": "Applied Data Scientist",
+      "company": "Caseware",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "364",
+      "role": "Manager, Data & Analytics",
+      "company": "City of Leduc",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "322",
+      "role": "Manager, Data &amp; Analytics",
+      "company": "City of Leduc",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "71",
+      "role": "Specialist, Data and Information",
+      "company": "CMHC",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "393",
+      "role": "Associate Data Scientist - GenAI",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "340",
+      "role": "Data Architect",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "396",
+      "role": "Data Architect",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "389",
+      "role": "Sr. Data Scientist - GenAI",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "344",
+      "role": "Product Manager, Retail Products",
+      "company": "Company 58 - Manulife Bank of Canada",
+      "category": "Product & Project",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "400",
+      "role": "Product Manager, Retail Products",
+      "company": "Company 58 - Manulife Bank of Canada",
+      "category": "Product & Project",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "205",
+      "role": "Customer Service Representative - Auto Claims",
+      "company": "Intact Financial Corporation",
+      "category": "Operations",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "204",
+      "role": "Senior Actuarial Analyst - Claims Data Analytics (CDAT)",
+      "company": "Intact Financial Corporation",
+      "category": "Finance",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "202",
+      "role": "AI Transformation Lead",
+      "company": "Jonas Software Canada",
+      "category": "Product & Project",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "190",
+      "role": "Senior Director of AI",
+      "company": "Jonas Software Canada",
+      "category": "Leadership",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "256",
+      "role": "Business Intelligence Manager",
+      "company": "Manulife",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "146",
+      "role": "Data Analyst, L&C Strategy and Operations: Data Analytics and Technology Focus",
+      "company": "Manulife",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "114",
+      "role": "Director, Canada AI",
+      "company": "Manulife",
+      "category": "Leadership",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "144",
+      "role": "Lead Solution Architect AI/ML",
+      "company": "Manulife",
+      "category": "IT & Infra",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "315",
+      "role": "Manager, Data Governance and Quality",
+      "company": "Manulife",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "112",
+      "role": "Product Support Specialist, Retail Product",
+      "company": "Manulife",
+      "category": "Product & Project",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "280",
+      "role": "Senior Travel Claims Specialist",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "156",
+      "role": "Maintenance Supervisor",
+      "company": "OMERS",
+      "category": "Operations",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "165",
+      "role": "Senior Business Analyst, Investment Data Operations (12 month direct contract)",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "178",
+      "role": "Technical Analyst, Valuations & Analytics",
+      "company": "OMERS",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "349",
+      "role": "Data Scientist",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "405",
+      "role": "Data Scientist",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "359",
+      "role": "Senior Associate, Total Fund Risk Analytics",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "415",
+      "role": "Senior Associate, Total Fund Risk Analytics",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "223",
+      "role": "Senior Associate, Total Fund Risk Analytics",
+      "company": "OTPPB",
+      "category": "Legal",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "70",
+      "role": "Financial Data Analyst",
+      "company": "Robert Half",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "51",
+      "role": "Data Technical Analyst",
+      "company": "StackAdapt",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "126",
+      "role": "Data Scientist III (B3617)",
+      "company": "TD Bank",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "8",
+      "role": "Manager, Data Science",
+      "company": "TD Bank",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "229",
+      "role": "Personal Banking Associate Trainee",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "217",
+      "role": "Research Machine Learning Scientist",
+      "company": "TD Bank",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "4",
+      "role": "Senior Business Intelligence Analyst",
+      "company": "TD Bank",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "14",
+      "role": "Manager, AI & Agentic Workflows",
+      "company": "Wealthsimple",
+      "category": "Product & Project",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "17",
+      "role": "Senior Data Scientist, Valuations",
+      "company": "Wealthsimple",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "41",
+      "role": "Sr Data Scientist, Finance & Market Risk",
+      "company": "Wealthsimple",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "16",
+      "role": "Sr. Data Scientist, Marketing",
+      "company": "Wealthsimple",
+      "category": "Data & Analytics",
+      "source_category": "Data & Analytics"
+    },
+    {
+      "id": "28",
+      "role": "Staff Software Engineer",
+      "company": "Achievers",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "215",
+      "role": "Senior Application Developer",
+      "company": "Alcohol and Gaming Commission of Ontario (A)",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "212",
+      "role": "Front-End Engineer",
+      "company": "Amazon",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "53",
+      "role": "Software Development Manager",
+      "company": "Amazon",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "58",
+      "role": "Senior Software Engineer, Product Engineering, Canada",
+      "company": "Ashby",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "378",
+      "role": "AI Engineer",
+      "company": "Bank of Montreal",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "381",
+      "role": "Applied AI Evaluation Engineer",
+      "company": "Bank of Montreal",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "377",
+      "role": "Data Engineer",
+      "company": "Bank of Montreal",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "331",
+      "role": "Intermediate Application Developer",
+      "company": "Bank of Montreal",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "382",
+      "role": "Multimodal (Voice/Visual) AI Engineer",
+      "company": "Bank of Montreal",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "379",
+      "role": "Senior AI Engineer",
+      "company": "Bank of Montreal",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "380",
+      "role": "Senior Azure Cloud AI Engineer",
+      "company": "Bank of Montreal",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "56",
+      "role": "Senior Software Engineer - Gen AI and Web Apps",
+      "company": "BenchSci",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "78",
+      "role": "Senior Full Stack Developer (DevOps | Go | React)",
+      "company": "Betstamp",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "100",
+      "role": "Analyst, Full Stack Engineer",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "142",
+      "role": "Application Developer (Java/ISAM)",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "101",
+      "role": "Associate, AI DevOps Engineer",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "103",
+      "role": "Associate, Data Engineer",
+      "company": "BMO",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "102",
+      "role": "Associate, Full Stack Engineer",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "300",
+      "role": "M365 Engineering Specialist",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "135",
+      "role": "Senior Cloud Engineer",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "96",
+      "role": "Senior Cloud Engineer - Azure",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "266",
+      "role": "Software Developer - (Java / Linux / AWS / Wire Payments)",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "97",
+      "role": "Vice President, AI Engineer",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "284",
+      "role": "Senior Analyst, Application Engineering",
+      "company": "Brookfield",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "55",
+      "role": "Senior Site Reliability Engineer",
+      "company": "BuildOps",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "39",
+      "role": "Engineer",
+      "company": "City of Toronto",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "342",
+      "role": "Global AI Platforms, Program Manager",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Product & Project",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "398",
+      "role": "Global AI Platforms, Program Manager",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Product & Project",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "391",
+      "role": "Manager, Procurement Risk Platforms Management",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "392",
+      "role": "Senior Staff Cyber Threat Exposure Management (CTEM) Engineer",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "72",
+      "role": "Backend Engineer",
+      "company": "Embroker",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "62",
+      "role": "Senior Infrastructure Engineer",
+      "company": "EvenUp",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "84",
+      "role": "Software Developer III",
+      "company": "Google",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "73",
+      "role": "Manufacturing Project Engineer",
+      "company": "INNIO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "218",
+      "role": "Manufacturing Project Engineer - Machining",
+      "company": "INNIO",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "213",
+      "role": "Principal, Software Engineering – Finance & Reinsurance",
+      "company": "Intact",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "189",
+      "role": "BI Reporting Developer Analyst",
+      "company": "Jonas Software Canada",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "196",
+      "role": "Director of Software Development",
+      "company": "Jonas Software Canada",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "200",
+      "role": "Software Engineer",
+      "company": "Jonas Software Canada",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "214",
+      "role": "Infrastructure Engineer (Data Encryption)",
+      "company": "Layer 6 AI",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "115",
+      "role": "AVP, Global AI Technology Platforms and Solutions",
+      "company": "Manulife",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "313",
+      "role": "Data Engineer",
+      "company": "Manulife",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "108",
+      "role": "Intermediate ServiceNow Developer",
+      "company": "Manulife",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "253",
+      "role": "Senior Release Train Engineer",
+      "company": "Manulife",
+      "category": "Product & Project",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "83",
+      "role": "Lead Developer Design Systems",
+      "company": "Not specified",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "170",
+      "role": "Business Analyst, Trading Platform",
+      "company": "OMERS",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "171",
+      "role": "Lead, Process Engineer (Intelligent Automation and AI)",
+      "company": "OMERS",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "162",
+      "role": "Senior Business Analyst, Data Integration & Performance Platform (12 Month Contract)",
+      "company": "OMERS",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "154",
+      "role": "Senior Front-End Web Developer (12 Months Contract)",
+      "company": "OMERS",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "152",
+      "role": "Site Reliability Engineer - Identity and Platform Services",
+      "company": "OMERS",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "150",
+      "role": "Systems Solution Developer",
+      "company": "OMERS",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "354",
+      "role": "Engineering Lead, Network Security Tools",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "410",
+      "role": "Engineering Lead, Network Security Tools",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "351",
+      "role": "Senior Software Developer",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "407",
+      "role": "Senior Software Developer",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "353",
+      "role": "Software Developer",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "409",
+      "role": "Software Developer",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "357",
+      "role": "Solution Architect, Microsoft Power Platform",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "413",
+      "role": "Solution Architect, Microsoft Power Platform",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "119",
+      "role": "Engineering Lead, Network Security Tools",
+      "company": "OTPPB",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "116",
+      "role": "Senior Software Developer",
+      "company": "OTPPB",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "118",
+      "role": "Software Developer",
+      "company": "OTPPB",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "122",
+      "role": "Solution Architect, Microsoft Power Platform",
+      "company": "OTPPB",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "20",
+      "role": "Senior Software Engineer, Full-Stack",
+      "company": "Owner",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "26",
+      "role": "AI Systems Developer",
+      "company": "PointClickCare",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "25",
+      "role": "Software Engineer (Java/React)",
+      "company": "PointClickCare",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "24",
+      "role": "Sr. Software Engineer, Developer Experience",
+      "company": "PointClickCare",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "288",
+      "role": "Java Engineer, TD Securities",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "2",
+      "role": "Machine Learning Engineer II",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "9",
+      "role": "Manager, Patent Engineering",
+      "company": "TD Bank",
+      "category": "Legal",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "91",
+      "role": "Microsoft Purview Engineer / Engineer II (B3617)",
+      "company": "TD Bank",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "125",
+      "role": "Senior .NET/C# Engineer, TD Securities",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "124",
+      "role": "Senior C# Engineer, TD Securities",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "289",
+      "role": "Senior Java Engineer, TD Securities",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "89",
+      "role": "Senior Java Software Engineer, TD Securities",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "127",
+      "role": "Transparency Pricing & Risk Developer",
+      "company": "TD Bank",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "80",
+      "role": "Lead Developer Design Systems",
+      "company": "TEEMA",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "54",
+      "role": "Senior Data Engineer – Databricks",
+      "company": "TEEMA",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "420",
+      "role": "Senior Data Engineer – Databricks",
+      "company": "Teema Group",
+      "category": "Data & Analytics",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "29",
+      "role": "Senior Full Stack Engineer",
+      "company": "Teleport",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "324",
+      "role": "M365 Copilot Engineer /Engineer II",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "373",
+      "role": "M365 Copilot Engineer /Engineer II",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "IT & Infra",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "325",
+      "role": "Software Engineer II",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "27",
+      "role": "Software Engineer",
+      "company": "Waabi",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "63",
+      "role": "Software Engineering Manager, Supplier Advertising Experience",
+      "company": "Wayfair",
+      "category": "Engineering",
+      "source_category": "Engineering"
+    },
+    {
+      "id": "374",
+      "role": "Associate/VP,  Portfolio & Risk Analysis,  BMO Global Asset Management, Operations",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "330",
+      "role": "Director, Business Banking Lending Acquisition & Account Management",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "332",
+      "role": "Director, Commercial Banking (Technology & Innovation Group)",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "328",
+      "role": "Manager, Business Banking Lending Acquisition",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "383",
+      "role": "Managing Director, Senior Relationship Manager - Real Estate Finance",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "375",
+      "role": "Senior Enterprise Architect - (Digital / Core Banking)",
+      "company": "Bank of Montreal",
+      "category": "IT & Infra",
+      "source_category": "Finance"
+    },
+    {
+      "id": "329",
+      "role": "Senior Manager, Business Banking Lending Acquisition",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "384",
+      "role": "Senior Relationship Manager, Commercial Banking (Diversified Industries)",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "234",
+      "role": "Agile Delivery Manager - (Banking Industry / Scrum Master / PM)",
+      "company": "BMO",
+      "category": "Product & Project",
+      "source_category": "Finance"
+    },
+    {
+      "id": "136",
+      "role": "Associate, Capital Optimization & Financial Performance - Corporate Banking",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "239",
+      "role": "Credit Analyst - Commercial Banking (Income Property Finance (IPF)",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "307",
+      "role": "Credit Manager",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "133",
+      "role": "Director, Commercial Banking (Corporate Finance Group)",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "95",
+      "role": "Manager, Canadian Commercial Banking Strategy",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "242",
+      "role": "Manager, Portfolio Management Group, BMO Private Wealth",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "132",
+      "role": "Personal Banking Associate",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "231",
+      "role": "Personal Banking Association",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "301",
+      "role": "Senior Banker",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "273",
+      "role": "Senior Manager - Commercial Banking Controls & Governance",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Finance"
+    },
+    {
+      "id": "93",
+      "role": "Senior Manager, Business Banking Credit Strategy Risk Management",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Finance"
+    },
+    {
+      "id": "183",
+      "role": "Finance Manager",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "258",
+      "role": "Manager, Finance",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "184",
+      "role": "Senior Analyst, Finance",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "33",
+      "role": "Senior Manager, Strategy & Finance",
+      "company": "Fullscript",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "207",
+      "role": "Director, Actuarial, Commercial Lines",
+      "company": "Intact Financial Corporation",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "192",
+      "role": "Director of Finance",
+      "company": "Jonas Software Canada",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "254",
+      "role": "Actuarial Manager, Global Retirement Finance - Pricing",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "281",
+      "role": "Client Portfolio Management Specialist",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "317",
+      "role": "Manager, Treasury Systems and Transformation",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "107",
+      "role": "Product Manager, Credit Cards",
+      "company": "Manulife",
+      "category": "Product & Project",
+      "source_category": "Finance"
+    },
+    {
+      "id": "249",
+      "role": "Treasury Operations Specialist",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "168",
+      "role": "Analyst, Finance & Treasury",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "166",
+      "role": "Analyst, Investment Finance (G&A)",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "164",
+      "role": "Manager, Investment Finance (Contract end January 2027)",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "177",
+      "role": "Senior Analyst, Finance and Accounting",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "159",
+      "role": "Senior Analyst, Investment Finance & Valuations",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "350",
+      "role": "Senior Associate, Treasury Operations",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "406",
+      "role": "Senior Associate, Treasury Operations",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "221",
+      "role": "Senior Associate, Treasury Operations",
+      "company": "OTPPB",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "5",
+      "role": "Account Manager II, Business Banking",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "230",
+      "role": "Actuarial Intern / Co-Op - Preferred Candidate",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "88",
+      "role": "Associate Vice President, Ontario, GTA, TDS and CNA, TD Equipment Finance, Canadian Business Banking",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "366",
+      "role": "Contact Center Rep - London Credit Card",
+      "company": "TD Bank",
+      "category": "Operations",
+      "source_category": "Finance"
+    },
+    {
+      "id": "131",
+      "role": "Investment Banking Analyst, Power & Utilities",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "7",
+      "role": "Risk Analyst, Credit Exceptions",
+      "company": "TD Bank",
+      "category": "Legal",
+      "source_category": "Finance"
+    },
+    {
+      "id": "19",
+      "role": "Manager, Treasury & Capital Markets",
+      "company": "Wealthsimple",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "18",
+      "role": "Senior Associate, Treasury & Settlements",
+      "company": "Wealthsimple",
+      "category": "Finance",
+      "source_category": "Finance"
+    },
+    {
+      "id": "335",
+      "role": "Director, Vendor Management Office",
+      "company": "Bank of Montreal",
+      "category": "Operations",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "236",
+      "role": "Director, SAMU National Accounts",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "139",
+      "role": "Vice President, Business Resilience, Capital Markets",
+      "company": "BMO",
+      "category": "Leadership",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "98",
+      "role": "Vice President, Internal Commercialization",
+      "company": "BMO",
+      "category": "Leadership",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "57",
+      "role": "Director, Appropriate Use",
+      "company": "CADTH",
+      "category": "Leadership",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "77",
+      "role": "Director, Technology Delivery",
+      "company": "Canada Life",
+      "category": "Product & Project",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "388",
+      "role": "AVP, HNW Underwriting",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Finance",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "390",
+      "role": "Director, Third Party Information Security Management",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "IT & Infra",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "346",
+      "role": "Head of Digital Business Development",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Sales & Mktg",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "402",
+      "role": "Head of Digital Business Development",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Sales & Mktg",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "198",
+      "role": "Director of Development",
+      "company": "Jonas Software Canada",
+      "category": "Engineering",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "311",
+      "role": "Director, Derivatives Middle Office Operation",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "175",
+      "role": "Associate Director, Business Continuity Program",
+      "company": "OMERS",
+      "category": "Operations",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "174",
+      "role": "Manager, Leadership & Team Development",
+      "company": "OMERS",
+      "category": "People & HR",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "219",
+      "role": "Director, Business Management",
+      "company": "TD Bank",
+      "category": "Operations",
+      "source_category": "Leadership"
+    },
+    {
+      "id": "385",
+      "role": "Manager, Liquidity Risk Reporting",
+      "company": "Bank of Montreal",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "243",
+      "role": "Senior Analyst, Market Risk",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "298",
+      "role": "Senior Compliance Officer, Equity Trade Surveillance",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "294",
+      "role": "Senior Manager - Global Markets Operational Risk",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "244",
+      "role": "Senior Technologist, Risk Systems",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Legal"
+    },
+    {
+      "id": "106",
+      "role": "Manager, Operational Risk Management, Group Functions",
+      "company": "Manulife",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "145",
+      "role": "Senior Compliance Analyst",
+      "company": "Manulife",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "318",
+      "role": "Analyst/Senior Analyst, Total Plan Risk Management",
+      "company": "OMERS",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "161",
+      "role": "Associate Director, Environmental Risk Management",
+      "company": "OMERS",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "319",
+      "role": "Senior Analyst, Compliance & Ethics",
+      "company": "OMERS",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "176",
+      "role": "Senior Analyst, Pension Policy and Legal (Technical Writer)",
+      "company": "OMERS",
+      "category": "Legal",
+      "source_category": "Legal"
+    },
+    {
+      "id": "82",
+      "role": "Operations Financial Analyst",
+      "company": "Amazon",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "306",
+      "role": "Manager, Investment and Client Operations, GAM",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "187",
+      "role": "Senior Specialist, SPV Operations",
+      "company": "Brookfield",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "40",
+      "role": "Budget & Operations Analyst",
+      "company": "City of Toronto",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "286",
+      "role": "Strategy and Operations Principal Lead",
+      "company": "Google",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "206",
+      "role": "Accounting Operations Specialist",
+      "company": "Intact Financial Corporation",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "111",
+      "role": "Director, Procurement Strategy and Transformation",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "279",
+      "role": "Manager, Procurement Strategy",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "248",
+      "role": "Senior Business Analyst – Group Benefits Operations",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "320",
+      "role": "Analyst, Derivatives Operations",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "163",
+      "role": "Analyst, Funding and Collateral Operations",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "153",
+      "role": "Manager, Operations",
+      "company": "OMERS",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "360",
+      "role": "Manager, Collateral & Liquidity Operations (12-month contract)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "416",
+      "role": "Manager, Collateral & Liquidity Operations (12-month contract)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "74",
+      "role": "Manager, Fleet Services Operations",
+      "company": "Ornge",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "224",
+      "role": "Manager, Collateral & Liquidity Operations (12-month contract)",
+      "company": "OTPPB",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "263",
+      "role": "Administrator, Institutional Client Operations",
+      "company": "RBC",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "228",
+      "role": "Business Operations Analyst",
+      "company": "TD Bank",
+      "category": "Operations",
+      "source_category": "Operations"
+    },
+    {
+      "id": "85",
+      "role": "Analyst, Global Trade Management, Public Markets Operations (12-month contract)",
+      "company": "VersaFi",
+      "category": "Finance",
+      "source_category": "Operations"
+    },
+    {
+      "id": "81",
+      "role": "Insights & Measurement Lead",
+      "company": "Amazon Advertising Canada Inc.",
+      "category": "Data & Analytics",
+      "source_category": "Other"
+    },
+    {
+      "id": "50",
+      "role": "Regional Manager, Ontario & Maritimes",
+      "company": "Arc'teryx",
+      "category": "Leadership",
+      "source_category": "Other"
+    },
+    {
+      "id": "326",
+      "role": "Manager, Real Estate Secured Lending (RESL) Account Management",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "327",
+      "role": "Senior Manager, Real Estate Secured Lending Acquisition",
+      "company": "Bank of Montreal",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "233",
+      "role": "Audit Manager, Quantitative",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "232",
+      "role": "Audit Manager, Wealth Management",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "305",
+      "role": "Bilingual Client Services Associate",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "297",
+      "role": "Business Development Manager, Segregated Funds/Annuities",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "238",
+      "role": "Client Service Associate, Private Wealth",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "140",
+      "role": "Customer Service Representative",
+      "company": "BMO",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "137",
+      "role": "Development Manager",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Other"
+    },
+    {
+      "id": "268",
+      "role": "Financial Planner",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "293",
+      "role": "Manager - Business Management",
+      "company": "BMO",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "269",
+      "role": "Manager, Digital Acquisition",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "292",
+      "role": "Manager, IT Controls Testing",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "264",
+      "role": "Quality Assurance Specialist - (Automation / Contact Centre applications)",
+      "company": "BMO",
+      "category": "Engineering",
+      "source_category": "Other"
+    },
+    {
+      "id": "274",
+      "role": "Regulatory Integrator and Governance Lead",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "237",
+      "role": "Senior Manager - Model Validation",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "235",
+      "role": "Senior Manager, Model Validation",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "275",
+      "role": "Senior Manager, PM Financial Planning and Analysis",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "94",
+      "role": "Senior Pricing Analyst",
+      "company": "BMO",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "302",
+      "role": "Senior Specialist, Global Investigations",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "265",
+      "role": "Senior Technology Manager - (Development / API Design / AWS/ Payment Systems)",
+      "company": "BMO",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "241",
+      "role": "Specialist, Anti Money Laundering  User Acceptance Testing",
+      "company": "BMO",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "141",
+      "role": "Supervisor, Contact Centre, Global Asset Management",
+      "company": "BMO",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "12",
+      "role": "Senior Solution Architect",
+      "company": "BMO Financial Group",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "333",
+      "role": "Administrative Assistant, Private Wealth",
+      "company": "BMO Nesbitt Burns Inc.",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "337",
+      "role": "Bilingual (Eng/Fr) Client Service Associate",
+      "company": "BMO Nesbitt Burns Inc.",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "336",
+      "role": "Investment Associate",
+      "company": "BMO Nesbitt Burns Inc.",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "185",
+      "role": "Associate, Investor Relations",
+      "company": "Brookfield",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "182",
+      "role": "Executive Assistant",
+      "company": "Brookfield",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "188",
+      "role": "Manager, Business Systems Applications",
+      "company": "Brookfield",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "181",
+      "role": "Manager, Tax",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "180",
+      "role": "Receptionist",
+      "company": "Brookfield",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "285",
+      "role": "Senior Analyst, Business Systems Analysis",
+      "company": "Brookfield",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "179",
+      "role": "Senior Financial Analyst",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "186",
+      "role": "Senior Specialist, Private Asset Servicing",
+      "company": "Brookfield",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "257",
+      "role": "Sr. Sourcing Analyst",
+      "company": "Brookfield",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "348",
+      "role": "Senior Analyst, ITSM Governance & Service Assurance",
+      "company": "Brookfield Asset Management LLC",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "404",
+      "role": "Senior Analyst, ITSM Governance & Service Assurance",
+      "company": "Brookfield Asset Management LLC",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "347",
+      "role": "Associate, Investor Relations and FP&A",
+      "company": "Brookfield Corporation",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "403",
+      "role": "Associate, Investor Relations and FP&A",
+      "company": "Brookfield Corporation",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "368",
+      "role": "Senior IT Specialist",
+      "company": "BuildOps",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "60",
+      "role": "Senior Business Analyst",
+      "company": "Capital One",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "276",
+      "role": "Client Associate (IR Licensed, Mandarin & Cantonese speaking) 12 month contract CIBC Wood Gundy",
+      "company": "CIBC",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "143",
+      "role": "Private Wealth Senior Consultant, Learning Designer",
+      "company": "CIBC",
+      "category": "People & HR",
+      "source_category": "Other"
+    },
+    {
+      "id": "277",
+      "role": "Senior Consultant, Events",
+      "company": "CIBC",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "246",
+      "role": "Wealth Strategist",
+      "company": "CIBC",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "339",
+      "role": "Analyst/Associate, Institutional Client Experience",
+      "company": "CIBC Asset Management Inc",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "386",
+      "role": "Client Associate (IR Licensed) CIBC Wood Gundy",
+      "company": "CIBC World Markets Inc (Canada)",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "38",
+      "role": "Business Management Analyst",
+      "company": "City of Toronto",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "36",
+      "role": "Senior Business & Systems Analyst",
+      "company": "City of Toronto",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "123",
+      "role": "Administrative Assistant",
+      "company": "Colliers",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "395",
+      "role": "Business Unit Security Officer- Manager",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "343",
+      "role": "CRM & Enablement Tools Manager",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "399",
+      "role": "CRM & Enablement Tools Manager",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "345",
+      "role": "Financial Controls Analyst",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "401",
+      "role": "Financial Controls Analyst",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "341",
+      "role": "Functional Rehabilitation Specialist",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "397",
+      "role": "Functional Rehabilitation Specialist",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "394",
+      "role": "Manager, Governance and Control",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "34",
+      "role": "Strategic Merchandising Manager",
+      "company": "Fullscript",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "79",
+      "role": "Test Developing Manager II, XR",
+      "company": "Google",
+      "category": "Engineering",
+      "source_category": "Other"
+    },
+    {
+      "id": "31",
+      "role": "Schedule Manager",
+      "company": "Infrastructure Ontario",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "367",
+      "role": "Senior Security Advisor",
+      "company": "Intact Financial Corporation",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "210",
+      "role": "Senior Underwriter Specialty Lines",
+      "company": "Intact Financial Corporation",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "193",
+      "role": "Accounts Payable Clerk",
+      "company": "Jonas Software Canada",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "195",
+      "role": "Junior Quality Assurance Analyst",
+      "company": "Jonas Software Canada",
+      "category": "Engineering",
+      "source_category": "Other"
+    },
+    {
+      "id": "191",
+      "role": "Manager, Professional Services",
+      "company": "Jonas Software Canada",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "201",
+      "role": "Mergers & Acquisitions Business Development Associate",
+      "company": "Jonas Software Canada",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "197",
+      "role": "Senior Financial Analyst",
+      "company": "Jonas Software Canada",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "260",
+      "role": "Auditor, Spot Audit, Practice Audits, Professional Development &amp; Competence",
+      "company": "Law Society of Ontario",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "245",
+      "role": "Auditor, Spot Audit, Practice Audits, Professional Development &amp; Competence (Remote, Toronto)",
+      "company": "Law Society of Ontario",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "255",
+      "role": "Agent of Record Specialist",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "105",
+      "role": "Associate Manager, Audit & Advisory Services",
+      "company": "Manulife",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "312",
+      "role": "Cybersecurity Delivery Manager",
+      "company": "Manulife",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "310",
+      "role": "Executive Assistant",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "314",
+      "role": "New Business Medical Administration Specialist",
+      "company": "Manulife",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "309",
+      "role": "Senior Business System Analyst",
+      "company": "Manulife",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "110",
+      "role": "Senior Disability Administrator - File Copy",
+      "company": "Manulife",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "251",
+      "role": "Senior Tax Analyst, Transfer Pricing",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "247",
+      "role": "Senior Underwriting Consultant, High Net Worth",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "316",
+      "role": "Strategy Analyst",
+      "company": "Manulife",
+      "category": "Data & Analytics",
+      "source_category": "Other"
+    },
+    {
+      "id": "259",
+      "role": "Sr. Financial Analyst (FP&A)",
+      "company": "Medline",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "287",
+      "role": "Designer, Design Systems",
+      "company": "Not specified",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "282",
+      "role": "Application Support Analyst",
+      "company": "OMERS",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "147",
+      "role": "Business Analyst (12 Month Contract)",
+      "company": "OMERS",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "158",
+      "role": "Coordinator, Accounts Payable (12 Month Contract)",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "172",
+      "role": "Jr. Building Operator",
+      "company": "OMERS",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "173",
+      "role": "Lead, Learning & Media Designer",
+      "company": "OMERS",
+      "category": "People & HR",
+      "source_category": "Other"
+    },
+    {
+      "id": "167",
+      "role": "Senior Analyst, Financial Planning & Analysis",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "160",
+      "role": "Senior Analyst, Fixed Income, Global Multi-Asset Strategies",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "220",
+      "role": "Senior Analyst, Payroll Accounting",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "155",
+      "role": "Senior Analyst, Performance & Valuations",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "157",
+      "role": "Senior Business Analyst (12 Month Contract)",
+      "company": "OMERS",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "148",
+      "role": "Senior Financial Analyst, Accounting",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "149",
+      "role": "Senior Financial Analyst, Consolidations & Management Reporting",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "169",
+      "role": "Specialist, Pension Accounting",
+      "company": "OMERS",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "69",
+      "role": "Human Resources Business Advisor",
+      "company": "Ontario Public Service",
+      "category": "People & HR",
+      "source_category": "Other"
+    },
+    {
+      "id": "356",
+      "role": "Associate Systems Analyst (12-month Contract)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "412",
+      "role": "Associate Systems Analyst (12-month Contract)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "363",
+      "role": "Law Clerk - Corporate and Investments",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "419",
+      "role": "Law Clerk - Corporate and Investments",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "362",
+      "role": "Manager, Due Diligence",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "418",
+      "role": "Manager, Due Diligence",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "361",
+      "role": "Senior Executive Assistant",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "417",
+      "role": "Senior Executive Assistant",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "355",
+      "role": "Tax Coordinator",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "411",
+      "role": "Tax Coordinator",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "75",
+      "role": "Aviation Safety Specialist",
+      "company": "Ornge",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "121",
+      "role": "Associate Systems Analyst (12-month Contract)",
+      "company": "OTPPB",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "227",
+      "role": "Law Clerk - Corporate and Investments",
+      "company": "OTPPB",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "226",
+      "role": "Manager, Due Diligence",
+      "company": "OTPPB",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "225",
+      "role": "Senior Executive Assistant",
+      "company": "OTPPB",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "120",
+      "role": "Tax Coordinator",
+      "company": "OTPPB",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "22",
+      "role": "Business Development Representative",
+      "company": "Owner",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "23",
+      "role": "Office Coordinator",
+      "company": "Owner",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "321",
+      "role": "Business Analyst",
+      "company": "Oxford Properties Group",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "365",
+      "role": "Business Analyst (12 Month Contract)",
+      "company": "Oxford Properties Group",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "64",
+      "role": "Regional Territory Account Executive",
+      "company": "PointClickCare",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "47",
+      "role": "Senior Financial Analyst, FP&A",
+      "company": "PointClickCare",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "262",
+      "role": "Administrative Assistant",
+      "company": "RBC",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "369",
+      "role": "Specialist Quality Water",
+      "company": "Region of Peel",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "211",
+      "role": "Program Manager",
+      "company": "Shoppers Drug Mart",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "52",
+      "role": "Vertical Lead, Commerce",
+      "company": "StackAdapt",
+      "category": "Sales & Mktg",
+      "source_category": "Other"
+    },
+    {
+      "id": "130",
+      "role": "Associate Planner (Future opportunity) - Ontario South West",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "86",
+      "role": "Career Event - Financial Planning - Cambridge",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "128",
+      "role": "Developing Investment Advisor",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "129",
+      "role": "Developing Investment Advisor - Downtown Toronto",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "90",
+      "role": "Developing Investment Advisor - Durham Region",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "92",
+      "role": "Developing Investment Advisor - Yorkville",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "6",
+      "role": "Manager, Behavioural Insights",
+      "company": "TD Bank",
+      "category": "Data & Analytics",
+      "source_category": "Other"
+    },
+    {
+      "id": "87",
+      "role": "Online Release Lead",
+      "company": "TD Bank",
+      "category": "Product & Project",
+      "source_category": "Other"
+    },
+    {
+      "id": "10",
+      "role": "Senior Analyst, AML Testing & QA",
+      "company": "TD Bank",
+      "category": "Legal",
+      "source_category": "Other"
+    },
+    {
+      "id": "11",
+      "role": "Senior Information Security Analyst",
+      "company": "TD Bank",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "291",
+      "role": "Senior Practice Consultant, Private Wealth Management",
+      "company": "TD Bank",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "290",
+      "role": "Solutions IT Designer",
+      "company": "TD Bank",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "371",
+      "role": "Bilingual Contact Center Representative",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "323",
+      "role": "Business Systems Analyst – Microsoft 365 Copilot & Copilot Studio",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "372",
+      "role": "Business Systems Analyst – Microsoft 365 Copilot & Copilot Studio",
+      "company": "The Toronto-Dominion Bank (Canada)",
+      "category": "IT & Infra",
+      "source_category": "Other"
+    },
+    {
+      "id": "68",
+      "role": "Clinical Manager, Inpatient Oncology",
+      "company": "Trillium Health Partners",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "76",
+      "role": "Registered Nurse (RN)",
+      "company": "VON Canada",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "216",
+      "role": "Nurse Practitioner",
+      "company": "WAHA",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "15",
+      "role": "Manager, Workflow Optimization",
+      "company": "Wealthsimple",
+      "category": "Operations",
+      "source_category": "Other"
+    },
+    {
+      "id": "42",
+      "role": "Senior Analyst, Investment Research",
+      "company": "Wealthsimple",
+      "category": "Finance",
+      "source_category": "Other"
+    },
+    {
+      "id": "67",
+      "role": "Registered Nurse",
+      "company": "Weeneebayko Area Health Authority (WAHA)",
+      "category": "Other",
+      "source_category": "Other"
+    },
+    {
+      "id": "48",
+      "role": "Senior HR Business Partner",
+      "company": "Caseware",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "261",
+      "role": "HR Director",
+      "company": "EastGen",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "252",
+      "role": "Regional Recruit Analyst",
+      "company": "Manulife",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "352",
+      "role": "Business Partner Specialist (12 month mat leave)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "408",
+      "role": "Business Partner Specialist (12 month mat leave)",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "117",
+      "role": "Business Partner Specialist (12 month mat leave)",
+      "company": "OTPPB",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "21",
+      "role": "People Business Partner",
+      "company": "Owner",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "43",
+      "role": "HR Business Partner (Contract)",
+      "company": "Wealthsimple",
+      "category": "People & HR",
+      "source_category": "People & HR"
+    },
+    {
+      "id": "334",
+      "role": "Associate Product Owner",
+      "company": "Bank of Montreal",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "338",
+      "role": "Product Manager Savings",
+      "company": "Bank of Montreal",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "376",
+      "role": "Product Manager, Digital Investing",
+      "company": "Bank of Montreal",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "13",
+      "role": "Senior Manager, Project & Change Risk",
+      "company": "BMO Financial Group",
+      "category": "Legal",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "35",
+      "role": "Project Manager, Business Solutions",
+      "company": "City of Toronto",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "37",
+      "role": "Project Manager, Transportation Services",
+      "company": "City of Toronto",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "387",
+      "role": "Project Manager, Executive Reporting and Communications, Digital Transformation",
+      "company": "Company 1 - The Manufacturers Life Insurance Company",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "45",
+      "role": "Product Manager, Care Mode",
+      "company": "Fullscript",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "32",
+      "role": "Project Coordinator, Project Delivery",
+      "company": "Infrastructure Ontario",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "370",
+      "role": "Senior Product Manager",
+      "company": "Intact",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "61",
+      "role": "Senior Product Delivery Analyst, Wealth Technology",
+      "company": "John Hancock Manulife",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "194",
+      "role": "Product Support Technical Specialist",
+      "company": "Jonas Software Canada",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "203",
+      "role": "Product Support Technician",
+      "company": "Jonas Software Canada",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "278",
+      "role": "Analyst, Strategy, Global Hedging - Variable and Indexed-Linked Products",
+      "company": "Manulife",
+      "category": "Finance",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "151",
+      "role": "Lead, Product Delivery (12 Months Contract)",
+      "company": "OMERS",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "49",
+      "role": "Product Manager",
+      "company": "PolicyMe",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "65",
+      "role": "Product Manager",
+      "company": "Shopify",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "1",
+      "role": "Product Owner / Product Manager",
+      "company": "TD Bank",
+      "category": "Product & Project",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "66",
+      "role": "Senior Specialist, Compensation Projects",
+      "company": "University Health Network",
+      "category": "People & HR",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "44",
+      "role": "Product Marketing Manager, Active Trader",
+      "company": "Wealthsimple",
+      "category": "Sales & Mktg",
+      "source_category": "Product & Project"
+    },
+    {
+      "id": "267",
+      "role": "Business Development Specialist (Inside Sales) - Segregated Funds & Annuities",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "271",
+      "role": "Marketing Specialist, Marketing Planning",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "303",
+      "role": "Measurement Lead, NACB Initiative Communications",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "272",
+      "role": "Partner Marketing Specialist (12 month contract)",
+      "company": "BMO",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "308",
+      "role": "Executive Director,  Wealth Brand, Experiences and Events",
+      "company": "CIBC",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "46",
+      "role": "Senior Digital Marketing Manager",
+      "company": "Fullscript",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "208",
+      "role": "Associate, Sales and Customer Service (May)",
+      "company": "Intact Financial Corporation",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "209",
+      "role": "Senior Communications Advisor",
+      "company": "Intact Financial Corporation",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "199",
+      "role": "Marketing Manager",
+      "company": "Jonas Software Canada",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "250",
+      "role": "Associate Marketing Manager, Retention/Expansion Affinity Markets",
+      "company": "Manulife",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "109",
+      "role": "AVP, Sales Enablement",
+      "company": "Manulife",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "358",
+      "role": "Executive Assistant, Teachers’ Venture Growth (TVG) - 15-month contract",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Operations",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "414",
+      "role": "Executive Assistant, Teachers’ Venture Growth (TVG) - 15-month contract",
+      "company": "Ontario Teachers' Pension Plan Board",
+      "category": "Operations",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "222",
+      "role": "Executive Assistant, Teachers’ Venture Growth (TVG) - 15-month contract",
+      "company": "OTPPB",
+      "category": "Operations",
+      "source_category": "Sales & Mktg"
+    },
+    {
+      "id": "3",
+      "role": "Digital Marketing Manager",
+      "company": "TD Bank",
+      "category": "Sales & Mktg",
+      "source_category": "Sales & Mktg"
+    }
+  ]
+}

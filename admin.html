@@ -253,17 +253,19 @@
       return String(text || "").toLowerCase().normalize("NFKD").replace(/[^\w\s]+/g, " ").replace(/\s+/g, " ").trim();
     }
 
-    function getTag(role){
-      const r = normalizeSearch(role);
-      if (/engineer|developer|software|devops|platform|full stack|frontend|backend|site reliability|infrastructure/.test(r)) return "Engineering";
-      if (/data|analytics|scientist|machine learning|ai|business intelligence/.test(r)) return "Data & Analytics";
-      if (/finance|bank|credit|actuarial|portfolio|treasury|accountant/.test(r)) return "Finance";
-      if (/product|project|owner|scrum/.test(r)) return "Product & Project";
-      if (/sales|marketing|growth|brand|communications/.test(r)) return "Sales & Mktg";
-      if (/hr|people|recruit|talent|business partner/.test(r)) return "People & HR";
-      if (/legal|compliance|privacy|risk/.test(r)) return "Legal";
-      if (/operations|supply chain|procurement/.test(r)) return "Operations";
-      if (/director|vice president|vp|head of|chief|leadership/.test(r)) return "Leadership";
+    function getTag(job){
+      if (job?.category) return job.category;
+      const r = normalizeSearch([job?.role || "", job?.company || "", job?.location || ""].join(" "));
+      if (/chief|vice president|vp |head of|managing director|regional manager|general manager/.test(r)) return "Leadership";
+      if (/legal|counsel|attorney|compliance|regulatory|privacy|complaints officer|investigations/.test(r)) return "Legal";
+      if (/human resources|hr |recruit|talent|compensation|total rewards|people business partner|employee relations/.test(r)) return "People & HR";
+      if (/marketing|sales |business development|account executive|account manager|growth|brand|communications|campaign|distribution|investor relations/.test(r)) return "Sales & Mktg";
+      if (/product manager|product owner|project manager|program manager|scrum|release manager|business analyst|delivery manager|portfolio manager/.test(r)) return "Product & Project";
+      if (/cloud|platform|infrastructure|sre|database administrator|systems administrator|network|information security|cybersecurity|architect|m365|servicenow|help desk|desktop support|it support|it analyst|application support/.test(r)) return "IT & Infra";
+      if (/software engineer|software developer|developer|full stack|frontend|front end|backend|back end|mobile developer|ios developer|android developer|qa engineer|automation engineer|machine learning engineer|ml engineer|ai engineer|application engineer|technologist| engineer/.test(r)) return "Engineering";
+      if (/data |analytics|data science|data scientist|data analyst|business intelligence|insights|reporting|research scientist|researcher|applied scientist|quantitative analyst|data governance|data management/.test(r)) return "Data & Analytics";
+      if (/finance|financial|banking|wealth|credit|treasury|actuarial|actuary|accountant|accounting|tax |underwriter|underwriting|portfolio|capital markets|investment|audit|controller|bookkeeper|payroll|fund |claims |pricing |risk |insurance/.test(r)) return "Finance";
+      if (/operations|procurement|supply chain|logistics|facilities|office manager|office coordinator|administrative|executive assistant|customer service|client service|service representative|contact center|contact centre|workflow|continuous improvement|lean|six sigma/.test(r)) return "Operations";
       return "Other";
     }
 
@@ -337,6 +339,7 @@
           id: Number(job.id),
           role: job.role,
           company: job.company,
+          category: job.category || "",
           min: job.min,
           max: job.max,
           location: job.location || "Ontario, ON",
@@ -344,7 +347,7 @@
           source_url: job.source_url || job.src || "",
           status: job.status || "active",
           work_mode: job.work_mode || "unknown",
-          tag: getTag(job.role),
+          tag: getTag(job),
         }));
         renderOverview();
         hydrateJobCategoryFilter();
