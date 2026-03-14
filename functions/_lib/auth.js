@@ -44,6 +44,18 @@ export function authConfig(env) {
   };
 }
 
+export function adminEmails(env) {
+  return String(env.ADMIN_EMAILS || "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+export function isAdminEmail(env, email) {
+  if (!email) return false;
+  return adminEmails(env).includes(String(email).trim().toLowerCase());
+}
+
 export async function createSession(context, userId, headers = new Headers()) {
   const rawToken = randomToken(32);
   const tokenHash = await sha256Hex(rawToken);
@@ -174,6 +186,25 @@ export async function ensurePreferencesSchema(context) {
   } catch (err) {
     if (!String(err.message || "").includes("duplicate column name")) throw err;
   }
+}
+
+export async function ensureAdminSchema(context) {
+  await context.env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS job_admin_overrides (
+      job_id INTEGER PRIMARY KEY,
+      status TEXT NOT NULL DEFAULT 'active',
+      note TEXT DEFAULT '',
+      updated_at TEXT NOT NULL,
+      updated_by TEXT NOT NULL
+    )`,
+  ).run();
+}
+
+export async function requireAdminSession(context) {
+  const session = await getSession(context);
+  if (!session) return { session: null, error: "auth" };
+  if (!isAdminEmail(context.env, session.user.email)) return { session, error: "forbidden" };
+  return { session, error: null };
 }
 
 export async function getUserBundle(context, userId) {

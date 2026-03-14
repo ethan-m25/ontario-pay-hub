@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ontario Pay Hub Admin</title>
+  <style>
+    :root{
+      --bg:#111418; --surface:#171b21; --surface2:#1d232b; --border:#2b3440; --text:#f3f4f6; --text2:#b8c0cc;
+      --text3:#8591a2; --accent:#56b6ff; --green:#22c55e; --amber:#f59e0b; --red:#ef4444;
+      --shadow:0 20px 40px rgba(0,0,0,.28);
+      --font-display: Georgia, "Times New Roman", serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans)}
+    a{color:inherit}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:16px 22px;border-bottom:1px solid var(--border);background:#0f1318;position:sticky;top:0;z-index:20;
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+    .brand-badge{font-size:.66rem;font-family:var(--font-mono);letter-spacing:.08em;color:var(--text3);text-transform:uppercase}
+    .layout{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:calc(100vh - 72px)}
+    .sidebar{border-right:1px solid var(--border);padding:18px;background:#131820}
+    .main{padding:20px 22px}
+    .panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+    .panel + .panel{margin-top:16px}
+    .panel-head{padding:16px 18px;border-bottom:1px solid var(--border)}
+    .panel-body{padding:16px 18px}
+    .kicker{font-size:.68rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px}
+    h1,h2,h3,p{margin:0}
+    h1{font-family:var(--font-display);font-size:2rem;line-height:1}
+    h2{font-family:var(--font-display);font-size:1.35rem;line-height:1.1}
+    .muted{color:var(--text2)}
+    .tiny{font-size:.78rem;color:var(--text3)}
+    .row{display:flex;align-items:center;gap:10px}
+    .row.wrap{flex-wrap:wrap}
+    .stack{display:flex;flex-direction:column;gap:14px}
+    .tabs{display:flex;gap:8px}
+    .tab{padding:10px 12px;border:1px solid var(--border);background:transparent;color:var(--text2);border-radius:999px;cursor:pointer}
+    .tab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+    .input,.select,.textarea{
+      width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);
+      border-radius:12px;padding:11px 12px;font:inherit;
+    }
+    .textarea{min-height:88px;resize:vertical}
+    .btn{
+      border:1px solid var(--border);background:var(--surface2);color:var(--text);
+      border-radius:12px;padding:10px 12px;cursor:pointer;font-weight:600
+    }
+    .btn.primary{background:var(--text);color:var(--bg);border-color:var(--text)}
+    .btn.green{border-color:rgba(34,197,94,.3);color:var(--green)}
+    .btn.amber{border-color:rgba(245,158,11,.3);color:var(--amber)}
+    .btn.red{border-color:rgba(239,68,68,.3);color:var(--red)}
+    .stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .stat{padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--surface2)}
+    .stat strong{display:block;font-size:1.3rem}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .card{padding:14px;border:1px solid var(--border);border-radius:14px;background:var(--surface2)}
+    .card.active{outline:1px solid rgba(86,182,255,.35)}
+    .card-title{font-weight:700;margin-bottom:4px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+    .table th{font-size:.75rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;font-size:.72rem;border:1px solid var(--border);color:var(--text2)}
+    .pill.green{color:var(--green);border-color:rgba(34,197,94,.3)}
+    .pill.amber{color:var(--amber);border-color:rgba(245,158,11,.3)}
+    .pill.red{color:var(--red);border-color:rgba(239,68,68,.3)}
+    .pill.blue{color:var(--accent);border-color:rgba(86,182,255,.3)}
+    .split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:18px}
+    .empty{padding:20px;border:1px dashed var(--border);border-radius:14px;color:var(--text3)}
+    .toolbar{display:grid;grid-template-columns:minmax(0,1.2fr) 180px 180px;gap:10px}
+    .job-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .notice{padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--text2)}
+    .danger{color:var(--red)}
+    @media (max-width: 980px){
+      .layout,.split{grid-template-columns:1fr}
+      .toolbar{grid-template-columns:1fr}
+      .sidebar{border-right:none;border-bottom:1px solid var(--border)}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <span>Ontario Pay Hub</span>
+      <span class="brand-badge">Admin</span>
+    </div>
+    <div class="row wrap tiny" id="adminIdentity">Checking access…</div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="stack">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Overview</div>
+            <h2>Admin tools</h2>
+          </div>
+          <div class="panel-body stat-grid" id="overviewStats">
+            <div class="stat"><strong>—</strong><span class="tiny">users</span></div>
+            <div class="stat"><strong>—</strong><span class="tiny">saved jobs</span></div>
+            <div class="stat"><strong>—</strong><span class="tiny">moderated jobs</span></div>
+            <div class="stat"><strong>—</strong><span class="tiny">hidden jobs</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Views</div>
+            <div class="tabs">
+              <button class="tab active" id="tabUsers" onclick="setAdminTab('users')">Users</button>
+              <button class="tab" id="tabJobs" onclick="setAdminTab('jobs')">Jobs</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <p class="tiny">Users lets you inspect accounts, saved jobs, and preferences. Jobs lets you archive, hide, or restore postings without touching the dataset file.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="adminMessage" class="notice" style="display:none"></div>
+
+      <section id="usersView" class="split">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Users</div>
+            <div class="toolbar">
+              <input class="input" id="userSearch" placeholder="Search by email or name…" oninput="renderUsers()">
+              <select class="select" id="providerFilter" onchange="renderUsers()">
+                <option value="">All providers</option>
+                <option value="google">Google</option>
+                <option value="email">Email</option>
+              </select>
+              <select class="select" id="activityFilter" onchange="renderUsers()">
+                <option value="">Any activity</option>
+                <option value="recent">Seen in 7 days</option>
+                <option value="saved">Has saved jobs</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="usersList" class="list"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">User detail</div>
+            <h2 id="userDetailTitle">Select a user</h2>
+          </div>
+          <div class="panel-body" id="userDetailBody">
+            <div class="empty">Choose a user from the left to inspect saved jobs, preferences, and recent sessions.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="jobsView" class="split" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Job moderation</div>
+            <div class="toolbar">
+              <input class="input" id="jobSearch" placeholder="Search role, company, or id…" oninput="renderJobs()">
+              <select class="select" id="jobOverrideFilter" onchange="renderJobs()">
+                <option value="">All jobs</option>
+                <option value="archived">Archived override</option>
+                <option value="hidden">Hidden override</option>
+                <option value="clean">No override</option>
+              </select>
+              <select class="select" id="jobCategoryFilter" onchange="renderJobs()">
+                <option value="">All categories</option>
+              </select>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="jobsList" class="list"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Moderation detail</div>
+            <h2 id="jobDetailTitle">Select a job</h2>
+          </div>
+          <div class="panel-body" id="jobDetailBody">
+            <div class="empty">Pick a job from the left to archive it, hide it from the public site, or restore it.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const S = {
+      auth: null,
+      admin: false,
+      tab: "users",
+      users: [],
+      selectedUser: null,
+      jobs: [],
+      overrides: {},
+      selectedJob: null,
+    };
+
+    function api(path, init = {}) {
+      return fetch(path, {
+        headers: { "content-type": "application/json", ...(init.headers || {}) },
+        credentials: "same-origin",
+        ...init,
+        body: init.body ? JSON.stringify(init.body) : undefined,
+      }).then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+        return data;
+      });
+    }
+
+    function normalizeSearch(text){
+      return String(text || "").toLowerCase().normalize("NFKD").replace(/[^\w\s]+/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function getTag(role){
+      const r = normalizeSearch(role);
+      if (/engineer|developer|software|devops|platform|full stack|frontend|backend|site reliability|infrastructure/.test(r)) return "Engineering";
+      if (/data|analytics|scientist|machine learning|ai|business intelligence/.test(r)) return "Data & Analytics";
+      if (/finance|bank|credit|actuarial|portfolio|treasury|accountant/.test(r)) return "Finance";
+      if (/product|project|owner|scrum/.test(r)) return "Product & Project";
+      if (/sales|marketing|growth|brand|communications/.test(r)) return "Sales & Mktg";
+      if (/hr|people|recruit|talent|business partner/.test(r)) return "People & HR";
+      if (/legal|compliance|privacy|risk/.test(r)) return "Legal";
+      if (/operations|supply chain|procurement/.test(r)) return "Operations";
+      if (/director|vice president|vp|head of|chief|leadership/.test(r)) return "Leadership";
+      return "Other";
+    }
+
+    function fmt(n){ return "$" + Math.round(Number(n || 0) / 1000) + "k"; }
+    function mid(j){ return Math.round((Number(j.min) + Number(j.max)) / 2); }
+
+    function showMessage(text, tone = "") {
+      const el = document.getElementById("adminMessage");
+      el.style.display = text ? "block" : "none";
+      el.textContent = text || "";
+      el.className = "notice" + (tone ? ` ${tone}` : "");
+    }
+
+    function setAdminTab(tab) {
+      S.tab = tab;
+      document.getElementById("usersView").style.display = tab === "users" ? "grid" : "none";
+      document.getElementById("jobsView").style.display = tab === "jobs" ? "grid" : "none";
+      document.getElementById("tabUsers").classList.toggle("active", tab === "users");
+      document.getElementById("tabJobs").classList.toggle("active", tab === "jobs");
+    }
+
+    async function bootstrap() {
+      try {
+        const me = await api("/api/auth/me");
+        if (!me.user) {
+          showMessage("Sign in first, then open /admin again.", "danger");
+          document.getElementById("adminIdentity").textContent = "Not signed in";
+          return;
+        }
+        S.auth = me;
+        document.getElementById("adminIdentity").textContent = `${me.user.email}`;
+        const [users, overrides, jobsData] = await Promise.all([
+          api("/api/admin/users"),
+          api("/api/admin/job-overrides"),
+          fetch("./data/jobs.json?_=" + Date.now()).then(r => r.json()),
+        ]);
+        S.admin = true;
+        S.users = users.users || [];
+        S.overrides = Object.fromEntries((overrides.overrides || []).map(row => [String(row.job_id), row]));
+        S.jobs = (jobsData.jobs || []).map((job) => ({
+          id: Number(job.id),
+          role: job.role,
+          company: job.company,
+          min: job.min,
+          max: job.max,
+          location: job.location || "Ontario, ON",
+          posted: job.posted || job.date || "",
+          source_url: job.source_url || job.src || "",
+          status: job.status || "active",
+          tag: getTag(job.role),
+        }));
+        renderOverview();
+        hydrateJobCategoryFilter();
+        renderUsers();
+        renderJobs();
+      } catch (err) {
+        showMessage(err.message, "danger");
+        document.getElementById("adminIdentity").textContent = "Access denied";
+      }
+    }
+
+    function renderOverview() {
+      const overrideRows = Object.values(S.overrides);
+      const hidden = overrideRows.filter(row => row.status === "hidden").length;
+      const savedCount = S.users.reduce((sum, user) => sum + Number(user.saved_count || 0), 0);
+      document.getElementById("overviewStats").innerHTML = `
+        <div class="stat"><strong>${S.users.length}</strong><span class="tiny">users</span></div>
+        <div class="stat"><strong>${savedCount}</strong><span class="tiny">saved jobs</span></div>
+        <div class="stat"><strong>${overrideRows.length}</strong><span class="tiny">moderated jobs</span></div>
+        <div class="stat"><strong>${hidden}</strong><span class="tiny">hidden jobs</span></div>
+      `;
+    }
+
+    function renderUsers() {
+      const q = normalizeSearch(document.getElementById("userSearch").value);
+      const provider = document.getElementById("providerFilter").value;
+      const activity = document.getElementById("activityFilter").value;
+      const now = Date.now();
+      const filtered = S.users.filter((user) => {
+        const text = normalizeSearch(`${user.name} ${user.email}`);
+        if (q && !text.includes(q)) return false;
+        if (provider && user.provider !== provider) return false;
+        if (activity === "saved" && !Number(user.saved_count || 0)) return false;
+        if (activity === "recent") {
+          const seen = user.last_seen_at ? new Date(user.last_seen_at).getTime() : 0;
+          if (!seen || now - seen > 7 * 86400000) return false;
+        }
+        return true;
+      });
+      const el = document.getElementById("usersList");
+      if (!filtered.length) {
+        el.innerHTML = `<div class="empty">No matching users.</div>`;
+        return;
+      }
+      el.innerHTML = filtered.map((user) => `
+        <button class="card${S.selectedUser?.id === user.id ? " active" : ""}" style="text-align:left" onclick="loadUserDetail(${user.id})">
+          <div class="card-title">${user.name || user.email}</div>
+          <div class="tiny">${user.email}</div>
+          <div class="row wrap" style="margin-top:10px">
+            <span class="pill blue">${user.provider}</span>
+            <span class="pill">${Number(user.saved_count || 0)} saved</span>
+            <span class="pill">${user.last_seen_at ? `seen ${new Date(user.last_seen_at).toLocaleDateString("en-CA")}` : "no active session"}</span>
+          </div>
+        </button>
+      `).join("");
+    }
+
+    async function loadUserDetail(id) {
+      try {
+        const data = await api(`/api/admin/users/${id}`);
+        S.selectedUser = data.user;
+        document.getElementById("userDetailTitle").textContent = data.user.email;
+        const prefs = data.preferences || {};
+        const sessions = data.sessions || [];
+        const saved = data.saved || [];
+        document.getElementById("userDetailBody").innerHTML = `
+          <div class="stack">
+            <div class="detail-grid">
+              <div class="notice"><div class="kicker">Provider</div><strong>${data.user.provider}</strong></div>
+              <div class="notice"><div class="kicker">Created</div><strong>${new Date(data.user.created_at).toLocaleString()}</strong></div>
+              <div class="notice"><div class="kicker">Saved jobs</div><strong>${saved.length}</strong></div>
+              <div class="notice"><div class="kicker">Active sessions</div><strong>${sessions.length}</strong></div>
+            </div>
+            <div class="panel" style="box-shadow:none">
+              <div class="panel-head"><div class="kicker">Preferences</div></div>
+              <div class="panel-body tiny">
+                Category: <strong>${prefs.cat || "All"}</strong><br>
+                Region: <strong>${prefs.region || "All regions"}</strong><br>
+                Min salary: <strong>${prefs.salMin ? fmt(prefs.salMin) + "+" : "Any"}</strong><br>
+                Archived by default: <strong>${prefs.showArchived ? "Shown" : "Hidden"}</strong>
+              </div>
+            </div>
+            <div class="panel" style="box-shadow:none">
+              <div class="panel-head"><div class="kicker">Saved jobs</div></div>
+              <div class="panel-body">
+                ${(saved.length ? saved.slice(0, 20).map((row) => `<div class="row wrap tiny" style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>#${row.job_id}</strong><span>${row.label || "Unsorted"}</span><span>${new Date(row.created_at).toLocaleDateString("en-CA")}</span></div>`).join("") : `<div class="empty">No saved jobs.</div>`)}
+              </div>
+            </div>
+          </div>
+        `;
+        renderUsers();
+      } catch (err) {
+        showMessage(err.message, "danger");
+      }
+    }
+
+    function hydrateJobCategoryFilter() {
+      const sel = document.getElementById("jobCategoryFilter");
+      const cats = [...new Set(S.jobs.map((j) => j.tag))].sort();
+      sel.innerHTML = `<option value="">All categories</option>` + cats.map((cat) => `<option value="${cat}">${cat}</option>`).join("");
+    }
+
+    function effectiveJobStatus(job) {
+      const override = S.overrides[String(job.id)];
+      return override?.status || job.status || "active";
+    }
+
+    function renderJobs() {
+      const q = normalizeSearch(document.getElementById("jobSearch").value);
+      const overrideFilter = document.getElementById("jobOverrideFilter").value;
+      const cat = document.getElementById("jobCategoryFilter").value;
+      const filtered = S.jobs.filter((job) => {
+        const text = normalizeSearch(`${job.id} ${job.role} ${job.company} ${job.location}`);
+        const override = S.overrides[String(job.id)];
+        const status = override?.status || "";
+        if (q && !text.includes(q)) return false;
+        if (cat && job.tag !== cat) return false;
+        if (overrideFilter === "clean" && override) return false;
+        if (overrideFilter && overrideFilter !== "clean" && status !== overrideFilter) return false;
+        return true;
+      });
+      const el = document.getElementById("jobsList");
+      if (!filtered.length) {
+        el.innerHTML = `<div class="empty">No matching jobs.</div>`;
+        return;
+      }
+      el.innerHTML = filtered.slice(0, 250).map((job) => {
+        const status = effectiveJobStatus(job);
+        const pillClass = status === "hidden" ? "red" : status === "archived" ? "amber" : "green";
+        return `
+          <button class="card${S.selectedJob?.id === job.id ? " active" : ""}" style="text-align:left" onclick="selectJob(${job.id})">
+            <div class="card-title">${job.role}</div>
+            <div class="tiny">${job.company} · ${job.location}</div>
+            <div class="row wrap" style="margin-top:10px">
+              <span class="pill ${pillClass}">${status}</span>
+              <span class="pill">${job.tag}</span>
+              <span class="pill">${fmt(job.min)} – ${fmt(job.max)}</span>
+            </div>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectJob(id) {
+      S.selectedJob = S.jobs.find((job) => job.id === id) || null;
+      renderJobs();
+      renderJobDetail();
+    }
+
+    function renderJobDetail() {
+      const el = document.getElementById("jobDetailBody");
+      const title = document.getElementById("jobDetailTitle");
+      if (!S.selectedJob) {
+        title.textContent = "Select a job";
+        el.innerHTML = `<div class="empty">Pick a job from the left to archive it, hide it, or restore it.</div>`;
+        return;
+      }
+      const job = S.selectedJob;
+      const override = S.overrides[String(job.id)];
+      const status = effectiveJobStatus(job);
+      title.textContent = `${job.company} · #${job.id}`;
+      el.innerHTML = `
+        <div class="stack">
+          <div>
+            <div class="card-title">${job.role}</div>
+            <div class="tiny">${job.location} · posted ${job.posted || "—"}</div>
+          </div>
+          <div class="row wrap">
+            <span class="pill ${status === "hidden" ? "red" : status === "archived" ? "amber" : "green"}">${status}</span>
+            <span class="pill">${job.tag}</span>
+            <span class="pill">${fmt(job.min)} – ${fmt(job.max)}</span>
+          </div>
+          <label class="kicker">Reason / note</label>
+          <textarea class="textarea" id="jobOverrideNote" placeholder="Optional internal note">${override?.note || ""}</textarea>
+          <div class="job-actions">
+            <button class="btn amber" onclick="saveJobOverride('archived')">Archive publicly</button>
+            <button class="btn red" onclick="saveJobOverride('hidden')">Hide completely</button>
+            <button class="btn green" onclick="saveJobOverride('active')">Restore default</button>
+          </div>
+          <div class="notice tiny">
+            Archive keeps the job visible with archived styling. Hide removes it from the public site entirely. Restore removes the admin override.
+          </div>
+          ${job.source_url ? `<a class="btn" href="${job.source_url}" target="_blank" rel="noopener">Open source posting ↗</a>` : ""}
+          ${override ? `<div class="tiny">Last override by ${override.updated_by} on ${new Date(override.updated_at).toLocaleString()}</div>` : ""}
+        </div>
+      `;
+    }
+
+    async function saveJobOverride(status) {
+      if (!S.selectedJob) return;
+      try {
+        const note = document.getElementById("jobOverrideNote").value.trim();
+        const res = await api("/api/admin/job-overrides", {
+          method: "PUT",
+          body: { jobId: S.selectedJob.id, status, note },
+        });
+        S.overrides = Object.fromEntries((res.overrides || []).map((row) => [String(row.job_id), row]));
+        renderOverview();
+        renderJobs();
+        renderJobDetail();
+        showMessage(`Job #${S.selectedJob.id} updated to ${status}.`);
+      } catch (err) {
+        showMessage(err.message, "danger");
+      }
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>

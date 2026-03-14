@@ -2301,6 +2301,7 @@ const FALLBACK_JOBS = [
 ];
 let JOBS = FALLBACK_JOBS;
 let SITE_META = null;
+let JOB_OVERRIDES = {};
 
 function normalizeJob(j, i) {
   // Preserve the full specific job posting URL
@@ -2324,15 +2325,43 @@ function normalizeJob(j, i) {
   };
 }
 
+function applyJobOverridesToList(list) {
+  return list
+    .map((job) => {
+      const override = JOB_OVERRIDES[String(job.id)];
+      if (!override) return job;
+      return {
+        ...job,
+        status: override.status === "active" ? job.status : override.status,
+        admin_note: override.note || "",
+      };
+    })
+    .filter((job) => job.status !== "hidden");
+}
+
+async function loadJobOverrides() {
+  try {
+    const r = await fetch("./api/job-overrides?_=" + Date.now());
+    if (!r.ok) throw new Error("override fetch failed");
+    const data = await r.json();
+    JOB_OVERRIDES = data.overrides || {};
+  } catch (err) {
+    JOB_OVERRIDES = {};
+    console.warn("Job overrides unavailable:", err.message);
+  }
+}
+
 async function loadData() {
   // Normalize fallback data first (ensures .domain field exists)
   JOBS = FALLBACK_JOBS.map(normalizeJob);
+  await loadJobOverrides();
   try {
     const r = await fetch("./data/jobs.json?_=" + Date.now());
     if (!r.ok) throw new Error("fetch failed");
     const d = await r.json();
     if (d.jobs && d.jobs.length) {
       JOBS = d.jobs.map(normalizeJob);
+      JOBS = applyJobOverridesToList(JOBS);
       SITE_META = d.meta || null;
       if (d.meta && d.meta.updated) {
         const dt = new Date(d.meta.updated);
@@ -2344,6 +2373,7 @@ async function loadData() {
   } catch(e) {
     console.log("Using embedded fallback data:", e.message);
   }
+  JOBS = applyJobOverridesToList(JOBS);
   applyTheme();
   updateStats();
   populateFilters();
@@ -2482,8 +2512,8 @@ function renderDiscovery(){
       : "Ontario compensation signals, organized for decision-making.";
   }
   if(marketSignalCopy) {
-    const active = SITE_META && SITE_META.active ? SITE_META.active : JOBS.length;
-    const archived = SITE_META && SITE_META.archived ? SITE_META.archived : JOBS.filter(isArchived).length;
+    const archived = JOBS.filter(isArchived).length;
+    const active = JOBS.length - archived;
     const newest = newestJobs(1)[0];
     const recency = newest ? `Newest visible posting: ${relDate(newest.date)}.` : "";
     marketSignalCopy.textContent = `${active} active postings and ${archived} archived records are preserved for calibration and comparison. ${recency}`.trim();

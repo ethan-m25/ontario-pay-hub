@@ -26,6 +26,10 @@ export function unauthorized(message = "Unauthorized") {
   return json({ ok: false, error: message }, { status: 401 });
 }
 
+export function forbidden(message = "Forbidden") {
+  return json({ ok: false, error: message }, { status: 403 });
+}
+
 export function serverError(message = "Server error") {
   return json({ ok: false, error: message }, { status: 500 });
 }

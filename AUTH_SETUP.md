@@ -13,6 +13,7 @@ This repo now expects Cloudflare Pages Functions + D1 for real user accounts.
 4. Set these vars:
    - `APP_BASE_URL`
    - `AUTH_FROM_EMAIL`
+   - `ADMIN_EMAILS` (comma-separated admin login emails)
 
 ## Google OAuth
 
@@ -33,5 +34,11 @@ The email flow uses Resend from the backend function:
 - sessions
 - saved jobs
 - default preferences
+
+## Admin tools
+
+- Admin page: `/admin.html`
+- Admin access is gated by `ADMIN_EMAILS`
+- Run [`migrations/0003_job_admin_overrides.sql`](/Users/clawii/ontario-pay-hub/migrations/0003_job_admin_overrides.sql) if you want the admin moderation table created ahead of first use
 
 The browser now only keeps theme preference locally.
