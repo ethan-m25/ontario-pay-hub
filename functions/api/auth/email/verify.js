@@ -77,7 +77,7 @@ function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedire
       <div class="kicker">Ontario Pay Hub</div>
       <h1>${safeTitle}</h1>
       <p>${safeBody}</p>
-      <p class="hint">Email sign-in links work once. If this opened inside your mail app, use your browser's Open in Browser action for the smoothest experience.</p>
+      <p class="hint">Email sign-in links work once. The same browser usually stays signed in for about 30 days; a new browser or device will ask for a fresh link. If this opened inside your mail app, use your browser's Open in Browser action for the smoothest experience.</p>
       <a class="button" href="${safeHref}">${safeLabel}</a>
     </div>
     ${redirectScript}
@@ -126,7 +126,7 @@ export async function onRequestGet(context) {
   return new Response(
     authPage({
       title: "You're signed in.",
-      body: "Your saved jobs and preferences are ready. Continue back to Ontario Pay Hub.",
+      body: "Your saved jobs and preferences are ready. Using this same email later brings you back to the same account.",
       ctaLabel: "Continue to Ontario Pay Hub",
       ctaHref: continueTo,
       tone: "success",
