@@ -5,7 +5,7 @@
   "pages_build_output_dir": ".",
   "vars": {
     "APP_BASE_URL": "https://ontariopayhub.fyi",
-    "AUTH_FROM_EMAIL": "Ontario Pay Hub <auth@ontariopayhub.fyi>"
+    "AUTH_FROM_EMAIL": "Ontario Pay Hub <auth@auth.ontariopayhub.fyi>"
   },
   "d1_databases": [
     {
