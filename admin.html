@@ -72,6 +72,7 @@
     .split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);gap:18px}
     .empty{padding:20px;border:1px dashed var(--border);border-radius:14px;color:var(--text3)}
     .toolbar{display:grid;grid-template-columns:minmax(0,1.2fr) 180px 180px;gap:10px}
+    .toolbar.with-action{grid-template-columns:minmax(0,1.2fr) 180px 180px auto}
     .job-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .notice{padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--text2)}
@@ -190,7 +191,7 @@
         <div class="panel">
           <div class="panel-head">
             <div class="kicker">Job moderation</div>
-            <div class="toolbar">
+            <div class="toolbar with-action">
               <input class="input" id="jobSearch" placeholder="Search role, company, or id…" oninput="renderJobs()">
               <select class="select" id="jobOverrideFilter" onchange="renderJobs()">
                 <option value="">All jobs</option>
@@ -201,6 +202,7 @@
               <select class="select" id="jobCategoryFilter" onchange="renderJobs()">
                 <option value="">All categories</option>
               </select>
+              <button class="btn" onclick="exportJobsCsv()">Export CSV</button>
             </div>
           </div>
           <div class="panel-body">
@@ -341,6 +343,7 @@
           posted: job.posted || job.date || "",
           source_url: job.source_url || job.src || "",
           status: job.status || "active",
+          work_mode: job.work_mode || "unknown",
           tag: getTag(job.role),
         }));
         renderOverview();
@@ -486,19 +489,7 @@
     }
 
     function renderJobs() {
-      const q = normalizeSearch(document.getElementById("jobSearch").value);
-      const overrideFilter = document.getElementById("jobOverrideFilter").value;
-      const cat = document.getElementById("jobCategoryFilter").value;
-      const filtered = S.jobs.filter((job) => {
-        const text = normalizeSearch(`${job.id} ${job.role} ${job.company} ${job.location}`);
-        const override = S.overrides[String(job.id)];
-        const status = override?.status || "";
-        if (q && !text.includes(q)) return false;
-        if (cat && job.tag !== cat) return false;
-        if (overrideFilter === "clean" && override) return false;
-        if (overrideFilter && overrideFilter !== "clean" && status !== overrideFilter) return false;
-        return true;
-      });
+      const filtered = getFilteredJobs();
       const el = document.getElementById("jobsList");
       if (!filtered.length) {
         el.innerHTML = `<div class="empty">No matching jobs.</div>`;
@@ -514,11 +505,28 @@
             <div class="row wrap" style="margin-top:10px">
               <span class="pill ${pillClass}">${status}</span>
               <span class="pill">${job.tag}</span>
+              <span class="pill">${job.work_mode === "unknown" ? "mode unclear" : job.work_mode}</span>
               <span class="pill">${fmt(job.min)} – ${fmt(job.max)}</span>
             </div>
           </button>
         `;
       }).join("");
+    }
+
+    function getFilteredJobs() {
+      const q = normalizeSearch(document.getElementById("jobSearch").value);
+      const overrideFilter = document.getElementById("jobOverrideFilter").value;
+      const cat = document.getElementById("jobCategoryFilter").value;
+      return S.jobs.filter((job) => {
+        const text = normalizeSearch(`${job.id} ${job.role} ${job.company} ${job.location}`);
+        const override = S.overrides[String(job.id)];
+        const status = override?.status || "";
+        if (q && !text.includes(q)) return false;
+        if (cat && job.tag !== cat) return false;
+        if (overrideFilter === "clean" && override) return false;
+        if (overrideFilter && overrideFilter !== "clean" && status !== overrideFilter) return false;
+        return true;
+      });
     }
 
     function selectJob(id) {
@@ -582,6 +590,60 @@
       } catch (err) {
         showMessage(err.message, "danger");
       }
+    }
+
+    function csvCell(value) {
+      const text = String(value ?? "");
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function exportJobsCsv() {
+      const rows = getFilteredJobs().map((job) => {
+        const override = S.overrides[String(job.id)] || null;
+        return [
+          job.id,
+          job.role,
+          job.company,
+          job.tag,
+          job.work_mode,
+          effectiveJobStatus(job),
+          job.location,
+          job.posted,
+          job.min,
+          job.max,
+          Math.round((Number(job.min || 0) + Number(job.max || 0)) / 2),
+          override?.status || "",
+          override?.note || "",
+          job.source_url,
+        ];
+      });
+      const headers = [
+        "job_id",
+        "role",
+        "company",
+        "category",
+        "work_mode",
+        "effective_status",
+        "location",
+        "posted",
+        "salary_min",
+        "salary_max",
+        "midpoint",
+        "admin_override",
+        "admin_note",
+        "source_url",
+      ];
+      const csv = [headers.map(csvCell).join(","), ...rows.map((row) => row.map(csvCell).join(","))].join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ontario-pay-hub-admin-jobs-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showMessage(`Exported ${rows.length} jobs to CSV.`);
     }
 
     bootstrap();

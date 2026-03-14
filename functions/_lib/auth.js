@@ -3,6 +3,7 @@ import { appendCookie, parseCookies, serializeCookie } from "./cookies.js";
 const SESSION_COOKIE = "oph_session";
 const OAUTH_COOKIE = "oph_google_state";
 const REDIRECT_COOKIE = "oph_auth_redirect";
+const BROWSER_HANDOFF_TTL_MINUTES = 15;
 
 function isoNow() {
   return new Date().toISOString();
@@ -200,6 +201,19 @@ export async function ensureAdminSchema(context) {
   ).run();
 }
 
+export async function ensureBrowserHandoffSchema(context) {
+  await context.env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS browser_handoffs (
+      token_hash TEXT PRIMARY KEY,
+      user_id INTEGER NOT NULL,
+      redirect_to TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      used_count INTEGER NOT NULL DEFAULT 0
+    )`,
+  ).run();
+}
+
 export async function requireAdminSession(context) {
   const session = await getSession(context);
   if (!session) return { session: null, error: "auth" };
@@ -278,5 +292,45 @@ export async function consumeMagicLink(context, token) {
   if (row.consumed_at) return null;
   if (new Date(row.expires_at).getTime() <= Date.now()) return null;
   await context.env.DB.prepare("UPDATE magic_links SET consumed_at = ?2 WHERE id = ?1").bind(row.id, isoNow()).run();
+  return row;
+}
+
+export async function createBrowserHandoff(context, { userId, redirectTo = "/" }) {
+  await ensureBrowserHandoffSchema(context);
+  const rawToken = randomToken(24);
+  const tokenHash = await sha256Hex(rawToken);
+  const now = isoNow();
+  const expiresAt = addMinutes(BROWSER_HANDOFF_TTL_MINUTES);
+  await context.env.DB.prepare(
+    `INSERT INTO browser_handoffs (token_hash, user_id, redirect_to, created_at, expires_at, used_count)
+     VALUES (?1, ?2, ?3, ?4, ?5, 0)`,
+  )
+    .bind(tokenHash, userId, sanitizeRedirect(redirectTo), now, expiresAt)
+    .run();
+  return rawToken;
+}
+
+export async function consumeBrowserHandoff(context, token) {
+  await ensureBrowserHandoffSchema(context);
+  const tokenHash = await sha256Hex(token);
+  const row = await context.env.DB.prepare(
+    `SELECT token_hash, user_id, redirect_to, expires_at, used_count
+     FROM browser_handoffs
+     WHERE token_hash = ?1`,
+  )
+    .bind(tokenHash)
+    .first();
+  if (!row) return null;
+  if (new Date(row.expires_at).getTime() <= Date.now()) {
+    await context.env.DB.prepare("DELETE FROM browser_handoffs WHERE token_hash = ?1").bind(tokenHash).run();
+    return null;
+  }
+  if (Number(row.used_count || 0) >= 5) {
+    await context.env.DB.prepare("DELETE FROM browser_handoffs WHERE token_hash = ?1").bind(tokenHash).run();
+    return null;
+  }
+  await context.env.DB.prepare(
+    "UPDATE browser_handoffs SET used_count = used_count + 1 WHERE token_hash = ?1",
+  ).bind(tokenHash).run();
   return row;
 }

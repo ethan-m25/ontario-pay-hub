@@ -230,6 +230,21 @@ nav {
   color: var(--text2); position: relative;
 }
 .btn-icon:hover { background: var(--surface); border-color: var(--text3); }
+#themeBtn svg{
+  width:18px;
+  height:18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#themeBtn .theme-fill{ fill: currentColor; stroke: none; opacity: .12; }
+.theme-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
 .save-badge {
   position:absolute; top:-4px; right:-4px;
   background: var(--accent); color:#fff;
@@ -1800,7 +1815,7 @@ tbody tr:hover {
     <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs">
       🔖<span class="save-badge" id="savedBadge" style="display:none">0</span>
     </button>
-    <button class="btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"></button>
     <button class="btn-primary" id="userBtn" onclick="openAuth()">Sign in</button>
   </div>
 </nav>
@@ -2566,7 +2581,21 @@ function renderDiscovery(){
 // ===== THEME =====
 function applyTheme(){
   document.documentElement.setAttribute("data-theme", S.theme);
-  document.getElementById("themeBtn").textContent = S.theme==="dark"?"☀️":"🌙";
+  document.getElementById("themeBtn").innerHTML = S.theme==="dark" ? `
+    <span class="theme-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3.5"></circle>
+        <path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3"></path>
+      </svg>
+    </span>
+  ` : `
+    <span class="theme-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path class="theme-fill" d="M15.8 2.9a9.3 9.3 0 1 0 5.3 12.7 8.7 8.7 0 0 1-10.8-10.8 9.2 9.2 0 0 0 5.5-1.9z"></path>
+        <path d="M15.8 2.9a9.3 9.3 0 1 0 5.3 12.7 8.7 8.7 0 0 1-10.8-10.8 9.2 9.2 0 0 0 5.5-1.9z"></path>
+      </svg>
+    </span>
+  `;
   localStorage.setItem("theme",S.theme);
   setTimeout(drawChart,50);
 }

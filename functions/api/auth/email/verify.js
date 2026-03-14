@@ -1,4 +1,4 @@
-import { consumeMagicLink, createSession, getBaseUrl, sanitizeRedirect, upsertUserByEmail } from "../../../_lib/auth.js";
+import { consumeMagicLink, createBrowserHandoff, createSession, getBaseUrl, sanitizeRedirect, upsertUserByEmail } from "../../../_lib/auth.js";
 
 function escapeHtml(value = "") {
   return String(value)
@@ -9,16 +9,46 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#39;");
 }
 
-function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedirect = false }) {
+function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedirect = false, browserCtaHref = "", browserCtaLabel = "" }) {
   const safeTitle = escapeHtml(title);
   const safeBody = escapeHtml(body);
   const safeLabel = escapeHtml(ctaLabel);
   const safeHref = escapeHtml(ctaHref);
+  const safeBrowserHref = escapeHtml(browserCtaHref);
+  const safeBrowserLabel = escapeHtml(browserCtaLabel);
   const accent = tone === "success" ? "#10b981" : "#f97316";
   const border = tone === "success" ? "rgba(16,185,129,.28)" : "rgba(249,115,22,.28)";
   const redirectScript = autoRedirect
     ? `<script>setTimeout(function(){ window.location.replace(${JSON.stringify(ctaHref)}); }, 1200);</script>`
     : "";
+  const handoffBlock = browserCtaHref ? `
+      <div class="handoff" id="handoffCard" hidden>
+        <div class="handoff-title">Finish this in your browser</div>
+        <p class="hint">Mail apps often open links in a temporary in-app browser. Use this button to move the signed-in session into your regular browser and keep it there.</p>
+        <a class="button secondary" href="${safeBrowserHref}" rel="noopener">${safeBrowserLabel}</a>
+        <button class="button ghost" id="copyBrowserLink" type="button">Copy browser link</button>
+      </div>
+  ` : "";
+  const handoffScript = browserCtaHref ? `<script>
+      (function(){
+        var ua = navigator.userAgent || "";
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+        var looksEmbedded = /(Gmail|GSA|FBAN|FBAV|Instagram|Line|MicroMessenger|wv\\)|WebView)/i.test(ua) || (isMobile && !/Safari/i.test(ua));
+        var card = document.getElementById("handoffCard");
+        if (card && looksEmbedded) card.hidden = false;
+        var copyBtn = document.getElementById("copyBrowserLink");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", async function(){
+            try {
+              await navigator.clipboard.writeText(${JSON.stringify(browserCtaHref)});
+              copyBtn.textContent = "Browser link copied";
+            } catch (_) {
+              copyBtn.textContent = "Copy failed";
+            }
+          });
+        }
+      })();
+    </script>` : "";
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -60,6 +90,18 @@ function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedire
         color: #9ca3af;
         font-size: 14px;
       }
+      .handoff {
+        margin-top: 16px;
+        padding: 14px 14px 6px;
+        border: 1px solid rgba(148,163,184,.18);
+        border-radius: 16px;
+        background: rgba(255,255,255,.03);
+      }
+      .handoff-title {
+        margin-bottom: 8px;
+        font-weight: 700;
+        color: #f3f4f6;
+      }
       a.button {
         display: inline-block;
         margin-top: 10px;
@@ -68,6 +110,21 @@ function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedire
         background: ${accent};
         color: #08130f;
         text-decoration: none;
+        font-weight: 700;
+      }
+      .button.secondary {
+        background: #f3f4f6;
+        color: #111827;
+      }
+      .button.ghost {
+        display: inline-block;
+        margin: 10px 0 0 8px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(148,163,184,.25);
+        background: transparent;
+        color: #f3f4f6;
+        font: inherit;
         font-weight: 700;
       }
     </style>
@@ -79,8 +136,10 @@ function authPage({ title, body, ctaLabel, ctaHref, tone = "success", autoRedire
       <p>${safeBody}</p>
       <p class="hint">Email sign-in links work once. The same browser usually stays signed in for about 30 days; a new browser or device will ask for a fresh link. If this opened inside your mail app, use your browser's Open in Browser action for the smoothest experience.</p>
       <a class="button" href="${safeHref}">${safeLabel}</a>
+      ${handoffBlock}
     </div>
     ${redirectScript}
+    ${handoffScript}
   </body>
 </html>`;
 }
@@ -122,6 +181,11 @@ export async function onRequestGet(context) {
   });
   const headers = await createSession(context, user.id);
   const continueTo = `${baseUrl}${sanitizeRedirect(magic.redirect_to || "/")}?auth=email`;
+  const handoffToken = await createBrowserHandoff(context, {
+    userId: user.id,
+    redirectTo: magic.redirect_to || "/",
+  });
+  const browserContinueTo = `${baseUrl}/api/auth/handoff?token=${encodeURIComponent(handoffToken)}`;
   headers.set("content-type", "text/html; charset=utf-8");
   return new Response(
     authPage({
@@ -129,6 +193,8 @@ export async function onRequestGet(context) {
       body: "Your saved jobs and preferences are ready. Using this same email later brings you back to the same account.",
       ctaLabel: "Continue to Ontario Pay Hub",
       ctaHref: continueTo,
+      browserCtaLabel: "Continue in your browser",
+      browserCtaHref: browserContinueTo,
       tone: "success",
       autoRedirect: true,
     }),

@@ -21,6 +21,7 @@ import subprocess
 import sys
 import time
 import urllib.request
+import urllib.parse
 from datetime import date, timedelta
 
 from _common import (
@@ -188,8 +189,9 @@ def parse_workday_tenant(url):
 
 
 def discover_tenants():
-    """Use Exa to find myworkdayjobs.com job URLs and extract unique (host, tenant) pairs."""
+    """Use Exa to find myworkdayjobs.com URLs and extract tenants plus direct job URLs."""
     discovered = {}  # host → (host, company_id, tenant, display_name)
+    candidate_urls = {}  # direct Workday job URL → metadata
 
     for i, query in enumerate(DISCOVERY_QUERIES, 1):
         log(f"  Discovery Exa [{i}/{len(DISCOVERY_QUERIES)}]: {query[:60]}...")
@@ -199,15 +201,26 @@ def discover_tenants():
         results = resp.get("results", [])
         new = 0
         for r in results:
-            parsed = parse_workday_tenant(r.get("url", ""))
+            url = (r.get("url") or "").strip()
+            parsed = parse_workday_tenant(url)
             if parsed and parsed[0] not in discovered:
                 host, company_id, tenant = parsed
                 discovered[host] = (host, company_id, tenant, format_tenant_name(company_id, tenant))
                 new += 1
+            job_url = parse_workday_job_url(url)
+            if job_url:
+                host, company_id, tenant, external_path = job_url
+                candidate_urls[url] = {
+                    "host": host,
+                    "company_id": company_id,
+                    "tenant": tenant,
+                    "external_path": external_path,
+                    "fallback_company": format_tenant_name(company_id, tenant),
+                }
         log(f"    → {len(results)} results, {new} new tenants")
         time.sleep(1.5)
 
-    return list(discovered.values())
+    return list(discovered.values()), candidate_urls
 
 
 # ── Workday CXS JSON API ──────────────────────────────────────────────────────
@@ -315,6 +328,45 @@ def fetch_job_html(host, tenant, external_path):
         return None
 
 
+def fetch_job_html_from_url(url):
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", UA)
+    req.add_header("Accept", "text/html,application/xhtml+xml,*/*;q=0.9")
+    req.add_header("Accept-Language", "en-CA,en;q=0.9")
+    try:
+        with urllib.request.urlopen(req, timeout=18) as r:
+            return r.read().decode("utf-8", errors="ignore")
+    except Exception:
+        return None
+
+
+def parse_workday_job_url(url):
+    """Extract (host, company_id, tenant, external_path) from a direct Workday job URL."""
+    try:
+        parsed = urllib.parse.urlparse(url)
+    except Exception:
+        return None
+    if "myworkdayjobs.com" not in (parsed.netloc or "").lower():
+        return None
+
+    host = (parsed.netloc or "").lower()
+    company_id = host.split(".")[0]
+    parts = [p for p in (parsed.path or "").split("/") if p]
+    if not parts:
+        return None
+
+    tenant_idx = 0
+    if re.fullmatch(r"[a-z]{2}-[A-Z]{2}", parts[0]):
+        tenant_idx = 1
+    if len(parts) <= tenant_idx + 1:
+        return None
+    tenant = parts[tenant_idx]
+    if parts[tenant_idx + 1].lower() != "job":
+        return None
+    external_path = "/" + "/".join(parts[tenant_idx + 1 :])
+    return host, company_id, tenant, external_path
+
+
 def extract_company_from_html(text):
     """Try to extract the real hiring organization name from Workday job page HTML.
 
@@ -356,6 +408,88 @@ def extract_company_from_html(text):
     return None
 
 
+def extract_title_from_html(text):
+    if not text:
+        return None
+
+    ld_blocks = re.findall(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        text, re.DOTALL | re.IGNORECASE
+    )
+    for block in ld_blocks:
+        try:
+            data = json.loads(block)
+            if isinstance(data, list):
+                data = data[0]
+            name = (data.get("title") or data.get("name") or "").strip()
+            if name:
+                return name
+        except Exception:
+            continue
+
+    for pattern in (
+        r'<meta[^>]+property=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']',
+        r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:title["\']',
+        r'<title>(.*?)</title>',
+    ):
+        m = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
+        if m:
+            title = re.sub(r'\s+', ' ', m.group(1)).strip()
+            title = re.sub(r'\s*[-|]\s*Workday.*$', '', title, flags=re.IGNORECASE)
+            if title:
+                return title
+    return None
+
+
+def extract_location_from_html(text, external_path=""):
+    if not text:
+        return parse_location("", external_path)
+
+    ld_blocks = re.findall(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        text, re.DOTALL | re.IGNORECASE
+    )
+    for block in ld_blocks:
+        try:
+            data = json.loads(block)
+            if isinstance(data, list):
+                data = data[0]
+            loc = data.get("jobLocation")
+            if isinstance(loc, list):
+                loc = loc[0]
+            addr = (loc or {}).get("address", {})
+            locality = (addr.get("addressLocality") or "").strip()
+            region = (addr.get("addressRegion") or "").strip()
+            if locality:
+                if region.upper() in {"ON", "ONTARIO"}:
+                    return f"{locality}, ON"
+                return locality
+        except Exception:
+            continue
+    return parse_location("", external_path)
+
+
+def extract_posted_from_html(text):
+    if not text:
+        return TODAY
+    ld_blocks = re.findall(
+        r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',
+        text, re.DOTALL | re.IGNORECASE
+    )
+    for block in ld_blocks:
+        try:
+            data = json.loads(block)
+            if isinstance(data, list):
+                data = data[0]
+            posted = str(data.get("datePosted") or "").strip()
+            m = re.search(r'(\d{4}-\d{2}-\d{2})', posted)
+            if m:
+                return m.group(1)
+        except Exception:
+            continue
+    return TODAY
+
+
 def extract_salary(text):
     """Try to extract min/max annual CAD salary from page HTML. Returns (min, max) or None."""
     if not text:
@@ -389,7 +523,7 @@ def main():
 
     # Build tenant list: seed (known-good) + dynamically discovered via Exa
     log(f"Seed tenants: {len(SEED_TENANTS)} | Running tenant discovery via Exa...")
-    discovered = discover_tenants()
+    discovered, candidate_urls = discover_tenants()
 
     # Merge: seed takes priority (has proper display names + verified tenant IDs)
     seed_hosts = {t[0] for t in SEED_TENANTS}
@@ -402,6 +536,8 @@ def main():
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
 
     total_found = 0
+    api_failures = 0
+    failed_hosts = set()
 
     for host, company_id, tenant, company_name in all_tenants:
         log(f"\n── {company_name} ({host}) ──")
@@ -419,6 +555,9 @@ def main():
         while offset // limit < max_pages:
             postings, total = wd_list_jobs(host, company_id, tenant, offset, limit)
             if not postings:
+                if offset == 0:
+                    api_failures += 1
+                    failed_hosts.add(host)
                 break
             if total > 0:
                 known_total = total  # Only trust non-zero totals (wd5 bug: returns 0 on page 2+)
@@ -493,7 +632,65 @@ def main():
         # Single calls work fine; rapid sequential calls (< ~30s apart) trigger HTTP 400 blocks.
         time.sleep(60)
 
-    log(f"\n=== Workday scraper complete: {total_found} new jobs written to {OUTPUT_FILE} ===")
+    direct_fallback_found = 0
+    fallback_candidates = [
+        (url, meta)
+        for url, meta in candidate_urls.items()
+        if meta["host"] in failed_hosts
+    ][:30]
+    if fallback_candidates:
+        log(
+            f"\n── Direct Workday URL fallback ({len(fallback_candidates)} candidates "
+            f"from {len(failed_hosts)} failed hosts) ──"
+        )
+    for index, (url, meta) in enumerate(fallback_candidates, 1):
+        host = meta["host"]
+        company_id = meta["company_id"]
+        tenant = meta["tenant"]
+        external_path = meta["external_path"]
+        fallback_company = meta["fallback_company"]
+        log(f"  [fallback {index}/{len(fallback_candidates)}] {host}")
+        html = fetch_job_html_from_url(url)
+        if not html:
+            continue
+        salary = extract_salary(html)
+        if not salary:
+            continue
+
+        title = extract_title_from_html(html)
+        if not title:
+            continue
+
+        company_name = extract_company_from_html(html) or fallback_company or format_tenant_name(company_id, tenant)
+        key = f"{title.lower()}|{company_name.lower()}"
+        if key in seen_keys:
+            continue
+
+        location = extract_location_from_html(html, external_path)
+        if "on" not in location.lower() and not is_ontario(location, external_path):
+            continue
+
+        val_min, val_max = salary
+        job = {
+            "role": title,
+            "company": company_name,
+            "min": val_min,
+            "max": val_max,
+            "location": location,
+            "source_url": url,
+            "posted": extract_posted_from_html(html),
+        }
+        write_job(OUTPUT_FILE, job)
+        seen_keys.add(key)
+        total_found += 1
+        direct_fallback_found += 1
+        log(f"  → DIRECT FOUND: {title[:50]} @ {company_name} ${val_min:,}–${val_max:,} [{location}]")
+        time.sleep(0.4)
+
+    log(
+        f"\n=== Workday scraper complete: {total_found} new jobs written to {OUTPUT_FILE} "
+        f"(api_failures={api_failures}, direct_fallback={direct_fallback_found}) ==="
+    )
     return 0
 
 

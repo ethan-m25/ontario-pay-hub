@@ -68,7 +68,7 @@ fi
 
 # ---- 3. Parse & merge ----
 python3 - <<PYEOF
-import json, os, re, subprocess, urllib.request, urllib.error
+import json, os, re, subprocess, urllib.request, urllib.error, html
 
 data_file = "$DATA_FILE"
 overrides_file = "$OVERRIDES_FILE"
@@ -187,6 +187,47 @@ def _infer_work_mode_fast(job):
         return "onsite"
     return "unknown"
 
+def _extract_plain_text(raw_html):
+    if not raw_html:
+        return ""
+    text = re.sub(r'<script[^>]*>.*?</script>', ' ', raw_html, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<style[^>]*>.*?</style>', ' ', text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<[^>]+>', ' ', text)
+    return re.sub(r'\s+', ' ', html.unescape(text)).strip()
+
+def _fetch_page_html(url, timeout=12):
+    if not url:
+        return ""
+    try:
+        req = urllib.request.Request(url)
+        req.add_header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+        req.add_header("Accept-Language", "en-CA,en;q=0.9")
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read().decode("utf-8", errors="ignore")
+    except Exception:
+        return ""
+
+def _infer_work_mode_from_text(text, url=""):
+    combined = f"{text} {url}".lower()
+    if any(k in combined for k in (
+        "hybrid", "hybride", "flexible work model", "flexible working model",
+        "partially remote", "mix of remote", "remote and in-office",
+        "remote and onsite", "remote / office", "remote/office"
+    )):
+        return "hybrid"
+    if any(k in combined for k in (
+        "fully remote", "100% remote", "work from home", "work-from-home",
+        "remote-first", "remote position", "remote role", "telecommute", "teletravail"
+    )):
+        return "remote"
+    if any(k in combined for k in (
+        "on-site", "onsite", "in office", "in-office", "office based",
+        "must be in office", "must work on site", "must work onsite",
+        "must work on-site", "position is located in", "primary work location"
+    )):
+        return "onsite"
+    return "unknown"
+
 def _classify_job(job):
     fast_wm = _infer_work_mode_fast(job)
     if fast_wm != "unknown":
@@ -234,24 +275,44 @@ for job in existing:
         job["salary_type"] = "unknown"
 
 # ---- 3.3. Backfill work_mode for historical active jobs with unknown mode ----
-BACKFILL_LIMIT = 40
+BACKFILL_LIMIT = max(1, int(os.environ.get("WORK_MODE_BACKFILL_LIMIT", "120")))
 backfilled_work_modes = 0
+backfill_attempted = 0
 backfill_candidates = [
     job for job in existing
     if job.get("status") != "archived"
     and job.get("source_url")
     and job.get("work_mode", "unknown") == "unknown"
 ]
+backfill_cursor = int(db.get("meta", {}).get("work_mode_backfill_cursor", 0) or 0)
 if backfill_candidates:
     print(f"Backfilling work_mode for up to {BACKFILL_LIMIT} active historical jobs...")
-    for job in backfill_candidates[:BACKFILL_LIMIT]:
+    backfill_candidates.sort(key=lambda j: int(j.get("id", 0)))
+    if backfill_cursor >= len(backfill_candidates):
+        backfill_cursor = 0
+    batch = (
+        backfill_candidates[backfill_cursor:backfill_cursor + BACKFILL_LIMIT]
+        if backfill_cursor + BACKFILL_LIMIT <= len(backfill_candidates)
+        else backfill_candidates[backfill_cursor:] + backfill_candidates[: (backfill_cursor + BACKFILL_LIMIT) % len(backfill_candidates)]
+    )
+    for job in batch:
+        backfill_attempted += 1
         wm, st = _classify_job(job)
+        if wm == "unknown":
+            page_html = _fetch_page_html(job.get("source_url", ""))
+            page_text = _extract_plain_text(page_html)[:12000]
+            text_wm = _infer_work_mode_from_text(page_text, job.get("source_url", ""))
+            if text_wm != "unknown":
+                wm = text_wm
         if wm != "unknown":
             job["work_mode"] = wm
             backfilled_work_modes += 1
         if job.get("salary_type", "unknown") == "unknown" and st in ("base", "total_comp"):
             job["salary_type"] = st
-    print(f"  BACKFILL work_mode updated: {backfilled_work_modes}")
+    backfill_cursor = (backfill_cursor + len(batch)) % len(backfill_candidates)
+    print(f"  BACKFILL work_mode updated: {backfilled_work_modes} / attempted {backfill_attempted}")
+else:
+    backfill_cursor = 0
 
 # Merge (append-only — existing records are NEVER deleted or overwritten)
 all_jobs = existing + new_jobs
@@ -377,6 +438,8 @@ db["meta"] = {
     "new_today": len(new_jobs),
     "parse_errors": errors,
     "work_modes_backfilled": backfilled_work_modes,
+    "work_modes_backfill_attempted": backfill_attempted,
+    "work_mode_backfill_cursor": backfill_cursor,
     "manual_overrides_applied": overrides_applied,
     "links_validated": val_active,
     "links_newly_archived": val_archived,
