@@ -60,6 +60,7 @@
 
 /* ===== LIGHT THEME (default — cool editorial stone) ===== */
 [data-theme="light"] {
+  --thumb-fill: #ffffff;
   --bg: #EEF1F4;
   --bg2: #E4E8ED;
   --surface: #F8FAFC;
@@ -92,6 +93,7 @@
 
 /* ===== DARK THEME (modern neutral — GitHub dark / VS Code palette) ===== */
 [data-theme="dark"] {
+  --thumb-fill: var(--bg);
   --bg: #0D1117;
   --bg2: #161B22;
   --surface: #1C2128;
@@ -435,7 +437,7 @@ nav {
 }
 
 /* ===== TABLE — editorial data table ===== */
-.table-wrap { overflow-x:auto; }
+.table-wrap { overflow-x:clip; }
 table {
   width: 100%; border-collapse: collapse; font-size: .79rem;
   table-layout: fixed;
@@ -450,7 +452,7 @@ table {
 #jobTable th:nth-child(7) { width:7%;  } /* Save */
 
 thead th {
-  background: var(--bg2);
+  background: var(--surface);
   padding: 8px 10px; text-align: left;
   font-family: var(--font-mono);
   font-size: .59rem; font-weight: 600;
@@ -458,6 +460,9 @@ thead th {
   color: var(--text3); white-space: nowrap;
   border-bottom: 2px solid var(--text);
   cursor: pointer; user-select: none; overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 thead th:hover { color: var(--text2); }
 thead th.active-sort { color: var(--accent); }
@@ -1336,7 +1341,7 @@ footer a { color: var(--accent); text-decoration: none; }
 .content-area {
   padding: 20px 24px;
   min-width: 0;
-  overflow: hidden;
+  overflow-x: clip;
   background: var(--bg);
 }
 
@@ -1515,6 +1520,10 @@ footer a { color: var(--accent); text-decoration: none; }
   gap: 14px;
   padding: 16px 18px 14px;
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  z-index: 99;
+  background: var(--surface);
+  border-radius: 16px 16px 0 0;
 }
 .results-title {
   font-family: var(--font-display);
@@ -1796,6 +1805,120 @@ tbody tr:hover {
   .results-shell { order: 2; }
   .market-grid { grid-template-columns: 1fr; margin-bottom: 0; }
   .results-sub { display: none; }
+  /* Salary bar on mobile: stick below mobile-search-bar (nav 56 + search ~64 = 120) */
+  .salary-focus-bar {
+    top: 120px;
+    border-radius: 10px;
+    padding: 8px 14px 10px;
+    margin-bottom: 8px;
+  }
+  /* Results-header on mobile: compact */
+  .results-header {
+    padding: 10px 14px 8px;
+  }
+  /* salary-focus-bar order: show above insights on mobile */
+  .salary-focus-bar { order: 0; }
+  .insights-drawer { order: 1; }
+  .results-shell { order: 2; }
+}
+
+/* Extra-small: even more compact sticky header */
+@media(max-width:480px) {
+  .results-title { font-size: 1rem; }
+  .results-focus-tag { display: none; }
+}
+
+/* ===== SALARY FOCUS BAR ===== */
+.salary-focus-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border2);
+  border-radius: 14px;
+  padding: 10px 18px 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  position: sticky;
+  top: 56px; /* desktop fallback; JS overrides dynamically */
+  z-index: 100;
+}
+.salary-focus-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .56rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text3); margin-bottom: 5px;
+}
+/* Results-header: salary focus info */
+.results-focus-tag {
+  font-family: var(--font-mono);
+  font-size: .55rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--text3); margin-bottom: 3px;
+}
+.results-meta #resultsHeadline {
+  font-family: var(--font-mono);
+  font-size: .9rem; font-weight: 600;
+  color: var(--text); line-height: 1.2;
+  margin-top: 2px;
+}
+
+/* ===== SALARY SLIDER COMPONENT ===== */
+.salary-slider-box { width: 100%; padding-bottom: 28px; }
+.salary-slider-svg {
+  display: block; width: 100%; height: 64px;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  overflow: visible;
+}
+.salary-range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 3px; background: transparent;
+  outline: none; margin: 4px 0 0; cursor: pointer; display: block;
+}
+.salary-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: var(--border);
+  border-radius: 0;
+}
+.salary-range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--thumb-fill, #fff); cursor: pointer; margin-top: -5.5px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  transition: width .12s ease, height .12s ease, margin-top .12s ease;
+}
+.salary-range:hover::-webkit-slider-thumb,
+.salary-range::-webkit-slider-thumb:active {
+  width: 14px; height: 14px; margin-top: -6.5px;
+}
+.salary-range::-moz-range-thumb {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--thumb-fill, #fff); cursor: pointer;
+  border: 2px solid var(--accent);
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+  transition: width .12s ease, height .12s ease;
+}
+.salary-range:hover::-moz-range-thumb { width: 14px; height: 14px; }
+.salary-range::-moz-range-track {
+  height: 1px;
+  background: var(--border);
+  border-radius: 0;
+}
+.salary-display {
+  font-family: var(--font-mono); font-size: .68rem; font-weight: 600;
+  color: var(--accent); margin-top: 5px; letter-spacing: .03em;
+  display: none;
+}
+.salary-thumb-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent);
+  top: calc(64px + 4px + 12px + 8px);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: left 0.05s ease;
 }
 </style>
 </head>
@@ -1936,16 +2059,6 @@ tbody tr:hover {
     <div class="sidebar-divider"></div>
 
     <div class="sidebar-meta-grid">
-      <div class="sidebar-section sidebar-box">
-        <div class="sidebar-label">Min Salary</div>
-        <select class="filter-select-modern" id="salaryFilter" onchange="applyFilters()">
-          <option value="0">Any</option>
-          <option value="80000">$80K+</option>
-          <option value="100000">$100K+</option>
-          <option value="120000">$120K+</option>
-          <option value="150000">$150K+</option>
-        </select>
-      </div>
 
       <div class="sidebar-section sidebar-box">
         <div class="sidebar-label">Region</div>
@@ -2032,13 +2145,36 @@ tbody tr:hover {
       </div>
     </div>
 
+    <!-- SALARY FOCUS BAR -->
+    <div class="salary-focus-bar">
+      <!-- Hidden select: bridge for applyFilters(), clearAllFilters(), presetFilter() -->
+      <input type="hidden" id="sliderSalaryValue" value="0">
+      <select id="salaryFilter" style="display:none">
+        <option value="0">Any</option>
+        <option value="80000">$80K+</option>
+        <option value="100000">$100K+</option>
+        <option value="120000">$120K+</option>
+        <option value="150000">$150K+</option>
+      </select>
+      <div class="salary-focus-eyebrow">Salary Focus</div>
+      <div class="salary-slider-box" style="position:relative">
+        <svg id="salaryHistSvg" class="salary-slider-svg" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div id="salaryThumbLabel" class="salary-thumb-label">$100K</div>
+        <input type="range" id="salaryRangeInput" class="salary-range" min="30000" max="220000" step="1" value="100000">
+        <div class="salary-display" id="salaryDisplay">$78K – $122K focus</div>
+      </div>
+    </div>
+
     <div class="results-shell">
       <div class="results-header">
         <div>
           <div class="results-title">Browse Salary-Disclosed Jobs</div>
           <div class="results-sub">Filter, scan, open.</div>
         </div>
-        <div class="results-meta">Current View<strong id="resultsHeadline">All postings</strong></div>
+        <div class="results-meta">
+          <div class="results-focus-tag">Salary Focus</div>
+          <div id="resultsHeadline"></div>
+        </div>
       </div>
       <div class="comp-note" id="compNote">
         <strong>What "Compensation Range" means under Ontario ESA (effective Jan 1, 2026):</strong><br>
@@ -2332,13 +2468,507 @@ function buildCategoryChips() {
   });
 }
 const FALLBACK_JOBS = [
-  {id:1,role:"Software Engineer",tag:"eng",company:"Shopify",min:110000,max:160000,src:"shopify.com/careers",date:"2026-03-04"},
-  {id:2,role:"Software Engineer",tag:"eng",company:"RBC",min:95000,max:140000,src:"rbc.com/careers",date:"2026-03-03"},
-  {id:3,role:"Software Engineer",tag:"eng",company:"Wealthsimple",min:120000,max:170000,src:"wealthsimple.com/careers",date:"2026-03-02"},
-  {id:7,role:"Data Analyst",tag:"data",company:"TD Bank",min:85000,max:120000,src:"td.com/careers",date:"2026-03-04"},
-  {id:12,role:"HR Manager",tag:"hr",company:"Scotiabank",min:105000,max:150000,src:"scotiabank.com/careers",date:"2026-03-03"},
-  {id:17,role:"Product Manager",tag:"pm",company:"Shopify",min:130000,max:180000,src:"shopify.com/careers",date:"2026-03-05"},
-  {id:21,role:"Marketing Manager",tag:"mktg",company:"Rogers Communications",min:90000,max:130000,src:"rogers.com/careers",date:"2026-03-04"},
+  {id:1,role:"Product Owner / Product Manager",tag:"pm",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Product-Own",date:"2026-02-27"},
+  {id:2,role:"Machine Learning Engineer II",tag:"eng",company:"TD Bank",min:154000,max:199500,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Machine-Lea",date:"2026-02-22"},
+  {id:3,role:"Digital Marketing Manager",tag:"sales",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Digital-Mar",date:"2026-02-26"},
+  {id:4,role:"Senior Business Intelligence Analyst",tag:"data",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Senior-Busi",date:"2026-02-25"},
+  {id:5,role:"Account Manager II, Business Banking",tag:"fin",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Account-Man",date:"2026-02-24"},
+  {id:6,role:"Manager, Behavioural Insights",tag:"data",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Manager--Be",date:"2026-02-27"},
+  {id:12,role:"Senior Solution Architect",tag:"it",company:"BMO Financial Group",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Solution-Ar",date:"2026-02-23"},
+  {id:13,role:"Senior Manager, Project & Change Risk",tag:"legal",company:"BMO Financial Group",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Manager--Pr",date:"2026-02-21"},
+  {id:14,role:"Manager, AI & Agentic Workflows",tag:"pm",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/52232318-ec94-417f-a985-6fe6ccac97df",date:"2026-02-15"},
+  {id:15,role:"Manager, Workflow Optimization",tag:"ops",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/1200efa1-87c4-42ec-bf0b-072a49079fa4",date:"2026-02-12"},
+  {id:16,role:"Sr. Data Scientist, Marketing",tag:"data",company:"Wealthsimple",min:151200,max:189000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/6c5d99a9-8b3b-4001-8989-4ee30f9921f8",date:"2026-02-20"},
+  {id:17,role:"Senior Data Scientist, Valuations",tag:"data",company:"Wealthsimple",min:151200,max:189000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/d4157dfb-2018-41cb-8342-f7990c1c3180",date:"2026-02-10"},
+  {id:18,role:"Senior Associate, Treasury & Settlements",tag:"fin",company:"Wealthsimple",min:69600,max:87000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/41901ca4-dc8f-4840-8fb9-573cf521dabf",date:"2026-01-20"},
+  {id:19,role:"Manager, Treasury & Capital Markets",tag:"fin",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/31183f63-158d-4149-bcd1-84a0f726e0f5",date:"2026-02-18"},
+  {id:20,role:"Senior Software Engineer, Full-Stack",tag:"eng",company:"Owner",min:190000,max:220000,location:"Toronto, ON",src:"https://jobs.lever.co/owner/a72058a0-6d4a-4310-8e01-68b950decf82",date:"2026-02-10"},
+  {id:21,role:"People Business Partner",tag:"hr",company:"Owner",min:140000,max:150000,location:"Toronto, ON",src:"https://jobs.lever.co/owner/248cac79-d1f0-450f-b32f-5cec0ee8b5d8",date:"2026-02-15"},
+  {id:22,role:"Business Development Representative",tag:"sales",company:"Owner",min:70000,max:90000,location:"Toronto, ON",src:"https://jobs.lever.co/owner/7fb5c4b6-0a8a-4e50-9628-2e0edeabf270",date:"2026-01-25"},
+  {id:24,role:"Sr. Software Engineer, Developer Experience",tag:"eng",company:"PointClickCare",min:142000,max:158000,location:"Mississauga, ON",src:"https://jobs.lever.co/pointclickcare/ce41a1f5-22d7-4e25-8ba0-94c2ad24556b",date:"2026-02-10"},
+  {id:34,role:"Strategic Merchandising Manager",tag:"sales",company:"Fullscript",min:94000,max:125000,location:"Toronto, ON",src:"https://jobs.lever.co/fullscript/dd6c1246-1757-4d33-ae34-0a8a94b5ad27",date:"2026-02-08"},
+  {id:41,role:"Sr Data Scientist, Finance & Market Risk",tag:"data",company:"Wealthsimple",min:151200,max:189000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/0c6eb5e6-3287-4a87-a94a-dcf6a1837ad2",date:"2026-01-20"},
+  {id:42,role:"Senior Analyst, Investment Research",tag:"fin",company:"Wealthsimple",min:123200,max:154000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/15ca085a-109f-469d-95a1-73432011a62a",date:"2026-01-18"},
+  {id:44,role:"Product Marketing Manager, Active Trader",tag:"sales",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/b039c106-82a3-4d9e-9313-e96afb68dc15",date:"2026-01-25"},
+  {id:45,role:"Product Manager, Care Mode",tag:"pm",company:"Fullscript",min:105000,max:130000,location:"Ottawa, ON",src:"https://jobs.lever.co/fullscript/aa0c78c5-dbf8-471e-89fc-7f02e6f282ef",date:"2026-01-21"},
+  {id:46,role:"Senior Digital Marketing Manager",tag:"sales",company:"Fullscript",min:110000,max:135000,location:"Ottawa, ON",src:"https://jobs.lever.co/fullscript/d19f3565-51ea-44c5-b7fa-d94bb7bae606",date:"2026-01-15"},
+  {id:47,role:"Senior Financial Analyst, FP&A",tag:"fin",company:"PointClickCare",min:81000,max:90000,location:"Mississauga, ON",src:"https://jobs.lever.co/pointclickcare/5de096e0-23d7-4e83-9a15-87a667df1f5a",date:"2026-01-28"},
+  {id:49,role:"Product Manager",tag:"pm",company:"PolicyMe",min:110000,max:143000,location:"Toronto, ON",src:"https://jobs.lever.co/policyme/a9c9ce51-b9cf-4648-9ff8-a1f7b61f32a0",date:"2026-01-15"},
+  {id:51,role:"Data Technical Analyst",tag:"data",company:"StackAdapt",min:64000,max:76000,location:"Toronto, ON",src:"https://job-boards.greenhouse.io/stackadapt/jobs/4129356009",date:"2026-02-11"},
+  {id:52,role:"Vertical Lead, Commerce",tag:"sales",company:"StackAdapt",min:114400,max:135850,location:"Toronto, ON",src:"https://job-boards.greenhouse.io/stackadapt/jobs/4031165009",date:"2026-02-06"},
+  {id:53,role:"Software Development Manager",tag:"eng",company:"Amazon",min:171400,max:286200,location:"Toronto, ON",src:"https://jobflexy.com/software-development-manager-amazon-toronto/",date:"2026-03-07"},
+  {id:55,role:"Senior Site Reliability Engineer",tag:"it",company:"BuildOps",min:151000,max:190000,location:"Toronto, ON",src:"https://www.thesaraslist.com/jobs/senior-site-reliability-engineer-buildops-toro",date:"2026-02-20"},
+  {id:58,role:"Senior Software Engineer, Product Engineering, Canada",tag:"eng",company:"Ashby",min:151000,max:200000,location:"Southwestern Ontario",src:"https://ca.jobrapido.com/jobpreview/7243666898963922944",date:"2026-01-17"},
+  {id:59,role:"Database Administrator",tag:"it",company:"Alcohol and Gaming Commission of Ontario",min:91982,max:114973,location:"Toronto, ON",src:"https://www.gojobs.gov.on.ca/Preview.aspx?JobID=195321&Language=English",date:"2023-02-27"},
+  {id:60,role:"Senior Business Analyst",tag:"pm",company:"Capital One",min:114000,max:137000,location:"Greater Toronto Area",src:"https://www.levels.fyi/companies/capital-one/salaries/business-analyst/levels/se",date:"2026-03-07"},
+  {id:61,role:"Senior Product Delivery Analyst, Wealth Technology",tag:"pm",company:"John Hancock Manulife",min:94220,max:174980,location:"Toronto, ON",src:"https://jobs.anitab.org/companies/john-hancock-manulife/jobs/52212788-senior-pro",date:"2026-03-07"},
+  {id:62,role:"Senior Infrastructure Engineer",tag:"it",company:"EvenUp",min:150805,max:236398,location:"Toronto, ON",src:"https://jobs.ashbyhq.com/evenup/f2b483a2-2e07-4e9a-8328-6dddb93255a9",date:"2026-03-07"},
+  {id:64,role:"Regional Territory Account Executive",tag:"sales",company:"PointClickCare",min:108000,max:112000,location:"Mississauga, ON",src:"https://www1.communitech.ca/companies/pointclickcare/jobs/60320439-canada-region",date:"2025-10-11"},
+  {id:65,role:"Product Manager",tag:"pm",company:"Shopify",min:118000,max:253000,location:"Greater Toronto Area",src:"https://www.levels.fyi/en-gb/companies/shopify/salaries/product-manager/location",date:"2026-03-07"},
+  {id:66,role:"Senior Specialist, Compensation Projects",tag:"hr",company:"University Health Network",min:84006,max:126005,location:"Toronto, ON",src:"https://forms.uhn.ca/UHNCareers/Home/Posting/744000101193065",date:"2026-03-07"},
+  {id:67,role:"Registered Nurse",tag:"other",company:"Weeneebayko Area Health Authority (WAHA)",min:77688,max:111365,location:"Moose Factory, Ontario",src:"https://www.nursingcareerscanada.ca/jobs/ontario/",date:"2026-03-07"},
+  {id:68,role:"Clinical Manager, Inpatient Oncology",tag:"other",company:"Trillium Health Partners",min:104350,max:156550,location:"Mississauga, ON",src:"https://www.talentify.io/job/clinical-manager-inpatient-oncology-mississauga-ont",date:"2023-06-26"},
+  {id:69,role:"Human Resources Business Advisor",tag:"hr",company:"Ontario Public Service",min:70538,max:103944,location:"Toronto, ON",src:"https://www.gojobs.gov.on.ca/PDR.aspx?JobID=139250&Language=English",date:"2026-03-07"},
+  {id:70,role:"Financial Data Analyst",tag:"data",company:"Robert Half",min:64405,max:90220,location:"Toronto, ON",src:"https://www.roberthalf.com/ca/en/job-details/financial-data-analyst/toronto-on",date:"2026-03-07"},
+  {id:71,role:"Specialist, Data and Information",tag:"data",company:"CMHC",min:83038,max:103798,location:"Ottawa, ON",src:"https://www.talentify.io/job/specialist-data-and-information-ottawa-ontario-ca-c",date:"2026-03-07"},
+  {id:72,role:"Backend Engineer",tag:"eng",company:"Embroker",min:130000,max:160000,location:"Toronto, ON",src:"https://builtintoronto.com/job/backend-engineer/3659215",date:"2026-03-07"},
+  {id:73,role:"Manufacturing Project Engineer",tag:"eng",company:"INNIO",min:95000,max:115000,location:"Welland, ON",src:"https://jobs.jobvite.com/innio/job/obEZxfw5",date:"2026-03-07"},
+  {id:74,role:"Manager, Fleet Services Operations",tag:"ops",company:"Ornge",min:121518,max:144302,location:"Mississauga, ON",src:"https://jobs.jobvite.com/ornge/job/oK1IzfwM",date:"2026-02-20"},
+  {id:75,role:"Aviation Safety Specialist",tag:"other",company:"Ornge",min:73757,max:87586,location:"Mississauga, ON",src:"https://jobs.jobvite.com/ornge/job/oTcJzfw7",date:"2026-02-24"},
+  {id:76,role:"Registered Nurse (RN)",tag:"other",company:"VON Canada",min:69721,max:93812,location:"Brantford, ON",src:"https://jobs.jobvite.com/von/job/o4MRyfwZ",date:"2026-03-07"},
+  {id:77,role:"Director, Technology Delivery",tag:"pm",company:"Canada Life",min:127200,max:177200,location:"Toronto, ON",src:"https://ca.indeed.com/career/director-of-technology/salaries/Ontario",date:"2026-03-04"},
+  {id:78,role:"Senior Full Stack Developer (DevOps | Go | React)",tag:"eng",company:"Betstamp",min:140000,max:175000,location:"Toronto, ON",src:"https://sportstechjobs.com/senior-full-stack-developer-(devops-or-go-or-react)-b",date:"2026-03-07"},
+  {id:79,role:"Test Developing Manager II, XR",tag:"eng",company:"Google",min:198000,max:203000,location:"Waterloo, ON",src:"https://jobflexy.com/test-developing-manager-ii-xr-google-waterloo/",date:"2026-03-05"},
+  {id:81,role:"Insights & Measurement Lead",tag:"data",company:"Amazon Advertising Canada Inc.",min:99900,max:166900,location:"Toronto, ON",src:"https://jobflexy.com/insights-measurement-lead-amazon-advertising-canada-inc-tor",date:"2026-03-07"},
+  {id:82,role:"Operations Financial Analyst",tag:"fin",company:"Amazon",min:49300,max:82300,location:"Toronto, ON",src:"https://jobflexy.com/operations-finance-rotational-program-amazon-toronto/",date:"2026-02-09"},
+  {id:84,role:"Software Developer III",tag:"eng",company:"Google",min:144000,max:148000,location:"Waterloo, ON",src:"https://jobflexy.com/software-developer-iii-google-waterloo/",date:"2026-02-16"},
+  {id:85,role:"Analyst, Global Trade Management, Public Markets Operations ",tag:"fin",company:"VersaFi",min:80600,max:91500,location:"Toronto, ON",src:"https://versafi.ca/jobs/analyst-global-trade-management-public-markets-operation",date:"2026-03-08"},
+  {id:86,role:"Career Event - Financial Planning - Cambridge",tag:"fin",company:"TD Bank",min:60000,max:70000,location:"Ontario, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Cambridge-Ontario/Car",date:"2026-03-08"},
+  {id:87,role:"Online Release Lead",tag:"pm",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Onlin",date:"2026-03-08"},
+  {id:88,role:"Associate Vice President, Ontario, GTA, TDS and CNA, TD Equi",tag:"fin",company:"TD Bank",min:155000,max:215000,location:"Ontario, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Burlington-Ontario/As",date:"2026-03-08"},
+  {id:89,role:"Senior Java Software Engineer, TD Securities",tag:"eng",company:"TD Bank",min:126800,max:164100,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Senio",date:"2026-03-08"},
+  {id:90,role:"Developing Investment Advisor - Durham Region",tag:"fin",company:"TD Bank",min:50000,max:100000,location:"Ontario, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Whitby-Ontario/Develo",date:"2026-03-08"},
+  {id:91,role:"Microsoft Purview Engineer / Engineer II (B3617)",tag:"it",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Micro",date:"2026-03-08"},
+  {id:92,role:"Developing Investment Advisor - Yorkville",tag:"fin",company:"TD Bank",min:50000,max:100000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Devel",date:"2026-03-08"},
+  {id:93,role:"Senior Manager, Business Banking Credit Strategy Risk Manage",tag:"legal",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-08"},
+  {id:94,role:"Senior Pricing Analyst",tag:"fin",company:"BMO",min:56000,max:103500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Prici",date:"2026-03-08"},
+  {id:95,role:"Manager, Canadian Commercial Banking Strategy",tag:"fin",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Can",date:"2026-03-08"},
+  {id:96,role:"Senior Cloud Engineer - Azure",tag:"it",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Cloud",date:"2026-03-08"},
+  {id:97,role:"Vice President, AI Engineer",tag:"eng",company:"BMO",min:120000,max:150000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Vice-Preside",date:"2026-03-08"},
+  {id:98,role:"Vice President, Internal Commercialization",tag:"exec",company:"BMO",min:120000,max:150000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Vice-Preside",date:"2026-03-08"},
+  {id:99,role:"Vice President, AI Strategy and Change Management",tag:"exec",company:"BMO",min:120000,max:150000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Vice-Preside",date:"2026-03-08"},
+  {id:100,role:"Analyst, Full Stack Engineer",tag:"eng",company:"BMO",min:90000,max:100000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Analyst--Ful",date:"2026-03-08"},
+  {id:101,role:"Associate, AI DevOps Engineer",tag:"it",company:"BMO",min:90000,max:120000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate--A",date:"2026-03-08"},
+  {id:102,role:"Associate, Full Stack Engineer",tag:"eng",company:"BMO",min:90000,max:120000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate--F",date:"2026-03-08"},
+  {id:103,role:"Associate, Data Engineer",tag:"data",company:"BMO",min:90000,max:120000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate--D",date:"2026-03-08"},
+  {id:105,role:"Associate Manager, Audit & Advisory Services",tag:"legal",company:"Manulife",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-08"},
+  {id:106,role:"Manager, Operational Risk Management, Group Functions",tag:"legal",company:"Manulife",min:85300,max:135300,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Man",date:"2026-03-08"},
+  {id:107,role:"Product Manager, Credit Cards",tag:"pm",company:"Manulife",min:92900,max:142900,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario-Waterloo",date:"2026-03-08"},
+  {id:108,role:"Intermediate ServiceNow Developer",tag:"it",company:"Manulife",min:86100,max:136100,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Inte",date:"2026-03-08"},
+  {id:109,role:"AVP, Sales Enablement",tag:"sales",company:"Manulife",min:129800,max:241200,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/AVP-",date:"2026-03-08"},
+  {id:110,role:"Senior Disability Administrator - File Copy",tag:"ops",company:"Manulife",min:39225,max:65375,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-08"},
+  {id:111,role:"Director, Procurement Strategy and Transformation",tag:"ops",company:"Manulife",min:125100,max:175100,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Dire",date:"2026-03-08"},
+  {id:112,role:"Product Support Specialist, Retail Product",tag:"pm",company:"Manulife",min:59100,max:98500,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Pro",date:"2026-03-08"},
+  {id:114,role:"Director, Canada AI",tag:"exec",company:"Manulife",min:113260,max:210340,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Dire",date:"2026-03-08"},
+  {id:115,role:"AVP, Global AI Technology Platforms and Solutions",tag:"it",company:"Manulife",min:129800,max:241200,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/AVP-",date:"2026-03-08"},
+  {id:116,role:"Senior Software Developer",tag:"eng",company:"OTPPB",min:112300,max:122300,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:117,role:"Business Partner Specialist (12 month mat leave)",tag:"hr",company:"OTPPB",min:90000,max:140000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:118,role:"Software Developer",tag:"eng",company:"OTPPB",min:100300,max:107200,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:119,role:"Engineering Lead, Network Security Tools",tag:"it",company:"OTPPB",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:120,role:"Tax Coordinator",tag:"fin",company:"OTPPB",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:121,role:"Associate Systems Analyst (12-month Contract)",tag:"it",company:"OTPPB",min:89800,max:95600,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:122,role:"Solution Architect, Microsoft Power Platform",tag:"it",company:"OTPPB",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-08"},
+  {id:123,role:"Administrative Assistant",tag:"ops",company:"Colliers",min:51899,max:60000,location:"Toronto, ON",src:"https://colliers.wd3.myworkdayjobs.com/en-US/Colliers-External-Career-Site/job/T",date:"2026-03-08"},
+  {id:124,role:"Senior C# Engineer, TD Securities",tag:"eng",company:"TD Bank",min:126800,max:164100,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Senio",date:"2026-03-08"},
+  {id:125,role:"Senior .NET/C# Engineer, TD Securities",tag:"eng",company:"TD Bank",min:126800,max:164100,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Senio",date:"2026-03-08"},
+  {id:126,role:"Data Scientist III (B3617)",tag:"data",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Data-",date:"2026-03-08"},
+  {id:127,role:"Transparency Pricing & Risk Developer",tag:"eng",company:"TD Bank",min:126800,max:164100,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Trans",date:"2026-03-08"},
+  {id:128,role:"Developing Investment Advisor",tag:"fin",company:"TD Bank",min:50000,max:100000,location:"Waterloo, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/412-Albert-Street-Wat",date:"2026-03-08"},
+  {id:129,role:"Developing Investment Advisor - Downtown Toronto",tag:"fin",company:"TD Bank",min:50000,max:100000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Devel",date:"2026-03-08"},
+  {id:130,role:"Associate Planner (Future opportunity) - Ontario South West",tag:"fin",company:"TD Bank",min:60000,max:70000,location:"Ontario, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Sudbury-Ontario/Assoc",date:"2026-03-08"},
+  {id:131,role:"Investment Banking Analyst, Power & Utilities",tag:"fin",company:"TD Bank",min:100000,max:110000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Inves",date:"2026-03-08"},
+  {id:132,role:"Personal Banking Associate",tag:"fin",company:"BMO",min:36000,max:54500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Personal-Ban",date:"2026-03-08"},
+  {id:133,role:"Director, Commercial Banking (Corporate Finance Group)",tag:"fin",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--Co",date:"2026-03-08"},
+  {id:134,role:"Senior Data Architect, Artificial Intelligence / AWS Cloud",tag:"data",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Enterprise-A",date:"2026-03-08"},
+  {id:135,role:"Senior Cloud Engineer",tag:"it",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Cloud",date:"2026-03-08"},
+  {id:136,role:"Associate, Capital Optimization & Financial Performance - Co",tag:"fin",company:"BMO",min:85000,max:105000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate--C",date:"2026-03-08"},
+  {id:137,role:"Development Manager",tag:"eng",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-08"},
+  {id:138,role:"Senior Manager, RESL Account Management Strategy & Analytics",tag:"fin",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-08"},
+  {id:139,role:"Vice President, Business Resilience, Capital Markets",tag:"exec",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Vice-Preside",date:"2026-03-08"},
+  {id:140,role:"Customer Service Representative",tag:"ops",company:"BMO",min:34750,max:47250,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Guelph-ON-CAN/Customer-Serv",date:"2026-03-08"},
+  {id:141,role:"Supervisor, Contact Centre, Global Asset Management",tag:"ops",company:"BMO",min:53200,max:98300,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/Su",date:"2026-03-08"},
+  {id:142,role:"Application Developer (Java/ISAM)",tag:"eng",company:"BMO",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Application-",date:"2026-03-08"},
+  {id:143,role:"Private Wealth Senior Consultant, Learning Designer",tag:"hr",company:"CIBC",min:92490,max:127200,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Private-Wealth-Se",date:"2026-03-08"},
+  {id:144,role:"Lead Solution Architect AI/ML",tag:"it",company:"Manulife",min:113260,max:210340,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Lead",date:"2026-03-08"},
+  {id:145,role:"Senior Compliance Analyst",tag:"legal",company:"Manulife",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Seni",date:"2026-03-08"},
+  {id:146,role:"Data Analyst, L&C Strategy and Operations: Data Analytics an",tag:"data",company:"Manulife",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-08"},
+  {id:147,role:"Business Analyst (12 Month Contract)",tag:"pm",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:148,role:"Senior Financial Analyst, Accounting",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:149,role:"Senior Financial Analyst, Consolidations & Management Report",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:150,role:"Systems Solution Developer",tag:"it",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sys",date:"2026-03-08"},
+  {id:151,role:"Lead, Product Delivery (12 Months Contract)",tag:"pm",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Lea",date:"2026-03-08"},
+  {id:152,role:"Site Reliability Engineer - Identity and Platform Services",tag:"it",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sit",date:"2026-03-08"},
+  {id:153,role:"Manager, Operations",tag:"ops",company:"OMERS",min:115000,max:145000,location:"Ontario, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Newmarket-Ontario/M",date:"2026-03-08"},
+  {id:154,role:"Senior Front-End Web Developer (12 Months Contract)",tag:"eng",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:155,role:"Senior Analyst, Performance & Valuations",tag:"fin",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:156,role:"Maintenance Supervisor",tag:"ops",company:"OMERS",min:65000,max:75000,location:"Mississauga, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Mississauga-Ontario",date:"2026-03-08"},
+  {id:157,role:"Senior Business Analyst (12 Month Contract)",tag:"pm",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:158,role:"Coordinator, Accounts Payable (12 Month Contract)",tag:"fin",company:"OMERS",min:48000,max:68000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Coo",date:"2026-03-08"},
+  {id:159,role:"Senior Analyst, Investment Finance & Valuations",tag:"fin",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:160,role:"Senior Analyst, Fixed Income, Global Multi-Asset Strategies",tag:"fin",company:"OMERS",min:140000,max:170000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:161,role:"Associate Director, Environmental Risk Management",tag:"legal",company:"OMERS",min:122000,max:172000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ass",date:"2026-03-08"},
+  {id:162,role:"Senior Business Analyst, Data Integration & Performance Plat",tag:"it",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Bus",date:"2026-03-08"},
+  {id:163,role:"Analyst, Funding and Collateral Operations",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ana",date:"2026-03-08"},
+  {id:164,role:"Manager, Investment Finance (Contract end January 2027)",tag:"fin",company:"OMERS",min:105000,max:155000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Man",date:"2026-03-08"},
+  {id:165,role:"Senior Business Analyst, Investment Data Operations (12 mont",tag:"fin",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:166,role:"Analyst, Investment Finance (G&A)",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ana",date:"2026-03-08"},
+  {id:167,role:"Senior Analyst, Financial Planning & Analysis",tag:"fin",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:168,role:"Analyst, Finance & Treasury",tag:"fin",company:"OMERS",min:62000,max:92000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ana",date:"2026-03-08"},
+  {id:169,role:"Specialist, Pension Accounting",tag:"fin",company:"OMERS",min:62000,max:92000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Spe",date:"2026-03-08"},
+  {id:170,role:"Business Analyst, Trading Platform",tag:"it",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Bus",date:"2026-03-08"},
+  {id:171,role:"Lead, Process Engineer (Intelligent Automation and AI)",tag:"eng",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Lea",date:"2026-03-08"},
+  {id:172,role:"Jr. Building Operator",tag:"ops",company:"OMERS",min:50000,max:60000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Jr-",date:"2026-03-08"},
+  {id:173,role:"Lead, Learning & Media Designer",tag:"hr",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Lea",date:"2026-03-08"},
+  {id:174,role:"Manager, Leadership & Team Development",tag:"hr",company:"OMERS",min:103000,max:157000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Man",date:"2026-03-08"},
+  {id:175,role:"Associate Director, Business Continuity Program",tag:"ops",company:"OMERS",min:122000,max:188000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ass",date:"2026-03-08"},
+  {id:176,role:"Senior Analyst, Pension Policy and Legal (Technical Writer)",tag:"legal",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:177,role:"Senior Analyst, Finance and Accounting",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-08"},
+  {id:178,role:"Technical Analyst, Valuations & Analytics",tag:"data",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Tec",date:"2026-03-08"},
+  {id:179,role:"Senior Financial Analyst",tag:"fin",company:"Brookfield",min:90000,max:105000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-08"},
+  {id:180,role:"Receptionist",tag:"ops",company:"Brookfield",min:50000,max:65000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Re",date:"2026-03-08"},
+  {id:181,role:"Manager, Tax",tag:"fin",company:"Brookfield",min:120000,max:140000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Ma",date:"2026-03-08"},
+  {id:182,role:"Executive Assistant",tag:"ops",company:"Brookfield",min:90000,max:110000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Ex",date:"2026-03-08"},
+  {id:183,role:"Finance Manager",tag:"fin",company:"Brookfield",min:120000,max:140000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Fi",date:"2026-03-08"},
+  {id:184,role:"Senior Analyst, Finance",tag:"fin",company:"Brookfield",min:90000,max:105000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-08"},
+  {id:185,role:"Associate, Investor Relations",tag:"sales",company:"Brookfield",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-08"},
+  {id:186,role:"Senior Specialist, Private Asset Servicing",tag:"fin",company:"Brookfield",min:95000,max:110000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-08"},
+  {id:187,role:"Senior Specialist, SPV Operations",tag:"ops",company:"Brookfield",min:95000,max:110000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-08"},
+  {id:188,role:"Manager, Business Systems Applications",tag:"it",company:"Brookfield",min:115000,max:130000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Ma",date:"2026-03-08"},
+  {id:189,role:"BI Reporting Developer Analyst",tag:"data",company:"Jonas Software Canada",min:100000,max:115000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:190,role:"Senior Director of AI",tag:"exec",company:"Jonas Software Canada",min:130000,max:150000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:191,role:"Manager, Professional Services",tag:"ops",company:"Jonas Software Canada",min:75000,max:85000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:192,role:"Director of Finance",tag:"fin",company:"Jonas Software Canada",min:155000,max:165000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:193,role:"Accounts Payable Clerk",tag:"fin",company:"Jonas Software Canada",min:50000,max:55000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:194,role:"Product Support Technical Specialist",tag:"pm",company:"Jonas Software Canada",min:60000,max:70000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:195,role:"Junior Quality Assurance Analyst",tag:"eng",company:"Jonas Software Canada",min:50000,max:55000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:196,role:"Director of Software Development",tag:"eng",company:"Jonas Software Canada",min:155000,max:175000,location:"Toronto, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:197,role:"Senior Financial Analyst",tag:"fin",company:"Jonas Software Canada",min:85000,max:95000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:198,role:"Director of Development",tag:"eng",company:"Jonas Software Canada",min:130000,max:150000,location:"Toronto, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:199,role:"Marketing Manager",tag:"sales",company:"Jonas Software Canada",min:65000,max:75000,location:"Toronto, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:200,role:"Software Engineer",tag:"eng",company:"Jonas Software Canada",min:70000,max:80000,location:"Toronto, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:201,role:"Mergers & Acquisitions Business Development Associate",tag:"sales",company:"Jonas Software Canada",min:55000,max:65000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:202,role:"AI Transformation Lead",tag:"pm",company:"Jonas Software Canada",min:120000,max:140000,location:"Toronto, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:203,role:"Product Support Technician",tag:"pm",company:"Jonas Software Canada",min:55000,max:60000,location:"Markham, ON",src:"https://talentmanagementsolution.wd3.myworkdayjobs.com/en-US/JonasSoftwareCanada",date:"2026-03-08"},
+  {id:204,role:"Senior Actuarial Analyst - Claims Data Analytics (CDAT)",tag:"fin",company:"Intact Financial Corporation",min:89700,max:109700,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/Se",date:"2026-03-08"},
+  {id:205,role:"Customer Service Representative - Auto Claims",tag:"ops",company:"Intact Financial Corporation",min:43600,max:53200,location:"Ottawa, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Ottawa-Ontario-CAN/Cus",date:"2026-03-08"},
+  {id:206,role:"Accounting Operations Specialist",tag:"fin",company:"Intact Financial Corporation",min:87200,max:106600,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/Fi",date:"2026-03-08"},
+  {id:207,role:"Director, Actuarial, Commercial Lines",tag:"fin",company:"Intact Financial Corporation",min:174500,max:213300,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/Di",date:"2026-03-08"},
+  {id:208,role:"Associate, Sales and Customer Service (May)",tag:"sales",company:"Intact Financial Corporation",min:47100,max:57500,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/As",date:"2026-03-08"},
+  {id:209,role:"Senior Communications Advisor",tag:"sales",company:"Intact Financial Corporation",min:87200,max:106600,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/Se",date:"2026-03-08"},
+  {id:210,role:"Senior Underwriter Specialty Lines",tag:"fin",company:"Intact Financial Corporation",min:94200,max:115200,location:"Toronto, ON",src:"https://intactfc.wd3.myworkdayjobs.com/en-US/intactfc/job/Toronto-Ontario-CAN/Se",date:"2026-03-08"},
+  {id:211,role:"Program Manager",tag:"pm",company:"Shoppers Drug Mart",min:100000,max:132000,location:"Mississauga, ON",src:"https://myview.wd3.myworkdayjobs.com/en-US/sdm_careers/job/1685-Tech-Ave-Mississ",date:"2026-03-08"},
+  {id:212,role:"Front-End Engineer",tag:"eng",company:"Amazon",min:114800,max:191800,location:"Toronto, ON",src:"https://jobflexy.com/front-end-engineer-amazon-toronto/",date:"2026-02-25"},
+  {id:213,role:"Principal, Software Engineering – Finance & Reinsurance",tag:"eng",company:"Intact",min:161600,max:197500,location:"Toronto, ON",src:"https://bettercareer.ca/job/principal-software-engineering-finance-reinsurance/",date:"2026-02-11"},
+  {id:214,role:"Infrastructure Engineer (Data Encryption)",tag:"it",company:"Layer 6 AI",min:96900,max:136800,location:"Toronto, ON",src:"https://www1.communitech.ca/companies/layer-6-ai/jobs/68231738-infrastructure-en",date:"2026-02-20"},
+  {id:215,role:"Senior Application Developer",tag:"eng",company:"Alcohol and Gaming Commission of Ontario",min:92902,max:116123,location:"Toronto, ON",src:"https://can251.dayforcehcm.com/CandidatePortal/en-US/agco/Posting/View/4281",date:"2026-03-08"},
+  {id:216,role:"Nurse Practitioner",tag:"other",company:"WAHA",min:159588,max:165886,location:"Moosonee, ON/Fort Albany, ON/A",src:"https://www.nursingcareerscanada.ca/jobs/nursing-healthcare/ontario/",date:"2026-03-08"},
+  {id:217,role:"Research Machine Learning Scientist",tag:"data",company:"TD Bank",min:140000,max:250000,location:"Toronto, ON",src:"https://builtintoronto.com/job/research-machine-learning-scientist/8626958",date:"2026-03-08"},
+  {id:218,role:"Manufacturing Project Engineer - Machining",tag:"eng",company:"INNIO",min:95000,max:115000,location:"Welland, Ontario",src:"https://jobs.jobvite.com/innio/job/obEZxfw5",date:"2026-03-09"},
+  {id:219,role:"Director, Business Management",tag:"ops",company:"TD Bank",min:115600,max:163200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Direc",date:"2026-03-09"},
+  {id:220,role:"Senior Analyst, Payroll Accounting",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-09"},
+  {id:221,role:"Senior Associate, Treasury Operations",tag:"fin",company:"OTPPB",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:222,role:"Executive Assistant, Teachers’ Venture Growth (TVG) - 15-mon",tag:"ops",company:"OTPPB",min:55000,max:90000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:223,role:"Senior Associate, Total Fund Risk Analytics",tag:"legal",company:"OTPPB",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:224,role:"Manager, Collateral & Liquidity Operations (12-month contrac",tag:"fin",company:"OTPPB",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:225,role:"Senior Executive Assistant",tag:"ops",company:"OTPPB",min:70000,max:115000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:226,role:"Manager, Due Diligence",tag:"legal",company:"OTPPB",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:227,role:"Law Clerk - Corporate and Investments",tag:"legal",company:"OTPPB",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-09"},
+  {id:228,role:"Business Operations Analyst",tag:"ops",company:"TD Bank",min:59500,max:84000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Opera",date:"2026-03-10"},
+  {id:229,role:"Personal Banking Associate Trainee",tag:"fin",company:"TD Bank",min:45700,max:61000,location:"Mississauga, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Mississauga-Ontario/P",date:"2026-03-10"},
+  {id:230,role:"Actuarial Intern / Co-Op - Preferred Candidate",tag:"fin",company:"TD Bank",min:45700,max:74400,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Actua",date:"2026-03-10"},
+  {id:231,role:"Personal Banking Association",tag:"fin",company:"BMO",min:36000,max:54500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Personal-Ban",date:"2026-03-10"},
+  {id:232,role:"Audit Manager, Wealth Management",tag:"legal",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Audit-Manage",date:"2026-03-10"},
+  {id:233,role:"Audit Manager, Quantitative",tag:"legal",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Audit-Manage",date:"2026-03-10"},
+  {id:234,role:"Agile Delivery Manager - (Banking Industry / Scrum Master / ",tag:"pm",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Agile-Delive",date:"2026-03-10"},
+  {id:235,role:"Senior Manager, Model Validation",tag:"legal",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-10"},
+  {id:236,role:"Director, SAMU National Accounts",tag:"sales",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--SA",date:"2026-03-10"},
+  {id:237,role:"Senior Manager - Model Validation",tag:"legal",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-10"},
+  {id:238,role:"Client Service Associate, Private Wealth",tag:"fin",company:"BMO",min:35900,max:66300,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Client-Servi",date:"2026-03-10"},
+  {id:239,role:"Credit Analyst - Commercial Banking (Income Property Finance",tag:"fin",company:"BMO",min:53200,max:98300,location:"Waterloo, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Waterloo-ON-CAN/Credit-Anal",date:"2026-03-10"},
+  {id:240,role:"NAIMR Head of Canada Alternatives Distribution",tag:"sales",company:"BMO",min:147200,max:197200,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/NAIMR-Head-o",date:"2026-03-10"},
+  {id:241,role:"Specialist, Anti Money Laundering  User Acceptance Testing",tag:"legal",company:"BMO",min:56000,max:103500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Specialist--",date:"2026-03-10"},
+  {id:242,role:"Manager, Portfolio Management Group, BMO Private Wealth",tag:"fin",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Por",date:"2026-03-10"},
+  {id:243,role:"Senior Analyst, Market Risk",tag:"legal",company:"BMO",min:56000,max:103500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Analy",date:"2026-03-10"},
+  {id:244,role:"Senior Technologist, Risk Systems",tag:"it",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Techn",date:"2026-03-10"},
+  {id:245,role:"Auditor, Spot Audit, Practice Audits, Professional Developme",tag:"legal",company:"Law Society of Ontario",min:90795,max:113495,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13754882/auditor-spot-audit-practice-audits-prof",date:"2026-02-22"},
+  {id:246,role:"Wealth Strategist",tag:"fin",company:"CIBC",min:92490,max:127200,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Wealth-Strategist",date:"2026-03-10"},
+  {id:247,role:"Senior Underwriting Consultant, High Net Worth",tag:"fin",company:"Manulife",min:85300,max:135300,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-10"},
+  {id:248,role:"Senior Business Analyst – Group Benefits Operations",tag:"ops",company:"Manulife",min:70500,max:117500,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Ana",date:"2026-03-10"},
+  {id:249,role:"Treasury Operations Specialist",tag:"fin",company:"Manulife",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario-Toronto-",date:"2026-03-10"},
+  {id:250,role:"Associate Marketing Manager, Retention/Expansion Affinity Ma",tag:"sales",company:"Manulife",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-10"},
+  {id:251,role:"Senior Tax Analyst, Transfer Pricing",tag:"fin",company:"Manulife",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Seni",date:"2026-03-10"},
+  {id:252,role:"Regional Recruit Analyst",tag:"hr",company:"Manulife",min:48450,max:80750,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Burlington-Ontario/R",date:"2026-03-10"},
+  {id:253,role:"Senior Release Train Engineer",tag:"pm",company:"Manulife",min:113000,max:163000,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Rel",date:"2026-03-10"},
+  {id:254,role:"Actuarial Manager, Global Retirement Finance - Pricing",tag:"fin",company:"Manulife",min:103270,max:153270,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Actu",date:"2026-03-10"},
+  {id:255,role:"Agent of Record Specialist",tag:"ops",company:"Manulife",min:43875,max:73125,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-10"},
+  {id:256,role:"Business Intelligence Manager",tag:"data",company:"Manulife",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Deci",date:"2026-03-10"},
+  {id:257,role:"Sr. Sourcing Analyst",tag:"ops",company:"Brookfield",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Sr",date:"2026-03-10"},
+  {id:258,role:"Manager, Finance",tag:"fin",company:"Brookfield",min:120000,max:140000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Ma",date:"2026-03-10"},
+  {id:259,role:"Sr. Financial Analyst (FP&A)",tag:"fin",company:"Medline",min:81600,max:122400,location:"Mississauga, ON",src:"https://jobs.accaglobal.com/job/13739483/sr-financial-analyst-fp-and-a-/",date:"2026-02-12"},
+  {id:260,role:"Auditor, Spot Audit, Practice Audits, Professional Developme",tag:"legal",company:"Law Society of Ontario",min:90795,max:113495,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13754882/auditor-spot-audit-practice-audits-prof",date:"2026-02-22"},
+  {id:261,role:"HR Director",tag:"hr",company:"EastGen",min:100000,max:130000,location:"Guelph, ON",src:"https://www.hireauthority.ca/job/1696310/hr-director/",date:"2026-03-11"},
+  {id:262,role:"Administrative Assistant",tag:"ops",company:"RBC",min:35000,max:47000,location:"Toronto, ON",src:"https://rbc.wd3.myworkdayjobs.com/en-US/RBCGLOBAL1/job/TORONTO-Ontario-Canada/Ad",date:"2026-03-11"},
+  {id:263,role:"Administrator, Institutional Client Operations",tag:"ops",company:"RBC",min:46000,max:70000,location:"Toronto, ON",src:"https://rbc.wd3.myworkdayjobs.com/en-US/RBCGLOBAL1/job/TORONTO-Ontario-Canada/Ad",date:"2026-03-11"},
+  {id:264,role:"Quality Assurance Specialist - (Automation / Contact Centre ",tag:"eng",company:"BMO",min:61600,max:113900,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/Qu",date:"2026-03-11"},
+  {id:265,role:"Senior Technology Manager - (Development / API Design / AWS/",tag:"it",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Techn",date:"2026-03-11"},
+  {id:266,role:"Software Developer - (Java / Linux / AWS / Wire Payments)",tag:"eng",company:"BMO",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Software-Dev",date:"2026-03-11"},
+  {id:267,role:"Business Development Specialist (Inside Sales) - Segregated ",tag:"sales",company:"BMO",min:42500,max:78900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Business-Dev",date:"2026-03-11"},
+  {id:268,role:"Financial Planner",tag:"fin",company:"BMO",min:45500,max:84500,location:"Hamilton, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Hamilton-ON-CAN/Financial-P",date:"2026-03-11"},
+  {id:269,role:"Manager, Digital Acquisition",tag:"sales",company:"BMO",min:56000,max:103500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Dig",date:"2026-03-11"},
+  {id:270,role:"Manager, Data Science",tag:"data",company:"BMO",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Dat",date:"2026-03-11"},
+  {id:271,role:"Marketing Specialist, Marketing Planning",tag:"sales",company:"BMO",min:45500,max:84500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Marketing-Sp",date:"2026-03-11"},
+  {id:272,role:"Partner Marketing Specialist (12 month contract)",tag:"sales",company:"BMO",min:45500,max:84500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Partner-Mark",date:"2026-03-11"},
+  {id:273,role:"Senior Manager - Commercial Banking Controls & Governance",tag:"legal",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-11"},
+  {id:274,role:"Regulatory Integrator and Governance Lead",tag:"legal",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Regulatory-I",date:"2026-03-11"},
+  {id:275,role:"Senior Manager, PM Financial Planning and Analysis",tag:"fin",company:"BMO",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-11"},
+  {id:276,role:"Client Associate (IR Licensed, Mandarin & Cantonese speaking",tag:"fin",company:"CIBC",min:50840,max:59350,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Client-Associate-",date:"2026-03-11"},
+  {id:277,role:"Senior Consultant, Events",tag:"sales",company:"CIBC",min:92490,max:127200,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Senior-Consultant",date:"2026-03-11"},
+  {id:278,role:"Analyst, Strategy, Global Hedging - Variable and Indexed-Lin",tag:"fin",company:"Manulife",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Anal",date:"2026-03-11"},
+  {id:279,role:"Manager, Procurement Strategy",tag:"ops",company:"Manulife",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-11"},
+  {id:280,role:"Senior Travel Claims Specialist",tag:"ops",company:"Manulife",min:51975,max:86625,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-11"},
+  {id:281,role:"Client Portfolio Management Specialist",tag:"fin",company:"Manulife",min:132000,max:231000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Clie",date:"2026-03-11"},
+  {id:282,role:"Application Support Analyst",tag:"it",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Bus",date:"2026-03-11"},
+  {id:283,role:"Analyst, Data Management",tag:"data",company:"Brookfield",min:65000,max:80000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/An",date:"2026-03-11"},
+  {id:284,role:"Senior Analyst, Application Engineering",tag:"eng",company:"Brookfield",min:95000,max:115000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-11"},
+  {id:285,role:"Senior Analyst, Business Systems Analysis",tag:"it",company:"Brookfield",min:95000,max:115000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-11"},
+  {id:286,role:"Strategy and Operations Principal Lead",tag:"ops",company:"Google",min:194000,max:199000,location:"Toronto, ON",src:"https://jobflexy.com/strategy-and-operations-principal-lead-google-toronto/",date:"2026-03-09"},
+  {id:288,role:"Java Engineer, TD Securities",tag:"eng",company:"TD Bank",min:105100,max:129400,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Java-",date:"2026-03-12"},
+  {id:289,role:"Senior Java Engineer, TD Securities",tag:"eng",company:"TD Bank",min:126800,max:164100,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Senio",date:"2026-03-12"},
+  {id:290,role:"Solutions IT Designer",tag:"it",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Solut",date:"2026-03-12"},
+  {id:291,role:"Senior Practice Consultant, Private Wealth Management",tag:"fin",company:"TD Bank",min:91200,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Senio",date:"2026-03-12"},
+  {id:292,role:"Manager, IT Controls Testing",tag:"legal",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--IT-",date:"2026-03-12"},
+  {id:293,role:"Manager - Business Management",tag:"ops",company:"BMO",min:69000,max:129000,location:"Mississauga, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Mississauga-ON-CAN/Manager-",date:"2026-03-12"},
+  {id:294,role:"Senior Manager - Global Markets Operational Risk",tag:"legal",company:"BMO",min:121600,max:211800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-12"},
+  {id:295,role:"Retail Insurance Compliance Specialist",tag:"legal",company:"BMO",min:56000,max:103500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Retail-Insur",date:"2026-03-12"},
+  {id:296,role:"Bilingual (French) Insurance Consumer Complaints Officer",tag:"legal",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Bilingual--F",date:"2026-03-12"},
+  {id:297,role:"Business Development Manager, Segregated Funds/Annuities",tag:"sales",company:"BMO",min:67400,max:117400,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Business-Dev",date:"2026-03-12"},
+  {id:298,role:"Senior Compliance Officer, Equity Trade Surveillance",tag:"legal",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Compl",date:"2026-03-12"},
+  {id:299,role:"Manager, Wealth Data Management & Governance",tag:"data",company:"BMO",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Wea",date:"2026-03-12"},
+  {id:301,role:"Senior Banker",tag:"fin",company:"BMO",min:43200,max:80300,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Tillsonburg-ON-CAN/Senior-B",date:"2026-03-12"},
+  {id:302,role:"Senior Specialist, Global Investigations",tag:"legal",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Speci",date:"2026-03-12"},
+  {id:303,role:"Measurement Lead, NACB Initiative Communications",tag:"sales",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Measurement-",date:"2026-03-12"},
+  {id:304,role:"Senior Manager Campaign Strategy and Optimization, NARP and ",tag:"sales",company:"BMO",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-12"},
+  {id:305,role:"Bilingual Client Services Associate",tag:"fin",company:"BMO",min:38500,max:71000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Bilingual-Cl",date:"2026-03-12"},
+  {id:306,role:"Manager, Investment and Client Operations, GAM",tag:"fin",company:"BMO",min:69000,max:129000,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/Ma",date:"2026-03-12"},
+  {id:307,role:"Credit Manager",tag:"fin",company:"BMO",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Credit-Manag",date:"2026-03-12"},
+  {id:308,role:"Executive Director,  Wealth Brand, Experiences and Events",tag:"sales",company:"CIBC",min:136680,max:186680,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Executive-Directo",date:"2026-03-12"},
+  {id:309,role:"Senior Business System Analyst",tag:"it",company:"Manulife",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Seni",date:"2026-03-12"},
+  {id:310,role:"Executive Assistant",tag:"ops",company:"Manulife",min:55125,max:91875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Exec",date:"2026-03-12"},
+  {id:311,role:"Director, Derivatives Middle Office Operation",tag:"fin",company:"Manulife",min:125100,max:175100,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Dire",date:"2026-03-12"},
+  {id:312,role:"Cybersecurity Delivery Manager",tag:"pm",company:"Manulife",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Cybe",date:"2026-03-12"},
+  {id:313,role:"Data Engineer",tag:"data",company:"Manulife",min:86100,max:136100,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-12"},
+  {id:314,role:"New Business Medical Administration Specialist",tag:"other",company:"Manulife",min:43875,max:73125,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/New",date:"2026-03-12"},
+  {id:315,role:"Manager, Data Governance and Quality",tag:"data",company:"Manulife",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-12"},
+  {id:316,role:"Strategy Analyst",tag:"data",company:"Manulife",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Stra",date:"2026-03-12"},
+  {id:317,role:"Manager, Treasury Systems and Transformation",tag:"fin",company:"Manulife",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-12"},
+  {id:318,role:"Analyst/Senior Analyst, Total Plan Risk Management",tag:"legal",company:"OMERS",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ana",date:"2026-03-12"},
+  {id:319,role:"Senior Analyst, Compliance & Ethics",tag:"legal",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-12"},
+  {id:320,role:"Analyst, Derivatives Operations",tag:"fin",company:"OMERS",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Ana",date:"2026-03-12"},
+  {id:321,role:"Business Analyst",tag:"pm",company:"Oxford Properties Group",min:86000,max:130000,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13777674/business-analyst-12-month-contract-/",date:"2026-03-08"},
+  {id:322,role:"Manager, Data &amp; Analytics",tag:"data",company:"City of Leduc",min:119137,max:148931,location:"Kitchener, ON",src:"https://bettercareer.ca/job/manager-data-analytics/",date:"2026-02-12"},
+  {id:323,role:"Business Systems Analyst – Microsoft 365 Copilot & Copilot S",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Busin",date:"2026-03-13"},
+  {id:324,role:"M365 Copilot Engineer /Engineer II",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/M365-",date:"2026-03-13"},
+  {id:325,role:"Software Engineer II",tag:"eng",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Softw",date:"2026-03-13"},
+  {id:326,role:"Manager, Real Estate Secured Lending (RESL) Account Manageme",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Rea",date:"2026-03-13"},
+  {id:327,role:"Senior Manager, Real Estate Secured Lending Acquisition",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-13"},
+  {id:328,role:"Manager, Business Banking Lending Acquisition",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Bus",date:"2026-03-13"},
+  {id:329,role:"Senior Manager, Business Banking Lending Acquisition",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-13"},
+  {id:330,role:"Director, Business Banking Lending Acquisition & Account Man",tag:"fin",company:"Bank of Montreal",min:110500,max:192500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--Le",date:"2026-03-13"},
+  {id:331,role:"Intermediate Application Developer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Intermediate",date:"2026-03-13"},
+  {id:332,role:"Director, Commercial Banking (Technology & Innovation Group)",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--Co",date:"2026-03-13"},
+  {id:333,role:"Administrative Assistant, Private Wealth",tag:"fin",company:"BMO Nesbitt Burns Inc.",min:33600,max:50900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Administrati",date:"2026-03-13"},
+  {id:334,role:"Associate Product Owner",tag:"pm",company:"Bank of Montreal",min:75900,max:141900,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/As",date:"2026-03-13"},
+  {id:335,role:"Director, Vendor Management Office",tag:"ops",company:"Bank of Montreal",min:110500,max:192500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Director--Ve",date:"2026-03-13"},
+  {id:336,role:"Investment Associate",tag:"fin",company:"BMO Nesbitt Burns Inc.",min:42500,max:78900,location:"Ottawa, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Ottawa-ON-CAN/Investment-As",date:"2026-03-13"},
+  {id:337,role:"Bilingual (Eng/Fr) Client Service Associate",tag:"fin",company:"BMO Nesbitt Burns Inc.",min:35900,max:66300,location:"Ottawa, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Ottawa-ON-CAN/Bilingual--En",date:"2026-03-13"},
+  {id:338,role:"Product Manager Savings",tag:"pm",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Product-Mana",date:"2026-03-13"},
+  {id:339,role:"Analyst/Associate, Institutional Client Experience",tag:"ops",company:"CIBC Asset Management Inc",min:75870,max:104320,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Analyst-Associate",date:"2026-03-13"},
+  {id:340,role:"Data Architect",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-13"},
+  {id:341,role:"Functional Rehabilitation Specialist",tag:"other",company:"Company 1 - The Manufacturers Life Insur",min:51975,max:86625,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-13"},
+  {id:342,role:"Global AI Platforms, Program Manager",tag:"pm",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Glob",date:"2026-03-13"},
+  {id:343,role:"CRM & Enablement Tools Manager",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/CRM-",date:"2026-03-13"},
+  {id:344,role:"Product Manager, Retail Products",tag:"pm",company:"Company 58 - Manulife Bank of Canada",min:85300,max:135300,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Pro",date:"2026-03-13"},
+  {id:345,role:"Financial Controls Analyst",tag:"legal",company:"Company 1 - The Manufacturers Life Insur",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Fina",date:"2026-03-13"},
+  {id:346,role:"Head of Digital Business Development",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Head",date:"2026-03-13"},
+  {id:347,role:"Associate, Investor Relations and FP&A",tag:"fin",company:"Brookfield Corporation",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-13"},
+  {id:348,role:"Senior Analyst, ITSM Governance & Service Assurance",tag:"it",company:"Brookfield Asset Management LLC",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-13"},
+  {id:349,role:"Data Scientist",tag:"data",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:350,role:"Senior Associate, Treasury Operations",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:351,role:"Senior Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:112300,max:122300,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:352,role:"Business Partner Specialist (12 month mat leave)",tag:"hr",company:"Ontario Teachers Pension Plan Board",min:90000,max:140000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:353,role:"Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:100300,max:107200,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:354,role:"Engineering Lead, Network Security Tools",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:355,role:"Tax Coordinator",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:356,role:"Associate Systems Analyst (12-month Contract)",tag:"it",company:"Ontario Teachers Pension Plan Board",min:89800,max:95600,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:357,role:"Solution Architect, Microsoft Power Platform",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:358,role:"Executive Assistant, Teachers’ Venture Growth (TVG) - 15-mon",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:55000,max:90000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:359,role:"Senior Associate, Total Fund Risk Analytics",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:360,role:"Manager, Collateral & Liquidity Operations (12-month contrac",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:361,role:"Senior Executive Assistant",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:70000,max:115000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:362,role:"Manager, Due Diligence",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:363,role:"Law Clerk - Corporate and Investments",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-13"},
+  {id:364,role:"Manager, Data & Analytics",tag:"data",company:"City of Leduc",min:119137,max:148931,location:"Kitchener, ON",src:"https://bettercareer.ca/job/manager-data-analytics/",date:"2026-02-12"},
+  {id:365,role:"Business Analyst (12 Month Contract)",tag:"pm",company:"Oxford Properties Group",min:86000,max:130000,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13777674/business-analyst-12-month-contract-/",date:"2026-03-08"},
+  {id:366,role:"Contact Center Rep - London Credit Card",tag:"ops",company:"TD Bank",min:45700,max:61000,location:"London, ON",src:"https://ca.indeed.com/cmp/Td-Bank/salaries",date:"2026-03-13"},
+  {id:367,role:"Senior Security Advisor",tag:"it",company:"Intact Financial Corporation",min:101800,max:124400,location:"Toronto, ON",src:"https://prideatwork.ca/careers/senior-security-advisor-saas-security-and-cyber-s",date:"2026-03-13"},
+  {id:368,role:"Senior IT Specialist",tag:"it",company:"BuildOps",min:80000,max:100000,location:"Toronto, ON",src:"https://thesaraslist.com/jobs/senior-it-specialist-buildops-toronto-on-068a0371",date:"2026-03-06"},
+  {id:369,role:"Specialist Quality Water",tag:"other",company:"Region of Peel",min:92151,max:115189,location:"Brampton, ON",src:"https://owwa.ca/job/region-of-peel-10-peel-centre-drive-brampton-on-67-specialis",date:"2026-03-14"},
+  {id:370,role:"Senior Product Manager",tag:"pm",company:"Intact",min:118700,max:145100,location:"Toronto, ON",src:"https://hybridhired.com/company/intactfc",date:"2026-03-14"},
+  {id:371,role:"Bilingual Contact Center Representative",tag:"ops",company:"The Toronto-Dominion Bank (Canada)",min:45700,max:61000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Bilin",date:"2026-03-14"},
+  {id:372,role:"Business Systems Analyst – Microsoft 365 Copilot & Copilot S",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Busin",date:"2026-03-14"},
+  {id:373,role:"M365 Copilot Engineer /Engineer II",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/M365-",date:"2026-03-14"},
+  {id:374,role:"Associate/VP,  Portfolio & Risk Analysis,  BMO Global Asset ",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate-VP",date:"2026-03-14"},
+  {id:375,role:"Senior Enterprise Architect - (Digital / Core Banking)",tag:"it",company:"Bank of Montreal",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Enter",date:"2026-03-14"},
+  {id:376,role:"Product Manager, Digital Investing",tag:"pm",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Product-Mana",date:"2026-03-14"},
+  {id:377,role:"Data Engineer",tag:"data",company:"Bank of Montreal",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Data-Enginee",date:"2026-03-14"},
+  {id:378,role:"AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/AI-Engineer_",date:"2026-03-14"},
+  {id:379,role:"Senior AI Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-AI-En",date:"2026-03-14"},
+  {id:380,role:"Senior Azure Cloud AI Engineer",tag:"it",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Azure",date:"2026-03-14"},
+  {id:381,role:"Applied AI Evaluation Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Applied-AI-E",date:"2026-03-14"},
+  {id:382,role:"Multimodal (Voice/Visual) AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Multimodal--",date:"2026-03-14"},
+  {id:383,role:"Managing Director, Senior Relationship Manager - Real Estate",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Managing-Dir",date:"2026-03-14"},
+  {id:384,role:"Senior Relationship Manager, Commercial Banking (Diversified",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Pickering-ON-CAN/Sales-Dire",date:"2026-03-14"},
+  {id:385,role:"Manager, Liquidity Risk Reporting",tag:"legal",company:"Bank of Montreal",min:89700,max:167700,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Liq",date:"2026-03-14"},
+  {id:386,role:"Client Associate (IR Licensed) CIBC Wood Gundy",tag:"fin",company:"CIBC World Markets Inc (Canada)",min:50840,max:59350,location:"Oakville, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Oakville-ON/Client-Associate",date:"2026-03-14"},
+  {id:387,role:"Project Manager, Executive Reporting and Communications, Dig",tag:"pm",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Proj",date:"2026-03-14"},
+  {id:388,role:"AVP, HNW Underwriting",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/AVP",date:"2026-03-14"},
+  {id:389,role:"Sr. Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:129400,max:179400,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Sr-D",date:"2026-03-14"},
+  {id:390,role:"Director, Third Party Information Security Management",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113260,max:210340,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-14"},
+  {id:391,role:"Manager, Procurement Risk Platforms Management",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-14"},
+  {id:392,role:"Senior Staff Cyber Threat Exposure Management (CTEM) Enginee",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Staf",date:"2026-03-14"},
+  {id:393,role:"Associate Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:69525,max:115875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-14"},
+  {id:394,role:"Manager, Governance and Control",tag:"legal",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-14"},
+  {id:395,role:"Business Unit Security Officer- Manager",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:86100,max:136100,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Bus",date:"2026-03-14"},
+  {id:396,role:"Data Architect",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-14"},
+  {id:397,role:"Functional Rehabilitation Specialist",tag:"other",company:"Company 1 - The Manufacturers Life Insur",min:51975,max:86625,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-14"},
+  {id:398,role:"Global AI Platforms, Program Manager",tag:"pm",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Glob",date:"2026-03-14"},
+  {id:399,role:"CRM & Enablement Tools Manager",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/CRM-",date:"2026-03-14"},
+  {id:400,role:"Product Manager, Retail Products",tag:"pm",company:"Company 58 - Manulife Bank of Canada",min:85300,max:135300,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Pro",date:"2026-03-14"},
+  {id:401,role:"Financial Controls Analyst",tag:"legal",company:"Company 1 - The Manufacturers Life Insur",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Fina",date:"2026-03-14"},
+  {id:402,role:"Head of Digital Business Development",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Head",date:"2026-03-14"},
+  {id:403,role:"Associate, Investor Relations and FP&A",tag:"fin",company:"Brookfield Corporation",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-14"},
+  {id:404,role:"Senior Analyst, ITSM Governance & Service Assurance",tag:"it",company:"Brookfield Asset Management LLC",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-14"},
+  {id:405,role:"Data Scientist",tag:"data",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:406,role:"Senior Associate, Treasury Operations",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:407,role:"Senior Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:112300,max:122300,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:408,role:"Business Partner Specialist (12 month mat leave)",tag:"hr",company:"Ontario Teachers Pension Plan Board",min:90000,max:140000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:409,role:"Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:100300,max:107200,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:410,role:"Engineering Lead, Network Security Tools",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:411,role:"Tax Coordinator",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:412,role:"Associate Systems Analyst (12-month Contract)",tag:"it",company:"Ontario Teachers Pension Plan Board",min:89800,max:95600,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:413,role:"Solution Architect, Microsoft Power Platform",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:414,role:"Executive Assistant, Teachers’ Venture Growth (TVG) - 15-mon",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:55000,max:90000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:415,role:"Senior Associate, Total Fund Risk Analytics",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:416,role:"Manager, Collateral & Liquidity Operations (12-month contrac",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:417,role:"Senior Executive Assistant",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:70000,max:115000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:418,role:"Manager, Due Diligence",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:419,role:"Law Clerk - Corporate and Investments",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-14"},
+  {id:420,role:"Senior Data Engineer – Databricks",tag:"data",company:"Teema Group",min:120000,max:150000,location:"Toronto, ON",src:"https://jobs.teemagroup.com/job/86341-sr-data-engineer-databricks-toronto-ontari",date:"2026-03-14"},
+  {id:421,role:"Director, Communications & Community Develop",tag:"exec",company:"Lennox & Addington",min:152836,max:178762,location:"Napanee, ON",src:"https://lennox-addington.on.ca/.../director.../",date:"2026-03-09"},
+  {id:422,role:"Bilingual Contact Center Representative",tag:"ops",company:"The Toronto-Dominion Bank (Canada)",min:45700,max:61000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Bilin",date:"2026-03-15"},
+  {id:423,role:"Business Systems Analyst – Microsoft 365 Copilot & Copilot S",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Busin",date:"2026-03-15"},
+  {id:424,role:"M365 Copilot Engineer /Engineer II",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/M365-",date:"2026-03-15"},
+  {id:425,role:"Associate/VP,  Portfolio & Risk Analysis,  BMO Global Asset ",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate-VP",date:"2026-03-15"},
+  {id:426,role:"Senior Enterprise Architect - (Digital / Core Banking)",tag:"it",company:"Bank of Montreal",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Enter",date:"2026-03-15"},
+  {id:427,role:"Product Manager, Digital Investing",tag:"pm",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Product-Mana",date:"2026-03-15"},
+  {id:428,role:"Data Engineer",tag:"data",company:"Bank of Montreal",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Data-Enginee",date:"2026-03-15"},
+  {id:429,role:"AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/AI-Engineer_",date:"2026-03-15"},
+  {id:430,role:"Senior AI Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-AI-En",date:"2026-03-15"},
+  {id:431,role:"Senior Azure Cloud AI Engineer",tag:"it",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Azure",date:"2026-03-15"},
+  {id:432,role:"Applied AI Evaluation Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Applied-AI-E",date:"2026-03-15"},
+  {id:433,role:"Multimodal (Voice/Visual) AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Multimodal--",date:"2026-03-15"},
+  {id:434,role:"Managing Director, Senior Relationship Manager - Real Estate",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Managing-Dir",date:"2026-03-15"},
+  {id:435,role:"Senior Relationship Manager, Commercial Banking (Diversified",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Pickering-ON-CAN/Sales-Dire",date:"2026-03-15"},
+  {id:436,role:"Manager, Liquidity Risk Reporting",tag:"fin",company:"Bank of Montreal",min:89700,max:167700,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Liq",date:"2026-03-15"},
+  {id:437,role:"Client Associate (IR Licensed) CIBC Wood Gundy",tag:"fin",company:"CIBC World Markets Inc (Canada)",min:50840,max:59350,location:"Oakville, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Oakville-ON/Client-Associate",date:"2026-03-15"},
+  {id:438,role:"Senior Manager, Audit and Advisory Services",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:92475,max:160290,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Seni",date:"2026-03-15"},
+  {id:439,role:"Associate Manager, Audit and Advisory Services",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-15"},
+  {id:440,role:"Project Manager, Executive Reporting and Communications, Dig",tag:"pm",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Proj",date:"2026-03-15"},
+  {id:441,role:"AVP, HNW Underwriting",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/AVP",date:"2026-03-15"},
+  {id:442,role:"Sr. Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:129400,max:179400,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Sr-D",date:"2026-03-15"},
+  {id:443,role:"Director, Third Party Information Security Management",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113260,max:210340,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-15"},
+  {id:444,role:"Manager, Procurement Risk Platforms Management",tag:"ops",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-15"},
+  {id:445,role:"Senior Staff Cyber Threat Exposure Management (CTEM) Enginee",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Staf",date:"2026-03-15"},
+  {id:446,role:"Associate Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:69525,max:115875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-15"},
+  {id:447,role:"Manager, Governance and Control",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-15"},
+  {id:448,role:"Business Unit Security Officer- Manager",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:86100,max:136100,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Bus",date:"2026-03-15"},
+  {id:449,role:"Data Architect",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-15"},
+  {id:450,role:"Functional Rehabilitation Specialist",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:51975,max:86625,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-15"},
+  {id:451,role:"Global AI Platforms, Program Manager",tag:"pm",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Glob",date:"2026-03-15"},
+  {id:452,role:"CRM & Enablement Tools Manager",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/CRM-",date:"2026-03-15"},
+  {id:453,role:"Product Manager, Retail Products",tag:"pm",company:"Company 58 - Manulife Bank of Canada",min:85300,max:135300,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Pro",date:"2026-03-15"},
+  {id:454,role:"Financial Controls Analyst",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Fina",date:"2026-03-15"},
+  {id:455,role:"Head of Digital Business Development",tag:"sales",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Head",date:"2026-03-15"},
+  {id:456,role:"Associate, Investor Relations and FP&A",tag:"fin",company:"Brookfield Corporation",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-15"},
+  {id:457,role:"Senior Analyst, ITSM Governance & Service Assurance",tag:"it",company:"Brookfield Asset Management LLC",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-15"},
+  {id:458,role:"Senior Full Stack Developer – Java, React",tag:"eng",company:"Intact",min:101800,max:124400,location:"Toronto, ON",src:"https://hybridhired.com/company/intactfc",date:"2026-03-15"},
+  {id:459,role:"Bilingual Contact Center Representative",tag:"ops",company:"The Toronto-Dominion Bank (Canada)",min:45700,max:61000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Bilin",date:"2026-03-16"},
+  {id:460,role:"Business Systems Analyst – Microsoft 365 Copilot & Copilot S",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Busin",date:"2026-03-16"},
+  {id:461,role:"M365 Copilot Engineer /Engineer II",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/M365-",date:"2026-03-16"},
+  {id:462,role:"Senior Audit Manager - Capital Markets",tag:"fin",company:"Bank of Montreal",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Audit",date:"2026-03-16"},
+  {id:463,role:"Associate/VP,  Portfolio & Risk Analysis,  BMO Global Asset ",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Associate-VP",date:"2026-03-16"},
+  {id:464,role:"Senior Enterprise Architect - (Digital / Core Banking)",tag:"it",company:"Bank of Montreal",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Enter",date:"2026-03-16"},
+  {id:465,role:"Product Manager, Digital Investing",tag:"pm",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Product-Mana",date:"2026-03-16"},
+  {id:466,role:"Data Engineer",tag:"data",company:"Bank of Montreal",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Data-Enginee",date:"2026-03-16"},
+  {id:467,role:"AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/AI-Engineer_",date:"2026-03-16"},
+  {id:468,role:"Senior AI Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-AI-En",date:"2026-03-16"},
+  {id:469,role:"Senior Azure Cloud AI Engineer",tag:"it",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Azure",date:"2026-03-16"},
+  {id:470,role:"Applied AI Evaluation Engineer",tag:"eng",company:"Bank of Montreal",min:82800,max:154800,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Applied-AI-E",date:"2026-03-16"},
+  {id:471,role:"Multimodal (Voice/Visual) AI Engineer",tag:"eng",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Multimodal--",date:"2026-03-16"},
+  {id:472,role:"Managing Director, Senior Relationship Manager - Real Estate",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Managing-Dir",date:"2026-03-16"},
+  {id:473,role:"Senior Relationship Manager, Commercial Banking (Diversified",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Pickering-ON-CAN/Sales-Dire",date:"2026-03-16"},
+  {id:474,role:"Manager, Liquidity Risk Reporting",tag:"fin",company:"Bank of Montreal",min:89700,max:167700,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--Liq",date:"2026-03-16"},
+  {id:475,role:"Client Associate (IR Licensed) CIBC Wood Gundy",tag:"fin",company:"CIBC World Markets Inc (Canada)",min:50840,max:59350,location:"Oakville, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Oakville-ON/Client-Associate",date:"2026-03-16"},
+  {id:476,role:"AVP, HNW Underwriting",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:129800,max:241200,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/AVP",date:"2026-03-16"},
+  {id:477,role:"Sr. Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:129400,max:179400,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Sr-D",date:"2026-03-16"},
+  {id:478,role:"Director, Third Party Information Security Management",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113260,max:210340,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-16"},
+  {id:479,role:"Manager, Procurement Risk Platforms Management",tag:"ops",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-16"},
+  {id:480,role:"Senior Staff Cyber Threat Exposure Management (CTEM) Enginee",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Staf",date:"2026-03-16"},
+  {id:481,role:"Associate Data Scientist - GenAI",tag:"data",company:"Company 1 - The Manufacturers Life Insur",min:69525,max:115875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-16"},
+  {id:482,role:"Manager, Governance and Control",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Mana",date:"2026-03-16"},
+  {id:483,role:"Business Unit Security Officer- Manager",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:86100,max:136100,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Bus",date:"2026-03-16"},
+  {id:484,role:"Data Architect",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-16"},
+  {id:485,role:"Functional Rehabilitation Specialist",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:51975,max:86625,location:"Ontario, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/CAN-Ontario---Full-T",date:"2026-03-16"},
+  {id:486,role:"Associate, Investor Relations and FP&A",tag:"fin",company:"Brookfield Corporation",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-16"},
+  {id:487,role:"Senior Analyst, ITSM Governance & Service Assurance",tag:"it",company:"Brookfield Asset Management LLC",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-16"},
+  {id:488,role:"Data Scientist",tag:"data",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:489,role:"Senior Associate, Treasury Operations",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:490,role:"Senior Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:112300,max:122300,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:491,role:"Business Partner Specialist (12 month mat leave)",tag:"hr",company:"Ontario Teachers Pension Plan Board",min:90000,max:140000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:492,role:"Software Developer",tag:"eng",company:"Ontario Teachers Pension Plan Board",min:100300,max:107200,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:493,role:"Engineering Lead, Network Security Tools",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:494,role:"Tax Coordinator",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:495,role:"Associate Systems Analyst (12-month Contract)",tag:"it",company:"Ontario Teachers Pension Plan Board",min:89800,max:95600,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:496,role:"Solution Architect, Microsoft Power Platform",tag:"it",company:"Ontario Teachers Pension Plan Board",min:105000,max:155000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:497,role:"Executive Assistant, Teachers’ Venture Growth (TVG) - 15-mon",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:55000,max:90000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:498,role:"Senior Associate, Total Fund Risk Analytics",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:499,role:"Manager, Collateral & Liquidity Operations (12-month contrac",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:500,role:"Senior Executive Assistant",tag:"ops",company:"Ontario Teachers Pension Plan Board",min:70000,max:115000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:501,role:"Manager, Due Diligence",tag:"fin",company:"Ontario Teachers Pension Plan Board",min:95000,max:145000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:502,role:"Law Clerk - Corporate and Investments",tag:"legal",company:"Ontario Teachers Pension Plan Board",min:85000,max:135000,location:"Toronto, ON",src:"https://otppb.wd3.myworkdayjobs.com/en-US/OntarioTeachers_Careers/job/Toronto-Ca",date:"2026-03-16"},
+  {id:503,role:"AI Computational Developer",tag:"data",company:"Natural Resources Canada",min:101672,max:120986,location:"Hamilton, ON",src:"https://canadadailyjobs.com/nrcan-ai-computational-developer-jobs-apply/",date:"2026-03-14"},
+  {id:504,role:"Bilingual Contact Center Representative",tag:"ops",company:"The Toronto-Dominion Bank (Canada)",min:45700,max:61000,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Bilin",date:"2026-03-17"},
+  {id:505,role:"Business Systems Analyst – Microsoft 365 Copilot & Copilot S",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/Busin",date:"2026-03-17"},
+  {id:506,role:"M365 Copilot Engineer /Engineer II",tag:"it",company:"The Toronto-Dominion Bank (Canada)",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/en-US/TD_Bank_Careers/job/Toronto-Ontario/M365-",date:"2026-03-17"},
+  {id:507,role:"Senior Manager, Policy & Front End Services, Canadian Busine",tag:"fin",company:"Bank of Montreal",min:86000,max:160000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-17"},
+  {id:508,role:"Manager, CCR Model Validation",tag:"fin",company:"Bank of Montreal",min:75900,max:141900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Manager--CCR",date:"2026-03-17"},
+  {id:509,role:"Enterprise Architect – Data Analytics and AI",tag:"it",company:"Bank of Montreal",min:94600,max:176000,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/REMOTETELETRAVAIL-ON-CAN/En",date:"2026-03-17"},
+  {id:510,role:"Marketing Operations Data Lead",tag:"sales",company:"Bank of Montreal",min:61600,max:113900,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Marketing-Op",date:"2026-03-17"},
+  {id:511,role:"Personal Banker",tag:"fin",company:"Bank of Montreal",min:36600,max:67500,location:"Ontario, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Haliburton-ON-CAN/Personal-",date:"2026-03-17"},
+  {id:512,role:"Senior Manager, Claims",tag:"fin",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Senior-Manag",date:"2026-03-17"},
+  {id:513,role:"Managing Director, National Accounts, Special Accounts Manag",tag:"fin",company:"Bank of Montreal",min:110500,max:192500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Managing-Dir",date:"2026-03-17"},
+  {id:514,role:"Senior GRC Advisor - Data & AI Governance",tag:"data",company:"Bank of Montreal",min:69000,max:129000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/T-O-Risk---D",date:"2026-03-17"},
+  {id:515,role:"Executive Assistant , BMO Capital Markets",tag:"fin",company:"Bank of Montreal",min:65000,max:84500,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/en-US/External/job/Toronto-ON-CAN/Executive-As",date:"2026-03-17"},
+  {id:516,role:"Senior Specialist, Sales Enablement & Events",tag:"sales",company:"CIBC Asset Management Inc",min:52890,max:68440,location:"Toronto, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Toronto-ON/Senior-Specialist",date:"2026-03-17"},
+  {id:517,role:"Financial Associate (RR Licensed) CIBC Wood Gundy",tag:"fin",company:"CIBC World Markets Inc (Canada)",min:48880,max:56980,location:"Waterloo, ON",src:"https://cibc.wd3.myworkdayjobs.com/en-US/search/job/Waterloo-ON/Financial-Associ",date:"2026-03-17"},
+  {id:518,role:"Senior Manager, Audit and Advisory Services",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:92475,max:160290,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Seni",date:"2026-03-17"},
+  {id:519,role:"Associate Manager, Audit and Advisory Services",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:73725,max:122875,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Asso",date:"2026-03-17"},
+  {id:520,role:"Project Manager, Treasury Systems and Transformation",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:92900,max:142900,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Proj",date:"2026-03-17"},
+  {id:521,role:"Engineering Manager",tag:"eng",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/Eng",date:"2026-03-17"},
+  {id:522,role:"Analyst, Global Asset Liability Management",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:62850,max:104750,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Anal",date:"2026-03-17"},
+  {id:523,role:"AML Compliance Analyst",tag:"fin",company:"Company 1 - The Manufacturers Life Insur",min:51975,max:86625,location:"Waterloo, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Waterloo-Ontario/AML",date:"2026-03-17"},
+  {id:524,role:"Data Architect",tag:"it",company:"Company 1 - The Manufacturers Life Insur",min:113000,max:163000,location:"Toronto, ON",src:"https://manulife.wd3.myworkdayjobs.com/en-US/MFCJH_Jobs/job/Toronto-Ontario/Data",date:"2026-03-17"},
+  {id:525,role:"Senior Analyst, Performance, Reporting & Attribution (12 mon",tag:"data",company:"OMERS Administration Corporation",min:86000,max:130000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-17"},
+  {id:526,role:"Senior Financial Analyst (18 Month Contract)",tag:"fin",company:"OPGI Management Limited Partnership",min:72000,max:108000,location:"Toronto, ON",src:"https://omers.wd3.myworkdayjobs.com/en-US/OMERS_External/job/Toronto-Ontario/Sen",date:"2026-03-17"},
+  {id:527,role:"Associate, Investor Relations and FP&A",tag:"fin",company:"Brookfield Corporation",min:120000,max:145000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/As",date:"2026-03-17"},
+  {id:528,role:"Senior Analyst, ITSM Governance & Service Assurance",tag:"it",company:"Brookfield Asset Management LLC",min:85000,max:100000,location:"Toronto, ON",src:"https://brookfield.wd5.myworkdayjobs.com/en-US/brookfield/job/Toronto-Ontario/Se",date:"2026-03-17"},
+  {id:529,role:"Associate Corporate Counsel",tag:"legal",company:"Amazon Web Services Canada, Inc.",min:90900,max:151800,location:"Toronto, ON",src:"https://jobflexy.com/associate-corporate-counsel-amazon-web-services-canada-inc-",date:"2026-02-16"},
+  {id:530,role:"UX Designer",tag:"eng",company:"Amazon",min:74300,max:124000,location:"Toronto, ON",src:"https://jobflexy.com/ux-designer-amazon-toronto/",date:"2026-03-05"},
+  {id:531,role:"Controllership and Risk Lead / Responsable du contrèle finan",tag:"fin",company:"Ministry of Health / Ministère de la San",min:84478,max:124487,location:"Toronto, ON",src:"https://mycareer.cpaontario.ca/jobs/toronto/",date:"2026-03-17"},
+  {id:532,role:"Senior Financial Analyst, Finance",tag:"fin",company:"CBI Health",min:85000,max:95000,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13747818/senior-financial-analyst-finance/",date:"2026-02-18"},
+  {id:533,role:"Senior Business Analyst, Data Integration &amp; Performance ",tag:"data",company:"Oxford Properties Group",min:86000,max:130000,location:"Toronto, ON",src:"https://jobs.accaglobal.com/job/13749594/senior-business-analyst-data-integratio",date:"2026-02-19"},
+  {id:534,role:"Software Development Specialist (Tech Lead)",tag:"eng",company:"Intact Financial Corporation",min:118700,max:145100,location:"Toronto, ON",src:"https://ca.jobrapido.com/jobpreview/2504141505388609536",date:"2026-03-09"},
+  {id:535,role:"National Manager, Learning &amp; Development",tag:"hr",company:"Intact Financial Corporation",min:109900,max:134300,location:"Mississauga, ON",src:"https://ca.talent.com/view?id=610541750435061599",date:"2026-03-17"}
 ];
 let JOBS = FALLBACK_JOBS;
 let SITE_META = null;
@@ -3128,7 +3758,8 @@ function applyFilters(sourceId){
   S.q=normalizeSearchText(document.getElementById("searchInput").value);
   S.cat=document.getElementById("catFilter").value;
   S.region=document.getElementById("regionFilter").value;
-  S.salMin=parseInt(document.getElementById("salaryFilter").value)||0;
+  var _sfh=document.getElementById('sliderSalaryValue');
+  S.salMin=(_sfh&&parseInt(_sfh.value)>0)?parseInt(_sfh.value):(parseInt(document.getElementById("salaryFilter").value)||0);
   S.showArchived=document.getElementById("archiveFilter").value !== "hide";
   S.wm=document.getElementById("wmFilter").value;
   S.sort=document.getElementById("sortSelect").value;
@@ -3142,7 +3773,7 @@ function renderTable(){
     const mq=!S.q||j._searchScore>0;
     const mc=!S.cat||j.tag===S.cat;
     const mr=!S.region||(j.location||"").startsWith(S.region);
-    const ms=!S.salMin||mid(j)>=S.salMin;
+    const ms=!S.salMin||(mid(j)>=S.salMin-10000&&mid(j)<=S.salMin+10000);
     const mh=S.showArchived||!isArchived(j);
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
     const posted=j.date||"";
@@ -3163,15 +3794,7 @@ function renderTable(){
   });
   const isFiltered=!!(S.q||S.cat||S.region||S.salMin||!S.showArchived||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
-  const headlineBits = [];
-  if(S.cat) headlineBits.push((CAT_META[S.cat]||{label:S.cat}).label);
-  if(S.wm) headlineBits.push(S.wm[0].toUpperCase()+S.wm.slice(1));
-  if(S.region) headlineBits.push(S.region);
-  if(S.salMin) headlineBits.push(`${fmt(S.salMin)}+ midpoint`);
-  if(!S.showArchived) headlineBits.push("Hide archived");
-  if(S.age) headlineBits.push(`posted ${S.age}`);
-  const resultsHeadline = document.getElementById("resultsHeadline");
-  if(resultsHeadline) resultsHeadline.textContent = headlineBits.length ? headlineBits.join(" · ") : "All postings";
+  if(typeof window.setSalaryFocusHeadline==='function') window.setSalaryFocusHeadline(S.salMin,data.length);
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
     ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,1).map(j=>j.id))
@@ -3829,6 +4452,360 @@ function presetFilter(opts = {}) {
   applyFilters();
   window.scrollTo({top: document.querySelector('.results-shell').offsetTop - 72, behavior: 'smooth'});
 }
+</script>
+<script>
+// ===== SALARY FOCUS SLIDER — tidal amplification edition =====
+(function() {
+  'use strict';
+  var SLIDER_MIN = 30000;
+  var SLIDER_MAX = 220000;
+  var SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN;
+  var SVG_W = 200, SVG_H = 64, PAD_TOP = 6, PAD_BOT = 4;
+  var BINS = 90;
+  var BIN_W = SLIDER_RANGE / BINS; // ≈2111 per bin
+
+  // Fallback histogram data (90 bins); recomputed from live JOBS on load
+  var histBins = new Array(90).fill(0);
+
+  // Tidal animation config
+  var LERP_SPEED    = 0.12;   // lerp rate per frame (0.12 = snappier, more responsive)
+  var AMPLITUDE     = 1.2;    // gaussian peak amplification (×2.2 max height)
+  var IDLE_TIMEOUT  = 3000;   // ms idle before stopping RAF
+
+  // Animation state
+  var currentHeights = null;  // float[] lerp'd bar heights
+  var currentLineW   = 1.5;   // lerp'd center-line stroke-width
+  var targetHeights  = null;
+  var targetLineW    = 1.5;
+  var rafId          = null;
+  var idleTimer      = null;
+  var cachedValue    = 100000;
+
+  function computeHistFromJobs() {
+    if (typeof JOBS === 'undefined' || !JOBS || JOBS.length < 5) return;
+    var newBins = new Array(BINS).fill(0);
+    var count = 0;
+    JOBS.forEach(function(j) {
+      if (!j.min || !j.max) return;
+      var mp = (j.min + j.max) / 2;
+      var idx;
+      if (mp < SLIDER_MIN)       { idx = 0; }
+      else if (mp >= SLIDER_MAX) { idx = BINS - 1; }
+      else { idx = Math.min(Math.floor((mp - SLIDER_MIN) / BIN_W), BINS - 1); }
+      newBins[idx]++;
+      count++;
+    });
+    if (count > 0) histBins = newBins;
+  }
+
+  function isShowAll(value) {
+    return (value - SLIDER_MIN) / SLIDER_RANGE < 0.05;
+  }
+
+  function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function makeSVGEl(tag) {
+    return document.createElementNS('http://www.w3.org/2000/svg', tag);
+  }
+
+  // Gaussian weight: peak=1 at sliderValue, falls to near-zero at ±$10K window edge
+  function gaussW(binCenter, sliderValue) {
+    var sigma = 5000; // half-width of ±$10K focus window
+    var d = binCenter - sliderValue;
+    return Math.exp(-(d * d) / (2 * sigma * sigma));
+  }
+
+  // Compute target bar heights with gaussian tidal amplification
+  function computeTargets(value) {
+    var usableH  = SVG_H - PAD_TOP - PAD_BOT;
+    var maxCount = Math.max.apply(null, histBins) || 1;
+    var showAll  = isShowAll(value);
+    var targets  = new Array(BINS);
+    for (var k = 0; k < BINS; k++) {
+      var baseH = Math.max(1.5, (histBins[k] / maxCount) * usableH * 0.88);
+      if (showAll) {
+        targets[k] = baseH;
+      } else {
+        var bc = SLIDER_MIN + (k + 0.5) * BIN_W;
+        var gw = gaussW(bc, value);
+        targets[k] = baseH * (1 + AMPLITUDE * gw);
+      }
+    }
+    return targets;
+  }
+
+  // Render one frame — heights already lerp'd
+  function renderFrame(value, heights, lineW) {
+    var svg = document.getElementById('salaryHistSvg');
+    if (!svg) return;
+    svg.innerHTML = '';
+
+    var accent  = getCSSVar('--accent');
+    var border2 = getCSSVar('--border2');
+    var svgBinW = SVG_W / BINS;
+    var showAll = isShowAll(value);
+    var lo = value - 10000;
+    var hi = value + 10000;
+
+    for (var k = 0; k < BINS; k++) {
+      var bc   = SLIDER_MIN + (k + 0.5) * BIN_W;
+      var h    = Math.max(1.5, heights[k]);
+      var bx   = (svgBinW * k + svgBinW * 0.325).toFixed(2);
+      var bw   = (svgBinW * 0.35).toFixed(2);
+      var by   = (SVG_H - PAD_BOT - h).toFixed(2);
+
+      var inWindow = !showAll && bc >= lo && bc <= hi;
+      var gw       = (!showAll && inWindow) ? gaussW(bc, value) : 0;
+
+      var fill, opacity;
+      if (showAll) {
+        fill    = border2;
+        opacity = '0.25';
+      } else if (inWindow) {
+        // Accent gradient: 0.9 at center, 0.3 at ±22% edges
+        fill    = accent;
+        opacity = (0.3 + 0.6 * gw).toFixed(2);
+      } else {
+        fill    = border2;
+        opacity = '0.25';
+      }
+
+      var rect = makeSVGEl('rect');
+      rect.setAttribute('x',       bx);
+      rect.setAttribute('y',       by);
+      rect.setAttribute('width',   bw);
+      rect.setAttribute('height',  h.toFixed(2));
+      rect.setAttribute('rx',      '1.5');
+      rect.setAttribute('fill',    fill);
+      rect.setAttribute('opacity', opacity);
+      svg.appendChild(rect);
+    }
+
+  }
+
+  function stopRAF() {
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  function startRAF() {
+    if (rafId !== null) return;
+    function loop() {
+      var done = true;
+      for (var k = 0; k < BINS; k++) {
+        var d = targetHeights[k] - currentHeights[k];
+        if (Math.abs(d) > 0.05) {
+          currentHeights[k] += d * LERP_SPEED;
+          done = false;
+        } else {
+          currentHeights[k] = targetHeights[k];
+        }
+      }
+      var ld = targetLineW - currentLineW;
+      if (Math.abs(ld) > 0.01) {
+        currentLineW += ld * LERP_SPEED;
+        done = false;
+      } else {
+        currentLineW = targetLineW;
+      }
+      renderFrame(cachedValue, currentHeights, currentLineW);
+      if (done) { rafId = null; return; }
+      rafId = requestAnimationFrame(loop);
+    }
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function resetIdleTimer() {
+    if (idleTimer !== null) clearTimeout(idleTimer);
+    idleTimer = setTimeout(function() { stopRAF(); idleTimer = null; }, IDLE_TIMEOUT);
+  }
+
+  function fmtK(v) { return '$' + Math.round(v / 1000) + 'K'; }
+
+  function updateSlider(value) {
+    cachedValue  = value;
+    targetHeights = computeTargets(value);
+    var showAll   = isShowAll(value);
+    // Target line width: thick (2.5) when active, slim (1.5) for show-all
+    targetLineW   = showAll ? 1.5 : 2.5;
+
+    // Bootstrap currentHeights on first call (no animation, just render)
+    if (!currentHeights) {
+      currentHeights = targetHeights.slice();
+      currentLineW   = targetLineW;
+    }
+
+    var display = document.getElementById('salaryDisplay');
+    var select  = document.getElementById('salaryFilter');
+    if (display) {
+      display.textContent = showAll
+        ? 'Show all'
+        : (fmtK(value - 10000) + '\u2013' + fmtK(value + 10000) + ' focus');
+    }
+    if (select) select.value = showAll ? '0' : String(Math.round(value / 1000) * 1000);
+    var focusHidden = document.getElementById('sliderSalaryValue');
+    if (focusHidden) focusHidden.value = showAll ? '0' : String(value);
+
+    // Update floating thumb label (below thumb)
+    (function() {
+      var label = document.getElementById('salaryThumbLabel');
+      var sEl   = document.getElementById('salaryRangeInput');
+      if (!label || !sEl) return;
+      if (showAll) {
+        label.style.display = 'none';
+      } else {
+        label.style.display = 'block';
+        var pct    = (value - SLIDER_MIN) / SLIDER_RANGE;
+        var thumbW = 12;
+        var trackW = sEl.offsetWidth || 200;
+        label.style.left = (pct * (trackW - thumbW) + thumbW / 2) + 'px';
+        label.textContent = '$' + Math.round(value / 1000) + 'K';
+      }
+    })();
+
+    startRAF();
+    resetIdleTimer();
+  }
+
+  // Called by renderTable() to sync the results-header headline
+  window.setSalaryFocusHeadline = function(salMin, count) {
+    var el = document.getElementById('resultsHeadline');
+    if (!el) return;
+    if (!salMin) {
+      el.innerHTML = 'All\u00a0<span style="font-family:var(--font-mono)">' + count + '</span>\u00a0jobs';
+    } else {
+      var lo = Math.round((salMin - 10000) / 1000);
+      var hi = Math.round((salMin + 10000) / 1000);
+      el.innerHTML =
+        '<span style="font-family:var(--font-mono)">$' + lo + 'K\u2013$' + hi + 'K</span>' +
+        '\u00a0\u00b7\u00a0' +
+        '<span style="font-family:var(--font-mono)">' + count + '</span>\u00a0jobs';
+    }
+  };
+
+  function syncSliderFromSelect() {
+    var select = document.getElementById('salaryFilter');
+    var slider = document.getElementById('salaryRangeInput');
+    if (!select || !slider) return;
+    var v = parseInt(select.value) || 0;
+    slider.value = String(v > 0 ? v : SLIDER_MIN);
+    updateSlider(parseInt(slider.value));
+  }
+
+  function patchGlobalFn(name, after) {
+    var orig = window[name];
+    if (orig) {
+      window[name] = function() { orig.apply(this, arguments); after(); };
+    }
+  }
+
+  function initSalarySlider() {
+    var slider = document.getElementById('salaryRangeInput');
+    var svg    = document.getElementById('salaryHistSvg');
+    if (!slider || !svg) return;
+
+    computeHistFromJobs();
+    updateSlider(parseInt(slider.value) || SLIDER_MIN);
+
+    // RAF-throttled filter: runs applyFilters at most once per animation frame
+    var filterDirty = false;
+    slider.addEventListener('input', function() {
+      var val = parseInt(this.value);
+      updateSlider(val);  // immediate visual
+      if (!filterDirty) {
+        filterDirty = true;
+        requestAnimationFrame(function() {
+          filterDirty = false;
+          if (typeof applyFilters === 'function') applyFilters();
+        });
+      }
+    });
+
+    // Click anywhere on SVG histogram to jump slider
+    if (svg) {
+      svg.style.cursor = 'pointer';
+      svg.addEventListener('click', function(e) {
+        var rect = svg.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var pct = Math.max(0, Math.min(1, x / rect.width));
+        var newVal = Math.round(SLIDER_MIN + pct * SLIDER_RANGE);
+        slider.value = String(newVal);
+        updateSlider(newVal);
+        if (typeof applyFilters === 'function') applyFilters();
+      });
+    }
+
+    patchGlobalFn('clearAllFilters', function() {
+      var s = document.getElementById('salaryRangeInput');
+      if (s) { s.value = String(SLIDER_MIN); updateSlider(SLIDER_MIN); }
+    });
+    patchGlobalFn('presetFilter', syncSliderFromSelect);
+    patchGlobalFn('applyAuthPrefsToState', syncSliderFromSelect);
+
+    // Redraw on theme toggle
+    var themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function() {
+        setTimeout(function() {
+          var s = document.getElementById('salaryRangeInput');
+          if (s) {
+            // Reset lerp state so new theme colors render immediately
+            currentHeights = null;
+            updateSlider(parseInt(s.value));
+          }
+        }, 60);
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initSalarySlider();
+    // Recompute histogram from live JOBS data after fetch completes
+    setTimeout(function() {
+      computeHistFromJobs();
+      var s = document.getElementById('salaryRangeInput');
+      if (s) {
+        currentHeights = null; // force re-init with updated data
+        updateSlider(parseInt(s.value));
+      }
+    }, 1200);
+    // Sticky stack: salary-bar → results-header → thead (desktop), all flush with no gaps.
+    // On mobile the search bar adds extra height above the salary bar.
+    var stickyBar = document.querySelector('.salary-focus-bar');
+    var resultsHeader = document.querySelector('.results-header');
+    var mobileSearchBar = document.querySelector('.mobile-search-bar');
+    var thead = document.querySelector('#jobTable thead');
+    if (stickyBar && resultsHeader) {
+      function updateStickyStack() {
+        // Nav is always 56px. Mobile search bar adds its height when visible.
+        var mobileBarH = (mobileSearchBar && getComputedStyle(mobileSearchBar).display !== 'none')
+          ? mobileSearchBar.offsetHeight : 0;
+        var navOffset = 56 + mobileBarH;
+
+        stickyBar.style.top = navOffset + 'px';
+
+        var resultsTop = navOffset + stickyBar.offsetHeight;
+        resultsHeader.style.top = resultsTop + 'px';
+
+        // thead is hidden on mobile (CSS), so this is a no-op there
+        if (thead) {
+          var theadTop = resultsTop + resultsHeader.offsetHeight;
+          var ths = thead.querySelectorAll('th');
+          for (var i = 0; i < ths.length; i++) {
+            ths[i].style.top = theadTop + 'px';
+          }
+        }
+      }
+      updateStickyStack();
+      window.addEventListener('resize', updateStickyStack);
+      var ro = new ResizeObserver(updateStickyStack);
+      ro.observe(stickyBar);
+      ro.observe(resultsHeader);
+      if (mobileSearchBar) ro.observe(mobileSearchBar);
+    }
+  });
+})();
 </script>
 </body>
 </html>
