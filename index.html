@@ -1829,9 +1829,9 @@ tbody tr:hover {
   }
   /* Hide redundant results-header entirely on mobile */
   .results-header { display: none !important; }
-  /* salary-focus-bar order: show above insights on mobile */
-  .salary-focus-bar { order: 0; }
-  .insights-drawer { order: 1; }
+  /* insights first, salary second, cards third — matches desktop logic */
+  .insights-drawer { order: 0; }
+  .salary-focus-bar { order: 1; }
   .results-shell { order: 2; }
 }
 
