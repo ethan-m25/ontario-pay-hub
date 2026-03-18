@@ -536,10 +536,10 @@ td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
     background: var(--surface);
     border: 1px solid var(--border);
     border-left: 2px solid transparent;
-    border-radius: 14px;
-    margin-bottom: 10px;
-    padding: 14px;
-    box-shadow: 0 12px 28px rgba(0,0,0,.08);
+    border-radius: 12px;
+    margin-bottom: 7px;
+    padding: 10px 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.07);
   }
   tbody tr:hover { background: var(--accent-dim); border-left-color: var(--accent); }
   td { padding:0; border:none; }
@@ -1809,13 +1809,26 @@ tbody tr:hover {
   .salary-focus-bar {
     top: 120px;
     border-radius: 10px;
-    padding: 8px 14px 10px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
-  /* Results-header on mobile: compact */
-  .results-header {
-    padding: 10px 14px 8px;
+  /* Eyebrow: flex row — "SALARY FOCUS" left, count+range right */
+  .salary-focus-eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
   }
+  .mobile-salary-meta {
+    display: inline;
+    font-family: var(--font-mono);
+    font-size: .64rem;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: .01em;
+    text-transform: none;
+  }
+  /* Hide redundant results-header entirely on mobile */
+  .results-header { display: none !important; }
   /* salary-focus-bar order: show above insights on mobile */
   .salary-focus-bar { order: 0; }
   .insights-drawer { order: 1; }
@@ -1847,6 +1860,7 @@ tbody tr:hover {
   text-transform: uppercase; letter-spacing: 0.08em;
   color: var(--text3); margin-bottom: 5px;
 }
+.mobile-salary-meta { display: none; }
 /* Results-header: salary focus info */
 .results-focus-tag {
   font-family: var(--font-mono);
@@ -1919,6 +1933,14 @@ tbody tr:hover {
   pointer-events: none;
   white-space: nowrap;
   transition: left 0.05s ease;
+}
+/* Mobile salary overrides — must come AFTER base salary CSS to win cascade */
+@media(max-width:760px) {
+  .salary-slider-svg { height: 28px; }
+  .salary-slider-box { padding-bottom: 20px; }
+  .salary-thumb-label { top: calc(28px + 20px); font-size: .62rem; }
+  .salary-focus-bar { padding: 6px 12px 8px; }
+  .mobile-salary-meta { display: inline; }
 }
 </style>
 </head>
@@ -2156,7 +2178,7 @@ tbody tr:hover {
         <option value="120000">$120K+</option>
         <option value="150000">$150K+</option>
       </select>
-      <div class="salary-focus-eyebrow">Salary Focus</div>
+      <div class="salary-focus-eyebrow">Salary Focus<span id="mobileSalaryMeta" class="mobile-salary-meta"></span></div>
       <div class="salary-slider-box" style="position:relative">
         <svg id="salaryHistSvg" class="salary-slider-svg" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div id="salaryThumbLabel" class="salary-thumb-label">$100K</div>
@@ -4671,16 +4693,19 @@ function presetFilter(opts = {}) {
   // Called by renderTable() to sync the results-header headline
   window.setSalaryFocusHeadline = function(salMin, count) {
     var el = document.getElementById('resultsHeadline');
-    if (!el) return;
+    var mob = document.getElementById('mobileSalaryMeta');
     if (!salMin) {
-      el.innerHTML = 'All\u00a0<span style="font-family:var(--font-mono)">' + count + '</span>\u00a0jobs';
+      var allHtml = 'All\u00a0<span style="font-family:var(--font-mono)">' + count + '</span>\u00a0jobs';
+      if (el) el.innerHTML = allHtml;
+      if (mob) mob.textContent = count + ' jobs';
     } else {
       var lo = Math.round((salMin - 10000) / 1000);
       var hi = Math.round((salMin + 10000) / 1000);
-      el.innerHTML =
-        '<span style="font-family:var(--font-mono)">$' + lo + 'K\u2013$' + hi + 'K</span>' +
+      var html = '<span style="font-family:var(--font-mono)">$' + lo + 'K\u2013$' + hi + 'K</span>' +
         '\u00a0\u00b7\u00a0' +
         '<span style="font-family:var(--font-mono)">' + count + '</span>\u00a0jobs';
+      if (el) el.innerHTML = html;
+      if (mob) mob.textContent = '$' + lo + 'K\u2013$' + hi + 'K\u00a0\u00b7\u00a0' + count + ' jobs';
     }
   };
 
@@ -4786,11 +4811,14 @@ function presetFilter(opts = {}) {
         stickyBar.style.top = navOffset + 'px';
 
         var resultsTop = navOffset + stickyBar.offsetHeight;
-        resultsHeader.style.top = resultsTop + 'px';
+        // results-header hidden on mobile; only set top when visible
+        var rhVisible = resultsHeader && getComputedStyle(resultsHeader).display !== 'none';
+        if (rhVisible) resultsHeader.style.top = resultsTop + 'px';
 
-        // thead is hidden on mobile (CSS), so this is a no-op there
+        // thead sticky: below results-header (desktop) or just below salary bar (mobile)
         if (thead) {
-          var theadTop = resultsTop + resultsHeader.offsetHeight;
+          var rhH = rhVisible ? resultsHeader.offsetHeight : 0;
+          var theadTop = resultsTop + rhH;
           var ths = thead.querySelectorAll('th');
           for (var i = 0; i < ths.length; i++) {
             ths[i].style.top = theadTop + 'px';
