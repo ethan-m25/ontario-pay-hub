@@ -3806,6 +3806,20 @@ function applyFilters(sourceId){
   syncControlState();
   renderTable();
 }
+// Returns jobs filtered by all active filters EXCEPT the salary slider.
+// Used to drive histogram distribution — salary excluded to avoid a feedback loop
+// where dragging the slider would collapse the histogram to only nearby bins.
+function getHistogramJobs() {
+  if (typeof JOBS === 'undefined' || !JOBS) return [];
+  return JOBS.filter(function(j) {
+    var mq = !S.q || searchScore(j, S.q) > 0;
+    var mc = !S.cat || j.tag === S.cat;
+    var mr = !S.region || (j.location || '').startsWith(S.region);
+    var mh = S.showArchived || !isArchived(j);
+    var mw = !S.wm || (j.work_mode || 'unknown') === S.wm;
+    return mq && mc && mr && mh && mw;
+  });
+}
 function renderTable(){
   let data=JOBS.filter(j=>{
     j._searchScore = searchScore(j, S.q);
@@ -3834,6 +3848,8 @@ function renderTable(){
   const isFiltered=!!(S.q||S.cat||S.region||S.salMin||!S.showArchived||S.wm||S.age);
   document.getElementById("resultInfo").textContent=data.length+" of "+JOBS.length+" postings"+(isFiltered?" (filtered)":"");
   if(typeof window.setSalaryFocusHeadline==='function') window.setSalaryFocusHeadline(S.salMin,data.length);
+  // Update histogram to reflect current non-salary filters
+  if(typeof window.refreshHistogram==='function') window.refreshHistogram(getHistogramJobs());
   // Top 3 payers — only when a filter is active
   const top3Ids=isFiltered
     ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,1).map(j=>j.id))
@@ -4520,11 +4536,12 @@ function presetFilter(opts = {}) {
   var idleTimer      = null;
   var cachedValue    = 100000;
 
-  function computeHistFromJobs() {
-    if (typeof JOBS === 'undefined' || !JOBS || JOBS.length < 5) return;
+  function computeHistFromJobs(jobs) {
+    var source = jobs || JOBS;
+    if (typeof source === 'undefined' || !source || source.length < 1) return;
     var newBins = new Array(BINS).fill(0);
     var count = 0;
-    JOBS.forEach(function(j) {
+    source.forEach(function(j) {
       if (!j.min || !j.max) return;
       var mp = (j.min + j.max) / 2;
       var idx;
@@ -4536,6 +4553,16 @@ function presetFilter(opts = {}) {
     });
     if (count > 0) histBins = newBins;
   }
+
+  // Hook for filter changes: recompute histogram from a subset of jobs,
+  // then re-trigger the tidal animation at the current slider position.
+  window.refreshHistogram = function(jobs) {
+    computeHistFromJobs(jobs);
+    if (targetHeights) {
+      targetHeights = computeTargets(cachedValue);
+      if (!rafId) startRAF();
+    }
+  };
 
   function isShowAll(value) {
     return (value - SLIDER_MIN) / SLIDER_RANGE < 0.05;
