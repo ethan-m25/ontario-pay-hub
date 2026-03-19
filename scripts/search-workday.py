@@ -390,6 +390,10 @@ def extract_company_from_html(text):
             org = data.get("hiringOrganization", {})
             name = org.get("name", "").strip()
             if name and len(name) > 1:
+                # Skip Workday internal "Company N - Legal Name" strings; the
+                # caller already has the correct display name from SEED_TENANTS.
+                if re.match(r'^Company\s+\d+\b', name):
+                    continue
                 return name
         except (json.JSONDecodeError, AttributeError, IndexError):
             continue

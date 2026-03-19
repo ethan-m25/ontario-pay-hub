@@ -103,9 +103,10 @@ with open(data_file) as f:
     db = json.load(f)
 
 existing = db.get("jobs", [])
-# Build dedup key set: role+company+posted
+# Build dedup key set: role+company+salary_range (posted date excluded — LLM defaults to
+# today when actual date is invisible, causing the same job to be re-inserted daily)
 existing_keys = set(
-    f"{j['role'].lower()}|{j['company'].lower()}|{j.get('posted','')}"
+    f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}"
     for j in existing
 )
 
@@ -148,8 +149,8 @@ with open(raw_file) as f:
             errors += 1
             continue
 
-        # Dedup check
-        key = f"{j['role'].lower()}|{j['company'].lower()}|{j.get('posted', today)}"
+        # Dedup check (role + company + salary range; date-independent)
+        key = f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}"
         if key in existing_keys:
             continue
 
