@@ -3826,7 +3826,8 @@ function renderTable(){
     const mq=!S.q||j._searchScore>0;
     const mc=!S.cat||j.tag===S.cat;
     const mr=!S.region||(j.location||"").startsWith(S.region);
-    const ms=!S.salMin||(mid(j)>=S.salMin-10000&&mid(j)<=S.salMin+10000);
+    const _hmx=window._salaryHistMax||0;
+    const ms=!S.salMin?true:(_hmx&&S.salMin>=_hmx)?(mid(j)>=S.salMin-10000):(mid(j)>=S.salMin-10000&&mid(j)<=S.salMin+10000);
     const mh=S.showArchived||!isArchived(j);
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
     const posted=j.date||"";
@@ -4514,10 +4515,11 @@ function presetFilter(opts = {}) {
   'use strict';
   var SLIDER_MIN = 30000;
   var SLIDER_MAX = 220000;
-  var SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN;
+  var OVERFLOW_BUF = 30000;  // empty drag zone beyond last histogram bar → show-max mode
+  var SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN + OVERFLOW_BUF;
   var SVG_W = 200, SVG_H = 64, PAD_TOP = 6, PAD_BOT = 4;
   var BINS = 90;
-  var BIN_W = SLIDER_RANGE / BINS; // ≈2111 per bin
+  var BIN_W = (SLIDER_MAX - SLIDER_MIN) / BINS; // histogram bin width (not overflow)
 
   // Fallback histogram data (90 bins); recomputed from live JOBS on load
   var histBins = new Array(90).fill(0);
@@ -4535,6 +4537,7 @@ function presetFilter(opts = {}) {
   var rafId          = null;
   var idleTimer      = null;
   var cachedValue    = 100000;
+  window._salaryHistMax = SLIDER_MAX;  // exposed for applyFilters show-max one-sided filter
 
   // Hover preview state (mouse over SVG — no filter change, gray bars only)
   var hoverValue    = null;
@@ -4562,12 +4565,13 @@ function presetFilter(opts = {}) {
       dynMax = Math.max(dynMax, 150000);
       if (dynMax !== SLIDER_MAX) {
         SLIDER_MAX   = dynMax;
-        SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN;
-        BIN_W        = SLIDER_RANGE / BINS;
+        BIN_W        = (SLIDER_MAX - SLIDER_MIN) / BINS;
+        SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN + OVERFLOW_BUF;
+        window._salaryHistMax = SLIDER_MAX;
         var sliderEl = document.getElementById('salaryRangeInput');
         if (sliderEl) {
-          sliderEl.setAttribute('max', String(SLIDER_MAX));
-          if (parseInt(sliderEl.value) > SLIDER_MAX) sliderEl.value = String(SLIDER_MAX);
+          sliderEl.setAttribute('max', String(SLIDER_MAX + OVERFLOW_BUF));
+          if (parseInt(sliderEl.value) > SLIDER_MAX + OVERFLOW_BUF) sliderEl.value = String(SLIDER_MAX + OVERFLOW_BUF);
         }
       }
     }
@@ -4576,7 +4580,7 @@ function presetFilter(opts = {}) {
     midpoints.forEach(function(mp) {
       var idx;
       if (mp < SLIDER_MIN)       { idx = 0; }
-      else if (mp >= SLIDER_MAX) { idx = BINS - 1; }
+      else if (mp >= SLIDER_MAX) { return; } // overflow jobs excluded from histogram (shown in show-max mode)
       else { idx = Math.min(Math.floor((mp - SLIDER_MIN) / BIN_W), BINS - 1); }
       newBins[idx]++;
     });
@@ -4595,6 +4599,10 @@ function presetFilter(opts = {}) {
 
   function isShowAll(value) {
     return (value - SLIDER_MIN) / SLIDER_RANGE < 0.05;
+  }
+
+  function isShowMax(value) {
+    return value >= SLIDER_MAX;  // slider is in the overflow buffer zone
   }
 
   function getCSSVar(name) {
@@ -4629,7 +4637,7 @@ function presetFilter(opts = {}) {
   function computeTargets(value) {
     var usableH  = SVG_H - PAD_TOP - PAD_BOT;
     var maxCount = Math.max.apply(null, histBins) || 1;
-    var showAll  = isShowAll(value);
+    var showAll  = isShowAll(value) || isShowMax(value);
     var targets  = new Array(BINS);
     for (var k = 0; k < BINS; k++) {
       var baseH = Math.max(1.5, (histBins[k] / maxCount) * usableH * 0.88);
@@ -4650,10 +4658,11 @@ function presetFilter(opts = {}) {
     if (!svg) return;
     svg.innerHTML = '';
 
-    var accent  = getCSSVar('--accent');
-    var border2 = getCSSVar('--border2');
-    var svgBinW = SVG_W / BINS;
-    var showAll = isShowAll(value);
+    var accent    = getCSSVar('--accent');
+    var border2   = getCSSVar('--border2');
+    var histFrac  = (SLIDER_MAX - SLIDER_MIN) / SLIDER_RANGE; // histogram occupies this fraction of SVG width
+    var svgBinW   = SVG_W * histFrac / BINS;
+    var showAll   = isShowAll(value) || isShowMax(value);
     var lo = value - 10000;
     var hi = value + 10000;
 
@@ -4750,8 +4759,9 @@ function presetFilter(opts = {}) {
     cachedValue  = value;
     targetHeights = computeTargets(value);
     var showAll   = isShowAll(value);
-    // Target line width: thick (2.5) when active, slim (1.5) for show-all
-    targetLineW   = showAll ? 1.5 : 2.5;
+    var showMax   = isShowMax(value);
+    // Target line width: thick (2.5) when active, slim (1.5) for show-all / show-max
+    targetLineW   = (showAll || showMax) ? 1.5 : 2.5;
 
     // Bootstrap currentHeights on first call (no animation, just render)
     if (!currentHeights) {
@@ -4762,20 +4772,22 @@ function presetFilter(opts = {}) {
     var display = document.getElementById('salaryDisplay');
     var select  = document.getElementById('salaryFilter');
     if (display) {
-      display.textContent = showAll
-        ? 'Show all'
+      display.textContent = showAll  ? 'Show all'
+        : showMax ? ('Top\u00a0' + fmtK(SLIDER_MAX - 10000) + '+')
         : (fmtK(value - 10000) + '\u2013' + fmtK(value + 10000) + ' focus');
     }
-    if (select) select.value = showAll ? '0' : String(Math.round(value / 1000) * 1000);
+    if (select) select.value = (showAll || showMax) ? '0' : String(Math.round(value / 1000) * 1000);
     var focusHidden = document.getElementById('sliderSalaryValue');
-    if (focusHidden) focusHidden.value = showAll ? '0' : String(value);
+    if (focusHidden) focusHidden.value = showAll  ? '0'
+      : showMax ? String(SLIDER_MAX)
+      : String(value);
 
     // Update floating thumb label (below thumb)
     (function() {
       var label = document.getElementById('salaryThumbLabel');
       var sEl   = document.getElementById('salaryRangeInput');
       if (!label || !sEl) return;
-      if (showAll) {
+      if (showAll || showMax) {
         label.style.display = 'none';
       } else {
         label.style.display = 'block';
