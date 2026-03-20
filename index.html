@@ -4540,7 +4540,7 @@ function presetFilter(opts = {}) {
   var hoverValue    = null;
   var hoverCurrentH = null;  // float[] additive ghost heights (lerp'd)
   var hoverTargetH  = null;
-  var HOVER_AMP     = 0.7;   // slightly less than drag AMPLITUDE
+  var HOVER_AMP     = 1.8;   // hover preview amplitude (drag AMPLITUDE=1.2)
 
   function computeHistFromJobs(jobs, _updateMax) {
     var source = jobs || JOBS;
