@@ -4523,8 +4523,8 @@ function presetFilter(opts = {}) {
   var histBins = new Array(90).fill(0);
 
   // Tidal animation config
-  var LERP_SPEED    = 0.12;   // lerp rate per frame (0.12 = snappier, more responsive)
-  var AMPLITUDE     = 1.2;    // gaussian peak amplification (×2.2 max height)
+  var LERP_SPEED    = 0.25;   // lerp rate per frame
+  var AMPLITUDE     = 1.5;    // gaussian peak amplification
   var IDLE_TIMEOUT  = 3000;   // ms idle before stopping RAF
 
   // Animation state
@@ -4540,7 +4540,7 @@ function presetFilter(opts = {}) {
   var hoverValue    = null;
   var hoverCurrentH = null;  // float[] additive ghost heights (lerp'd)
   var hoverTargetH  = null;
-  var HOVER_AMP     = 1.8;   // hover preview amplitude (drag AMPLITUDE=1.2)
+  var HOVER_AMP     = 1.5;   // hover preview — same amplitude as drag
 
   function computeHistFromJobs(jobs, _updateMax) {
     var source = jobs || JOBS;
