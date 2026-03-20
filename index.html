@@ -1484,6 +1484,55 @@ footer a { color: var(--accent); text-decoration: none; }
   gap: 8px;
   margin-top: 10px;
 }
+.transparency-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+.transparency-col-title {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text3);
+  margin-bottom: 7px;
+}
+.transparency-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+.transparency-row:last-child { margin-bottom: 0; }
+.transparency-co {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.transparency-pct {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--text3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.transparency-note {
+  font-size: .7rem;
+  color: var(--text3);
+  line-height: 1.45;
+  margin-bottom: 10px;
+  font-style: italic;
+}
 .market-link {
   display: block;
   padding: 10px 12px;
@@ -2163,10 +2212,10 @@ tbody tr:hover {
         <div class="insights-body" id="insightsBody">
           <section class="market-grid">
             <div class="market-card featured">
-              <div class="market-title">Market Snapshot</div>
-              <div class="market-headline" id="marketSignalTitle">A quick read on what stands out in the current dataset.</div>
-              <div class="market-copy" id="marketSignalCopy">A quick read before you start filtering.</div>
-              <div class="market-metrics" id="marketMetrics"></div>
+              <div class="market-title">Salary Range Transparency</div>
+              <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
+              <div class="market-copy">Range width as % of midpoint, averaged per employer (min. 3 postings). Narrower = more precise; wider = more room for negotiation — or ambiguity.</div>
+              <div id="transparencyRanking"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Quick Decisions</div>
@@ -3206,8 +3255,6 @@ function renderDiscovery(){
   const heroNewToday = document.getElementById("heroNewToday");
   const heroTopEmployer = document.getElementById("heroTopEmployer");
   const heroMedian = document.getElementById("heroMedian");
-  const marketSignalTitle = document.getElementById("marketSignalTitle");
-  const marketSignalCopy = document.getElementById("marketSignalCopy");
   if(heroUpdated) heroUpdated.textContent = `Updated ${updatedText}`;
   if(heroCount) heroCount.textContent = String(JOBS.length);
   if(heroNewToday) heroNewToday.textContent = SITE_META && SITE_META.new_today ? `${SITE_META.new_today} newly added today` : "Fresh roles available";
@@ -3215,29 +3262,43 @@ function renderDiscovery(){
   const mids = JOBS.map(mid).sort((a,b)=>a-b);
   const median = mids[Math.floor(mids.length/2)];
   if(heroMedian) heroMedian.textContent = fmt(median);
-  const leadTag = topTagByCount();
-  if(marketSignalTitle) {
-    marketSignalTitle.textContent = leadTag
-      ? `${leadTag.label} currently leads the Ontario disclosure mix.`
-      : "Ontario compensation signals, organized for decision-making.";
-  }
-  if(marketSignalCopy) {
-    const archived = JOBS.filter(isArchived).length;
-    const active = JOBS.length - archived;
-    const newest = newestJobs(1)[0];
-    const recency = newest ? `Newest visible posting: ${relDate(newest.date)}.` : "";
-    marketSignalCopy.textContent = `${active} active postings and ${archived} archived records are preserved for calibration and comparison. ${recency}`.trim();
-  }
-  const marketMetrics = document.getElementById("marketMetrics");
-  if(marketMetrics){
-    const remoteCount = JOBS.filter(j=>j.work_mode === "remote").length;
-    const highPayCount = JOBS.filter(j=>mid(j) >= 150000).length;
-    marketMetrics.innerHTML = `
-      <div class="market-metric"><strong>${SITE_META && SITE_META.new_today ? SITE_META.new_today : newestJobs(10).length}</strong><span>new in latest refresh</span></div>
-      <div class="market-metric"><strong>${leadTag ? leadTag.label : "Mixed"}</strong><span>largest category by volume</span></div>
-      <div class="market-metric"><strong>${remoteCount}</strong><span>remote roles in dataset</span></div>
-      <div class="market-metric"><strong>${highPayCount}</strong><span>roles with $150k+ midpoint</span></div>
-    `;
+
+  // ── Salary Range Transparency ranking ──────────────────────────────────────
+  const trEl = document.getElementById("transparencyRanking");
+  if(trEl) {
+    // Range width as % of midpoint: (max-min)/mid*100
+    const rwPct = j => (j.max - j.min) / mid(j) * 100;
+    // Group by company, require min 3 postings
+    const byco = {};
+    JOBS.filter(j=>!isArchived(j) && j.min && j.max && j.max > j.min).forEach(j=>{
+      const co = j.company || "Unknown";
+      if(!byco[co]) byco[co] = [];
+      byco[co].push(rwPct(j));
+    });
+    const ranked = Object.entries(byco)
+      .filter(([,arr])=>arr.length >= 3)
+      .map(([co,arr])=>({ co, avg: arr.reduce((s,v)=>s+v,0)/arr.length, n: arr.length }))
+      .sort((a,b)=>a.avg - b.avg);
+    const narrowest = ranked.slice(0, 5);
+    const widest    = ranked.slice(-5).reverse();
+    const row = (item) =>
+      `<div class="transparency-row">
+        <span class="transparency-co" title="${item.co}">${item.co}</span>
+        <span class="transparency-pct">${Math.round(item.avg)}% avg · ${item.n} jobs</span>
+      </div>`;
+    trEl.innerHTML = `
+      <div class="transparency-grid">
+        <div>
+          <div class="transparency-col-title">Narrowest ranges</div>
+          <div class="transparency-note">Precise and specific — a tighter band signals a well-defined role and pay structure.</div>
+          ${narrowest.map(row).join("")}
+        </div>
+        <div>
+          <div class="transparency-col-title">Widest ranges</div>
+          <div class="transparency-note">Broad bands may reflect seniority flexibility, unclear scope, or a desire not to anchor expectations.</div>
+          ${widest.map(row).join("")}
+        </div>
+      </div>`;
   }
   const topPayList = document.getElementById("topPayList");
   if(topPayList){
@@ -4515,7 +4576,7 @@ function presetFilter(opts = {}) {
   'use strict';
   var SLIDER_MIN = 30000;
   var SLIDER_MAX = 220000;
-  var OVERFLOW_BUF = 30000;  // empty drag zone beyond last histogram bar → show-max mode
+  var OVERFLOW_BUF = 15000;  // empty drag zone beyond last histogram bar → show-max mode
   var SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN + OVERFLOW_BUF;
   var SVG_W = 200, SVG_H = 64, PAD_TOP = 6, PAD_BOT = 4;
   var BINS = 90;
@@ -4598,7 +4659,7 @@ function presetFilter(opts = {}) {
   };
 
   function isShowAll(value) {
-    return (value - SLIDER_MIN) / SLIDER_RANGE < 0.05;
+    return (value - SLIDER_MIN) / SLIDER_RANGE < 0.025;
   }
 
   function isShowMax(value) {
