@@ -1484,55 +1484,34 @@ footer a { color: var(--accent); text-decoration: none; }
   gap: 8px;
   margin-top: 10px;
 }
-.transparency-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 10px;
-}
+.transparency-section { margin-top: 11px; }
+.transparency-section + .transparency-section { margin-top: 13px; }
 .transparency-col-title {
   font-family: var(--font-mono);
-  font-size: .62rem;
+  font-size: .6rem;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--text3);
-  margin-bottom: 7px;
+  margin-bottom: 6px;
 }
-.transparency-row {
+.tr-chips {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 6px;
-  padding: 7px 10px;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 5px;
-}
-.transparency-row:last-child { margin-bottom: 0; }
-.transparency-co {
-  font-size: .75rem;
-  font-weight: 600;
-  color: var(--text);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.transparency-pct {
-  font-family: var(--font-mono);
+  border-radius: 7px;
+  padding: 4px 9px;
   font-size: .72rem;
-  color: var(--text3);
-  white-space: nowrap;
-  flex-shrink: 0;
+  line-height: 1;
 }
-.transparency-note {
-  font-size: .7rem;
-  color: var(--text3);
-  line-height: 1.45;
-  margin-bottom: 10px;
-  font-style: italic;
-}
+.tr-chip-name { font-weight: 600; color: var(--text); }
+.tr-chip-pct  { font-family: var(--font-mono); color: var(--text3); }
 .market-link {
   display: block;
   padding: 10px 12px;
@@ -2214,7 +2193,7 @@ tbody tr:hover {
             <div class="market-card featured">
               <div class="market-title">Salary Range Transparency</div>
               <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
-              <div class="market-copy">Range width as % of midpoint, averaged per employer (min. 3 postings). Narrower = more precise; wider = more room for negotiation — or ambiguity.</div>
+              <div class="market-copy">(max−min) ÷ midpoint, avg per employer with ≥3 postings.</div>
               <div id="transparencyRanking"></div>
             </div>
             <div class="market-card">
@@ -3281,23 +3260,19 @@ function renderDiscovery(){
       .sort((a,b)=>a.avg - b.avg);
     const narrowest = ranked.slice(0, 5);
     const widest    = ranked.slice(-5).reverse();
-    const row = (item) =>
-      `<div class="transparency-row">
-        <span class="transparency-co" title="${item.co}">${item.co}</span>
-        <span class="transparency-pct">${Math.round(item.avg)}% avg · ${item.n} jobs</span>
-      </div>`;
+    const chip = (item) =>
+      `<span class="tr-chip" title="${item.n} postings">
+        <span class="tr-chip-name">${item.co}</span>
+        <span class="tr-chip-pct">${Math.round(item.avg)}%</span>
+      </span>`;
     trEl.innerHTML = `
-      <div class="transparency-grid">
-        <div>
-          <div class="transparency-col-title">Narrowest ranges</div>
-          <div class="transparency-note">Precise and specific — a tighter band signals a well-defined role and pay structure.</div>
-          ${narrowest.map(row).join("")}
-        </div>
-        <div>
-          <div class="transparency-col-title">Widest ranges</div>
-          <div class="transparency-note">Broad bands may reflect seniority flexibility, unclear scope, or a desire not to anchor expectations.</div>
-          ${widest.map(row).join("")}
-        </div>
+      <div class="transparency-section">
+        <div class="transparency-col-title">Most precise — narrowest avg range</div>
+        <div class="tr-chips">${narrowest.map(chip).join("")}</div>
+      </div>
+      <div class="transparency-section">
+        <div class="transparency-col-title">Least precise — widest avg range</div>
+        <div class="tr-chips">${widest.map(chip).join("")}</div>
       </div>`;
   }
   const topPayList = document.getElementById("topPayList");

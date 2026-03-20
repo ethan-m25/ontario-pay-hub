@@ -7,6 +7,11 @@
 # Steps:
 #   1. search-jobs.py               — Exa + ollama → Lever/Greenhouse/Jobvite/Indeed
 #   2. search-workday.py            — Workday CXS API (no LLM)
+#   2b. search-greenhouse.py        — Greenhouse boards JSON API + Scrapling (no LLM)
+#   2c. search-lever.py             — Lever postings JSON API + Scrapling (no LLM)
+#   2d. search-amazon.py            — Amazon Jobs JSON API (no LLM)
+#   2e. search-ashby.py             — Ashby job boards (server-rendered HTML, no LLM)
+#   2f. search-google.py            — Google Careers (Playwright list + Scrapling pages)
 #   3. search-browser.py            — Playwright + Exa + ollama → SuccessFactors/Phenom/etc.
 #   4. update-jobs.sh               — dedup, classify, link-validate, merge into jobs.json
 #   5. build_nightly_archive_queue  — decide which jobs need fresh local archiving
@@ -77,6 +82,46 @@ log "Step 1 done (exit $?)"
 log "--- Step 2: search-workday.py ---"
 python3 search-workday.py >> "$LOG_FILE" 2>&1
 log "Step 2 done (exit $?)"
+
+# 2b. search-greenhouse.py (Greenhouse boards API + Scrapling)
+log "--- Step 2b: search-greenhouse.py ---"
+python3 search-greenhouse.py >> "$LOG_FILE" 2>&1
+log "Step 2b done (exit $?)"
+
+# 2c. search-lever.py (Lever postings API + Scrapling)
+log "--- Step 2c: search-lever.py ---"
+python3 search-lever.py >> "$LOG_FILE" 2>&1
+log "Step 2c done (exit $?)"
+
+# 2d. search-amazon.py (Amazon Jobs JSON API, no auth needed)
+log "--- Step 2d: search-amazon.py ---"
+python3 search-amazon.py >> "$LOG_FILE" 2>&1
+log "Step 2d done (exit $?)"
+
+# 2e. search-ashby.py (Ashby server-rendered boards, no auth needed)
+log "--- Step 2e: search-ashby.py ---"
+python3 search-ashby.py >> "$LOG_FILE" 2>&1
+log "Step 2e done (exit $?)"
+
+# 2f. search-google.py (Google Careers, Playwright + Scrapling, no LLM)
+log "--- Step 2f: search-google.py ---"
+python3 search-google.py >> "$LOG_FILE" 2>&1
+log "Step 2f done (exit $?)"
+
+# 2g. search-sap.py (SAP Jobs portal, static HTML, no LLM)
+log "--- Step 2g: search-sap.py ---"
+python3 search-sap.py >> "$LOG_FILE" 2>&1
+log "Step 2g done (exit $?)"
+
+# 2h. search-kpmg.py (KPMG Canada, Playwright listing + Scrapling detail pages, no LLM)
+log "--- Step 2h: search-kpmg.py ---"
+python3 search-kpmg.py >> "$LOG_FILE" 2>&1
+log "Step 2h done (exit $?)"
+
+# 2i. search-successfactors.py (SAP SF portals: Telus, OPG, Scotiabank, Deloitte CA, EY CA)
+log "--- Step 2i: search-successfactors.py ---"
+python3 search-successfactors.py >> "$LOG_FILE" 2>&1
+log "Step 2i done (exit $?)"
 
 # 3. search-browser.py (Playwright, requires Chromium)
 log "--- Step 3: search-browser.py ---"
