@@ -4536,28 +4536,57 @@ function presetFilter(opts = {}) {
   var idleTimer      = null;
   var cachedValue    = 100000;
 
-  function computeHistFromJobs(jobs) {
+  // Hover preview state (mouse over SVG — no filter change, gray bars only)
+  var hoverValue    = null;
+  var hoverCurrentH = null;  // float[] additive ghost heights (lerp'd)
+  var hoverTargetH  = null;
+  var HOVER_AMP     = 0.7;   // slightly less than drag AMPLITUDE
+
+  function computeHistFromJobs(jobs, _updateMax) {
     var source = jobs || JOBS;
     if (typeof source === 'undefined' || !source || source.length < 1) return;
-    var newBins = new Array(BINS).fill(0);
-    var count = 0;
+
+    // Collect midpoints
+    var midpoints = [];
     source.forEach(function(j) {
       if (!j.min || !j.max) return;
-      var mp = (j.min + j.max) / 2;
+      midpoints.push((j.min + j.max) / 2);
+    });
+    if (midpoints.length === 0) return;
+
+    // Dynamic max from full dataset (not filtered subsets)
+    if (_updateMax !== false) {
+      var sorted = midpoints.slice().sort(function(a, b) { return a - b; });
+      var p99idx = Math.min(Math.floor(sorted.length * 0.99), sorted.length - 1);
+      var dynMax = Math.ceil(sorted[p99idx] / 20000) * 20000;
+      dynMax = Math.max(dynMax, 150000);
+      if (dynMax !== SLIDER_MAX) {
+        SLIDER_MAX   = dynMax;
+        SLIDER_RANGE = SLIDER_MAX - SLIDER_MIN;
+        BIN_W        = SLIDER_RANGE / BINS;
+        var sliderEl = document.getElementById('salaryRangeInput');
+        if (sliderEl) {
+          sliderEl.setAttribute('max', String(SLIDER_MAX));
+          if (parseInt(sliderEl.value) > SLIDER_MAX) sliderEl.value = String(SLIDER_MAX);
+        }
+      }
+    }
+
+    var newBins = new Array(BINS).fill(0);
+    midpoints.forEach(function(mp) {
       var idx;
       if (mp < SLIDER_MIN)       { idx = 0; }
       else if (mp >= SLIDER_MAX) { idx = BINS - 1; }
       else { idx = Math.min(Math.floor((mp - SLIDER_MIN) / BIN_W), BINS - 1); }
       newBins[idx]++;
-      count++;
     });
-    if (count > 0) histBins = newBins;
+    histBins = newBins;
   }
 
   // Hook for filter changes: recompute histogram from a subset of jobs,
   // then re-trigger the tidal animation at the current slider position.
   window.refreshHistogram = function(jobs) {
-    computeHistFromJobs(jobs);
+    computeHistFromJobs(jobs, false); // never update max for filtered subsets
     if (targetHeights) {
       targetHeights = computeTargets(cachedValue);
       if (!rafId) startRAF();
@@ -4583,6 +4612,19 @@ function presetFilter(opts = {}) {
     return Math.exp(-(d * d) / (2 * sigma * sigma));
   }
 
+  // Compute additive hover ghost heights (centered on hoverVal, gray bars only)
+  function computeHoverTargets(hv) {
+    var usableH  = SVG_H - PAD_TOP - PAD_BOT;
+    var maxCount = Math.max.apply(null, histBins) || 1;
+    var t = new Array(BINS);
+    for (var k = 0; k < BINS; k++) {
+      var baseH = Math.max(1.5, (histBins[k] / maxCount) * usableH * 0.88);
+      var bc    = SLIDER_MIN + (k + 0.5) * BIN_W;
+      t[k]      = baseH * HOVER_AMP * gaussW(bc, hv);
+    }
+    return t;
+  }
+
   // Compute target bar heights with gaussian tidal amplification
   function computeTargets(value) {
     var usableH  = SVG_H - PAD_TOP - PAD_BOT;
@@ -4602,8 +4644,8 @@ function presetFilter(opts = {}) {
     return targets;
   }
 
-  // Render one frame — heights already lerp'd
-  function renderFrame(value, heights, lineW) {
+  // Render one frame — heights already lerp'd; hoverH is additive ghost for gray bars
+  function renderFrame(value, heights, lineW, hoverH) {
     var svg = document.getElementById('salaryHistSvg');
     if (!svg) return;
     svg.innerHTML = '';
@@ -4616,14 +4658,17 @@ function presetFilter(opts = {}) {
     var hi = value + 10000;
 
     for (var k = 0; k < BINS; k++) {
-      var bc   = SLIDER_MIN + (k + 0.5) * BIN_W;
-      var h    = Math.max(1.5, heights[k]);
-      var bx   = (svgBinW * k + svgBinW * 0.325).toFixed(2);
-      var bw   = (svgBinW * 0.35).toFixed(2);
-      var by   = (SVG_H - PAD_BOT - h).toFixed(2);
-
+      var bc       = SLIDER_MIN + (k + 0.5) * BIN_W;
       var inWindow = !showAll && bc >= lo && bc <= hi;
       var gw       = (!showAll && inWindow) ? gaussW(bc, value) : 0;
+
+      // Hover ghost: only on gray (inactive) bars
+      var baseH = Math.max(1.5, heights[k]);
+      var h     = (!inWindow && hoverH) ? Math.max(1.5, baseH + hoverH[k]) : baseH;
+
+      var bx = (svgBinW * k + svgBinW * 0.325).toFixed(2);
+      var bw = (svgBinW * 0.35).toFixed(2);
+      var by = (SVG_H - PAD_BOT - h).toFixed(2);
 
       var fill, opacity;
       if (showAll) {
@@ -4675,7 +4720,19 @@ function presetFilter(opts = {}) {
       } else {
         currentLineW = targetLineW;
       }
-      renderFrame(cachedValue, currentHeights, currentLineW);
+      // Lerp hover ghost heights
+      if (hoverTargetH !== null && hoverCurrentH !== null) {
+        for (var k = 0; k < BINS; k++) {
+          var dh = hoverTargetH[k] - hoverCurrentH[k];
+          if (Math.abs(dh) > 0.05) {
+            hoverCurrentH[k] += dh * LERP_SPEED;
+            done = false;
+          } else {
+            hoverCurrentH[k] = hoverTargetH[k];
+          }
+        }
+      }
+      renderFrame(cachedValue, currentHeights, currentLineW, hoverCurrentH);
       if (done) { rafId = null; return; }
       rafId = requestAnimationFrame(loop);
     }
@@ -4810,6 +4867,26 @@ function presetFilter(opts = {}) {
         slider.value = String(newVal);
         updateSlider(newVal);
         if (typeof applyFilters === 'function') applyFilters();
+      });
+
+      // Hover preview: ghost tidal rise on gray bars, no color change, no filter
+      svg.addEventListener('mousemove', function(e) {
+        var rect = svg.getBoundingClientRect();
+        var pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        var hv   = SLIDER_MIN + pct * SLIDER_RANGE;
+        if (hv === hoverValue) return;
+        hoverValue   = hv;
+        hoverTargetH = computeHoverTargets(hv);
+        if (!hoverCurrentH) hoverCurrentH = new Array(BINS).fill(0);
+        if (!rafId) startRAF();
+        resetIdleTimer();
+      });
+
+      svg.addEventListener('mouseleave', function() {
+        hoverValue   = null;
+        hoverTargetH = new Array(BINS).fill(0);
+        if (!rafId) startRAF();
+        resetIdleTimer();
       });
     }
 
