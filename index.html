@@ -2366,7 +2366,7 @@ tbody tr:hover {
               </div>
               <div class="market-card">
                 <div class="market-title">High-Pay Density</div>
-                <div class="market-headline">Which sectors have the most high-paying roles?</div>
+                <div class="market-headline">How does each sector's pay distribute across bands?</div>
                 <div id="hpdCard"></div>
               </div>
             </div>
@@ -3404,41 +3404,49 @@ const MAJOR_EMPLOYERS = [
   { name: "Ontario Teachers'",  match: /ontario teachers/i,                   federal: false },
 ];
 
-const HPD_THRESHOLDS = [80000, 100000, 120000, 150000, 200000];
-let hpdThreshold = 120000;
+const HPD_BANDS = [
+  { label: '< $80k',      min: 0,      max: 80000  },
+  { label: '$80–100k',    min: 80000,  max: 100000 },
+  { label: '$100–120k',   min: 100000, max: 120000 },
+  { label: '$120–150k',   min: 120000, max: 150000 },
+  { label: '$150–200k',   min: 150000, max: 200000 },
+  { label: '$200k+',      min: 200000, max: Infinity },
+];
+let hpdBandIdx = 2; // default: $100–120k
 
 function renderHPDCard(){
   const el = document.getElementById("hpdCard");
   if(!el) return;
+  const band = HPD_BANDS[hpdBandIdx];
   const cats = Object.entries(CAT_META)
     .map(([tag, meta]) => {
       const catJobs = JOBS.filter(j => j.tag===tag && j.min>0 && j.max>0);
-      const above = catJobs.filter(j => mid(j) >= hpdThreshold).length;
-      const pct = catJobs.length >= 5 ? Math.round(above/catJobs.length*100) : null;
-      return { tag, label: meta.shortLabel, total: catJobs.length, above, pct };
+      const inBand  = catJobs.filter(j => mid(j) >= band.min && mid(j) < band.max).length;
+      const pct = catJobs.length >= 5 ? Math.round(inBand/catJobs.length*100) : null;
+      return { tag, label: meta.shortLabel, total: catJobs.length, inBand, pct };
     })
     .filter(d => d.pct !== null)
     .sort((a,b) => b.pct - a.pct);
 
-  const threshBtns = HPD_THRESHOLDS.map(t =>
-    `<button class="hpd-btn${t===hpdThreshold?' active':''}" onclick="setHpdThreshold(${t})">$${t/1000}k</button>`
+  const bandBtns = HPD_BANDS.map((b,i) =>
+    `<button class="hpd-btn${i===hpdBandIdx?' active':''}" onclick="setHpdBand(${i})">${b.label}</button>`
   ).join('');
 
   const rows = cats.map(d =>
-    `<div class="hpd-row" title="${d.above} of ${d.total} postings · midpoint ≥ $${hpdThreshold/1000}k">
+    `<div class="hpd-row" title="${d.inBand} of ${d.total} ${d.label} postings fall in ${band.label}">
       <span class="hpd-label">${d.label}</span>
       <div class="hpd-track"><div class="hpd-fill" data-pct="${d.pct}" style="width:0%"></div></div>
       <span class="hpd-pct">${d.pct}%</span>
-      <span class="hpd-n">${d.above}/${d.total}</span>
+      <span class="hpd-n">${d.inBand}/${d.total}</span>
     </div>`
   ).join('');
 
-  el.innerHTML = `<div class="hpd-thresholds">${threshBtns}</div><div class="hpd-chart">${rows}</div>`;
+  el.innerHTML = `<div class="hpd-thresholds">${bandBtns}</div><div class="hpd-chart">${rows}</div>`;
   requestAnimationFrame(()=>{
     el.querySelectorAll('.hpd-fill').forEach(bar=>{ bar.style.width = bar.dataset.pct+'%'; });
   });
 }
-function setHpdThreshold(t){ hpdThreshold=t; renderHPDCard(); }
+function setHpdBand(i){ hpdBandIdx=i; renderHPDCard(); }
 
 function filterByCompany(matchStr){
   const inp = document.getElementById("searchInput");
