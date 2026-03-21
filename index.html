@@ -1491,9 +1491,10 @@ footer a { color: var(--accent); text-decoration: none; }
 .content-area #chartCard { border-top: 2px solid var(--text3); }
 .market-grid {
   display: grid;
-  grid-template-columns: 1.15fr .9fr .95fr;
-  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   margin-bottom: 14px;
+  align-items: start;
 }
 .insights-drawer {
   margin-bottom: 14px;
@@ -2341,11 +2342,6 @@ tbody tr:hover {
               <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
               <div class="market-copy">(max−min) ÷ midpoint, avg per employer with ≥3 postings.</div>
               <div id="transparencyRanking"></div>
-            </div>
-            <div class="market-card">
-              <div class="market-title">Quick Decisions</div>
-              <div class="market-copy">Jump straight into a useful slice.</div>
-              <div class="market-list" id="quickStartList"></div>
             </div>
             <div class="market-card">
               <div class="market-title">Major Employer Coverage</div>
@@ -3356,9 +3352,6 @@ function topCo(){
   JOBS.forEach(j=>{cnt[j.company]=(cnt[j.company]||0)+1;});
   return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
 }
-function newestJobs(limit=3){
-  return [...JOBS].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,limit);
-}
 const MAJOR_EMPLOYERS = [
   { name: "RBC",                match: /\brbc\b|royal bank/i,                federal: false },
   { name: "TD Bank",            match: /\btd bank\b|\btd\s+(canada|financial)\b/i, federal: false },
@@ -3433,15 +3426,6 @@ function renderCoverageCard(){
     if(fill) fill.style.width = pct + '%';
   });
 }
-function byTagTop(tag, limit=1){
-  return [...JOBS].filter(j=>j.tag===tag).sort((a,b)=>mid(b)-mid(a)).slice(0,limit);
-}
-function topTagByCount(){
-  const counts = {};
-  JOBS.forEach(j=>{ counts[j.tag] = (counts[j.tag] || 0) + 1; });
-  const best = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
-  return best ? { tag: best[0], count: best[1], label: (CAT_META[best[0]]||{label:best[0]}).label } : null;
-}
 function renderDiscovery(){
   const updatedText = SITE_META && SITE_META.updated
     ? new Date(SITE_META.updated).toLocaleDateString("en-CA",{month:"short",day:"numeric"})
@@ -3493,26 +3477,6 @@ function renderDiscovery(){
       </div>`;
   }
   renderCoverageCard();
-  const quickStartList = document.getElementById("quickStartList");
-  if(quickStartList){
-    const freshHighPay = [...JOBS]
-      .filter(j=>mid(j)>=150000)
-      .sort((a,b)=>b.date.localeCompare(a.date)||mid(b)-mid(a))[0];
-    const starts = [
-      {label:"Newest postings", action:"presetFilter({sort:'date-desc'})", text: newestJobs(1)[0]},
-      {label:"Engineering pay leaders", action:"presetFilter({cat:'eng',sort:'mid-desc'})", text: byTagTop('eng',1)[0]},
-      {label:"Fresh $150k+ roles", action:"presetFilter({salMin:150000,sort:'date-desc'})", text: freshHighPay}
-    ];
-    quickStartList.innerHTML = starts.map(item=>{
-      const j = item.text;
-      const company = j && j.company && j.company !== "Not specified" ? j.company : "Ontario employer";
-      const meta = j ? `${j.role} · ${company}` : `Open this view and scan the current market quickly`;
-      return `<a class="market-link" href="#" onclick="event.preventDefault(); ${item.action}">
-        <div class="market-link-role">${item.label}</div>
-        <div class="market-link-meta">${meta}</div>
-      </a>`;
-    }).join("");
-  }
 }
 
 // ===== THEME =====
