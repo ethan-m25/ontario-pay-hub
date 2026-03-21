@@ -597,17 +597,41 @@ td { padding: 13px 11px; vertical-align: middle; overflow: hidden; }
 .range-bar-wrap { display: none; }
 .range-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); }
 
-/* Range width indicator — length = spread, purely neutral */
+/* Range width indicator — length = spread, color = precision signal */
 .range-width-bar {
-  height: 2px;
-  background: var(--text3);
-  border-radius: 1px;
-  margin-top: 5px;
+  height: 3px;
+  border-radius: 2px;
+  margin-top: 4px;
   min-width: 3px;
-  opacity: 0.45;
+  opacity: 0.55;
   transition: opacity var(--transition);
 }
-tbody tr:hover .range-width-bar { opacity: 0.9; }
+tbody tr:hover .range-width-bar { opacity: 1; }
+.range-spread-wrap { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.range-spread-label {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+.range-spread-label.narrow { color: var(--green); }
+.range-spread-label.moderate { color: var(--cyan); }
+.range-spread-label.wide { color: var(--amber, #f59e0b); }
+/* Federal employer badge in job rows */
+.fed-row-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--text3);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 0 4px;
+  margin-left: 5px;
+  vertical-align: middle;
+  cursor: default;
+}
 .midpoint { font-family: var(--font-mono); font-weight: 600; color: var(--cyan); font-size: var(--fs-md); white-space: nowrap; }
 .src-link { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size: var(--fs-xs); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .src-link:hover { text-decoration: underline; }
@@ -3410,6 +3434,12 @@ const MAJOR_EMPLOYERS = [
   { name: "Ontario Teachers'",  match: /ontario teachers/i,                   federal: false },
 ];
 
+// Returns the matched employer entry if federal, otherwise null
+function getFederalMatch(company) {
+  if (!company) return null;
+  return MAJOR_EMPLOYERS.find(e => e.federal && e.match.test(company)) || null;
+}
+
 const HPD_BANDS = [
   { label: '< $80k',      min: 0,      max: 80000  },
   { label: '$80–100k',    min: 80000,  max: 100000 },
@@ -4171,8 +4201,12 @@ function renderTable(){
       const archived=isArchived(j);
       const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
       const spreadPctM=Math.round((j.max-j.min)/mid(j)*100);
-      const spreadBarWM=(Math.min(spreadPctM/60,1)*28).toFixed(1);
+      const spreadBarWM=(Math.min(spreadPctM/60,1)*40).toFixed(1);
       const spreadLabelM=spreadPctM<15?'Narrow':spreadPctM<35?'Moderate':'Wide';
+      const spreadClassM=spreadPctM<15?'narrow':spreadPctM<35?'moderate':'wide';
+      const spreadColorM=spreadPctM<15?'var(--green)':spreadPctM<35?'var(--cyan)':'#f59e0b';
+      const fedMatchM=getFederalMatch(j.company);
+      const fedBadgeM=fedMatchM?`<span class="fed-row-badge" title="${fedMatchM.name} is a federally regulated employer — Ontario ESA pay transparency rules do not apply">Fed. exempt</span>`:'';
       return `<tr>
         <td colspan="7" style="padding:0">
           <div class="mobile-job-card" onclick="openJobDetail(${j.id})">
@@ -4187,11 +4221,17 @@ function renderTable(){
             <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="event.stopPropagation();toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
           </div>
           <div>
-            <span class="company-name">${j.company}</span>
+            <span class="company-name">${j.company}</span>${fedBadgeM}
             <span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span>
           </div>
           <div class="mobile-range-row">
-            <div><div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div><div class="range-width-bar" style="width:${spreadBarWM}px" title="${spreadLabelM} range · ${spreadPctM}% spread"></div></div>
+            <div>
+              <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
+              <div class="range-spread-wrap">
+                <div class="range-width-bar" style="width:${spreadBarWM}px;background:${spreadColorM}" title="${spreadLabelM} range · ${spreadPctM}% spread"></div>
+                <span class="range-spread-label ${spreadClassM}">${spreadLabelM}</span>
+              </div>
+            </div>
             <div class="midpoint">${fmt(mid(j))}</div>
           </div>
           <div class="mobile-card-foot">
@@ -4208,8 +4248,12 @@ function renderTable(){
       const archived=isArchived(j);
       const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
       const spreadPct=Math.round((j.max-j.min)/mid(j)*100);
-      const spreadBarW=(Math.min(spreadPct/60,1)*28).toFixed(1);
+      const spreadBarW=(Math.min(spreadPct/60,1)*40).toFixed(1);
       const spreadLabel=spreadPct<15?'Narrow':spreadPct<35?'Moderate':'Wide';
+      const spreadClass=spreadPct<15?'narrow':spreadPct<35?'moderate':'wide';
+      const spreadColor=spreadPct<15?'var(--green)':spreadPct<35?'var(--cyan)':'#f59e0b';
+      const fedMatch=getFederalMatch(j.company);
+      const fedBadge=fedMatch?`<span class="fed-row-badge" title="${fedMatch.name} is a federally regulated employer — Ontario ESA pay transparency rules do not apply">Fed. exempt</span>`:'';
       return `<tr style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
         <td>
           <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
@@ -4218,10 +4262,13 @@ function renderTable(){
             ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
           </div>
         </td>
-        <td><span class="company-name">${j.company}</span><span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
+        <td><span class="company-name">${j.company}</span>${fedBadge}<span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
-          <div class="range-width-bar" style="width:${spreadBarW}px" title="${spreadLabel} range · ${spreadPct}% spread (${fmt(j.max-j.min)} gap)"></div>
+          <div class="range-spread-wrap">
+            <div class="range-width-bar" style="width:${spreadBarW}px;background:${spreadColor}" title="${spreadLabel} range · ${spreadPct}% spread (${fmt(j.max-j.min)} gap)"></div>
+            <span class="range-spread-label ${spreadClass}">${spreadLabel}</span>
+          </div>
         </td>
         <td class="midpoint">${fmt(mid(j))}</td>
         <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a></td>
