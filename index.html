@@ -182,6 +182,10 @@ body {
 #tableBody tr {
   animation: rowIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+/* Suppress entrance animation while slider is being dragged (rows reset every frame → perpetual opacity:0) */
+body.slider-dragging #tableBody tr {
+  animation: none;
+}
 
 /* Active filter chip entrance */
 @keyframes chipIn {
@@ -3310,6 +3314,8 @@ const S = {
   wm: "",
   age: "",
   q: "",
+  covEmployer: null,   // RegExp from MAJOR_EMPLOYERS — filters table without touching search box
+  covEmployerName: "", // display name for the active-filter chip
 };
 
 // ===== HELPERS =====
@@ -3448,9 +3454,13 @@ function renderHPDCard(){
 }
 function setHpdBand(i){ hpdBandIdx=i; renderHPDCard(); }
 
-function filterByCompany(matchStr){
-  const inp = document.getElementById("searchInput");
-  if(inp){ inp.value = matchStr; inp.dispatchEvent(new Event("input")); }
+function filterByCompany(empName){
+  const emp = MAJOR_EMPLOYERS.find(e => e.name === empName);
+  if(!emp) return;
+  S.covEmployer = emp.match;
+  S.covEmployerName = emp.name;
+  renderTable();
+  updateActiveFilters();
   const table = document.getElementById("jobTable");
   if(table) table.scrollIntoView({behavior:"smooth", block:"start"});
 }
@@ -3469,10 +3479,10 @@ function renderCoverageCard(){
   const pct = Math.round(withData.length / results.length * 100);
 
   const rowsHTML = withData.map(r=>{
-    const keyword = r.sampleCo.split(/\s/)[0];
+    const safeAttr = r.name.replace(/"/g, '&quot;');
     return `<div class="cov-item">
       <span class="cov-item-name">${r.name}</span>
-      <span class="cov-item-badge" onclick="filterByCompany('${keyword}')" title="${r.count} posting${r.count===1?'':'s'} · click to filter">${r.count} postings</span>
+      <span class="cov-item-badge" onclick="filterByCompany(&quot;${safeAttr}&quot;)" title="${r.count} posting${r.count===1?'':'s'} · click to filter">${r.count} postings</span>
     </div>`;
   }).join('');
 
@@ -4123,10 +4133,11 @@ function renderTable(){
     const ms=!S.salMin?true:(_hmx&&S.salMin>=_hmx)?(mid(j)>=S.salMin-10000):(mid(j)>=S.salMin-10000&&mid(j)<=S.salMin+10000);
     const mh=S.showArchived||!isArchived(j);
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
+    const mco=!S.covEmployer||!!(j.company||"").match(S.covEmployer);
     const posted=j.date||"";
     const cutoff=(days)=>{const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);};
     const ma=!S.age||!posted||(S.age==='1m'?posted>=cutoff(30):S.age==='3m'?posted>=cutoff(90):S.age==='6m'?posted>=cutoff(180):posted<cutoff(180));
-    return mq&&mc&&mr&&ms&&mh&&mw&&ma;
+    return mq&&mc&&mr&&ms&&mh&&mw&&mco&&ma;
   });
   const [sk,sd]=S.sort.split("-");
   data.sort((a,b)=>{
@@ -4733,6 +4744,7 @@ function clearAllFilters() {
     if (chips[0]) chips[0].classList.add('active');
   });
   setAge('');
+  S.covEmployer = null; S.covEmployerName = '';
   applyFilters();
 }
 
@@ -4755,6 +4767,7 @@ function updateActiveFilters() {
     }
   });
   if (S.q) active.push({id:'searchInput', val:S.q, label:`Search: ${S.q}`});
+  if (S.covEmployer) active.push({id:'covEmployer', val:S.covEmployerName, label:`Employer: ${S.covEmployerName}`});
   const bar = document.getElementById('activeFilters');
   const chipsEl = document.getElementById('activeChips');
   const mobileFilterBtn = document.getElementById('mobileFilterBtn');
@@ -4775,6 +4788,11 @@ function clearOneFilter(id) {
     const mobileSearch = document.getElementById('mobileSearchInput');
     if (mobileSearch) mobileSearch.value = '';
     applyFilters();
+    return;
+  }
+  if (id === 'covEmployer') {
+    S.covEmployer = null; S.covEmployerName = '';
+    renderTable(); updateActiveFilters();
     return;
   }
   if (id === 'ageFilter') {
@@ -5152,6 +5170,7 @@ function presetFilter(opts = {}) {
 
     // RAF-throttled filter: runs applyFilters at most once per animation frame
     var filterDirty = false;
+    var sliderDragTimer = null;
     // Hide hint on first drag
     (function() {
       var hint = document.getElementById('sliderHintText');
@@ -5160,6 +5179,10 @@ function presetFilter(opts = {}) {
     slider.addEventListener('input', function() {
       var val = parseInt(this.value);
       updateSlider(val);  // immediate visual
+      // Suppress row entrance animation during drag (rows reset every frame → perpetual opacity:0)
+      document.body.classList.add('slider-dragging');
+      clearTimeout(sliderDragTimer);
+      sliderDragTimer = setTimeout(function() { document.body.classList.remove('slider-dragging'); }, 300);
       // Dismiss hint permanently once user interacts
       var hint = document.getElementById('sliderHintText');
       if (hint && hint.style.display !== 'none') { hint.style.display = 'none'; sessionStorage.setItem('sliderHintSeen','1'); }

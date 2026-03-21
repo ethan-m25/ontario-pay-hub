@@ -1,0 +1,17 @@
+.venv
+.git
+.wrangler
+scripts
+data
+lab
+migrations
+*.bak
+*.bak-*
+*.bak.*
+ARCHIVE_PIPELINE.md
+AUTH_SETUP.md
+SALARY_SLIDER_RESEARCH.md
+index-slider-preview.html
+index.html.bak*
+slider-v1.html
+slider-v2.html
