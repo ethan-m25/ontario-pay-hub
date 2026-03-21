@@ -184,11 +184,10 @@ nav {
 @media(min-width:480px){ .logo-badge { display:inline; } }
 @media(max-width:540px){
   .nav-search { display:none; }
-  #userBtn { padding:5px 10px; font-size:.73rem; max-width:88px; overflow:hidden; text-overflow:ellipsis; }
+  nav { padding: 0 12px; gap: 8px; overflow: hidden; }
   .logo-name { font-size:.9rem; }
-  /* Prevent nav from ever overflowing — nav-actions shrinks if needed */
-  .nav-actions { min-width: 0; }
-  nav { overflow: hidden; }
+  .nav-actions { min-width: 0; gap: 4px; }
+  #userBtn { padding:5px 9px; font-size:.72rem; }
 }
 .nav-search-toggle { display:none; font-size:1.1rem; }
 @media(max-width:540px){ .nav-search-toggle { display:inline-flex; } }
