@@ -3399,6 +3399,9 @@ const MAJOR_EMPLOYERS = [
   { name: "SickKids",           match: /sick\s*kids|hospital for sick children/i, federal: false },
   { name: "Sunnybrook",         match: /sunnybrook/i,                         federal: false },
   { name: "Air Canada",         match: /air canada/i,                         federal: true },
+  { name: "Brookfield",         match: /brookfield/i,                         federal: false },
+  { name: "Intact Financial",   match: /intact financial|intact insurance/i,  federal: false },
+  { name: "Ontario Teachers'",  match: /ontario teachers/i,                   federal: false },
 ];
 
 const HPD_THRESHOLDS = [80000, 100000, 120000, 150000, 200000];
@@ -3451,15 +3454,17 @@ function renderCoverageCard(){
     const matches = JOBS.filter(j=>(j.company||"").match(emp.match));
     return { ...emp, count: matches.length, sampleCo: matches[0]?.company || emp.name };
   });
-  const withData = results.filter(r=>r.count>0).sort((a,b)=>b.count-a.count);
-  const noData   = results.filter(r=>r.count===0);
+  const MIN_POSTINGS = 10;
+  const withData  = results.filter(r=>r.count>=MIN_POSTINGS).sort((a,b)=>b.count-a.count);
+  const fewData   = results.filter(r=>r.count>0 && r.count<MIN_POSTINGS);
+  const noData    = results.filter(r=>r.count===0);
   const pct = Math.round(withData.length / results.length * 100);
 
   const rowsHTML = withData.map(r=>{
     const keyword = r.sampleCo.split(/\s/)[0];
     return `<div class="cov-item">
       <span class="cov-item-name">${r.name}</span>
-      <span class="cov-item-badge" onclick="filterByCompany('${keyword}')" title="${r.count} posting${r.count===1?'':'s'} · click to filter">${r.count} posting${r.count===1?'':'s'}</span>
+      <span class="cov-item-badge" onclick="filterByCompany('${keyword}')" title="${r.count} posting${r.count===1?'':'s'} · click to filter">${r.count} postings</span>
     </div>`;
   }).join('');
 
@@ -3470,15 +3475,20 @@ function renderCoverageCard(){
     return `<span class="cov-chip${r.federal?' federal':''}" title="${tip}">${r.name}${r.federal?' †':''}</span>`;
   }).join('');
 
+  const fewNote = fewData.length>0
+    ? `<div class="cov-footnote" style="margin-top:6px">${fewData.length} additional employer${fewData.length>1?'s':''} tracked but excluded — fewer than ${MIN_POSTINGS} postings in our dataset.</div>`
+    : '';
+
   el.innerHTML = `
     <div class="cov-stat">${withData.length}<em> / ${results.length}</em></div>
-    <div class="cov-stat-sub">major employers with disclosed pay data</div>
+    <div class="cov-stat-sub">major employers with 10+ disclosed postings</div>
     <div class="cov-bar"><div class="cov-bar-fill" style="width:0"></div></div>
     <div class="cov-group-label">Disclosing pay</div>
     <div class="cov-rows">${rowsHTML}</div>
     <div class="cov-group-label">Not in our dataset</div>
     <div class="cov-chips">${chipsHTML}</div>
     <div class="cov-footnote">† Federal employer — pay disclosure not legally required. "Not in dataset" may mean: no active Ontario postings, pay not disclosed, or not yet scraped.</div>
+    ${fewNote}
   `;
   requestAnimationFrame(()=>{
     const fill = el.querySelector('.cov-bar-fill');
