@@ -704,14 +704,35 @@ tbody tr:hover .range-width-bar { opacity: 0.9; }
 [data-theme="dark"] .wm-onsite { background:rgba(212,152,10,.10); color:#E8C060; border-color:rgba(212,152,10,.25); }
 [data-theme="dark"] .wm-unknown { background:rgba(122,122,122,.08); color:var(--text3); border-color:rgba(122,122,122,.18); }
 
-/* ===== TOP PAYER ===== */
-.top-badge {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs); font-weight: 700;
-  background: var(--amber-dim); color: var(--amber);
-  border: 1px solid rgba(155,106,0,.25);
-  border-radius: 0; padding: 1px 5px; margin-left: 5px; white-space: nowrap;
-  text-transform: uppercase; letter-spacing: .04em;
+/* ===== EMPLOYER COVERAGE CARD ===== */
+.cov-list {
+  display: flex; flex-direction: column; gap: 3px;
+  margin: 10px 0 8px;
+  overflow-y: auto; max-height: 270px;
+}
+.cov-list::-webkit-scrollbar { width: 3px; }
+.cov-list::-webkit-scrollbar-thumb { background: var(--border2); }
+.cov-row { display: flex; align-items: center; gap: 6px; }
+.cov-name {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  color: var(--text2); white-space: nowrap; flex-shrink: 0;
+}
+.cov-line { flex: 1; height: 0; border-top: 1px dashed var(--border2); min-width: 6px; }
+.cov-count {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  font-weight: 600; color: var(--text);
+  white-space: nowrap; flex-shrink: 0;
+  cursor: pointer; background: none; border: none; padding: 0;
+  transition: color var(--transition);
+}
+.cov-count:hover { color: var(--accent); }
+.cov-none {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  color: var(--text3); white-space: nowrap; flex-shrink: 0;
+}
+.cov-note {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text3); line-height: 1.5; margin-top: 6px;
 }
 tr.selected-row { background: var(--accent-dim) !important; border-left: 3px solid var(--accent) !important; }
 
@@ -2331,9 +2352,10 @@ tbody tr:hover {
               <div class="market-list" id="quickStartList"></div>
             </div>
             <div class="market-card">
-              <div class="market-title">Top Paying Right Now</div>
-              <div class="market-copy">Highest disclosed midpoint ranges in view.</div>
-              <div class="market-list" id="topPayList"></div>
+              <div class="market-title">Major Employer Coverage</div>
+              <div class="market-copy">Ontario's top employers — who's disclosing pay?</div>
+              <div class="cov-list" id="coverageList"></div>
+              <div class="cov-note">† Federally regulated — ESA disclosure not yet required</div>
             </div>
           </section>
         </div>
@@ -3342,8 +3364,56 @@ function topCo(){
 function newestJobs(limit=3){
   return [...JOBS].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,limit);
 }
-function topPayJobs(limit=3){
-  return [...JOBS].sort((a,b)=>mid(b)-mid(a)).slice(0,limit);
+const MAJOR_EMPLOYERS = [
+  { name: "RBC",                match: /\brbc\b|royal bank/i,                federal: false },
+  { name: "TD Bank",            match: /\btd bank\b|\btd\s+(canada|financial)\b/i, federal: false },
+  { name: "Scotiabank",         match: /scotiabank|bank of nova scotia/i,     federal: false },
+  { name: "BMO",                match: /\bbmo\b|bank of montreal/i,           federal: false },
+  { name: "CIBC",               match: /\bcibc\b/i,                           federal: false },
+  { name: "Bell Canada",        match: /bell canada|bell mobility|\bbell inc\b/i, federal: true },
+  { name: "Rogers",             match: /rogers communications|rogers media/i, federal: true },
+  { name: "Telus",              match: /\btelus\b/i,                          federal: true },
+  { name: "Loblaws",            match: /loblaws|loblaw companies/i,           federal: false },
+  { name: "Canadian Tire",      match: /canadian tire/i,                      federal: false },
+  { name: "Metro Inc.",         match: /\bmetro inc\b|\bmetro stores\b/i,     federal: false },
+  { name: "Shopify",            match: /shopify/i,                            federal: false },
+  { name: "OpenText",           match: /opentext|open text corp/i,            federal: false },
+  { name: "Magna International",match: /magna international/i,                federal: false },
+  { name: "Manulife",           match: /manulife/i,                           federal: false },
+  { name: "Sun Life",           match: /sun life/i,                           federal: false },
+  { name: "Hydro One",          match: /hydro one/i,                          federal: false },
+  { name: "Ontario Power Gen.", match: /ontario power generation|\bopg\b/i,   federal: false },
+  { name: "Deloitte",           match: /deloitte/i,                           federal: false },
+  { name: "KPMG",               match: /\bkpmg\b/i,                           federal: false },
+  { name: "SickKids",           match: /sick\s*kids|hospital for sick children/i, federal: false },
+  { name: "Sunnybrook",         match: /sunnybrook/i,                         federal: false },
+  { name: "Air Canada",         match: /air canada/i,                         federal: true },
+];
+
+function filterByCompany(matchStr){
+  const inp = document.getElementById("searchInput");
+  if(inp){ inp.value = matchStr; inp.dispatchEvent(new Event("input")); }
+  const table = document.getElementById("jobTable");
+  if(table) table.scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function renderCoverageCard(){
+  const el = document.getElementById("coverageList");
+  if(!el) return;
+  const rows = MAJOR_EMPLOYERS.map(emp=>{
+    const matches = JOBS.filter(j=>(j.company||"").match(emp.match));
+    const count = matches.length;
+    const firstMatch = matches.length ? (matches[0].company||"").split(/\s/)[0] : emp.name.split(" ")[0];
+    const status = count > 0
+      ? `<span class="cov-count" title="${count} posting${count===1?'':'s'} · click to filter" onclick="filterByCompany('${firstMatch}')">${count} posting${count===1?'':'s'}</span>`
+      : `<span class="cov-none">${emp.federal?"not required †":"not disclosing"}</span>`;
+    return `<div class="cov-row">
+      <span class="cov-name">${emp.name}</span>
+      <span class="cov-line"></span>
+      ${status}
+    </div>`;
+  });
+  el.innerHTML = rows.join("");
 }
 function byTagTop(tag, limit=1){
   return [...JOBS].filter(j=>j.tag===tag).sort((a,b)=>mid(b)-mid(a)).slice(0,limit);
@@ -3404,15 +3474,7 @@ function renderDiscovery(){
         <div class="tr-chips">${widest.map(chip).join("")}</div>
       </div>`;
   }
-  const topPayList = document.getElementById("topPayList");
-  if(topPayList){
-    topPayList.innerHTML = topPayJobs(3).map(j=>`
-      <a class="market-link" href="#" onclick="event.preventDefault(); openJobDetail(${j.id})">
-        <div class="market-link-role">${j.role}</div>
-        <div class="market-link-meta">${j.company} · ${fmt(mid(j))} midpoint · ${relDate(j.date)}</div>
-      </a>
-    `).join("");
-  }
+  renderCoverageCard();
   const quickStartList = document.getElementById("quickStartList");
   if(quickStartList){
     const freshHighPay = [...JOBS]
