@@ -8,7 +8,7 @@ Strategy:
   2. CXS JSON API   — paginate all jobs per employer, filter Ontario (fast, no JS)
   3. HTML job page  — salary in raw HTML (meta content attrs); pure regex, no LLM
 
-Seed tenants (8 known) + dynamic discovery via Exa = covers ALL Workday employers
+Seed tenants (37 known) + dynamic discovery via Exa = covers ALL Workday employers
 posting Ontario jobs, not just the predefined list.
 
 Run: python3 ~/ontario-pay-hub/scripts/search-workday.py
@@ -41,19 +41,65 @@ UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML,
 # (host, company_id, tenant, display_name)
 SEED_TENANTS = [
     # Major Canadian banks
-    ("rbc.wd3.myworkdayjobs.com",       "rbc",       "RBCGLOBAL1",        "RBC"),
-    ("td.wd3.myworkdayjobs.com",        "td",        "TD_Bank_Careers",   "TD Bank"),
-    ("bmo.wd3.myworkdayjobs.com",       "bmo",       "External",          "BMO"),
-    ("cibc.wd3.myworkdayjobs.com",      "cibc",      "search",            "CIBC"),
+    ("rbc.wd3.myworkdayjobs.com",           "rbc",        "RBCGLOBAL1",           "RBC"),
+    ("td.wd3.myworkdayjobs.com",            "td",         "TD_Bank_Careers",      "TD Bank"),
+    ("bmo.wd3.myworkdayjobs.com",           "bmo",        "External",             "BMO"),
+    ("cibc.wd3.myworkdayjobs.com",          "cibc",       "search",               "CIBC"),
     # Insurance / financial services
-    ("manulife.wd3.myworkdayjobs.com",  "manulife",  "MFCJH_Jobs",        "Manulife"),
-    ("sunlife.wd3.myworkdayjobs.com",   "sunlife",   "Experienced-Jobs",  "Sun Life"),
+    ("manulife.wd3.myworkdayjobs.com",      "manulife",   "MFCJH_Jobs",           "Manulife"),
+    ("sunlife.wd3.myworkdayjobs.com",       "sunlife",    "Experienced-Jobs",     "Sun Life"),
     # Pension funds (Toronto-HQ, large Ontario employers)
-    ("omers.wd3.myworkdayjobs.com",     "omers",     "OMERS_External",    "OMERS"),
+    ("omers.wd3.myworkdayjobs.com",         "omers",      "OMERS_External",       "OMERS"),
+    ("otppb.wd3.myworkdayjobs.com",         "otppb",      "OntarioTeachers_Careers", "Ontario Teachers' Pension Plan"),
     # Real estate / asset management
-    ("brookfield.wd5.myworkdayjobs.com","brookfield","brookfield",        "Brookfield"),
+    ("brookfield.wd5.myworkdayjobs.com",    "brookfield", "brookfield",           "Brookfield"),
     # Retail
-    ("walmart.wd5.myworkdayjobs.com",   "walmart",   "WalmartExternal",   "Walmart Canada"),
+    ("walmart.wd5.myworkdayjobs.com",       "walmart",    "WalmartExternal",      "Walmart Canada"),
+    # ── New additions discovered 2026-03-19 ───────────────────────────────────
+    # Tech (large Canadian presence)
+    ("salesforce.wd12.myworkdayjobs.com",   "salesforce", "External_Career_Site", "Salesforce"),
+    ("etsy.wd5.myworkdayjobs.com",          "etsy",       "Etsy_Careers",         "Etsy"),
+    # Professional services
+    ("bdo.wd3.myworkdayjobs.com",           "bdo",        "BDO",                  "BDO Canada"),
+    ("pwc.wd3.myworkdayjobs.com",           "pwc",        "Global_Experienced_Careers", "PwC"),
+    # Energy / utilities
+    ("tcenergy.wd3.myworkdayjobs.com",      "tcenergy",   "CAREER_SITE_TC",       "TC Energy"),
+    # Telecom / media
+    ("cogeco.wd3.myworkdayjobs.com",        "cogeco",     "Cogeco_Careers",       "Cogeco"),
+    # Government / regulated
+    ("navcanada.wd10.myworkdayjobs.com",    "navcanada",  "NAV_Careers",          "NAV Canada"),
+    # Retail (Canadian)
+    ("canadiantirecorporation.wd3.myworkdayjobs.com", "canadiantirecorporation", "Enterprise_External_Careers_Site", "Canadian Tire"),
+    ("mywdhr.wd1.myworkdayjobs.com",        "mywdhr",     "HBC_Careers",          "Hudson's Bay Company"),
+    # Loblaw (board confirmed as loblaw_careers)
+    ("myview.wd3.myworkdayjobs.com",        "myview",     "loblaw_careers",       "Loblaw Companies"),
+    # Energy
+    ("enbridge.wd3.myworkdayjobs.com",      "enbridge",   "Enbridge_Careers",     "Enbridge"),
+    # Restaurant / food service (Toronto HQ — Tim Hortons, Burger King, Popeyes, Firehouse Subs)
+    ("rbi.wd3.myworkdayjobs.com",           "rbi",        "RBI_External_Career_Site", "Restaurant Brands International"),
+    # Insurance (Toronto HQ — Intact Financial Corporation)
+    ("intactfc.wd3.myworkdayjobs.com",      "intactfc",   "IntactFC",             "Intact Financial"),
+    # Media / tech (Toronto HQ — posts Ontario salary range)
+    ("thomsonreuters.wd5.myworkdayjobs.com","thomsonreuters","External_Career_Site","Thomson Reuters"),
+    # ── myworkdaysite.com tenants (path-based company routing, same CXS API) ───
+    # Manufacturing / automotive (Toronto-area plants, salary-disclosed roles)
+    ("wd3.myworkdaysite.com",               "magna",      "Magna",                "Magna International"),
+    # ── Additional tenants discovered 2026-03-19 ──────────────────────────────
+    # Pharma (Mississauga HQ — confirmed salary disclosure)
+    ("astrazeneca.wd3.myworkdayjobs.com",   "astrazeneca","Careers",              "AstraZeneca"),
+    # Utilities (Ottawa electric utility)
+    ("hydroottawa.wd3.myworkdayjobs.com",   "hydroottawa","hydro_ottawa_careersite","Hydro Ottawa"),
+    # Automotive (GM Canada — Oshawa/Ontario plants)
+    ("generalmotors.wd5.myworkdayjobs.com", "generalmotors","Careers_GM",         "General Motors"),
+    # Pharma (Mississauga/Toronto — two separate boards)
+    ("roche.wd3.myworkdayjobs.com",         "roche",        "roche-ext",          "Roche Canada"),
+    ("roche.wd3.myworkdayjobs.com",         "roche",        "ROG-A2O-GENE",       "Roche Canada (Gene Therapies)"),
+    # Medical devices (Hamilton/Ontario operations)
+    ("stryker.wd1.myworkdayjobs.com",       "stryker",      "StrykerCareers",     "Stryker"),
+    # Consumer goods (Belleville/Toronto plants — salary disclosed)
+    ("pg.wd5.myworkdayjobs.com",            "pg",           "1000",               "Procter & Gamble"),
+    # Pension fund (Toronto HQ — 34 jobs, Toronto-focused)
+    ("cppib.wd10.myworkdayjobs.com",        "cppib",        "cppinvestments",     "CPP Investments"),
 ]
 
 # Known company_id → display name overrides for dynamically discovered tenants.
@@ -70,6 +116,27 @@ KNOWN_COMPANY_OVERRIDES = {
     "canadalife":               "Canada Life",
     "hydro1":                   "Hydro One",
     "opg":                      "Ontario Power Generation",
+    "salesforce":               "Salesforce",
+    "bdo":                      "BDO Canada",
+    "pwc":                      "PwC",
+    "tcenergy":                 "TC Energy",
+    "cogeco":                   "Cogeco",
+    "navcanada":                "NAV Canada",
+    "canadiantirecorporation":  "Canadian Tire",
+    "mywdhr":                   "Hudson's Bay Company",
+    "rbi":                      "Restaurant Brands International",
+    "lseg":                     "LSEG (London Stock Exchange Group)",
+    "capitalone":               "Capital One",
+    "lcbo":                     "LCBO",
+    "accenture":                "Accenture",
+    "magna":                    "Magna International",
+    "astrazeneca":              "AstraZeneca",
+    "hydroottawa":              "Hydro Ottawa",
+    "generalmotors":            "General Motors",
+    "roche":                    "Roche Canada",
+    "stryker":                  "Stryker",
+    "pg":                       "Procter & Gamble",
+    "cppib":                    "CPP Investments",
 }
 
 # Exa queries to discover additional Workday tenants (Ontario employers)
@@ -93,6 +160,16 @@ DISCOVERY_QUERIES = [
     'site:myworkdayjobs.com "Enbridge" OR "TC Energy" OR "OPG" OR "Hydro One" Ontario',
     # Ontario healthcare / pharma (beyond Roche)
     'site:myworkdayjobs.com "Sanofi" OR "AstraZeneca" OR "Novartis" OR "Bayer" Ontario salary',
+    # Big tech Canada offices
+    'site:myworkdayjobs.com "Salesforce" OR "Adobe" OR "ServiceNow" OR "Workday" Toronto Ontario',
+    'site:myworkdayjobs.com "Accenture" OR "Deloitte" OR "KPMG" OR "EY" Toronto Ontario Canada',
+    'site:myworkdayjobs.com "Rogers" OR "Bell" OR "Telus" OR "Cogeco" Ontario Canada salary',
+    'site:myworkdayjobs.com "LSEG" OR "Capital One" OR "RBI" OR "Restaurant Brands" Toronto',
+    'site:myworkdayjobs.com "LCBO" OR "OLG" OR "Metrolinx" OR "GO Transit" Ontario salary',
+    'site:myworkdayjobs.com "Etsy" OR "Shopify" OR "Hootsuite" OR "Lightspeed" Canada Ontario',
+    # myworkdaysite.com — separate Workday hosting domain (Magna and others)
+    'site:myworkdaysite.com Ontario Canada salary 2026',
+    'site:myworkdaysite.com Toronto OR Waterloo OR Ottawa engineer analyst manager salary',
 ]
 
 # Ontario location terms — matched against locationsText from Workday API.
@@ -126,23 +203,31 @@ _NON_ONTARIO_PATH_TERMS = [
 # NOTE: Canadian job postings use both "$" and "C$" (e.g. Brookfield: "C$90,000.00 - C$105,000.00")
 # The (?:[A-Z])? prefix on \$ handles C$, US$, etc. without breaking plain-$ matches.
 SALARY_RE = [
-    # "$86,100.00 CAD - $136,100 CAD" or "C$90,000 - C$105,000" (Brookfield style)
-    re.compile(r'(?:[A-Z])?\$\s*([\d,]+)(?:\.\d+)?\s*(?:CAD)?\s*[-–—to]+\s*(?:[A-Z])?\$\s*([\d,]+)', re.IGNORECASE),
+    # "$86,100 CAD - $136,100 CAD" or "C$90,000 - C$105,000" or "CAD $96,000 - CAD $120,000"
+    # (?:[A-Z]{1,3}\s*)? handles single-letter (C$, U$) and 3-letter (CAD, USD) currency prefixes
+    re.compile(r'(?:[A-Z]{1,3}\s*)?\$\s*([\d,]+)(?:\.\d+)?\s*(?:CAD)?\s*[-–—to]+\s*(?:[A-Z]{1,3}\s*)?\$\s*([\d,]+)', re.IGNORECASE),
     # "$86K – $136K" or "C$86K – C$136K"
     re.compile(r'(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]\s*[-–—]\s*(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]', re.IGNORECASE),
-    # "pay range: 80,000 to 120,000" (without dollar sign)
-    re.compile(r'(?:pay|salary|compensation|wage)[^$\n]{0,30}([\d,]{6,})\s*[-–—to]+\s*([\d,]{6,})', re.IGNORECASE),
+    # "pay range: 80,000 to 120,000" or "Ontario Salary: 94,500 - $130,000" (optional $ before second)
+    re.compile(r'(?:pay|salary|compensation|wage|combined range|targeted range|salary range is)[^$\n]{0,50}([\d,]{5,})\s*[-–—to]+\s*\$?([\d,]{5,})', re.IGNORECASE),
 ]
 
 
 # ── Tenant discovery via Exa ──────────────────────────────────────────────────
-# Workday URL format: https://rbc.wd3.myworkdayjobs.com/en-US/RBCGLOBAL1/job/...
+# Workday URL formats:
+#   myworkdayjobs.com: https://{company}.wd3.myworkdayjobs.com/en-US/{tenant}/job/...
+#   myworkdaysite.com: https://wd3.myworkdaysite.com/en-US/recruiting/{company}/{tenant}/details/...
 _WD_URL_RE = re.compile(
     r'https?://([a-z0-9][a-z0-9-]*)\.wd\d+\.myworkdayjobs\.com'
     r'(?:/[a-z]{2}-[A-Z]{2})?/([^/?#]+)',
     re.IGNORECASE,
 )
-_SKIP_TENANTS = {'job', 'jobs', 'search', 'en', 'en-us', 'en-gb', 'fr', 'fr-ca'}
+_WD_SITE_URL_RE = re.compile(
+    r'https?://wd\d+\.myworkdaysite\.com'
+    r'(?:/[a-z]{2}-[A-Z]{2})?/recruiting/([a-z0-9][a-z0-9-]*)/([^/?#]+)',
+    re.IGNORECASE,
+)
+_SKIP_TENANTS = {'job', 'jobs', 'search', 'en', 'en-us', 'en-gb', 'fr', 'fr-ca', 'details', 'recruiting'}
 
 
 def format_tenant_name(company_id, tenant):
@@ -207,6 +292,18 @@ def discover_tenants():
                 host, company_id, tenant = parsed
                 discovered[host] = (host, company_id, tenant, format_tenant_name(company_id, tenant))
                 new += 1
+            # Also match myworkdaysite.com URLs — use company+tenant as key
+            m_site = _WD_SITE_URL_RE.search(url)
+            if m_site:
+                company_id = m_site.group(1).lower()
+                tenant = m_site.group(2)
+                host_m = re.match(r'https?://(wd\d+\.myworkdaysite\.com)', url, re.IGNORECASE)
+                if host_m:
+                    host = host_m.group(1).lower()
+                    site_key = f"{host}/{company_id}"
+                    if site_key not in discovered and tenant.lower() not in _SKIP_TENANTS:
+                        discovered[site_key] = (host, company_id, tenant, format_tenant_name(company_id, tenant))
+                        new += 1
             job_url = parse_workday_job_url(url)
             if job_url:
                 host, company_id, tenant, external_path = job_url
@@ -315,8 +412,15 @@ def fetch_job_html(host, tenant, external_path):
     description and salary range are embedded in <meta content="..."> attributes
     in the <head>. Stripping tags would discard those attribute values, so we
     return the raw HTML and let extract_salary search it directly.
+
+    myworkdaysite.com uses a path-based tenant: externalPath already contains
+    the full /recruiting/{company}/{tenant}/details/{id} segment, so the tenant
+    must NOT be inserted separately.
     """
-    url = f"https://{host}/en-US/{tenant}{external_path}"
+    if "myworkdaysite.com" in host:
+        url = f"https://{host}/en-US{external_path}"
+    else:
+        url = f"https://{host}/en-US/{tenant}{external_path}"
     req = urllib.request.Request(url)
     req.add_header("User-Agent", UA)
     req.add_header("Accept", "text/html,application/xhtml+xml,*/*;q=0.9")
@@ -341,12 +445,37 @@ def fetch_job_html_from_url(url):
 
 
 def parse_workday_job_url(url):
-    """Extract (host, company_id, tenant, external_path) from a direct Workday job URL."""
+    """Extract (host, company_id, tenant, external_path) from a direct Workday job URL.
+
+    Handles both myworkdayjobs.com (subdomain-per-company) and myworkdaysite.com
+    (path-based company routing at wd3.myworkdaysite.com/en-US/recruiting/{company}/{tenant}/...).
+    """
     try:
         parsed = urllib.parse.urlparse(url)
     except Exception:
         return None
-    if "myworkdayjobs.com" not in (parsed.netloc or "").lower():
+    netloc = (parsed.netloc or "").lower()
+
+    # myworkdaysite.com: path-based tenant
+    if "myworkdaysite.com" in netloc:
+        m = _WD_SITE_URL_RE.search(url)
+        if not m:
+            return None
+        company_id = m.group(1).lower()
+        tenant = m.group(2)
+        host_m = re.match(r'https?://(wd\d+\.myworkdaysite\.com)', url, re.IGNORECASE)
+        if not host_m:
+            return None
+        host = host_m.group(1).lower()
+        # external_path = everything from /recruiting/ onward (after /en-XX prefix)
+        path = parsed.path
+        idx = path.lower().find("/recruiting/")
+        if idx < 0:
+            return None
+        external_path = path[idx:]
+        return host, company_id, tenant, external_path
+
+    if "myworkdayjobs.com" not in netloc:
         return None
 
     host = (parsed.netloc or "").lower()
@@ -365,6 +494,38 @@ def parse_workday_job_url(url):
         return None
     external_path = "/" + "/".join(parts[tenant_idx + 1 :])
     return host, company_id, tenant, external_path
+
+
+# ── Company name normalisation ─────────────────────────────────────────────────
+# Workday often returns internal legal-entity names rather than consumer brands.
+# Two problems we fix here:
+#   1. Numeric prefix  e.g. "2105 The TDL Group Corp./ Groupe TDL Corporation"
+#   2. Legal-entity → brand  e.g. "TDL Group" → "Tim Hortons"
+
+_NUMERIC_PREFIX_RE = re.compile(r'^\d{3,5}\s+')
+
+# Ordered list: (pattern, canonical_brand).  First match wins.
+_BRAND_MAP = [
+    (re.compile(r'tdl\s+group|tim horton', re.IGNORECASE), "Tim Hortons"),
+    (re.compile(r'\bplk\b|popeyes', re.IGNORECASE),        "Popeyes"),
+    (re.compile(r'firehouse subs', re.IGNORECASE),          "Firehouse Subs"),
+    (re.compile(r'burger king', re.IGNORECASE),             "Burger King"),
+    (re.compile(r'salesforce\.com', re.IGNORECASE),         "Salesforce"),
+]
+
+
+def normalize_company_name(name):
+    """Strip Workday numeric prefix and map legal entities to consumer brands."""
+    if not name:
+        return name
+    name = _NUMERIC_PREFIX_RE.sub('', name).strip()
+    # Unescape HTML entities that sometimes appear in JSON-LD blocks
+    import html as _html
+    name = _html.unescape(name)
+    for pattern, brand in _BRAND_MAP:
+        if pattern.search(name):
+            return brand
+    return name
 
 
 def extract_company_from_html(text):
@@ -394,7 +555,7 @@ def extract_company_from_html(text):
                 # caller already has the correct display name from SEED_TENANTS.
                 if re.match(r'^Company\s+\d+\b', name):
                     continue
-                return name
+                return normalize_company_name(name)
         except (json.JSONDecodeError, AttributeError, IndexError):
             continue
 
@@ -407,7 +568,7 @@ def extract_company_from_html(text):
     if m:
         name = m.group(1).strip()
         if name and name.lower() not in ('workday', 'myworkdayjobs.com'):
-            return name
+            return normalize_company_name(name)
 
     return None
 
@@ -550,7 +711,7 @@ def main():
         ontario_jobs = []
         offset = 0
         limit = 10     # Workday blocks limit >= 25 (anti-scraping); 10 is safe
-        max_pages = 5  # covers 50 most recent jobs per company
+        max_pages = 10 # covers 100 most recent jobs per company
 
         # wd5 tenants (Brookfield, Walmart) return total=0 on offset>0 despite having more jobs.
         # Track the first valid total and use it for pagination decisions; if a page returns
@@ -572,7 +733,7 @@ def main():
             offset += limit
             if known_total > 0 and offset >= known_total:
                 break
-            time.sleep(5)  # brief pause between pages within same company
+            time.sleep(2)  # brief pause between pages within same company
 
         log(f"  Ontario jobs: {len(ontario_jobs)}")
 
