@@ -25,6 +25,9 @@
 
 set -uo pipefail
 
+# Ensure Homebrew Python (with scrapling, exa_py, etc.) is used by cron
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+
 SCRIPTS_DIR="$HOME/ontario-pay-hub/scripts"
 LOG_FILE="$SCRIPTS_DIR/pipeline.log"
 LOCK_FILE="$SCRIPTS_DIR/.nightly-pipeline.lock"

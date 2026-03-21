@@ -2399,7 +2399,7 @@ tbody tr:hover {
       <div class="salary-slider-box" style="position:relative">
         <svg id="salaryHistSvg" class="salary-slider-svg" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
         <div id="salaryThumbLabel" class="salary-thumb-label">$100K</div>
-        <input type="range" id="salaryRangeInput" class="salary-range" min="30000" max="220000" step="1" value="100000">
+        <input type="range" id="salaryRangeInput" class="salary-range" min="30000" max="220000" step="1" value="30000">
         <div class="slider-hint-text" id="sliderHintText">↔ slide to focus salary range</div>
         <div class="salary-display" id="salaryDisplay">$78K – $122K focus</div>
       </div>
@@ -3653,7 +3653,6 @@ async function initAuth() {
 function applyAuthPrefsToState() {
   if (!S.user) return;
   const prefs = S.preferences || { cat:"", region:"", salMin:0, showArchived:true };
-  if (!prefs.cat && !prefs.region && !prefs.salMin && prefs.showArchived !== false) return;
   S.cat = prefs.cat || "";
   S.region = prefs.region || "";
   S.salMin = prefs.salMin || 0;
@@ -4858,7 +4857,7 @@ function presetFilter(opts = {}) {
   var targetLineW    = 1.5;
   var rafId          = null;
   var idleTimer      = null;
-  var cachedValue    = 100000;
+  var cachedValue    = 30000;
   window._salaryHistMax = SLIDER_MAX;  // exposed for applyFilters show-max one-sided filter
 
   // Hover preview state (mouse over SVG — no filter change, gray bars only)
