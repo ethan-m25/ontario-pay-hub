@@ -3535,23 +3535,6 @@ function renderDiscovery(){
         <span class="tr-chip-name">${item.co}</span>
         <span class="tr-chip-pct">${Math.round(item.avg)}%</span>
       </span>`;
-    // By industry
-    const bycat = {};
-    JOBS.filter(j=>!isArchived(j)&&j.min&&j.max&&j.max>j.min).forEach(j=>{
-      const tag=j.tag||'other';
-      if(!bycat[tag]) bycat[tag]=[];
-      bycat[tag].push(rwPct(j));
-    });
-    const catRanked = Object.entries(bycat)
-      .filter(([,arr])=>arr.length>=5)
-      .map(([tag,arr])=>({
-        co:(CAT_META[tag]||{shortLabel:tag}).shortLabel,
-        avg:arr.reduce((s,v)=>s+v,0)/arr.length,
-        n:arr.length
-      }))
-      .sort((a,b)=>a.avg-b.avg);
-    const narrowestCat = catRanked.slice(0,4);
-    const widestCat    = catRanked.slice(-4).reverse();
     trEl.innerHTML = `
       <div class="transparency-section">
         <div class="transparency-col-title">Most precise — narrowest avg range</div>
@@ -3560,10 +3543,6 @@ function renderDiscovery(){
       <div class="transparency-section">
         <div class="transparency-col-title">Least precise — widest avg range</div>
         <div class="tr-chips">${widest.map(chip).join("")}</div>
-      </div>
-      <div class="transparency-section">
-        <div class="transparency-col-title">By sector — narrowest to widest</div>
-        <div class="tr-chips">${narrowestCat.map(chip).join("")}${widestCat.map(chip).join("")}</div>
       </div>`;
   }
   renderCoverageCard();
