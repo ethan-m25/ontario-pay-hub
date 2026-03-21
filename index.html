@@ -7,12 +7,12 @@
 <meta name="description" content="Browse real compensation ranges from Ontario job postings required by ESA Pay Transparency Rules (Jan 1, 2026). Free, updated daily. Research pay across tech, finance, healthcare, government and more.">
 <meta name="keywords" content="Ontario salary range, pay transparency Ontario, Ontario jobs salary 2026, compensation Ontario, Pay Transparency Act, Toronto salary data">
 <meta name="robots" content="index, follow">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='8' y1='8' x2='56' y2='56' gradientUnits='userSpaceOnUse'%3E%3Cstop stop-color='%23FFFDF7'/%3E%3Cstop offset='1' stop-color='%23E8DFCF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23111927'/%3E%3Crect x='7' y='7' width='50' height='50' rx='14' fill='url(%23g)'/%3E%3Cpath d='M21 39h7V25h-7zm0 0' fill='%23111927' opacity='.72'/%3E%3Cpath d='M31 39h7V19h-7zm0 0' fill='%23111927' opacity='.9'/%3E%3Cpath d='M41 39h7V13h-7zm0 0' fill='%23C8102E'/%3E%3Cpath d='M46 11l8 8' stroke='%23C8102E' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2311202e'/%3E%3Cpath d='M8 26 L8 8 L26 8 L26 14 L14 14 L14 26 Z' fill='white' opacity='.92'/%3E%3Cpath d='M38 8 L56 8 L56 26 L50 26 L50 14 L38 14 Z' fill='white' opacity='.92'/%3E%3Cpath d='M8 38 L8 56 L26 56 L26 50 L14 50 L14 38 Z' fill='white' opacity='.92'/%3E%3Cpath d='M38 50 L50 50 L50 38 L56 38 L56 56 L38 56 Z' fill='white' opacity='.92'/%3E%3Crect x='29' y='29' width='6' height='6' fill='%23C8102E' opacity='.7'/%3E%3C/svg%3E">
 <link rel="canonical" href="https://ontariopayhub.fyi/">
 <meta name="google-site-verification" content="Lnk75E9wdO33G-ytiEJ3AFIoMTtn5IDbqH1hXDZwZR4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ontario Pay Transparency Hub — Real Salary Ranges 2026">
@@ -46,7 +46,7 @@
 <style>
 /* ===== ONTARIO PAY HUB — Design System ===== */
 /* Aesthetic: Data journalism precision. Raycast discipline, editorial confidence. */
-/* Fonts: Sora (headlines) · IBM Plex Sans (UI) · IBM Plex Mono (data) */
+/* Fonts: Sora (all text) · IBM Plex Mono (salary numbers & data only) */
 
 :root {
   --radius: 12px; --radius-sm: 8px; --radius-xs: 6px; --radius-lg: 16px;
@@ -54,7 +54,7 @@
   --shadow: 0 1px 4px rgba(0,0,0,.06);
   --shadow-lg: 0 4px 16px rgba(0,0,0,.10);
   --font-display: 'Sora', system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-sans: 'Sora', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
   /* ── Type scale (10 steps) ── */
   --fs-xs:   0.625rem;  /* 10px — micro labels, kickers */
@@ -148,6 +148,76 @@ body {
   text-size-adjust: 100%;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== ENTRANCE ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero stagger */
+.masthead-copy > * {
+  animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.masthead-copy .hero-eyebrow { animation-delay: 0.04s; }
+.masthead-copy .hero-kicker  { animation-delay: 0.12s; }
+.masthead-copy h2            { animation-delay: 0.19s; }
+.masthead-copy p             { animation-delay: 0.29s; }
+.masthead-copy .hero-actions { animation-delay: 0.37s; }
+.masthead-copy .hero-summary { animation-delay: 0.45s; }
+
+/* Table row entrance — fires on DOM insertion */
+#tableBody tr {
+  animation: rowIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Active filter chip entrance */
+@keyframes chipIn {
+  from { opacity: 0; transform: scale(0.82); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.active-chip {
+  animation: chipIn 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Save button pop */
+@keyframes saveHeart {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4); }
+  70%  { transform: scale(0.88); }
+  100% { transform: scale(1); }
+}
+.btn-save.save-pop { animation: saveHeart 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Theme toggle spin */
+@keyframes themeFlip {
+  from { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(0.75); }
+  to   { transform: rotate(360deg) scale(1); }
+}
+#themeBtn.theme-flip { animation: themeFlip 0.42s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Nav scroll depth */
+nav.nav-scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,.09);
+  border-bottom-color: transparent;
+}
+[data-theme="dark"] nav.nav-scrolled {
+  box-shadow: 0 2px 20px rgba(0,0,0,.28);
+}
+
 /* ===== NAV — masthead newspaper style ===== */
 nav {
   position: sticky; top: 0; z-index: 200;
@@ -157,26 +227,25 @@ nav {
   display: flex; align-items: center; gap: 16px;
 }
 
-.logo { display:flex; align-items:center; gap:12px; text-decoration:none; flex-shrink:0; }
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
 .logo-icon {
-  width: 32px; height: 32px;
-  background: linear-gradient(145deg, #f5f5f3, #dfe6ee);
-  border: 1px solid rgba(184,196,209,.65);
-  border-radius: 8px;
+  width: 34px; height: 34px;
+  background: var(--accent);
+  border-radius: 9px;
   display: flex; align-items: center; justify-content: center;
-  color: var(--masthead-bg);
-  box-shadow: 0 2px 6px rgba(0,0,0,.10);
-  font-size: 15px;
+  flex-shrink: 0;
+  transition: transform var(--transition);
 }
+.logo:hover .logo-icon { transform: scale(1.06); }
 [data-theme="dark"] .logo-icon {
-  border-color: rgba(255,255,255,.08);
-  box-shadow: 0 2px 8px rgba(0,0,0,.22);
+  background: #1a2f42;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.07);
 }
 .logo-name {
   font-family: var(--font-display);
   font-size: var(--fs-lg); font-weight: 800;
   color: var(--text);
-  letter-spacing: -.01em;
+  letter-spacing: -.02em;
   line-height: 1;
 }
 .logo-badge {
@@ -211,7 +280,7 @@ nav {
   outline: none;
   transition: border-color var(--transition);
 }
-.nav-search input:focus { border-color: var(--accent); }
+.nav-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 .nav-search input::placeholder { color: var(--text3); }
 .nav-search-icon { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:14px; pointer-events:none; }
 .search-clear-btn {
@@ -297,6 +366,7 @@ nav {
   background: var(--accent);
 }
 @media(max-width:540px){ .hero { padding:24px 0 20px; } }
+@media(max-width:540px){ .masthead { padding: 28px 0 22px; } }
 .hero-inner { max-width:1320px; margin:0 auto; padding:0 28px; }
 
 .hero-eyebrow {
@@ -309,7 +379,7 @@ nav {
 }
 .hero-eyebrow::before {
   content: '';
-  display: inline-block; width: 24px; height: 2px;
+  display: inline-block; width: 40px; height: 2px;
   background: var(--accent);
 }
 
@@ -317,7 +387,7 @@ nav {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.5vw, 3.2rem);
   font-weight: 900;
-  letter-spacing: -.02em; line-height: 1.08;
+  letter-spacing: -.035em; line-height: 1.06;
   margin-bottom: 10px;
 }
 .hero p {
@@ -358,7 +428,7 @@ nav {
 .stat-label {
   font-family: var(--font-mono);
   font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em;
-  color: var(--text3); font-weight: 500; margin-bottom: 10px;
+  color: var(--text3); font-weight: 500; margin-bottom: 10px; line-height: 1.4;
 }
 .stat-num {
   font-family: var(--font-mono);
@@ -370,10 +440,9 @@ nav {
   font-family: var(--font-sans);
   font-size: var(--fs-xs); color: var(--text3); margin-top: 6px;
 }
-.c-green { color: var(--green); }
-.c-cyan  { color: var(--cyan); }
-.c-purple{ color: var(--purple); }
-.c-amber { color: var(--amber); }
+/* Accent utility — Ontario Red only */
+.c-accent { color: var(--accent); }
+@media(max-width:540px){ .stat-label, .stat-sub { font-size: var(--fs-sm); } }
 
 /* ===== MAIN LAYOUT ===== */
 .main { max-width:1320px; margin:0 auto; padding:24px 28px; }
@@ -420,7 +489,7 @@ nav {
   background-repeat: no-repeat; background-position: right 10px center;
   padding-right: 28px;
 }
-.filter-select:focus { border-color: var(--accent); }
+.filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 
 .age-filter { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:0 20px 16px; }
 .age-label {
@@ -435,7 +504,7 @@ nav {
   padding: 4px 12px; border-radius: 0;
   border: 1px solid var(--border2);
   background: transparent; color: var(--text2);
-  cursor: pointer; transition: all .14s; white-space: nowrap;
+  cursor: pointer; transition: all var(--transition); white-space: nowrap;
 }
 .age-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .age-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
@@ -452,14 +521,15 @@ table {
   width: 100%; border-collapse: collapse; font-size: var(--fs-md);
   table-layout: fixed;
 }
-/* Column width distribution */
-#jobTable th:nth-child(1) { width:30%; } /* Role */
-#jobTable th:nth-child(2) { width:13%; } /* Company */
-#jobTable th:nth-child(3) { width:17%; } /* Comp Range */
-#jobTable th:nth-child(4) { width:9%;  } /* Midpoint */
-#jobTable th:nth-child(5) { width:13%; } /* Source */
-#jobTable th:nth-child(6) { width:11%; } /* Posted */
-#jobTable th:nth-child(7) { width:7%;  } /* Save */
+/* Column width distribution — Source column hidden, space redistributed */
+#jobTable th:nth-child(1) { width:36%; } /* Role */
+#jobTable th:nth-child(2) { width:15%; } /* Company */
+#jobTable th:nth-child(3) { width:18%; } /* Comp Range */
+#jobTable th:nth-child(4) { width:10%; } /* Midpoint */
+#jobTable th:nth-child(5) { display:none; } /* Source — hidden, available in job detail */
+#jobTable th:nth-child(6) { width:13%; } /* Posted */
+#jobTable th:nth-child(7) { width:8%;  } /* Save */
+#jobTable td:nth-child(5) { display:none; }
 
 thead th {
   background: var(--surface);
@@ -480,47 +550,60 @@ thead th.active-sort { color: var(--accent); }
 tbody tr { border-bottom: 1px solid var(--border); transition: background var(--transition); }
 tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: var(--accent-dim); }
-td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
+td { padding: 13px 11px; vertical-align: middle; overflow: hidden; }
 
-/* Category tags — flat, typographic */
+/* Category tags — data-label style: left stripe + near-square corner */
 .tag {
   display: inline-flex; align-items: center;
-  padding: 3px 8px; border-radius: 999px;
+  padding: 2px 6px 2px 5px; border-radius: 2px;
   font-family: var(--font-mono); font-size: var(--fs-xs); font-weight: 600;
   letter-spacing: .06em; white-space: nowrap; text-transform: uppercase;
+  border-left: 2px solid currentColor;
 }
-.tag-eng   { background: rgba(200,16,46,.13);   color: var(--accent); border: 1px solid rgba(200,16,46,.28); }
-.tag-data  { background: rgba(0,95,135,.13);    color: var(--cyan);   border: 1px solid rgba(0,95,135,.28); }
-.tag-fin   { background: rgba(16,110,60,.13);   color: var(--green);  border: 1px solid rgba(16,110,60,.28); }
-.tag-pm    { background: rgba(155,106,0,.13);   color: var(--amber);  border: 1px solid rgba(155,106,0,.28); }
-.tag-sales { background: rgba(107,63,160,.13);  color: var(--purple); border: 1px solid rgba(107,63,160,.28); }
-.tag-hr    { background: rgba(0,120,140,.13);   color: var(--cyan);   border: 1px solid rgba(0,120,140,.28); }
-.tag-ops   { background: rgba(80,80,80,.12);    color: var(--text2);  border: 1px solid rgba(80,80,80,.25); }
-.tag-legal { background: rgba(160,80,0,.13);    color: var(--amber);  border: 1px solid rgba(160,80,0,.28); }
-.tag-it    { background: rgba(0,80,180,.13);    color: var(--cyan);   border: 1px solid rgba(0,80,180,.28); }
-.tag-exec  { background: rgba(180,20,20,.13);   color: var(--accent); border: 1px solid rgba(180,20,20,.28); }
-.tag-other { background: rgba(100,100,100,.10); color: var(--text3);  border: 1px solid rgba(100,100,100,.22); }
+.tag-eng   { background: rgba(200,16,46,.09);   color: var(--accent); }
+.tag-data  { background: rgba(0,95,135,.09);    color: var(--cyan);   }
+.tag-fin   { background: rgba(16,110,60,.09);   color: var(--green);  }
+.tag-pm    { background: rgba(155,106,0,.09);   color: var(--amber);  }
+.tag-sales { background: rgba(107,63,160,.09);  color: var(--purple); }
+.tag-hr    { background: rgba(0,120,140,.09);   color: var(--cyan);   }
+.tag-ops   { background: rgba(80,80,80,.08);    color: var(--text2);  }
+.tag-legal { background: rgba(160,80,0,.09);    color: var(--amber);  }
+.tag-it    { background: rgba(0,80,180,.09);    color: var(--cyan);   }
+.tag-exec  { background: rgba(180,20,20,.09);   color: var(--accent); }
+.tag-other { background: rgba(100,100,100,.07); color: var(--text3);  }
 
-[data-theme="dark"] .tag-eng   { background:rgba(230,48,48,.10);   color:#F08080; border-color:rgba(230,48,48,.25); }
-[data-theme="dark"] .tag-data  { background:rgba(58,160,200,.10);  color:#7AC8E8; border-color:rgba(58,160,200,.25); }
-[data-theme="dark"] .tag-fin   { background:rgba(61,170,104,.10);  color:#7DD4A8; border-color:rgba(61,170,104,.25); }
-[data-theme="dark"] .tag-pm    { background:rgba(212,152,10,.10);  color:#E8C060; border-color:rgba(212,152,10,.25); }
-[data-theme="dark"] .tag-sales { background:rgba(155,122,212,.10); color:#C8A8F0; border-color:rgba(155,122,212,.25); }
-[data-theme="dark"] .tag-hr    { background:rgba(0,180,200,.10);   color:#70D0E8; border-color:rgba(0,180,200,.25); }
-[data-theme="dark"] .tag-ops   { background:rgba(140,140,140,.10); color:#A0A0A0; border-color:rgba(140,140,140,.25); }
-[data-theme="dark"] .tag-legal { background:rgba(212,130,10,.10);  color:#E8B060; border-color:rgba(212,130,10,.25); }
-[data-theme="dark"] .tag-it    { background:rgba(80,140,240,.10);  color:#90C0F8; border-color:rgba(80,140,240,.25); }
-[data-theme="dark"] .tag-exec  { background:rgba(240,80,80,.10);   color:#F8A0A0; border-color:rgba(240,80,80,.25); }
-[data-theme="dark"] .tag-other { background:rgba(160,160,160,.08); color:#808080; border-color:rgba(160,160,160,.18); }
+[data-theme="dark"] .tag-eng   { background:rgba(230,48,48,.08);   color:#F08080; }
+[data-theme="dark"] .tag-data  { background:rgba(58,160,200,.08);  color:#7AC8E8; }
+[data-theme="dark"] .tag-fin   { background:rgba(61,170,104,.08);  color:#7DD4A8; }
+[data-theme="dark"] .tag-pm    { background:rgba(212,152,10,.08);  color:#E8C060; }
+[data-theme="dark"] .tag-sales { background:rgba(155,122,212,.08); color:#C8A8F0; }
+[data-theme="dark"] .tag-hr    { background:rgba(0,180,200,.08);   color:#70D0E8; }
+[data-theme="dark"] .tag-ops   { background:rgba(140,140,140,.08); color:#A0A0A0; }
+[data-theme="dark"] .tag-legal { background:rgba(212,130,10,.08);  color:#E8B060; }
+[data-theme="dark"] .tag-it    { background:rgba(80,140,240,.08);  color:#90C0F8; }
+[data-theme="dark"] .tag-exec  { background:rgba(240,80,80,.08);   color:#F8A0A0; }
+[data-theme="dark"] .tag-other { background:rgba(160,160,160,.06); color:#808080; }
 
 .company-name { font-family: var(--font-sans); font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
 .range-nums { font-family: var(--font-mono); font-size: var(--fs-sm); white-space: nowrap; }
 .range-min { color: var(--text3); }
 .range-sep { color: var(--text3); padding: 0 3px; }
-.range-max { color: var(--green); font-weight: 600; }
-/* Hide range bar in table — only show in detail panel */
+.range-max { color: var(--text); font-weight: 700; }
+/* Hide old range bar — replaced by range-width-bar */
 .range-bar-wrap { display: none; }
 .range-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--green)); }
+
+/* Range width indicator — length = spread, purely neutral */
+.range-width-bar {
+  height: 2px;
+  background: var(--text3);
+  border-radius: 1px;
+  margin-top: 5px;
+  min-width: 3px;
+  opacity: 0.45;
+  transition: opacity var(--transition);
+}
+tbody tr:hover .range-width-bar { opacity: 0.9; }
 .midpoint { font-family: var(--font-mono); font-weight: 600; color: var(--cyan); font-size: var(--fs-md); white-space: nowrap; }
 .src-link { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size: var(--fs-xs); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .src-link:hover { text-decoration: underline; }
@@ -630,7 +713,6 @@ td { padding: 9px 10px; vertical-align: middle; overflow: hidden; }
   border-radius: 0; padding: 1px 5px; margin-left: 5px; white-space: nowrap;
   text-transform: uppercase; letter-spacing: .04em;
 }
-tr.top-row { border-left: 3px solid var(--amber) !important; }
 tr.selected-row { background: var(--accent-dim) !important; border-left: 3px solid var(--accent) !important; }
 
 /* ===== EMPTY STATE ===== */
@@ -751,7 +833,7 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   font-family: var(--font-sans); font-size: var(--fs-base);
   outline: none; transition: border-color var(--transition);
 }
-.form-input:focus { border-color: var(--accent); }
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
 .form-input::placeholder { color: var(--text3); }
 .modal-footer { margin-top: 8px; text-align: center; font-size: var(--fs-md); color: var(--text3); }
 .modal-footer a { color: var(--accent); cursor: pointer; text-decoration: none; }
@@ -825,6 +907,8 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .saved-group-title {
   font-family: var(--font-display);
   font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -.02em;
   line-height: 1.05;
 }
 .saved-group-meta {
@@ -870,7 +954,7 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   background: var(--surface);
   border-left: 1px solid var(--border2);
   z-index: 310; box-shadow: var(--shadow-lg);
-  transform: translateX(100%); transition: transform .28s ease;
+  transform: translateX(100%); transition: transform var(--transition);
   display: flex; flex-direction: column; overflow: hidden;
   touch-action: pan-y;
 }
@@ -900,8 +984,8 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .jd-range-row { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
 .jd-range-min { font-family: var(--font-mono); font-size: var(--fs-lg); color: var(--text2); }
 .jd-range-sep { color: var(--text3); font-size: var(--fs-base); }
-.jd-range-max { font-family: var(--font-mono); font-size: var(--fs-3xl); font-weight: 600; color: var(--green); }
-.jd-mid { font-family: var(--font-mono); font-size: var(--fs-md); color: var(--cyan); font-weight: 600; margin-bottom: 12px; }
+.jd-range-max { font-family: var(--font-mono); font-size: var(--fs-3xl); font-weight: 700; color: var(--text); }
+.jd-mid { font-family: var(--font-mono); font-size: var(--fs-md); color: var(--accent); font-weight: 600; margin-bottom: 12px; }
 .jd-signal-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1045,8 +1129,10 @@ footer a { color: var(--accent); text-decoration: none; }
 /* Masthead replaces old hero */
 .masthead {
   background: var(--bg2);
-  border-bottom: 1px solid var(--border);
-  padding: 30px 0 26px;
+  background-image: radial-gradient(circle, var(--dot-color) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+  border-bottom: 2px solid var(--border2);
+  padding: 56px 0 48px;
   position: relative;
 }
 .masthead::before {
@@ -1060,13 +1146,24 @@ footer a { color: var(--accent); text-decoration: none; }
 .masthead .hero-eyebrow { margin-bottom: 10px; }
 .masthead h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
   font-weight: 900;
-  letter-spacing: -.02em; line-height: 1.1;
-  margin-bottom: 6px;
+  letter-spacing: -.04em; line-height: 1.04;
+  margin-bottom: 8px;
 }
 .masthead p {
   font-size: var(--fs-base); color: var(--text2); line-height: 1.55;
+}
+/* Brand moment — Ontario Red CTA in hero only */
+.masthead .btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+.masthead .btn-primary:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(200,16,46,.30);
 }
 .masthead-grid {
   display: grid;
@@ -1083,9 +1180,9 @@ footer a { color: var(--accent); text-decoration: none; }
   align-items: center;
   gap: 8px;
   padding: 5px 10px;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border2);
-  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   letter-spacing: .08em;
@@ -1117,7 +1214,7 @@ footer a { color: var(--accent); text-decoration: none; }
   padding: 6px 10px;
   border: 1px solid var(--border2);
   background: rgba(255,255,255,.025);
-  border-radius: 999px;
+  border-radius: 5px;
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   color: var(--text2);
@@ -1145,10 +1242,7 @@ footer a { color: var(--accent); text-decoration: none; }
   color: var(--text);
   font-size: var(--fs-sm);
 }
-.hero-stat-cyan strong { color: var(--cyan); }
-.hero-stat-green strong { color: var(--green); }
-.hero-stat-purple strong { color: var(--purple); }
-.hero-stat-amber strong { color: var(--amber); }
+.hero-stat-live strong { color: var(--accent); }
 
 .mobile-filter-backdrop,
 .mobile-search-bar,
@@ -1183,7 +1277,7 @@ footer a { color: var(--accent); text-decoration: none; }
 .sidebar::-webkit-scrollbar { width: 4px; }
 .sidebar::-webkit-scrollbar-thumb { background: var(--border2); }
 
-.sidebar-section { margin-bottom: 14px; }
+.sidebar-section { margin-bottom: 20px; }
 .sidebar-meta-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1209,21 +1303,41 @@ footer a { color: var(--accent); text-decoration: none; }
 .sidebar-divider { border-top: 1px solid var(--border); margin: 12px 0; }
 
 /* Sidebar stats — big typographic numbers */
-.sidebar-stats { display: flex; flex-direction: column; gap: 14px; }
+.sidebar-stats { display: flex; flex-direction: column; gap: 16px; }
 .sstat { display: flex; flex-direction: column; gap: 3px; }
 .sstat.featured {
-  padding-left: 10px;
-  border-left: 3px solid var(--accent);
+  position: relative;
+  padding: 10px 12px 10px 14px;
+  margin: 0 -12px;
+  background: rgba(200,16,46,.06);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 6px 6px 0;
 }
+.sstat.featured .sstat-num { color: var(--accent); }
+[data-theme="dark"] .sstat.featured { background: rgba(200,16,46,.09); }
 .sstat-num {
   font-family: var(--font-mono);
-  font-size: var(--fs-3xl); font-weight: 600;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 600;
   letter-spacing: -.03em; line-height: 1;
+  color: var(--text);
 }
 .sstat-label {
   font-family: var(--font-mono);
   font-size: var(--fs-xs); text-transform: uppercase;
   letter-spacing: .1em; color: var(--text3);
+}
+/* Live pulse dot */
+.live-dot {
+  display: inline-block;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+  margin-right: 6px; margin-top: -1px;
+  animation: livePulse 2.4s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.65); }
 }
 
 /* Sidebar filters */
@@ -1249,7 +1363,7 @@ footer a { color: var(--accent); text-decoration: none; }
   background: transparent;
   color: var(--text3);
   cursor: pointer;
-  transition: all .14s ease;
+  transition: all var(--transition);
   white-space: nowrap;
   line-height: 1.5;
   letter-spacing: .01em;
@@ -1284,7 +1398,7 @@ footer a { color: var(--accent); text-decoration: none; }
   background-repeat: no-repeat;
   background-position: right 10px center;
 }
-.filter-select-modern:focus { border-color: var(--accent); color: var(--text); }
+.filter-select-modern:focus { border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 3px var(--accent-dim); }
 
 /* Active filters bar */
 .active-filters {
@@ -1394,6 +1508,8 @@ footer a { color: var(--accent); text-decoration: none; }
 .insights-summary-title {
   font-family: var(--font-display);
   font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -.025em;
   line-height: 1.1;
   color: var(--text);
 }
@@ -1450,8 +1566,10 @@ footer a { color: var(--accent); text-decoration: none; }
 }
 .market-headline {
   font-family: var(--font-display);
-  font-size: var(--fs-2xl);
-  line-height: 1.15;
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.2;
   margin-bottom: 8px;
 }
 .market-copy {
@@ -1475,6 +1593,8 @@ footer a { color: var(--accent); text-decoration: none; }
   display: block;
   font-family: var(--font-display);
   font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -.025em;
   line-height: 1;
   margin-bottom: 5px;
 }
@@ -1566,6 +1686,8 @@ footer a { color: var(--accent); text-decoration: none; }
 .results-title {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
+  font-weight: 700;
+  letter-spacing: -.03em;
   line-height: 1.1;
 }
 .results-sub {
@@ -1646,7 +1768,7 @@ tbody tr:hover {
 @media(max-width:540px) {
   .sidebar { grid-template-columns: 1fr; }
   .sidebar-meta-grid { grid-template-columns: 1fr; }
-  .masthead h2 { font-size: 1.6rem; }
+  .masthead h2 { font-size: 2rem; }
   .masthead-inner,
   .content-area {
     padding-left: 16px;
@@ -1717,6 +1839,7 @@ tbody tr:hover {
   }
   .mobile-search-shell input:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
   }
   .mobile-search-shell .nav-search-icon {
     left: 12px;
@@ -1827,6 +1950,8 @@ tbody tr:hover {
   .sidebar-mobile-title {
     font-family: var(--font-display);
     font-size: var(--fs-lg);
+    font-weight: 700;
+    letter-spacing: -.02em;
     line-height: 1.1;
   }
   .sidebar-meta-grid,
@@ -1998,7 +2123,7 @@ tbody tr:hover {
 <!-- NAV -->
 <nav>
   <a class="logo" href="#">
-    <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="2" y="10" width="3" height="5" rx="1" fill="currentColor" opacity=".68"/><rect x="7.5" y="7" width="3" height="8" rx="1" fill="currentColor" opacity=".9"/><rect x="13" y="4" width="3" height="11" rx="1" fill="#C8102E"/><path d="M13.8 2.6l2.7 2.7" stroke="#C8102E" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M2 7 L2 2 L7 2 L7 4.5 L4.5 4.5 L4.5 7 Z" fill="white" opacity=".92"/><path d="M11 2 L16 2 L16 7 L13.5 7 L13.5 4.5 L11 4.5 Z" fill="white" opacity=".92"/><path d="M2 11 L2 16 L7 16 L7 13.5 L4.5 13.5 L4.5 11 Z" fill="white" opacity=".92"/><path d="M11 13.5 L13.5 13.5 L13.5 11 L16 11 L16 16 L11 16 Z" fill="white" opacity=".92"/></svg></div>
     <span class="logo-name">Ontario Pay Hub</span>
     <span class="logo-badge">2026</span>
   </a>
@@ -2008,9 +2133,8 @@ tbody tr:hover {
     <button class="search-clear-btn" id="searchClearBtn" type="button" onclick="clearSearch()">✕</button>
   </div>
   <div class="nav-actions">
-    <button class="btn-icon nav-search-toggle" onclick="focusMobileSearch()" title="Search" aria-label="Search">⌕</button>
-    <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs">
-      🔖<span class="save-badge" id="savedBadge" style="display:none">0</span>
+    <button class="btn-icon" id="savedBtn" onclick="toggleSaved()" title="Saved jobs" aria-label="Saved jobs">
+      <svg width="13" height="16" viewBox="0 0 13 16" fill="none" aria-hidden="true"><path d="M1.5 1.5h10a.5.5 0 0 1 .5.5v12l-5.5-3.5L1 14V2a.5.5 0 0 1 .5-.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span class="save-badge" id="savedBadge" style="display:none">0</span>
     </button>
     <button class="btn-icon" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme"></button>
     <button class="btn-primary" id="userBtn" onclick="openAuth()">Sign in</button>
@@ -2044,8 +2168,8 @@ tbody tr:hover {
           <button class="btn-secondary hero-action-btn" onclick="presetFilter({wm:'remote',sort:'mid-desc'})">Remote Roles</button>
         </div>
         <div class="hero-summary">
-          <span class="hero-stat hero-stat-green"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
-          <span class="hero-stat hero-stat-cyan">Sign in to sync saved jobs and filters</span>
+          <span class="hero-stat hero-stat-live"><strong id="heroNewToday">36 new</strong> in the latest refresh</span>
+          <span class="hero-stat">Sign in to sync saved jobs and filters</span>
         </div>
       </div>
     </div>
@@ -2068,22 +2192,22 @@ tbody tr:hover {
     </div>
 
     <div class="sidebar-section sidebar-live-data">
-      <div class="sidebar-label">Live Data</div>
+      <div class="sidebar-label"><span class="live-dot"></span>Live Data</div>
       <div class="sidebar-stats">
         <div class="sstat">
-          <span class="sstat-num c-cyan" id="statTotal">—</span>
+          <span class="sstat-num" id="statTotal">—</span>
           <span class="sstat-label">Total Postings</span>
         </div>
         <div class="sstat featured">
-          <span class="sstat-num c-green" id="statMedian">—</span>
+          <span class="sstat-num" id="statMedian">—</span>
           <span class="sstat-label">Median Compensation</span>
         </div>
         <div class="sstat">
-          <span class="sstat-num c-purple" id="statTop" style="font-size: var(--fs-lg)">—</span>
+          <span class="sstat-num" id="statTop" style="font-size: var(--fs-lg)">—</span>
           <span class="sstat-label">Top Employer</span>
         </div>
         <div class="sstat">
-          <span class="sstat-num c-amber" id="statSpread">—</span>
+          <span class="sstat-num" id="statSpread">—</span>
           <span class="sstat-label">Avg Range Width</span>
         </div>
       </div>
@@ -2121,9 +2245,9 @@ tbody tr:hover {
       </select>
       <div class="chip-group" id="wmChips">
         <button class="chip active" onclick="setChip('wmFilter','',this)">All</button>
-        <button class="chip" onclick="setChip('wmFilter','remote',this)">🏠 Remote</button>
-        <button class="chip" onclick="setChip('wmFilter','hybrid',this)">🔀 Hybrid</button>
-        <button class="chip" onclick="setChip('wmFilter','onsite',this)">🏢 Onsite</button>
+        <button class="chip" onclick="setChip('wmFilter','remote',this)">Remote</button>
+        <button class="chip" onclick="setChip('wmFilter','hybrid',this)">Hybrid</button>
+        <button class="chip" onclick="setChip('wmFilter','onsite',this)">Onsite</button>
       </div>
     </div>
 
@@ -2188,8 +2312,8 @@ tbody tr:hover {
         <div class="insights-header" onclick="expandInsightsFromHeader(event)">
           <div class="insights-summary-copy">
             <div class="insights-summary-kicker">Insights</div>
-            <div class="insights-summary-title">Optional context.</div>
-            <div class="insights-summary-sub">Shortcuts and market context.</div>
+            <div class="insights-summary-title">Market context.</div>
+            <div class="insights-summary-sub">Salary trends and quick filters.</div>
           </div>
           <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="event.stopPropagation();toggleInsightsPanel()">⌄</button>
         </div>
@@ -2294,7 +2418,7 @@ tbody tr:hover {
     <button class="modal-close" onclick="closeAuth()">✕</button>
     <div style="margin-bottom:14px">
       <div class="section-kicker">Account Access</div>
-      <h3 style="font-family:var(--font-display);font-size: var(--fs-3xl);line-height:1.05;margin:0 0 10px">Sign in to Ontario Pay Hub</h3>
+      <h3 style="font-family:var(--font-display);font-size: var(--fs-3xl);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0 0 10px">Sign in to Ontario Pay Hub</h3>
       <p class="modal-sub" style="margin-bottom:0">Use Google or a magic link. The same email always brings you back to the same account.</p>
     </div>
     <div class="error-msg" id="authErr"></div>
@@ -3204,9 +3328,9 @@ function isArchived(j){
 function tagClass(t){ return t?"tag-"+t:""; }
 function wmBadge(wm){
   const m={
-    remote:'<span class="wm-badge wm-remote">🏠 Remote</span>',
-    hybrid:'<span class="wm-badge wm-hybrid">🔀 Hybrid</span>',
-    onsite:'<span class="wm-badge wm-onsite">🏢 Onsite</span>'
+    remote:'<span class="wm-badge wm-remote">Remote</span>',
+    hybrid:'<span class="wm-badge wm-hybrid">Hybrid</span>',
+    onsite:'<span class="wm-badge wm-onsite">Onsite</span>'
   };
   return m[wm]||"";
 }
@@ -3332,7 +3456,12 @@ function applyTheme(){
   localStorage.setItem("theme",S.theme);
   setTimeout(drawChart,50);
 }
-function toggleTheme(){ S.theme=S.theme==="dark"?"light":"dark"; applyTheme(); }
+function toggleTheme(){
+  S.theme=S.theme==="dark"?"light":"dark";
+  applyTheme();
+  var btn=document.getElementById('themeBtn');
+  if(btn){ btn.classList.remove('theme-flip'); void btn.offsetWidth; btn.classList.add('theme-flip'); }
+}
 
 // ===== AUTH =====
 function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
@@ -3591,6 +3720,7 @@ async function toggleSave(id){
   document.querySelectorAll("[data-save='"+id+"']").forEach(b=>{
     b.className="btn-save"+(S.saved.includes(jobId)?" saved":"");
     b.textContent=S.saved.includes(jobId)?"★":"☆";
+    b.classList.remove('save-pop'); void b.offsetWidth; b.classList.add('save-pop');
   });
 }
 function updateSaveBadge(){
@@ -3893,9 +4023,6 @@ function renderTable(){
   // Update histogram to reflect current non-salary filters
   if(typeof window.refreshHistogram==='function') window.refreshHistogram(getHistogramJobs());
   // Top 3 payers — only when a filter is active
-  const top3Ids=isFiltered
-    ? new Set([...data].sort((a,b)=>mid(b)-mid(a)).slice(0,1).map(j=>j.id))
-    : new Set();
   const mxMax=Math.max(...JOBS.map(j=>j.max));
   const isSmall=window.innerWidth<700;
 
@@ -3910,8 +4037,10 @@ function renderTable(){
     document.getElementById("tableBody").innerHTML=data.map(j=>{
       const isSaved=S.saved.includes(String(j.id));
       const archived=isArchived(j);
-      const isTop=top3Ids.has(j.id);
       const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
+      const spreadPctM=Math.round((j.max-j.min)/mid(j)*100);
+      const spreadBarWM=(Math.min(spreadPctM/60,1)*28).toFixed(1);
+      const spreadLabelM=spreadPctM<15?'Narrow':spreadPctM<35?'Moderate':'Wide';
       return `<tr>
         <td colspan="7" style="padding:0">
           <div class="mobile-job-card" onclick="openJobDetail(${j.id})">
@@ -3920,7 +4049,6 @@ function renderTable(){
               <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
               <div class="role-meta">
                 <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
-                ${isTop?'<span class="top-badge">Top Pay</span>':''}
                 ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
               </div>
             </div>
@@ -3931,7 +4059,7 @@ function renderTable(){
             <span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span>
           </div>
           <div class="mobile-range-row">
-            <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
+            <div><div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div><div class="range-width-bar" style="width:${spreadBarWM}px" title="${spreadLabelM} range · ${spreadPctM}% spread"></div></div>
             <div class="midpoint">${fmt(mid(j))}</div>
           </div>
           <div class="mobile-card-foot">
@@ -3945,23 +4073,23 @@ function renderTable(){
     // TABLE LAYOUT for desktop
     document.getElementById("tableBody").innerHTML=data.map(j=>{
       const isSaved=S.saved.includes(String(j.id));
-      const barW=Math.round((j.max/mxMax)*100);
       const archived=isArchived(j);
-      const isTop=top3Ids.has(j.id);
       const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
-      return `<tr class="${isTop?'top-row':''}" style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
+      const spreadPct=Math.round((j.max-j.min)/mid(j)*100);
+      const spreadBarW=(Math.min(spreadPct/60,1)*28).toFixed(1);
+      const spreadLabel=spreadPct<15?'Narrow':spreadPct<35?'Moderate':'Wide';
+      return `<tr style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
         <td>
           <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
           <div class="role-meta">
             <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
-            ${isTop?'<span class="top-badge">Top Pay</span>':''}
             ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
           </div>
         </td>
         <td><span class="company-name">${j.company}</span><span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
         <td>
           <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
-          <div class="range-bar-wrap"><div class="range-bar" style="width:${barW}%"></div></div>
+          <div class="range-width-bar" style="width:${spreadBarW}px" title="${spreadLabel} range · ${spreadPct}% spread (${fmt(j.max-j.min)} gap)"></div>
         </td>
         <td class="midpoint">${fmt(mid(j))}</td>
         <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a></td>
@@ -3976,15 +4104,28 @@ function renderTable(){
   updateSaveBadge();
   updateActiveFilters();
 }
+function _animateCount(el, target, formatFn) {
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) { el.textContent = formatFn ? formatFn(target) : target; return; }
+  const duration = 900;
+  const start = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  (function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const v = Math.round(ease(t) * target);
+    el.textContent = formatFn ? formatFn(v) : v;
+    if (t < 1) requestAnimationFrame(step);
+  })(start);
+}
 function updateStats(){
   const mids=JOBS.map(mid).sort((a,b)=>a-b);
   const median=mids[Math.floor(mids.length/2)];
   const maxSal=Math.max(...JOBS.map(j=>j.max));
   const spread=Math.round(JOBS.reduce((a,j)=>a+(j.max-j.min),0)/JOBS.length);
-  document.getElementById("statTotal").textContent=JOBS.length;
+  _animateCount(document.getElementById("statTotal"), JOBS.length);
   document.getElementById("statMedian").textContent=fmt(median);
   document.getElementById("statTop").textContent=topCo();
-  document.getElementById("statSpread").textContent=fmt(spread);
+  _animateCount(document.getElementById("statSpread"), spread, fmt);
   const heroCount = document.getElementById("heroCount");
   if(heroCount) heroCount.textContent = String(JOBS.length);
   const heroTopEmployer = document.getElementById("heroTopEmployer");
@@ -4967,6 +5108,14 @@ function presetFilter(opts = {}) {
   }
 
   document.addEventListener('DOMContentLoaded', function() {
+    // Nav scroll depth
+    (function() {
+      var nav = document.querySelector('nav');
+      if (!nav) return;
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('nav-scrolled', window.scrollY > 12);
+      }, { passive: true });
+    })();
     initSalarySlider();
     // Recompute histogram from live JOBS data after fetch completes
     setTimeout(function() {
