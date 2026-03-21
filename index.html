@@ -730,6 +730,24 @@ tbody tr:hover .range-width-bar { opacity: 0.9; }
 }
 .cov-chip.federal { font-style: italic; }
 .cov-footnote { font-size: 10px; color: var(--text3); line-height: 1.5; padding-top: 4px; border-top: 1px solid var(--border); }
+/* ===== HIGH-PAY DENSITY CARD ===== */
+.hpd-thresholds { display: flex; gap: 5px; flex-wrap: wrap; margin: 10px 0 14px; }
+.hpd-btn {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 4px; border: 1px solid var(--border2);
+  background: none; color: var(--text3); cursor: pointer;
+  transition: all var(--transition);
+}
+.hpd-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.hpd-btn:hover:not(.active) { color: var(--text); border-color: var(--text2); }
+.hpd-chart { display: flex; flex-direction: column; gap: 9px; }
+.hpd-row { display: grid; grid-template-columns: 82px 1fr 34px 50px; align-items: center; gap: 8px; }
+.hpd-label { font-size: var(--fs-xs); color: var(--text2); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hpd-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.hpd-fill { height: 100%; background: var(--accent); border-radius: 3px; width: 0; transition: width .45s cubic-bezier(.22,1,.36,1); }
+.hpd-pct { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--text); text-align: right; }
+.hpd-n { font-family: var(--font-mono); font-size: 10px; color: var(--text3); }
+
 tr.selected-row { background: var(--accent-dim) !important; border-left: 3px solid var(--accent) !important; }
 
 /* ===== EMPTY STATE ===== */
@@ -1496,6 +1514,7 @@ footer a { color: var(--accent); text-decoration: none; }
   margin-bottom: 14px;
   align-items: start;
 }
+.market-left { display: flex; flex-direction: column; gap: 16px; }
 .insights-drawer {
   margin-bottom: 14px;
 }
@@ -1764,6 +1783,7 @@ tbody tr:hover {
   .market-grid {
     grid-template-columns: 1fr;
   }
+  .market-left { gap: 14px; }
   .app-layout { grid-template-columns: 1fr; }
   .sidebar {
     position: static; height: auto;
@@ -2337,15 +2357,22 @@ tbody tr:hover {
         </div>
         <div class="insights-body" id="insightsBody">
           <section class="market-grid">
-            <div class="market-card featured">
-              <div class="market-title">Salary Range Transparency</div>
-              <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
-              <div class="market-copy">(max−min) ÷ midpoint, avg per employer with ≥3 postings.</div>
-              <div id="transparencyRanking"></div>
+            <div class="market-left">
+              <div class="market-card featured">
+                <div class="market-title">Salary Range Transparency</div>
+                <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
+                <div class="market-copy">(max−min) ÷ midpoint, avg per employer with ≥3 postings.</div>
+                <div id="transparencyRanking"></div>
+              </div>
+              <div class="market-card">
+                <div class="market-title">High-Pay Density</div>
+                <div class="market-headline">Which sectors have the most high-paying roles?</div>
+                <div id="hpdCard"></div>
+              </div>
             </div>
             <div class="market-card">
               <div class="market-title">Major Employer Coverage</div>
-              <div class="market-copy">Ontario's top employers — who's disclosing pay?</div>
+              <div class="market-headline">Ontario's top employers — who's disclosing pay?</div>
               <div id="coverageList"></div>
             </div>
           </section>
@@ -3291,40 +3318,36 @@ function mid(j){ return Math.round((j.min+j.max)/2); }
 function normalizeSearchText(text){
   return String(text || "").toLowerCase().normalize("NFKD").replace(/[^\w\s]+/g, " ").replace(/\s+/g, " ").trim();
 }
-function fuzzyIncludes(haystack, needle){
-  if(!needle) return true;
-  let i = 0;
-  for(const ch of haystack){
-    if(ch === needle[i]) i++;
-    if(i === needle.length) return true;
-  }
-  return false;
-}
 function searchScore(job, query){
   if(!query) return 0;
   const q = normalizeSearchText(query);
   if(!q) return 0;
-  const fields = [
-    normalizeSearchText(job.role),
-    normalizeSearchText(job.company),
-    normalizeSearchText(job.location),
-    normalizeSearchText((CAT_META[job.tag]||{label:""}).label),
-  ];
-  const haystack = fields.join(" ");
-  const compactQ = q.replace(/\s+/g, "");
-  let score = 0;
-  if(fields[0].includes(q)) score = Math.max(score, 120);
-  if(fields[1].includes(q)) score = Math.max(score, 104);
-  if(fields[2].includes(q)) score = Math.max(score, 82);
-  if(haystack.includes(q)) score = Math.max(score, 72);
-  const tokens = q.split(" ").filter(Boolean);
-  if(tokens.length && tokens.every(token => haystack.includes(token))) {
-    score = Math.max(score, 60 + Math.min(tokens.length * 5, 20));
-  }
-  if(compactQ.length >= 3 && fuzzyIncludes(haystack.replace(/\s+/g, ""), compactQ)) {
-    score = Math.max(score, 40);
-  }
-  return score;
+  const role    = normalizeSearchText(job.role);
+  const company = normalizeSearchText(job.company);
+  const loc     = normalizeSearchText(job.location);
+  const cat     = normalizeSearchText((CAT_META[job.tag]||{label:""}).label);
+
+  // Word-aware match: short tokens (< 4 chars) must start a word boundary
+  const tokenHit = (field, token) => {
+    if(!field.includes(token)) return false;
+    if(token.length >= 4) return true;
+    return new RegExp('(^|\\s)' + token.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(field);
+  };
+
+  // Tier 1: full query as substring (with word awareness)
+  if(tokenHit(company, q)) return 110;
+  if(tokenHit(role, q))    return 100;
+  if(tokenHit(loc, q) || tokenHit(cat, q)) return 80;
+
+  // Tier 2: multi-token — every token must word-hit somewhere meaningful
+  const tokens = q.split(' ').filter(t => t.length >= 2);
+  if(tokens.length < 2) return 0; // single short token that didn't hit tier 1 → no match
+
+  if(tokens.every(t => tokenHit(company, t))) return 75;
+  if(tokens.every(t => tokenHit(role, t)))    return 70;
+  if(tokens.every(t => tokenHit(company, t) || tokenHit(role, t) || tokenHit(loc, t) || tokenHit(cat, t))) return 55;
+
+  return 0;
 }
 function relDate(s){
   const d=new Date(s), now=new Date();
@@ -3377,6 +3400,42 @@ const MAJOR_EMPLOYERS = [
   { name: "Sunnybrook",         match: /sunnybrook/i,                         federal: false },
   { name: "Air Canada",         match: /air canada/i,                         federal: true },
 ];
+
+const HPD_THRESHOLDS = [80000, 100000, 120000, 150000, 200000];
+let hpdThreshold = 120000;
+
+function renderHPDCard(){
+  const el = document.getElementById("hpdCard");
+  if(!el) return;
+  const cats = Object.entries(CAT_META)
+    .map(([tag, meta]) => {
+      const catJobs = JOBS.filter(j => j.tag===tag && j.min>0 && j.max>0);
+      const above = catJobs.filter(j => mid(j) >= hpdThreshold).length;
+      const pct = catJobs.length >= 5 ? Math.round(above/catJobs.length*100) : null;
+      return { tag, label: meta.shortLabel, total: catJobs.length, above, pct };
+    })
+    .filter(d => d.pct !== null)
+    .sort((a,b) => b.pct - a.pct);
+
+  const threshBtns = HPD_THRESHOLDS.map(t =>
+    `<button class="hpd-btn${t===hpdThreshold?' active':''}" onclick="setHpdThreshold(${t})">$${t/1000}k</button>`
+  ).join('');
+
+  const rows = cats.map(d =>
+    `<div class="hpd-row" title="${d.above} of ${d.total} postings · midpoint ≥ $${hpdThreshold/1000}k">
+      <span class="hpd-label">${d.label}</span>
+      <div class="hpd-track"><div class="hpd-fill" data-pct="${d.pct}" style="width:0%"></div></div>
+      <span class="hpd-pct">${d.pct}%</span>
+      <span class="hpd-n">${d.above}/${d.total}</span>
+    </div>`
+  ).join('');
+
+  el.innerHTML = `<div class="hpd-thresholds">${threshBtns}</div><div class="hpd-chart">${rows}</div>`;
+  requestAnimationFrame(()=>{
+    el.querySelectorAll('.hpd-fill').forEach(bar=>{ bar.style.width = bar.dataset.pct+'%'; });
+  });
+}
+function setHpdThreshold(t){ hpdThreshold=t; renderHPDCard(); }
 
 function filterByCompany(matchStr){
   const inp = document.getElementById("searchInput");
@@ -3466,6 +3525,23 @@ function renderDiscovery(){
         <span class="tr-chip-name">${item.co}</span>
         <span class="tr-chip-pct">${Math.round(item.avg)}%</span>
       </span>`;
+    // By industry
+    const bycat = {};
+    JOBS.filter(j=>!isArchived(j)&&j.min&&j.max&&j.max>j.min).forEach(j=>{
+      const tag=j.tag||'other';
+      if(!bycat[tag]) bycat[tag]=[];
+      bycat[tag].push(rwPct(j));
+    });
+    const catRanked = Object.entries(bycat)
+      .filter(([,arr])=>arr.length>=5)
+      .map(([tag,arr])=>({
+        co:(CAT_META[tag]||{shortLabel:tag}).shortLabel,
+        avg:arr.reduce((s,v)=>s+v,0)/arr.length,
+        n:arr.length
+      }))
+      .sort((a,b)=>a.avg-b.avg);
+    const narrowestCat = catRanked.slice(0,4);
+    const widestCat    = catRanked.slice(-4).reverse();
     trEl.innerHTML = `
       <div class="transparency-section">
         <div class="transparency-col-title">Most precise — narrowest avg range</div>
@@ -3474,9 +3550,14 @@ function renderDiscovery(){
       <div class="transparency-section">
         <div class="transparency-col-title">Least precise — widest avg range</div>
         <div class="tr-chips">${widest.map(chip).join("")}</div>
+      </div>
+      <div class="transparency-section">
+        <div class="transparency-col-title">By sector — narrowest to widest</div>
+        <div class="tr-chips">${narrowestCat.map(chip).join("")}${widestCat.map(chip).join("")}</div>
       </div>`;
   }
   renderCoverageCard();
+  renderHPDCard();
 }
 
 // ===== THEME =====
