@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pay Intelligence — Ontario Pay Hub</title>
+<meta name="description" content="What 2,500+ Ontario salary disclosures reveal: compliance patterns, salary range widths, employer benchmarks, and market signals under O. Reg. 476/24.">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-2026.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS — mirrors index.html ===== */
+:root {
+  --radius: 12px; --radius-sm: 8px; --radius-xs: 6px; --radius-lg: 16px;
+  --transition: .18s ease;
+  --shadow: 0 1px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,.10);
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-sans: 'Sora', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SF Mono', monospace;
+  --fs-xs:   0.625rem;
+  --fs-sm:   0.75rem;
+  --fs-md:   0.8125rem;
+  --fs-base: 0.875rem;
+  --fs-lg:   1rem;
+  --fs-xl:   1.125rem;
+  --fs-2xl:  1.25rem;
+  --fs-3xl:  1.5rem;
+  --fs-4xl:  1.75rem;
+  --fs-5xl:  2rem;
+  --fs-6xl:  2.5rem;
+  --fs-7xl:  3.25rem;
+}
+
+[data-theme="light"] {
+  --bg: #EEF1F4;
+  --bg2: #E4E8ED;
+  --surface: #F8FAFC;
+  --surface2: #EEF2F6;
+  --border: #D5DCE5;
+  --border2: #B8C4D1;
+  --text: #14202B;
+  --text2: #445364;
+  --text3: #748294;
+  --accent: #C8102E;
+  --accent-dim: rgba(200,16,46,.06);
+  --accent-border: rgba(200,16,46,.18);
+  --green: #1D6C49;
+  --green-dim: rgba(29,108,73,.08);
+  --green-mid: rgba(29,108,73,.18);
+  --amber: #9A6A14;
+  --amber-dim: rgba(154,106,20,.10);
+  --amber-mid: rgba(154,106,20,.20);
+  --red: #C8102E;
+  --red-dim: rgba(200,16,46,.08);
+  --red-mid: rgba(200,16,46,.16);
+  --nav-bg: #F8FAFC;
+  --masthead-bg: #18222D;
+  --masthead-text: #F5F7FA;
+  --chart-grid: rgba(213,220,229,.9);
+  --rule: #D5DCE5;
+}
+
+[data-theme="dark"] {
+  --bg: #0D1117;
+  --bg2: #161B22;
+  --surface: #1C2128;
+  --surface2: #22272E;
+  --border: #30363D;
+  --border2: #484F58;
+  --text: #E6EDF3;
+  --text2: #8D96A0;
+  --text3: #545D68;
+  --accent: #E8445A;
+  --accent-dim: rgba(232,68,90,.10);
+  --accent-border: rgba(232,68,90,.28);
+  --green: #3FB950;
+  --green-dim: rgba(63,185,80,.10);
+  --green-mid: rgba(63,185,80,.22);
+  --amber: #D29922;
+  --amber-dim: rgba(210,153,34,.10);
+  --amber-mid: rgba(210,153,34,.22);
+  --red: #E8445A;
+  --red-dim: rgba(232,68,90,.10);
+  --red-mid: rgba(232,68,90,.22);
+  --nav-bg: #0D1117;
+  --masthead-bg: #E6EDF3;
+  --masthead-text: #0D1117;
+  --chart-grid: rgba(48,54,61,.9);
+  --rule: #30363D;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+  transition: background var(--transition), color var(--transition);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ===== NAV ===== */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border2);
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 16px;
+}
+.logo { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.logo-icon {
+  width: 34px; height: 34px;
+  background: var(--accent);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition);
+}
+.logo:hover .logo-icon { transform: scale(1.06); }
+[data-theme="dark"] .logo-icon { background: #1a2f42; box-shadow: 0 0 0 1px rgba(255,255,255,.07); }
+.logo-name { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 800; color: var(--text); letter-spacing: -.02em; line-height: 1; }
+.logo-badge { font-family: var(--font-mono); font-size: var(--fs-xs); background: var(--accent); color: var(--bg); padding: 2px 6px; font-weight: 600; letter-spacing: .05em; }
+@media(max-width:540px){ .logo-badge { display:none; } .logo-name { font-size: var(--fs-base); } }
+.nav-pill {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text2);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px;
+  text-decoration: none; transition: all var(--transition);
+  white-space: nowrap;
+}
+.nav-pill:hover { color: var(--text); border-color: var(--border2); }
+.nav-pill.active { background: var(--accent); color: #fff; border-color: transparent; }
+.nav-spacer { flex: 1; }
+.btn-icon-nav {
+  width: 34px; height: 34px; border: none; background: transparent;
+  border-radius: 8px; cursor: pointer; color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; transition: background var(--transition), color var(--transition);
+}
+.btn-icon-nav:hover { background: var(--surface2); color: var(--text); }
+
+/* ===== MASTHEAD ===== */
+.masthead {
+  background: var(--masthead-bg);
+  color: var(--masthead-text);
+  padding: 64px 0 56px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(100% / 12 - 1px),
+    rgba(255,255,255,.03) calc(100% / 12 - 1px),
+    rgba(255,255,255,.03) calc(100% / 12)
+  );
+  pointer-events: none;
+}
+[data-theme="dark"] .masthead::before { background: repeating-linear-gradient(90deg, transparent, transparent calc(100% / 12 - 1px), rgba(255,255,255,.02) calc(100% / 12 - 1px), rgba(255,255,255,.02) calc(100% / 12)); }
+.masthead-inner { max-width: 1200px; margin: 0 auto; padding: 0 28px; position: relative; }
+.masthead-kicker {
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; opacity: .5;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.masthead-kicker::before {
+  content: '';
+  display: block;
+  width: 24px; height: 1px;
+  background: currentColor;
+  opacity: .6;
+}
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.08;
+  margin-bottom: 16px;
+  max-width: 680px;
+}
+.masthead h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+[data-theme="dark"] .masthead h1 em { color: #E8445A; }
+.masthead-sub {
+  font-size: var(--fs-lg);
+  opacity: .65;
+  max-width: 540px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.masthead-meta {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  font-size: var(--fs-sm); opacity: .45;
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding-top: 20px;
+}
+.masthead-meta strong { opacity: 1; font-weight: 600; font-family: var(--font-mono); }
+
+/* ===== PAGE LAYOUT ===== */
+.page { max-width: 1200px; margin: 0 auto; padding: 0 28px 80px; }
+@media(max-width:600px){ .page { padding: 0 16px 60px; } }
+
+/* ===== SECTION ===== */
+.insight-section {
+  margin-top: 56px;
+  padding-top: 56px;
+  border-top: 1px solid var(--rule);
+}
+.insight-section:first-child { margin-top: 48px; border-top: none; padding-top: 0; }
+.section-header { margin-bottom: 32px; }
+.section-kicker {
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-kicker::after {
+  content: '';
+  flex: 1;
+  max-width: 40px;
+  height: 1px;
+  background: var(--accent);
+  opacity: .4;
+}
+.section-title {
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+.section-desc {
+  font-size: var(--fs-base);
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ===== COMPLIANCE CARDS ===== */
+.compliance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: stretch;
+}
+@media(max-width:900px){ .compliance-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:540px){ .compliance-grid { grid-template-columns: 1fr; } }
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+.stat-card.exempt::before { background: var(--text3); }
+.stat-card.compliant::before { background: var(--green); }
+.stat-card.noncompliant::before { background: var(--amber); }
+
+.stat-card-label {
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text3);
+  margin-bottom: 10px;
+}
+.stat-card-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-7xl);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-card.exempt .stat-card-num { color: var(--text3); }
+.stat-card.compliant .stat-card-num { color: var(--green); }
+.stat-card.noncompliant .stat-card-num { color: var(--amber); }
+.stat-card-detail { font-size: var(--fs-sm); color: var(--text2); line-height: 1.5; }
+.stat-card-detail strong { font-weight: 600; color: var(--text); }
+
+.donut-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 180px;
+}
+@media(max-width:900px){ .donut-card { grid-column: 1 / -1; padding: 20px; } }
+
+/* ===== TWO-COL LAYOUT ===== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media(max-width:800px){ .two-col { grid-template-columns: 1fr; } }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+@media(max-width:900px){ .three-col { grid-template-columns: 1fr 1fr; } }
+@media(max-width:600px){ .three-col { grid-template-columns: 1fr; } }
+
+/* ===== CHART CARD ===== */
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.chart-card-title {
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: .01em;
+  margin-bottom: 4px;
+}
+.chart-card-sub {
+  font-size: var(--fs-sm);
+  color: var(--text3);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* ===== HISTOGRAM ===== */
+.histogram-wrap { position: relative; }
+.histogram-svg { width: 100%; display: block; }
+.hist-annotation {
+  font-size: var(--fs-xs); fill: var(--accent); font-family: var(--font-mono); font-weight: 600;
+}
+.hist-label { font-size: var(--fs-xs); fill: var(--text3); font-family: var(--font-mono); }
+.hist-bar-compliant { fill: var(--green); opacity: .7; }
+.hist-bar-noncompliant { fill: var(--amber); opacity: .7; }
+.hist-bar-exempt { fill: var(--text3); opacity: .45; }
+
+/* ===== BAR CHART ===== */
+.bar-list { display: flex; flex-direction: column; gap: 0; }
+.bar-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 72px;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: default;
+  transition: background var(--transition);
+  border-radius: 4px;
+  padding: 7px 6px;
+}
+.bar-row:last-child { border-bottom: none; }
+.bar-row:hover { background: var(--surface2); }
+.bar-name {
+  font-size: var(--fs-sm); font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--text);
+}
+.bar-name .bar-count { font-weight: 400; color: var(--text3); font-size: var(--fs-xs); margin-left: 4px; }
+.bar-track { position: relative; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .4s cubic-bezier(0.22, 1, 0.36, 1); }
+.bar-fill.compliant { background: var(--green); opacity: .75; }
+.bar-fill.noncompliant { background: var(--amber); }
+.bar-fill.exempt { background: var(--text3); opacity: .5; }
+.bar-value {
+  font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 600;
+  text-align: right; white-space: nowrap;
+}
+.bar-value.compliant { color: var(--green); }
+.bar-value.noncompliant { color: var(--amber); }
+.bar-value.exempt { color: var(--text3); }
+
+/* ===== PLATFORM CHART ===== */
+.platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:500px){ .platform-grid { grid-template-columns: 1fr; } }
+.platform-tile {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+.platform-name { font-size: var(--fs-sm); font-weight: 700; margin-bottom: 4px; }
+.platform-num { font-family: var(--font-mono); font-size: var(--fs-4xl); font-weight: 600; margin-bottom: 6px; line-height: 1; }
+.platform-bar-track { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+.platform-bar-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+.platform-meta { font-size: var(--fs-xs); color: var(--text3); }
+
+/* ===== STAT TILES ===== */
+.stat-tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media(max-width:600px){ .stat-tiles { grid-template-columns: 1fr 1fr; } }
+.stat-tile {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+.stat-tile-label { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+.stat-tile-num { font-family: var(--font-mono); font-size: var(--fs-3xl); font-weight: 600; line-height: 1; color: var(--text); }
+
+/* ===== WORD SALARY TABLE ===== */
+.word-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 90px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+  border-radius: 4px;
+  transition: background var(--transition);
+}
+.word-row:last-child { border-bottom: none; }
+.word-row:hover { background: var(--surface2); }
+.word-chip {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm); font-weight: 500;
+  color: var(--text2);
+}
+.word-track { position: relative; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.word-fill { height: 100%; border-radius: 3px; }
+.word-salary { font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 600; text-align: right; color: var(--text); }
+.word-count { font-size: var(--fs-xs); color: var(--text3); text-align: right; }
+
+/* ===== LEGEND ===== */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--text2); font-weight: 500; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ===== CALLOUT ===== */
+.callout {
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-top: 16px;
+}
+.callout-label { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.callout p { font-size: var(--fs-sm); color: var(--text2); line-height: 1.6; }
+.callout p strong { color: var(--text); font-weight: 600; }
+
+.callout-neutral {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-top: 16px;
+}
+.callout-neutral p { font-size: var(--fs-sm); color: var(--text2); line-height: 1.6; }
+.callout-neutral p strong { color: var(--text); font-weight: 600; }
+
+/* ===== SECTION NAV ===== */
+.section-nav {
+  position: sticky;
+  top: 56px;
+  z-index: 100;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.section-nav::-webkit-scrollbar { display: none; }
+@media(max-width:600px){ .section-nav { padding: 0 16px; } }
+.snav-pill {
+  flex-shrink: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.snav-pill:hover { color: var(--text); background: var(--surface2); }
+.snav-pill.active { background: var(--accent); color: #fff; }
+
+/* ===== FOOTER ===== */
+footer {
+  margin-top: 80px;
+  border-top: 1px solid var(--rule);
+  padding: 32px 28px;
+  max-width: 1200px;
+  margin-left: auto; margin-right: auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.footer-note { font-size: var(--fs-xs); color: var(--text3); line-height: 1.6; max-width: 520px; }
+.footer-note a { color: var(--text3); text-decoration: underline; }
+
+/* ===== LOADING ===== */
+#loadingOverlay {
+  position: fixed; inset: 0; background: var(--bg); z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  transition: opacity .3s ease;
+}
+#loadingOverlay.hidden { opacity: 0; pointer-events: none; }
+.loading-spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: var(--fs-sm); color: var(--text3); font-family: var(--font-mono); }
+
+/* ===== ENTRANCE ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-in { animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ===== TABLE MINI ===== */
+.mini-table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
+.mini-table th { font-size: var(--fs-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); padding: 8px 10px; border-bottom: 2px solid var(--border2); text-align: left; }
+.mini-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td { background: var(--surface2); }
+.td-mono { font-family: var(--font-mono); font-weight: 600; }
+.badge { display: inline-block; font-size: var(--fs-xs); font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.badge-green { background: var(--green-dim); color: var(--green); }
+.badge-amber { background: var(--amber-dim); color: var(--amber); }
+.badge-neutral { background: var(--surface2); color: var(--text3); }
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading 2,500+ job records…</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="/">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M2 7 L2 2 L7 2 L7 4.5 L4.5 4.5 L4.5 7 Z" fill="white" opacity=".92"/>
+        <path d="M11 2 L16 2 L16 7 L13.5 7 L13.5 4.5 L11 4.5 Z" fill="white" opacity=".92"/>
+        <path d="M2 11 L2 16 L7 16 L7 13.5 L4.5 13.5 L4.5 11 Z" fill="white" opacity=".92"/>
+        <path d="M11 13.5 L13.5 13.5 L13.5 11 L16 11 L16 16 L11 16 Z" fill="white" opacity=".92"/>
+      </svg>
+    </div>
+    <span class="logo-name">Ontario Pay Hub</span>
+    <span class="logo-badge">2026</span>
+  </a>
+  <div class="nav-spacer"></div>
+  <a class="nav-pill" href="/">Browse Jobs</a>
+  <a class="nav-pill active" href="/insights.html">Pay Intelligence</a>
+  <button class="btn-icon-nav" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">◐</button>
+</nav>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-kicker">Pay Intelligence · O. Reg. 476/24</div>
+    <h1>What Ontario employers are actually <em>disclosing.</em></h1>
+    <div class="masthead-sub">Analysis of 2,500+ salary disclosures from Ontario job postings under the Pay Transparency Act, effective January 1, 2026.</div>
+    <div class="masthead-meta">
+      <span>Dataset: <strong id="metaTotal">—</strong> job postings</span>
+      <span><strong id="metaCompanies">—</strong> employers</span>
+      <span>Updated daily</span>
+      <span>Province of Ontario, Canada</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION NAV -->
+<nav class="section-nav" aria-label="Page sections">
+  <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
+  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
+  <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
+  <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
+  <a class="snav-pill" href="#s-language" data-section="s-language">Language</a>
+</nav>
+
+<!-- PAGE CONTENT -->
+<div class="page">
+
+  <!-- SECTION 1: COMPLIANCE OVERVIEW -->
+  <section class="insight-section" id="s-compliance">
+    <div class="section-header">
+      <div class="section-kicker">Compliance Landscape</div>
+      <div class="section-title">Who's following the $50k rule?</div>
+      <div class="section-desc">O. Reg. 476/24 limits salary range width to $50,000 for jobs under $200k. High-compensation roles (annual max &gt;$200k) are fully exempt from disclosure.</div>
+    </div>
+
+    <div class="compliance-grid animate-in">
+      <div class="stat-card exempt">
+        <div class="stat-card-label">Exempt from disclosure</div>
+        <div class="stat-card-num" id="pctExempt">—</div>
+        <div class="stat-card-detail">Roles with an upper limit <strong>&gt;$200k/yr</strong>. These employers chose to disclose voluntarily — the $50k width rule does not apply.</div>
+      </div>
+      <div class="stat-card compliant">
+        <div class="stat-card-label">Compliant disclosures</div>
+        <div class="stat-card-num" id="pctCompliant">—</div>
+        <div class="stat-card-detail">Roles under $200k with a salary range width <strong>≤$50k</strong>, meeting the regulation.</div>
+      </div>
+      <div class="stat-card noncompliant">
+        <div class="stat-card-label">Exceeds $50k width limit</div>
+        <div class="stat-card-num" id="pctNonCompliant">—</div>
+        <div class="stat-card-detail">Regulated roles disclosing a range <strong>wider than $50k</strong>. Appears non-compliant with O. Reg. 476/24.</div>
+      </div>
+      <div class="donut-card">
+        <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140" aria-label="Compliance donut chart"></svg>
+      </div>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:20px">
+      <p><strong>Methodology note:</strong> "Exempt" and "compliant" describe the disclosed salary data relative to the regulation. They do not evaluate actual employer pay practices, which may differ from posted ranges. Regulation source: Employment Standards Act, O. Reg. 476/24.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: WIDTH DISTRIBUTION -->
+  <section class="insight-section" id="s-distribution">
+    <div class="section-header">
+      <div class="section-kicker">Range Width Analysis</div>
+      <div class="section-title">How wide are posted salary ranges?</div>
+      <div class="section-desc">Distribution of salary range width (max − min) across all postings. Width percentage uses midpoint as the reference — more comparable across salary levels than absolute dollars.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-card-title">Absolute width distribution</div>
+        <div class="chart-card-sub">All postings by range width in $k. Regulated group only (upper ≤$200k).</div>
+        <div class="legend" id="histLegend1">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.7"></div>Compliant (≤$50k width)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Exceeds limit (&gt;$50k)</div>
+        </div>
+        <svg id="histSvg1" class="histogram-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Width as % of midpoint salary</div>
+        <div class="chart-card-sub">Percentage comparison is more meaningful for cross-company benchmarks. Industry standard: ±10–20% (20–40% range) is a typical salary band.</div>
+        <div class="legend" id="histLegend2">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.7"></div>Standard band (&lt;40%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Wide band (40–100%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent);opacity:.7"></div>Very wide (&gt;100%)</div>
+        </div>
+        <svg id="histSvg2" class="histogram-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:16px">
+      <div class="chart-card">
+        <div class="chart-card-title">Median range width by sector</div>
+        <div class="chart-card-sub">Absolute median width across job categories. All groups (including exempt).</div>
+        <div id="sectorBars" class="platform-grid" style="margin-top:12px"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Summary statistics</div>
+        <div class="chart-card-sub">Key percentiles for regulated postings (upper ≤$200k).</div>
+        <div id="statsBody" class="stat-tiles" style="margin-top:12px"></div>
+        <div class="callout" style="margin-top:16px">
+          <div class="callout-label">Professional context</div>
+          <p>A range width of <strong>±10–20% of midpoint</strong> (20–40% total) is considered a standard salary band in most compensation frameworks. Ranges below 20% more likely represent a single pay point rather than a true band.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: COMPANY RANKING -->
+  <section class="insight-section" id="s-companies">
+    <div class="section-header">
+      <div class="section-kicker">Employer Profiles</div>
+      <div class="section-title">Employers by salary range width</div>
+      <div class="section-desc">Median salary range width percentage, by employer (≥5 postings). Sorted narrowest to widest. Colour indicates compliance status of the majority of their regulated postings.</div>
+    </div>
+
+    <div class="chart-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.75"></div>Mostly compliant</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Non-compliant jobs present</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:var(--text3)">Employers with ≥5 postings · Median width%</div>
+      </div>
+      <div id="companyBars" class="bar-list"></div>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:16px">
+      <p><strong>Narrow ranges at the top of this list</strong> (e.g., &lt;10% width) often indicate a single pay point rather than a true salary band — the employer is likely disclosing a specific rate, not a range. This is not inherently more informative than a well-defined standard band.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 4: NON-COMPLIANCE LEADERS -->
+  <section class="insight-section" id="s-signals">
+    <div class="section-header">
+      <div class="section-kicker">Market Signals</div>
+      <div class="section-title">Who's posting the widest ranges?</div>
+      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-title">Top non-compliant employers</div>
+      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
+      <table class="mini-table">
+        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
+        <tbody id="nonCompliantBody"></tbody>
+      </table>
+      <div class="callout" style="margin-top:16px">
+        <div class="callout-label">Largest non-compliant employers</div>
+        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: WORD × SALARY -->
+  <section class="insight-section" id="s-language">
+    <div class="section-header">
+      <div class="section-kicker">Language & Compensation</div>
+      <div class="section-title">Job title keywords and median salary</div>
+      <div class="section-desc">Correlation between words in job titles and disclosed salary midpoints. This is a descriptive observation — salary differences reflect different role types, not necessarily the word itself causing higher pay.</div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-card">
+        <div class="chart-card-title">High-median title keywords</div>
+        <div class="chart-card-sub">Words associated with the highest median salaries in this dataset.</div>
+        <div id="wordListHigh" class="bar-list" style="margin-top:8px"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Lower-median title keywords</div>
+        <div class="chart-card-sub">Words associated with lower median salaries. Reflects role type, not word-caused differences.</div>
+        <div id="wordListLow" class="bar-list" style="margin-top:8px"></div>
+      </div>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:16px">
+      <p><strong>Important:</strong> These correlations reflect job category differences, not linguistic bias in isolation. "Coordinator" roles pay less because they are different jobs than "Director" roles — not because of the word itself. Causal interpretation requires controlling for job function, industry, and seniority level.</p>
+    </div>
+  </section>
+
+</div><!-- /page -->
+
+<footer>
+  <div class="footer-note">
+    Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
+    Analysis covers <span id="footerTotal">—</span> postings from <span id="footerCompanies">—</span> employers.
+    All salary figures in CAD. Updated daily. · <a href="/">Browse all jobs →</a>
+  </div>
+  <div style="font-size:var(--fs-xs);color:var(--text3);font-family:var(--font-mono)">ontariopayhub.fyi</div>
+</footer>
+
+<script>
+/* ===== THEME ===== */
+function toggleTheme(){
+  const t = document.documentElement.getAttribute('data-theme');
+  document.documentElement.setAttribute('data-theme', t === 'dark' ? 'light' : 'dark');
+  localStorage.setItem('oph-theme', document.documentElement.getAttribute('data-theme'));
+}
+(function(){
+  const saved = localStorage.getItem('oph-theme');
+  if(saved) document.documentElement.setAttribute('data-theme', saved);
+})();
+
+/* ===== HELPERS ===== */
+const $ = id => document.getElementById(id);
+const fmt = (n, dec=0) => n == null ? '—' : n.toLocaleString('en-CA', {style:'currency', currency:'CAD', maximumFractionDigits:dec, minimumFractionDigits:dec});
+const fmtK = n => n == null ? '—' : '$' + Math.round(n/1000) + 'k';
+const fmtPct = n => n == null ? '—' : Math.round(n) + '%';
+const getCSSVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ===== DATA LOAD & ANALYSIS ===== */
+async function main() {
+  let jobs = [];
+  try {
+    const r = await fetch('./data/jobs.json');
+    const raw = await r.json();
+    jobs = Array.isArray(raw) ? raw : (raw.jobs || raw.data || Object.values(raw)[0] || []);
+  } catch(e) {
+    $('loadingOverlay').innerHTML = '<div style="color:var(--text3);font-size:var(--fs-sm);font-family:var(--font-mono)">Could not load jobs.json</div>';
+    return;
+  }
+
+  // Filter to valid salary entries
+  const valid = jobs.filter(j => j.min > 0 && j.max > 0 && j.max >= j.min);
+  const N = valid.length;
+  const companies = new Set(valid.map(j => j.company)).size;
+
+  // Annotate each job
+  valid.forEach(j => {
+    j._width = j.max - j.min;
+    j._mid = (j.max + j.min) / 2;
+    j._widthPct = j._mid > 0 ? (j._width / j._mid) * 100 : 0;
+    j._exempt = j.max > 200000;
+    j._compliant = !j._exempt && j._width <= 50000;
+    j._nonCompliant = !j._exempt && j._width > 50000;
+  });
+
+  const regulated = valid.filter(j => !j._exempt);
+  const exempt = valid.filter(j => j._exempt);
+  const compliant = valid.filter(j => j._compliant);
+  const nonCompliant = valid.filter(j => j._nonCompliant);
+
+  // Update masthead
+  $('metaTotal').textContent = N.toLocaleString();
+  $('metaCompanies').textContent = companies.toLocaleString();
+  $('footerTotal').textContent = N.toLocaleString();
+  $('footerCompanies').textContent = companies.toLocaleString();
+
+  // ─── SECTION 1: COMPLIANCE ───
+  $('pctExempt').textContent = Math.round(exempt.length / N * 100) + '%';
+  $('pctCompliant').textContent = Math.round(compliant.length / N * 100) + '%';
+  $('pctNonCompliant').textContent = Math.round(nonCompliant.length / N * 100) + '%';
+  drawDonut('donutSvg', [
+    { val: exempt.length, color: getCSSVar('--text3'), label: 'Exempt' },
+    { val: compliant.length, color: getCSSVar('--green'), label: 'Compliant' },
+    { val: nonCompliant.length, color: getCSSVar('--amber'), label: 'Non-compliant' },
+  ]);
+
+  // ─── SECTION 2: WIDTH DISTRIBUTION ───
+  // Histogram 1: absolute width (regulated only)
+  const bins1 = buildBins(regulated, 0, 120000, 12000);
+  drawHistogram('histSvg1', bins1, 120000, 50000, '$k', v => '$'+Math.round(v/1000)+'k');
+
+  // Histogram 2: width % (regulated only)
+  const bins2 = buildBinsPct(regulated.map(j=>({val:j._widthPct, compliant: j._widthPct < 40})), 0, 160, 16);
+  drawHistogramPct('histSvg2', bins2, 160, 40, '%', v => Math.round(v)+'%');
+
+  // Sector bars — use actual `category` field from jobs data
+  const catMedians = groupMedian(valid, j => j.category || 'Other', j => j._width);
+  const catCounts = {};
+  valid.forEach(j => { const k = j.category || 'Other'; catCounts[k] = (catCounts[k] || 0) + 1; });
+  const catEntries = Object.entries(catMedians).filter(([k]) => k && k !== 'Other').sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxCat = catEntries.length ? Math.max(...catEntries.map(e=>e[1])) : 1;
+  $('sectorBars').innerHTML = catEntries.map(([k,v]) => {
+    const pct = (v / maxCat * 100).toFixed(1);
+    const color = v <= 50000 ? 'var(--green)' : 'var(--amber)';
+    const count = catCounts[k] || 0;
+    return `<div class="platform-tile">
+      <div class="platform-name">${k}</div>
+      <div class="platform-num" style="color:${color}">${fmtK(v)}</div>
+      <div class="platform-bar-track"><div class="platform-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="platform-meta">${count} postings · median width</div>
+    </div>`;
+  }).join('');
+
+  // Stats tiles
+  const sortedReg = regulated.map(j=>j._width).sort((a,b)=>a-b);
+  const statsRows = [
+    ['Median width', fmtK(percentile(sortedReg, 50))],
+    ['Mean width', fmtK(regulated.reduce((a,j)=>a+j._width,0)/regulated.length)],
+    ['25th pctile', fmtK(percentile(sortedReg, 25))],
+    ['75th pctile', fmtK(percentile(sortedReg, 75))],
+    ['Median width%', fmtPct(percentile(regulated.map(j=>j._widthPct).sort((a,b)=>a-b), 50))],
+  ];
+  $('statsBody').innerHTML = statsRows.map(([l,v]) =>
+    `<div class="stat-tile"><div class="stat-tile-label">${l}</div><div class="stat-tile-num">${v}</div></div>`
+  ).join('');
+
+  // ─── SECTION 3: COMPANY RANKING ───
+  const byCompany = {};
+  valid.forEach(j => {
+    const co = normCompany(j.company);
+    if(!byCompany[co]) byCompany[co] = {widths:[], nonCompliantCount:0, exemptCount:0, total:0};
+    byCompany[co].widths.push(j._widthPct);
+    byCompany[co].total++;
+    if(j._nonCompliant) byCompany[co].nonCompliantCount++;
+    if(j._exempt) byCompany[co].exemptCount++;
+  });
+  const coEntries = Object.entries(byCompany)
+    .filter(([k,v]) => v.total >= 5)
+    .map(([k,v]) => {
+      const sorted = v.widths.slice().sort((a,b)=>a-b);
+      const med = percentile(sorted, 50);
+      const exemptPct = v.exemptCount / v.total;
+      const cls = exemptPct > 0.5 ? 'exempt' : (v.nonCompliantCount > 0 ? 'noncompliant' : 'compliant');
+      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount};
+    })
+    .sort((a,b) => a.med - b.med);
+  const maxMed = Math.max(...coEntries.map(e=>e.med));
+  $('companyBars').innerHTML = coEntries.map(e => {
+    const pct = (e.med / maxMed * 100).toFixed(1);
+    const fillCls = e.cls === 'exempt' ? 'exempt' : (e.cls === 'noncompliant' ? 'noncompliant' : 'compliant');
+    return `<div class="bar-row">
+      <div class="bar-name">${e.name}<span class="bar-count">${e.total}</span></div>
+      <div class="bar-track"><div class="bar-fill ${fillCls}" style="width:${pct}%"></div></div>
+      <div class="bar-value ${fillCls}">${Math.round(e.med)}%</div>
+    </div>`;
+  }).join('');
+
+  // ─── SECTION 4: NON-COMPLIANCE LEADERS (platform chart moved to admin.html) ───
+
+  // Non-compliant leaders
+  const ncByCompany = {};
+  nonCompliant.forEach(j => {
+    const co = normCompany(j.company);
+    if(!ncByCompany[co]) ncByCompany[co] = {count:0, widths:[]};
+    ncByCompany[co].count++;
+    ncByCompany[co].widths.push(j._width);
+  });
+  const ncEntries = Object.entries(ncByCompany).sort((a,b)=>b[1].count-a[1].count).slice(0,8);
+  $('nonCompliantBody').innerHTML = ncEntries.map(([co,v]) => {
+    const med = fmtK(percentile(v.widths.slice().sort((a,b)=>a-b), 50));
+    return `<tr>
+      <td>${co}</td>
+      <td><span class="badge badge-amber">${v.count}</span></td>
+      <td class="td-mono">${med}</td>
+    </tr>`;
+  }).join('');
+
+  // ─── SECTION 5: WORD × SALARY ───
+  const titleWords = {};
+  valid.forEach(j => {
+    if(!j.role) return;
+    const words = j.role.toLowerCase()
+      .replace(/[^a-z\s]/g,'').split(/\s+/)
+      .filter(w => w.length > 3 && !STOPWORDS.has(w));
+    words.forEach(w => {
+      if(!titleWords[w]) titleWords[w] = [];
+      titleWords[w].push(j._mid);
+    });
+  });
+  const wordStats = Object.entries(titleWords)
+    .filter(([w,vals]) => vals.length >= 8)
+    .map(([w,vals]) => {
+      const sorted = vals.slice().sort((a,b)=>a-b);
+      return {word:w, med:percentile(sorted,50), count:vals.length};
+    });
+
+  const highWords = wordStats.sort((a,b)=>b.med-a.med).slice(0,12);
+  const lowWords = wordStats.sort((a,b)=>a.med-b.med).slice(0,12);
+  const globalMax = Math.max(...wordStats.map(w=>w.med));
+
+  const renderWordList = (el, words, colorFn) => {
+    el.innerHTML = words.map(w => {
+      const pct = (w.med / globalMax * 100).toFixed(1);
+      const color = colorFn(w.med);
+      return `<div class="bar-row">
+        <div class="bar-name" style="font-family:var(--font-mono);font-size:var(--fs-sm)">${w.word}<span class="bar-count">${w.count}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color};opacity:.8"></div></div>
+        <div class="bar-value" style="color:${color}">${fmtK(w.med)}</div>
+      </div>`;
+    }).join('');
+  };
+
+  renderWordList($('wordListHigh'), highWords.slice(0,10), m => `var(--green)`);
+  renderWordList($('wordListLow'), lowWords.slice(0,10), m => `var(--amber)`);
+
+  // Hide loading overlay
+  const ov = $('loadingOverlay');
+  ov.classList.add('hidden');
+  setTimeout(()=>ov.style.display='none', 350);
+}
+
+/* ===== CHART HELPERS ===== */
+function drawDonut(id, segments) {
+  const svg = $(id);
+  const total = segments.reduce((s,x)=>s+x.val,0);
+  const cx=70, cy=70, R=56, r=34;
+  let startAngle = -Math.PI/2;
+  let paths = '';
+  segments.forEach(seg => {
+    const angle = (seg.val / total) * 2 * Math.PI;
+    const x1 = cx + R * Math.cos(startAngle);
+    const y1 = cy + R * Math.sin(startAngle);
+    const x2 = cx + R * Math.cos(startAngle + angle);
+    const y2 = cy + R * Math.sin(startAngle + angle);
+    const x3 = cx + r * Math.cos(startAngle + angle);
+    const y3 = cy + r * Math.sin(startAngle + angle);
+    const x4 = cx + r * Math.cos(startAngle);
+    const y4 = cy + r * Math.sin(startAngle);
+    const lg = angle > Math.PI ? 1 : 0;
+    paths += `<path d="M${x1},${y1} A${R},${R} 0 ${lg},1 ${x2},${y2} L${x3},${y3} A${r},${r} 0 ${lg},0 ${x4},${y4} Z" fill="${seg.color}" opacity=".82"/>`;
+    startAngle += angle;
+  });
+  const pct = Math.round(segments[1].val / total * 100);
+  svg.innerHTML = paths + `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="IBM Plex Mono" font-size="18" font-weight="600" fill="currentColor">${pct}%</text><text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="Sora" font-size="9" fill="currentColor" opacity=".5">COMPLIANT</text>`;
+}
+
+function buildBins(data, min, max, step, compliantFn) {
+  const bins = [];
+  for(let v=min; v<max; v+=step) {
+    const group = data.filter(j => j._width >= v && j._width < v+step);
+    const compliantCount = group.filter(j=>j._compliant).length;
+    bins.push({low:v, high:v+step, count:group.length, compliantCount, label:'$'+Math.round(v/1000)+'k'});
+  }
+  return bins;
+}
+
+function drawHistogram(svgId, bins, maxX, threshold, unit, labelFn) {
+  const svg = $(svgId);
+  const W=400, H=180, padL=36, padB=28, padT=10, padR=8;
+  const plotW = W-padL-padR, plotH = H-padB-padT;
+  const maxCount = Math.max(...bins.map(b=>b.count), 1);
+  const bw = plotW / bins.length;
+  const threshX = padL + (threshold/maxX)*plotW;
+
+  let out = `<g>`;
+  // grid lines
+  for(let i=0; i<=4; i++){
+    const y = padT + (plotH - (plotH*i/4));
+    out += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    if(i>0) out += `<text x="${padL-4}" y="${y+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${Math.round(maxCount*i/4)}</text>`;
+  }
+  // bars
+  bins.forEach((b,i) => {
+    const bh = (b.count / maxCount) * plotH;
+    const x = padL + i*bw + 1;
+    const y = padT + plotH - bh;
+    const isOver = b.low >= threshold;
+    const color = isOver ? 'var(--amber)' : 'var(--green)';
+    const opacity = isOver ? '0.75' : '0.65';
+    out += `<rect x="${x}" y="${y}" width="${bw-2}" height="${bh}" fill="${color}" opacity="${opacity}" rx="1"/>`;
+  });
+  // threshold line
+  out += `<line x1="${threshX}" y1="${padT}" x2="${threshX}" y2="${H-padB+4}" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+  out += `<text x="${threshX+3}" y="${padT+9}" font-family="IBM Plex Mono" font-size="8" fill="var(--accent)" font-weight="600">$50k limit</text>`;
+  // x axis labels
+  bins.filter((_,i)=>i%3===0).forEach((b,i) => {
+    const x = padL + (bins.indexOf(b)+0.5)*bw;
+    out += `<text x="${x}" y="${H-padB+12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${b.label}</text>`;
+  });
+  // x axis
+  out += `<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border2)" stroke-width="1"/>`;
+  out += `</g>`;
+  svg.innerHTML = out;
+}
+
+function buildBinsPct(data, min, max, bins) {
+  const step = (max-min)/bins;
+  return Array.from({length:bins},(_,i)=>{
+    const low = min+i*step, high = low+step;
+    const group = data.filter(d=>d.val>=low && d.val<high);
+    const compCount = group.filter(d=>d.compliant).length;
+    return {low,high,count:group.length,compliantCount:compCount,label:Math.round(low)+'%'};
+  });
+}
+
+function drawHistogramPct(svgId, bins, maxX, threshold, unit, labelFn) {
+  const svg = $(svgId);
+  const W=400, H=180, padL=36, padB=28, padT=10, padR=8;
+  const plotW = W-padL-padR, plotH = H-padB-padT;
+  const maxCount = Math.max(...bins.map(b=>b.count), 1);
+  const bw = plotW / bins.length;
+  const threshX = padL + (threshold/maxX)*plotW;
+
+  let out = `<g>`;
+  for(let i=0; i<=4; i++){
+    const y = padT + (plotH - (plotH*i/4));
+    out += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    if(i>0) out += `<text x="${padL-4}" y="${y+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${Math.round(maxCount*i/4)}</text>`;
+  }
+  bins.forEach((b,i) => {
+    const bh = (b.count / maxCount) * plotH;
+    const x = padL + i*bw + 1;
+    const y = padT + plotH - bh;
+    let color;
+    if(b.low >= 100) color = 'var(--accent)';
+    else if(b.low >= 40) color = 'var(--amber)';
+    else color = 'var(--green)';
+    out += `<rect x="${x}" y="${y}" width="${bw-2}" height="${bh}" fill="${color}" opacity="0.65" rx="1"/>`;
+  });
+  out += `<line x1="${threshX}" y1="${padT}" x2="${threshX}" y2="${H-padB+4}" stroke="var(--border2)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+  out += `<text x="${threshX+3}" y="${padT+9}" font-family="IBM Plex Mono" font-size="8" fill="var(--text2)" font-weight="500">Standard band</text>`;
+  bins.filter((_,i)=>i%4===0).forEach(b => {
+    const x = padL + (bins.indexOf(b)+0.5)*bw;
+    out += `<text x="${x}" y="${H-padB+12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${b.label}</text>`;
+  });
+  out += `<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border2)" stroke-width="1"/>`;
+  out += `</g>`;
+  svg.innerHTML = out;
+}
+
+function groupMedian(arr, keyFn, valFn) {
+  const groups = {};
+  arr.forEach(item => {
+    const k = keyFn(item);
+    if(!groups[k]) groups[k] = [];
+    groups[k].push(valFn(item));
+  });
+  const result = {};
+  Object.entries(groups).forEach(([k,v]) => {
+    if(v.length >= 5) result[k] = percentile(v.slice().sort((a,b)=>a-b), 50);
+  });
+  return result;
+}
+
+function percentile(sortedArr, p) {
+  if(!sortedArr.length) return 0;
+  const i = (p/100) * (sortedArr.length-1);
+  const lo = Math.floor(i), hi = Math.ceil(i);
+  return sortedArr[lo] + (sortedArr[hi]-sortedArr[lo])*(i-lo);
+}
+
+function normCompany(name) {
+  if(!name) return 'Unknown';
+  return name.trim()
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLC|LLP|ULC|Canada|Inc$)(\s|$)/gi, '')
+    .replace(/\s+/g,' ').trim();
+}
+
+const STOPWORDS = new Set(['with','that','this','from','have','will','your','they','been','were','their','there','what','when','which','also','into','than','more','some','such','very','just','make','both','each','much','through','about','senior','junior','associate','manager','lead']);
+
+main();
+
+/* ===== SECTION NAV ACTIVE STATE ===== */
+(function(){
+  const pills = document.querySelectorAll('.snav-pill[data-section]');
+  const sections = Array.from(pills).map(p => document.getElementById(p.dataset.section)).filter(Boolean);
+  const nav = document.querySelector('.section-nav');
+
+  function setActive(id) {
+    pills.forEach(p => {
+      const on = p.dataset.section === id;
+      p.classList.toggle('active', on);
+      if(on) {
+        // Scroll pill into view within the nav
+        const pLeft = p.offsetLeft;
+        const pRight = pLeft + p.offsetWidth;
+        const nLeft = nav.scrollLeft;
+        const nRight = nLeft + nav.clientWidth;
+        if(pLeft < nLeft) nav.scrollLeft = pLeft - 12;
+        else if(pRight > nRight) nav.scrollLeft = pRight - nav.clientWidth + 12;
+      }
+    });
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) setActive(e.target.id); });
+  }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+
+  pills.forEach(p => {
+    p.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(p.dataset.section);
+      if(!target) return;
+      const stickyOffset = 56 + 44; // main nav + section nav
+      const top = target.getBoundingClientRect().top + window.scrollY - stickyOffset - 16;
+      window.scrollTo({ top, behavior: 'smooth' });
+      setActive(p.dataset.section);
+    });
+  });
+})();
+</script>
+</body>
+</html>

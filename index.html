@@ -1536,147 +1536,6 @@ footer a { color: var(--accent); text-decoration: none; }
 /* Table card without top padding since filters moved to sidebar */
 .content-area .card { border-top: 2px solid var(--border2); }
 .content-area #chartCard { border-top: 2px solid var(--text3); }
-.market-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 14px;
-  align-items: start;
-}
-.market-left { display: flex; flex-direction: column; gap: 16px; }
-.insights-drawer {
-  margin-bottom: 14px;
-}
-.insights-details {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--border2);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(0,0,0,.07);
-  overflow: hidden;
-}
-.insights-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 15px 18px;
-}
-.insights-summary-copy { min-width: 0; }
-.insights-summary-kicker {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--text3);
-  margin-bottom: 5px;
-}
-.insights-summary-title {
-  font-family: var(--font-display);
-  font-size: var(--fs-lg);
-  font-weight: 700;
-  letter-spacing: -.025em;
-  line-height: 1.1;
-  color: var(--text);
-}
-.insights-summary-sub {
-  margin-top: 4px;
-  font-size: var(--fs-sm);
-  color: var(--text2);
-}
-.insights-chevron {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  color: var(--text2);
-  transition: transform var(--transition), color var(--transition), border-color var(--transition);
-  background: transparent;
-  cursor: pointer;
-}
-.insights-details.insights-open .insights-chevron {
-  transform: rotate(180deg);
-  color: var(--accent);
-  border-color: var(--accent-border);
-}
-.insights-body {
-  padding: 0 16px 16px;
-  border-top: 1px solid var(--border);
-}
-.insights-details:not(.insights-open) .insights-body {
-  display: none;
-}
-.market-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--border2);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 2px 8px rgba(0,0,0,.07);
-  padding: 16px;
-  min-width: 0;
-}
-.market-card.featured {
-  border-top-color: var(--accent);
-}
-.market-title {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: .12em;
-  color: var(--text3);
-  margin-bottom: 10px;
-}
-.market-headline {
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  font-weight: 700;
-  letter-spacing: -.025em;
-  line-height: 1.2;
-  margin-bottom: 8px;
-}
-.market-copy {
-  font-size: var(--fs-md);
-  color: var(--text2);
-  line-height: 1.55;
-}
-.market-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 12px;
-}
-.market-metric {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  border-radius: 12px;
-}
-.market-metric strong {
-  display: block;
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  font-weight: 700;
-  letter-spacing: -.025em;
-  line-height: 1;
-  margin-bottom: 5px;
-}
-.market-metric span {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text3);
-}
-.market-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-}
 .transparency-section { margin-top: 11px; }
 .transparency-section + .transparency-section { margin-top: 13px; }
 .transparency-col-title {
@@ -1808,11 +1667,9 @@ tbody tr:hover {
 
 /* Mobile: sidebar becomes horizontal strip */
 @media(max-width:1024px) {
-  .masthead-grid,
-  .market-grid {
+  .masthead-grid {
     grid-template-columns: 1fr;
   }
-  .market-left { gap: 14px; }
   .app-layout { grid-template-columns: 1fr; }
   .sidebar {
     position: static; height: auto;
@@ -1865,9 +1722,6 @@ tbody tr:hover {
     font-size: var(--fs-xl);
     line-height: 1;
     letter-spacing: -.03em;
-  }
-  .market-metrics {
-    grid-template-columns: 1fr;
   }
   .results-header {
     align-items: flex-start;
@@ -2029,9 +1883,7 @@ tbody tr:hover {
     gap: 14px;
     padding-top: 14px;
   }
-  .insights-drawer { order: 1; margin-bottom: 0; }
   .results-shell { order: 2; }
-  .market-grid { grid-template-columns: 1fr; margin-bottom: 0; }
   .results-sub { display: none; }
   /* Salary bar on mobile: stick below mobile-search-bar (nav 56 + search ~64 = 120) */
   .salary-focus-bar {
@@ -2057,8 +1909,6 @@ tbody tr:hover {
   }
   /* Hide redundant results-header entirely on mobile */
   .results-header { display: none !important; }
-  /* insights first, salary second, cards third — matches desktop logic */
-  .insights-drawer { order: 0; }
   .salary-focus-bar { order: 1; }
   .results-shell { order: 2; }
 }
@@ -2374,40 +2224,6 @@ tbody tr:hover {
 
   <!-- RIGHT CONTENT -->
   <main class="content-area">
-    <div class="insights-drawer">
-      <div class="insights-details" id="insightsPanel">
-        <div class="insights-header" onclick="expandInsightsFromHeader(event)">
-          <div class="insights-summary-copy">
-            <div class="insights-summary-kicker">Insights</div>
-            <div class="insights-summary-title">Market context.</div>
-            <div class="insights-summary-sub">Salary trends and quick filters.</div>
-          </div>
-          <button class="insights-chevron" type="button" aria-expanded="false" aria-controls="insightsBody" onclick="event.stopPropagation();toggleInsightsPanel()">⌄</button>
-        </div>
-        <div class="insights-body" id="insightsBody">
-          <section class="market-grid">
-            <div class="market-left">
-              <div class="market-card featured">
-                <div class="market-title">Salary Range Transparency</div>
-                <div class="market-headline">How precisely are Ontario employers disclosing pay?</div>
-                <div class="market-copy">(max−min) ÷ midpoint, avg per employer with ≥3 postings.</div>
-                <div id="transparencyRanking"></div>
-              </div>
-              <div class="market-card">
-                <div class="market-title">High-Pay Density</div>
-                <div class="market-headline">How does each sector's pay distribute across bands?</div>
-                <div id="hpdCard"></div>
-              </div>
-            </div>
-            <div class="market-card">
-              <div class="market-title">Major Employer Coverage</div>
-              <div class="market-headline">Ontario's top employers — who's disclosing pay?</div>
-              <div id="coverageList"></div>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
 
     <!-- SALARY FOCUS BAR -->
     <div class="salary-focus-bar">
@@ -3318,7 +3134,6 @@ async function loadData() {
   renderDiscovery();
   applyAuthPrefsToState();
   applyFilters();
-  syncInsightsPanel(true);
   updateUserUI();
   handleAuthReturn();
 }
@@ -4418,35 +4233,6 @@ function drawChart(){
   });
 }
 
-let _insightsDesktopMode = null;
-
-function syncInsightsPanel(force=false){
-  const panel=document.getElementById("insightsPanel");
-  if(!panel) return;
-  const isDesktop = window.innerWidth > 760;
-  if(!force && _insightsDesktopMode === isDesktop) return;
-  const shouldOpen = isDesktop;
-  panel.classList.toggle("insights-open", shouldOpen);
-  const btn = panel.querySelector(".insights-chevron");
-  if(btn) btn.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
-  _insightsDesktopMode = isDesktop;
-}
-
-function toggleInsightsPanel(force){
-  const panel=document.getElementById("insightsPanel");
-  if(!panel) return;
-  const next = typeof force === "boolean" ? force : !panel.classList.contains("insights-open");
-  panel.classList.toggle("insights-open", next);
-  const btn = panel.querySelector(".insights-chevron");
-  if(btn) btn.setAttribute("aria-expanded", next ? "true" : "false");
-}
-function expandInsightsFromHeader(){
-  if(window.innerWidth > 760) return;
-  const panel=document.getElementById("insightsPanel");
-  if(!panel || panel.classList.contains("insights-open")) return;
-  toggleInsightsPanel(true);
-}
-
 // ===== COMPENSATION NOTE TOGGLE =====
 function toggleCompNote(){
   const n=document.getElementById("compNote");
@@ -4726,7 +4512,6 @@ function bindJobDetailGestures() {
 // ===== INIT =====
 window.addEventListener("resize",()=>{
   if(window.innerWidth > 760) toggleMobileFilters(false);
-  syncInsightsPanel();
   drawChart();
   renderTable();
 });
