@@ -127,6 +127,10 @@ nav {
 .logo-name { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 800; color: var(--text); letter-spacing: -.02em; line-height: 1; }
 .logo-badge { font-family: var(--font-mono); font-size: var(--fs-xs); background: var(--accent); color: var(--bg); padding: 2px 6px; font-weight: 600; letter-spacing: .05em; }
 @media(max-width:540px){ .logo-badge { display:none; } .logo-name { font-size: var(--fs-base); } }
+@media(max-width:600px){
+  nav { padding: 0 12px; gap: 8px; }
+  .nav-pill:not(.active) { display: none; }
+}
 .nav-pill {
   font-size: var(--fs-sm); font-weight: 600; color: var(--text2);
   background: var(--surface2); border: 1px solid var(--border);
@@ -756,7 +760,7 @@ footer {
   <div class="footer-note">
     Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
     Analysis covers <span id="footerTotal">—</span> postings from <span id="footerCompanies">—</span> employers.
-    All salary figures in CAD. Updated daily. · <a href="/">Browse all jobs →</a>
+    All salary figures in CAD. Updated daily. · <a href="/jobs.html">Browse all jobs →</a>
   </div>
   <div style="font-size:var(--fs-xs);color:var(--text3);font-family:var(--font-mono)">ontariopayhub.fyi</div>
 </footer>
