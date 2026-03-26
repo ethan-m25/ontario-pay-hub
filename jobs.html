@@ -187,6 +187,10 @@ body {
 body.slider-dragging #tableBody tr {
   animation: none;
 }
+/* No row animation on mobile — too expensive with 50+ cards */
+@media(max-width:700px){
+  #tableBody tr { animation: none; }
+}
 
 /* Active filter chip entrance */
 @keyframes chipIn {
@@ -357,6 +361,8 @@ nav {
 }
 .btn-secondary:hover { background: var(--surface); border-color: var(--text3); transform: translateY(-1px); }
 #userBtn { font-size: var(--fs-sm); padding:6px 12px; white-space:nowrap; }
+.load-more-btn { padding:10px 28px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; font-size:var(--fs-sm); font-weight:600; color:var(--text2); cursor:pointer; transition:all var(--transition); }
+.load-more-btn:hover { background:var(--surface); border-color:var(--border2); color:var(--text); }
 .nav-pill {
   font-size: var(--fs-sm); font-weight: 600; color: var(--text2);
   background: var(--surface2); border: 1px solid var(--border);
@@ -3175,7 +3181,7 @@ async function loadData() {
 
 // ===== STATE =====
 const S = {
-  theme: localStorage.getItem("oph-theme") || "dark",
+  theme: localStorage.getItem("oph-theme") || "light",
   user: null,
   saved: [],
   savedMeta: {},
@@ -3989,6 +3995,10 @@ function getHistogramJobs() {
   });
 }
 function renderTable(){
+  const _now=Date.now();
+  const _cutoff30=new Date(_now-30*86400000).toISOString().slice(0,10);
+  const _cutoff90=new Date(_now-90*86400000).toISOString().slice(0,10);
+  const _cutoff180=new Date(_now-180*86400000).toISOString().slice(0,10);
   let data=JOBS.filter(j=>{
     j._searchScore = searchScore(j, S.q);
     const mq=!S.q||j._searchScore>0;
@@ -4000,8 +4010,7 @@ function renderTable(){
     const mw=!S.wm||(j.work_mode||"unknown")===S.wm;
     const mco=!S.covEmployer||!!(j.company||"").match(S.covEmployer);
     const posted=j.date||"";
-    const cutoff=(days)=>{const d=new Date();d.setDate(d.getDate()-days);return d.toISOString().slice(0,10);};
-    const ma=!S.age||!posted||(S.age==='1m'?posted>=cutoff(30):S.age==='3m'?posted>=cutoff(90):S.age==='6m'?posted>=cutoff(180):posted<cutoff(180));
+    const ma=!S.age||!posted||(S.age==='1m'?posted>=_cutoff30:S.age==='3m'?posted>=_cutoff90:S.age==='6m'?posted>=_cutoff180:posted<_cutoff180);
     return mq&&mc&&mr&&ms&&mh&&mw&&mco&&ma;
   });
   const [sk,sd]=S.sort.split("-");
@@ -4020,105 +4029,136 @@ function renderTable(){
   if(typeof window.setSalaryFocusHeadline==='function') window.setSalaryFocusHeadline(S.salMin,data.length);
   // Update histogram to reflect current non-salary filters
   if(typeof window.refreshHistogram==='function') window.refreshHistogram(getHistogramJobs());
-  // Top 3 payers — only when a filter is active
-  const mxMax=Math.max(...JOBS.map(j=>j.max));
-  const isSmall=window.innerWidth<700;
-
   if(!data.length){
     document.getElementById("tableBody").innerHTML="";
-    document.getElementById("emptyState").style.display="block"; return;
+    document.getElementById("emptyState").style.display="block";
+    updateSaveBadge(); updateActiveFilters(); return;
   }
   document.getElementById("emptyState").style.display="none";
-
-  if(isSmall){
-    // CARD LAYOUT for mobile
-    document.getElementById("tableBody").innerHTML=data.map(j=>{
-      const isSaved=S.saved.includes(String(j.id));
-      const archived=isArchived(j);
-      const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
-      const spreadPctM=Math.round((j.max-j.min)/mid(j)*100);
-      const spreadBarWM=(Math.min(spreadPctM/60,1)*40).toFixed(1);
-      const spreadLabelM=spreadPctM<15?'Narrow':spreadPctM<35?'Moderate':'Wide';
-      const spreadClassM=spreadPctM<15?'narrow':spreadPctM<35?'moderate':'wide';
-      const spreadColorM=spreadPctM<15?'var(--green)':spreadPctM<35?'var(--cyan)':'#f59e0b';
-      const fedMatchM=getFederalMatch(j.company);
-      const fedBadgeM=fedMatchM?`<span class="fed-row-badge" title="${fedMatchM.name} is a federally regulated employer — Ontario ESA pay transparency rules do not apply">Fed. exempt</span>`:'';
-      return `<tr>
-        <td colspan="7" style="padding:0">
-          <div class="mobile-job-card" onclick="openJobDetail(${j.id})">
-          <div class="card-row-top">
-            <div style="min-width:0;flex:1 1 auto;">
-              <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
-              <div class="role-meta">
-                <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
-                ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
-              </div>
-            </div>
-            <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="event.stopPropagation();toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
-          </div>
-          <div>
-            <span class="company-name">${j.company}</span>${fedBadgeM}
-            <span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span>
-          </div>
-          <div class="mobile-range-row">
-            <div>
-              <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
-              <div class="range-spread-wrap">
-                <div class="range-width-bar" style="width:${spreadBarWM}px;background:${spreadColorM}" title="${spreadLabelM} range · ${spreadPctM}% spread"></div>
-                <span class="range-spread-label ${spreadClassM}">${spreadLabelM}</span>
-              </div>
-            </div>
-            <div class="midpoint">${fmt(mid(j))}</div>
-          </div>
-          <div class="mobile-card-foot">
-            <a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a>
-            <span class="date-rel">${relDate(j.date)}</span>
-          </div>
-          </div>
-        </td></tr>`;
-    }).join("");
-  } else {
-    // TABLE LAYOUT for desktop
-    document.getElementById("tableBody").innerHTML=data.map(j=>{
-      const isSaved=S.saved.includes(String(j.id));
-      const archived=isArchived(j);
-      const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
-      const spreadPct=Math.round((j.max-j.min)/mid(j)*100);
-      const spreadBarW=(Math.min(spreadPct/60,1)*40).toFixed(1);
-      const spreadLabel=spreadPct<15?'Narrow':spreadPct<35?'Moderate':'Wide';
-      const spreadClass=spreadPct<15?'narrow':spreadPct<35?'moderate':'wide';
-      const spreadColor=spreadPct<15?'var(--green)':spreadPct<35?'var(--cyan)':'#f59e0b';
-      const fedMatch=getFederalMatch(j.company);
-      const fedBadge=fedMatch?`<span class="fed-row-badge" title="${fedMatch.name} is a federally regulated employer — Ontario ESA pay transparency rules do not apply">Fed. exempt</span>`:'';
-      return `<tr style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
-        <td>
-          <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
-          <div class="role-meta">
-            <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
-            ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
-          </div>
-        </td>
-        <td><span class="company-name">${j.company}</span>${fedBadge}<span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
-        <td>
-          <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
-          <div class="range-spread-wrap">
-            <div class="range-width-bar" style="width:${spreadBarW}px;background:${spreadColor}" title="${spreadLabel} range · ${spreadPct}% spread (${fmt(j.max-j.min)} gap)"></div>
-            <span class="range-spread-label ${spreadClass}">${spreadLabel}</span>
-          </div>
-        </td>
-        <td class="midpoint">${fmt(mid(j))}</td>
-        <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a></td>
-        <td class="date-cell">
-          ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">📁 Archived</span><br>':""}
-          <span class="date-rel">${relDate(j.date)}</span><br>${j.date}
-        </td>
-        <td><button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id});event.stopPropagation()" title="Save job">${isSaved?"★":"☆"}</button></td>
-      </tr>`;
-    }).join("");
-  }
+  _filteredData = data;
+  _currentPage = 1;
+  _renderJobPage();
   updateSaveBadge();
   updateActiveFilters();
 }
+
+// ===== PAGINATION & ROW RENDERING =====
+let _filteredData = [];
+let _currentPage = 1;
+const _PAGE_SIZE = 50;
+const _fedBadgeCache = new Map();
+
+function _getFedBadge(company) {
+  if (_fedBadgeCache.has(company)) return _fedBadgeCache.get(company);
+  const m = getFederalMatch(company);
+  const b = m ? `<span class="fed-row-badge" title="${m.name} is a federally regulated employer — Ontario ESA pay transparency rules do not apply">Fed. exempt</span>` : '';
+  _fedBadgeCache.set(company, b);
+  return b;
+}
+
+function _jobRowHTML(j, isSmall) {
+  const isSaved=S.saved.includes(String(j.id));
+  const archived=isArchived(j);
+  const fedBadge=_getFedBadge(j.company);
+  if(isSmall){
+    const displayRole=j.role.length>72?j.role.slice(0,69)+"…":j.role;
+    const spreadPctM=Math.round((j.max-j.min)/mid(j)*100);
+    const spreadBarWM=(Math.min(spreadPctM/60,1)*40).toFixed(1);
+    const spreadLabelM=spreadPctM<15?'Narrow':spreadPctM<35?'Moderate':'Wide';
+    const spreadClassM=spreadPctM<15?'narrow':spreadPctM<35?'moderate':'wide';
+    const spreadColorM=spreadPctM<15?'var(--green)':spreadPctM<35?'var(--cyan)':'#f59e0b';
+    return `<tr>
+      <td colspan="7" style="padding:0">
+        <div class="mobile-job-card" onclick="openJobDetail(${j.id})">
+        <div class="card-row-top">
+          <div style="min-width:0;flex:1 1 auto;">
+            <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
+            <div class="role-meta">
+              <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
+              ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
+            </div>
+          </div>
+          <button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="event.stopPropagation();toggleSave(${j.id})">${isSaved?"★":"☆"}</button>
+        </div>
+        <div>
+          <span class="company-name">${j.company}</span>${fedBadge}
+          <span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span>
+        </div>
+        <div class="mobile-range-row">
+          <div>
+            <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
+            <div class="range-spread-wrap">
+              <div class="range-width-bar" style="width:${spreadBarWM}px;background:${spreadColorM}" title="${spreadLabelM} range · ${spreadPctM}% spread"></div>
+              <span class="range-spread-label ${spreadClassM}">${spreadLabelM}</span>
+            </div>
+          </div>
+          <div class="midpoint">${fmt(mid(j))}</div>
+        </div>
+        <div class="mobile-card-foot">
+          <a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a>
+          <span class="date-rel">${relDate(j.date)}</span>
+        </div>
+        </div>
+      </td></tr>`;
+  } else {
+    const displayRole=j.role.length>55?j.role.slice(0,52)+"…":j.role;
+    const spreadPct=Math.round((j.max-j.min)/mid(j)*100);
+    const spreadBarW=(Math.min(spreadPct/60,1)*40).toFixed(1);
+    const spreadLabel=spreadPct<15?'Narrow':spreadPct<35?'Moderate':'Wide';
+    const spreadClass=spreadPct<15?'narrow':spreadPct<35?'moderate':'wide';
+    const spreadColor=spreadPct<15?'var(--green)':spreadPct<35?'var(--cyan)':'#f59e0b';
+    return `<tr style="cursor:pointer${archived?';opacity:.7':''}" onclick="openJobDetail(${j.id})">
+      <td>
+        <div class="role-link role-title" title="${j.role.replace(/"/g,'&quot;')}">${displayRole}</div>
+        <div class="role-meta">
+          <span class="tag ${tagClass(j.tag)}">${(CAT_META[j.tag]||{shortLabel:j.tag}).shortLabel || j.tag}</span>
+          ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">Archived</span>':''}
+        </div>
+      </td>
+      <td><span class="company-name">${j.company}</span>${fedBadge}<span class="row-company-meta">${j.location||"Ontario, ON"} ${wmBadge(j.work_mode)}</span></td>
+      <td>
+        <div class="range-nums"><span class="range-min">${fmt(j.min)}</span><span class="range-sep">–</span><span class="range-max">${fmt(j.max)}</span></div>
+        <div class="range-spread-wrap">
+          <div class="range-width-bar" style="width:${spreadBarW}px;background:${spreadColor}" title="${spreadLabel} range · ${spreadPct}% spread (${fmt(j.max-j.min)} gap)"></div>
+          <span class="range-spread-label ${spreadClass}">${spreadLabel}</span>
+        </div>
+      </td>
+      <td class="midpoint">${fmt(mid(j))}</td>
+      <td><a href="${j.src}" target="_blank" rel="noopener" class="src-link" onclick="event.stopPropagation()">${j.domain} ↗</a></td>
+      <td class="date-cell">
+        ${archived?'<span style="font-size: var(--fs-xs);color:var(--text3)">📁 Archived</span><br>':""}
+        <span class="date-rel">${relDate(j.date)}</span><br>${j.date}
+      </td>
+      <td><button class="btn-save ${isSaved?"saved":""}" data-save="${j.id}" onclick="toggleSave(${j.id});event.stopPropagation()" title="Save job">${isSaved?"★":"☆"}</button></td>
+    </tr>`;
+  }
+}
+
+function _loadMoreRow(remaining) {
+  return `<tr id="loadMoreRow"><td colspan="7" style="text-align:center;padding:16px 0 20px"><button class="load-more-btn" onclick="window._loadMoreJobs()">Show ${Math.min(_PAGE_SIZE, remaining)} more · ${remaining} remaining</button></td></tr>`;
+}
+
+function _renderJobPage() {
+  const isSmall = window.innerWidth < 700;
+  const visible = _filteredData.slice(0, _PAGE_SIZE * _currentPage);
+  const remaining = _filteredData.length - visible.length;
+  document.getElementById("tableBody").innerHTML =
+    visible.map(j => _jobRowHTML(j, isSmall)).join('') +
+    (remaining > 0 ? _loadMoreRow(remaining) : '');
+}
+
+window._loadMoreJobs = function() {
+  const isSmall = window.innerWidth < 700;
+  const prevEnd = _PAGE_SIZE * _currentPage;
+  _currentPage++;
+  const newRows = _filteredData.slice(prevEnd, _PAGE_SIZE * _currentPage);
+  const remaining = _filteredData.length - _PAGE_SIZE * _currentPage;
+  const lmr = document.getElementById('loadMoreRow');
+  if (lmr) lmr.remove();
+  document.getElementById('tableBody').insertAdjacentHTML('beforeend',
+    newRows.map(j => _jobRowHTML(j, isSmall)).join('') +
+    (remaining > 0 ? _loadMoreRow(remaining) : ''));
+};
 function _animateCount(el, target, formatFn) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) { el.textContent = formatFn ? formatFn(target) : target; return; }
