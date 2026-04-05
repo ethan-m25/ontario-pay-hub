@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated": "2026-04-04T10:42:20+00:00",
+    "updated": "2026-04-05T10:54:40+00:00",
     "source": "Ontario Pay Transparency Act 2026 — public job postings",
     "count": 3046,
     "active": 2893,
@@ -21,7 +21,7 @@
     "work_modes_changed_from_archive": 0,
     "work_modes_preserved_existing_labels": 543,
     "work_modes_unknown_after_archive_sync": 857,
-    "work_mode_archive_sync_run": "2026-04-04T10:42:20+00:00",
+    "work_mode_archive_sync_run": "2026-04-05T10:54:40+00:00",
     "work_mode_distribution_active": {
       "remote": 308,
       "hybrid": 1150,
