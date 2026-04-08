@@ -1177,14 +1177,19 @@ function drawCompanyScatter(entries) {
     document.body.appendChild(tt);
   }
 
-  const VW = 800, VH = 480;
-  const M = { t: 40, r: 32, b: 60, l: 64 };
+  // Responsive: read actual container width
+  const cw = el.clientWidth || 800;
+  const mob = cw < 540;
+
+  const VW = mob ? cw : 800;
+  const VH = mob ? Math.round(cw * 1.05) : 480;   // portrait-ish on mobile
+  const M  = mob ? { t: 28, r: 12, b: 44, l: 48 } : { t: 40, r: 32, b: 60, l: 64 };
   const PW = VW - M.l - M.r, PH = VH - M.t - M.b;
 
   const xMax = 120;
   const sx = v => M.l + (Math.min(v, xMax) / xMax) * PW;
   const sy = v => M.t + PH - (v / 100) * PH;
-  const rad = t => Math.max(4, Math.min(18, Math.sqrt(t) * 1.85));
+  const rad = t => Math.max(mob ? 5 : 4, Math.min(mob ? 20 : 18, Math.sqrt(t) * (mob ? 2.1 : 1.85)));
 
   const GREEN = getCSSVar('--green');
   const RED   = getCSSVar('--accent');   // site red for non-compliant — stronger visual signal
@@ -1225,8 +1230,8 @@ function drawCompanyScatter(entries) {
   }
   // ────────────────────────────────────────────────────────────────────────
 
-  const yTicks = [0, 25, 50, 75, 100];
-  const xTicks = [0, 20, 40, 60, 80, 100, 120];
+  const yTicks = mob ? [0, 50, 100]              : [0, 25, 50, 75, 100];
+  const xTicks = mob ? [0, 40, 80, 120]          : [0, 20, 40, 60, 80, 100, 120];
 
   const gridLines = yTicks.map(v => {
     const y = sy(v).toFixed(1);
@@ -1262,41 +1267,44 @@ function drawCompanyScatter(entries) {
       data-n="${ne}" data-m="${Math.round(e.med)}" data-t="${e.total}"
       data-r="${rStr}" data-c="${e.cls}" data-nc="${e.nonCompliantCount}"/>`;
 
-    // Labels: only the most notable — large employers outside crowded zone, problem companies
-    const rawY = e.complianceRate !== null ? e.complianceRate : 100;
-    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= 12;
-    const isMajor   = e.total >= 40 && !(rawY >= 95 && e.med < TX);
+    // Labels: fewer on mobile
+    const rawY      = e.complianceRate !== null ? e.complianceRate : 100;
+    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= (mob ? 25 : 12);
+    const isMajor   = e.total >= (mob ? 70 : 40) && !(rawY >= 95 && e.med < TX);
     if (isProblem || isMajor) {
-      const short  = e.name.length > 22 ? e.name.substring(0, 20)+'…' : e.name;
+      const maxLen = mob ? 14 : 22;
+      const short  = e.name.length > maxLen ? e.name.substring(0, maxLen - 2)+'…' : e.name;
       const sne    = short.replace(/&/g,'&amp;').replace(/</g,'&lt;');
-      const nearRight = e.nx + e.r + 130 > M.l + PW;
-      const lx     = nearRight ? (e.nx - e.r - 5).toFixed(1) : (e.nx + e.r + 5).toFixed(1);
+      const nearRight = e.nx + e.r + (mob ? 90 : 130) > M.l + PW;
+      const lx     = nearRight ? (e.nx - e.r - 4).toFixed(1) : (e.nx + e.r + 4).toFixed(1);
       const anchor = nearRight ? 'end' : 'start';
       labels += `<text x="${lx}" y="${(e.ny + 3.5).toFixed(1)}" text-anchor="${anchor}" class="sc-lbl">${sne}</text>`;
     }
   });
 
-  // Size legend (top-right corner inside chart)
-  const legX = M.l + PW - 4, legY = M.t + 14;
-  const legSizes = [[5,'5'], [20,'20'], [50,'50+']];
-  let sizeLegend = `<text x="${legX}" y="${legY}" text-anchor="end" class="sc-ql" opacity=".4">bubble = postings</text>`;
-  let lxOff = legX - 20;
-  [...legSizes].reverse().forEach(([t, lbl]) => {
-    const lr = rad(t);
-    lxOff -= lr + 2;
-    sizeLegend += `<circle cx="${lxOff.toFixed(1)}" cy="${(legY+16+lr).toFixed(1)}" r="${lr}" fill="none" stroke="var(--text3)" stroke-width="1" opacity=".35"/>
-    <text x="${lxOff.toFixed(1)}" y="${(legY+16+lr*2+10).toFixed(1)}" text-anchor="middle" class="sc-ax" opacity=".5">${lbl}</text>`;
-    lxOff -= lr + 6;
-  });
+  // Size legend — desktop only (too cluttered on mobile)
+  let sizeLegend = '';
+  if (!mob) {
+    const legX = M.l + PW - 4, legY = M.t + 14;
+    sizeLegend = `<text x="${legX}" y="${legY}" text-anchor="end" class="sc-ql" opacity=".4">bubble = postings</text>`;
+    let lxOff = legX - 20;
+    [[5,'5'], [20,'20'], [50,'50+']].reverse().forEach(([t, lbl]) => {
+      const lr = rad(t);
+      lxOff -= lr + 2;
+      sizeLegend += `<circle cx="${lxOff.toFixed(1)}" cy="${(legY+16+lr).toFixed(1)}" r="${lr}" fill="none" stroke="var(--text3)" stroke-width="1" opacity=".35"/>
+      <text x="${lxOff.toFixed(1)}" y="${(legY+16+lr*2+10).toFixed(1)}" text-anchor="middle" class="sc-ax" opacity=".5">${lbl}</text>`;
+      lxOff -= lr + 6;
+    });
+  }
 
   el.innerHTML = `<svg viewBox="0 0 ${VW} ${VH}" width="100%" style="display:block;overflow:visible">
     <defs>
       <clipPath id="sc-clip"><rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}"/></clipPath>
       <style>
-        .sc-ax {font-family:var(--font-mono);font-size:9.5px;fill:var(--text3)}
-        .sc-ttl{font-family:var(--font-sans);font-size:10.5px;fill:var(--text2);font-weight:500}
-        .sc-ql {font-family:var(--font-sans);font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-        .sc-lbl{font-family:var(--font-sans);font-size:9px;fill:var(--text2);pointer-events:none}
+        .sc-ax {font-family:var(--font-mono);font-size:${mob?'11px':'9.5px'};fill:var(--text3)}
+        .sc-ttl{font-family:var(--font-sans);font-size:${mob?'11px':'10.5px'};fill:var(--text2);font-weight:500}
+        .sc-ql {font-family:var(--font-sans);font-size:${mob?'9px':'8.5px'};font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .sc-lbl{font-family:var(--font-sans);font-size:${mob?'10.5px':'9px'};fill:var(--text2);pointer-events:none}
         .sc-dot{cursor:pointer;transition:opacity .12s}
         .sc-dot:hover{opacity:.95 !important;stroke-width:2px !important}
       </style>
@@ -1313,11 +1321,11 @@ function drawCompanyScatter(entries) {
 
     <!-- $50k threshold -->
     <line x1="${txPx.toFixed(1)}" y1="${M.t}" x2="${txPx.toFixed(1)}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1" stroke-dasharray="4 3"/>
-    <text x="${(txPx+4).toFixed(1)}" y="${M.t+12}" class="sc-ax" style="font-size:8px">$50k limit</text>
+    <text x="${(txPx+4).toFixed(1)}" y="${M.t+12}" class="sc-ax" style="font-size:${mob?'9px':'8px'}">$50k limit</text>
 
     <!-- Quadrant labels -->
-    <text x="${M.l+8}" y="${M.t+18}" class="sc-ql" fill="${GREEN}" opacity=".55">▲ Narrow &amp; compliant</text>
-    <text x="${(txPx+6).toFixed(1)}" y="${M.t+PH-10}" class="sc-ql" fill="${RED}" opacity=".55">▼ Wide &amp; non-compliant</text>
+    <text x="${M.l+8}" y="${M.t+18}" class="sc-ql" fill="${GREEN}" opacity=".55">${mob?'▲ Compliant':'▲ Narrow &amp; compliant'}</text>
+    <text x="${(txPx+6).toFixed(1)}" y="${M.t+PH-10}" class="sc-ql" fill="${RED}" opacity=".55">${mob?'▼ Non-compliant':'▼ Wide &amp; non-compliant'}</text>
 
     <!-- Size legend -->
     ${sizeLegend}
@@ -1331,11 +1339,11 @@ function drawCompanyScatter(entries) {
     <!-- Axes -->
     <line x1="${M.l}" y1="${M.t+PH}" x2="${M.l+PW}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1"/>
     ${xAxis}
-    <text x="${(M.l+PW/2).toFixed(1)}" y="${VH-8}" text-anchor="middle" class="sc-ttl">Median salary range width %  ·  narrower = more precise disclosure</text>
+    <text x="${(M.l+PW/2).toFixed(1)}" y="${VH-8}" text-anchor="middle" class="sc-ttl">${mob?'Salary range width %':'Median salary range width %  ·  narrower = more precise disclosure'}</text>
 
     <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1"/>
     ${yAxis}
-    <text transform="rotate(-90)" x="${-(M.t+PH/2).toFixed(1)}" y="14" text-anchor="middle" class="sc-ttl">Compliance rate % (regulated postings)</text>
+    <text transform="rotate(-90)" x="${-(M.t+PH/2).toFixed(1)}" y="${mob?'13':'14'}" text-anchor="middle" class="sc-ttl">${mob?'Compliance %':'Compliance rate % (regulated postings)'}</text>
   </svg>`;
 
   el.querySelectorAll('.sc-dot').forEach(dot => {
