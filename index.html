@@ -1116,6 +1116,7 @@ function percentile(sortedArr, p) {
 function normCompany(name) {
   if(!name) return 'Unknown';
   return name.trim()
+    .replace(/\s*\([^)]+\)\s*$/, '')           // strip trailing parenthetical: "Bank of Montreal (BMO)" → "Bank of Montreal"
     .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLC|LLP|ULC|Canada|Inc$)(\s|$)/gi, '')
     .replace(/\s+/g,' ').trim();
 }
