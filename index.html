@@ -384,6 +384,21 @@ nav {
 .bar-value.noncompliant { color: var(--amber); }
 .bar-value.exempt { color: var(--text3); }
 
+/* ===== SCATTER TOOLTIP ===== */
+#ctt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-lg);
+  min-width: 200px; max-width: 260px;
+}
+.ctt-name { font-weight: 700; font-size: var(--fs-sm); margin-bottom: 4px; color: var(--text); }
+.ctt-cls  { font-size: var(--fs-xs); font-weight: 600; margin-bottom: 10px; }
+.ctt-grid { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+.ctt-lbl  { font-size: var(--fs-xs); color: var(--text3); }
+.ctt-val  { font-size: var(--fs-xs); font-weight: 600; font-family: var(--font-mono); text-align: right; color: var(--text); }
+
 /* ===== PLATFORM CHART ===== */
 .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media(max-width:500px){ .platform-grid { grid-template-columns: 1fr; } }
@@ -684,7 +699,7 @@ footer {
     <div class="section-header">
       <div class="section-kicker">Employer Profiles</div>
       <div class="section-title">Employers by salary range width</div>
-      <div class="section-desc">Median salary range width percentage, by employer (≥5 postings). Sorted narrowest to widest. Colour indicates compliance status of the majority of their regulated postings.</div>
+      <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width. Vertical = compliance rate among regulated postings. Bubble size = number of postings. Hover for details.</div>
     </div>
 
     <div class="chart-card">
@@ -694,13 +709,13 @@ footer {
           <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Non-compliant jobs present</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
         </div>
-        <div style="font-size:var(--fs-xs);color:var(--text3)">Employers with ≥5 postings · Median width%</div>
+        <div style="font-size:var(--fs-xs);color:var(--text3)">Hover any bubble for details · Bubble size = posting count</div>
       </div>
-      <div id="companyBars" class="bar-list"></div>
+      <div id="companyBars"></div>
     </div>
 
     <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Narrow ranges at the top of this list</strong> (e.g., &lt;10% width) often indicate a single pay point rather than a true salary band — the employer is likely disclosing a specific rate, not a range. This is not inherently more informative than a well-defined standard band.</p>
+      <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
     </div>
   </section>
 
@@ -887,19 +902,12 @@ async function main() {
       const med = percentile(sorted, 50);
       const exemptPct = v.exemptCount / v.total;
       const cls = exemptPct > 0.5 ? 'exempt' : (v.nonCompliantCount > 0 ? 'noncompliant' : 'compliant');
-      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount};
+      const regulatedCount = v.total - v.exemptCount;
+      const complianceRate = regulatedCount > 0 ? ((regulatedCount - v.nonCompliantCount) / regulatedCount * 100) : null;
+      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount, exemptCount:v.exemptCount, complianceRate};
     })
     .sort((a,b) => a.med - b.med);
-  const maxMed = Math.max(...coEntries.map(e=>e.med));
-  $('companyBars').innerHTML = coEntries.map(e => {
-    const pct = (e.med / maxMed * 100).toFixed(1);
-    const fillCls = e.cls === 'exempt' ? 'exempt' : (e.cls === 'noncompliant' ? 'noncompliant' : 'compliant');
-    return `<div class="bar-row">
-      <div class="bar-name">${e.name}<span class="bar-count">${e.total}</span></div>
-      <div class="bar-track"><div class="bar-fill ${fillCls}" style="width:${pct}%"></div></div>
-      <div class="bar-value ${fillCls}">${Math.round(e.med)}%</div>
-    </div>`;
-  }).join('');
+  drawCompanyScatter(coEntries);
 
   // ─── SECTION 4: NON-COMPLIANCE LEADERS (platform chart moved to admin.html) ───
 
@@ -1113,6 +1121,147 @@ function normCompany(name) {
 }
 
 const STOPWORDS = new Set(['with','that','this','from','have','will','your','they','been','were','their','there','what','when','which','also','into','than','more','some','such','very','just','make','both','each','much','through','about','senior','junior','associate','manager','lead']);
+
+/* ===== COMPLIANCE SCATTER PLOT ===== */
+function drawCompanyScatter(entries) {
+  const el = $('companyBars');
+  if (!el) return;
+
+  let tt = document.getElementById('ctt');
+  if (!tt) {
+    tt = document.createElement('div');
+    tt.id = 'ctt';
+    tt.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;display:none';
+    document.body.appendChild(tt);
+  }
+
+  const VW = 780, VH = 440;
+  const M = { t: 34, r: 24, b: 58, l: 68 };
+  const PW = VW - M.l - M.r, PH = VH - M.t - M.b;
+
+  const maxX = Math.max(...entries.map(e => e.med), 70);
+  const xMax = Math.ceil((maxX + 10) / 20) * 20;
+
+  const sx = v => M.l + (v / xMax) * PW;
+  const sy = v => M.t + PH - (v / 100) * PH;
+  const rad = t => Math.max(4, Math.min(22, Math.sqrt(t) * 2.4));
+
+  const GREEN = getCSSVar('--green');
+  const AMBER = getCSSVar('--amber');
+  const GRAY  = getCSSVar('--text3');
+
+  const TX = 40;
+  const txPx = sx(TX);
+
+  const yTicks = [0, 25, 50, 75, 100];
+  const xTicks = [];
+  for (let v = 0; v <= xMax; v += 20) xTicks.push(v);
+
+  const gridLines = yTicks.map(v => {
+    const y = sy(v).toFixed(1);
+    return `<line x1="${M.l}" y1="${y}" x2="${M.l + PW}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+  }).join('');
+
+  const xAxis = xTicks.map(v => {
+    const x = sx(v).toFixed(1);
+    return `<line x1="${x}" y1="${M.t + PH}" x2="${x}" y2="${M.t + PH + 5}" stroke="var(--border2)" stroke-width="1"/>
+    <text x="${x}" y="${M.t + PH + 17}" text-anchor="middle" class="sc-ax">${v}%</text>`;
+  }).join('');
+
+  const yAxis = yTicks.map(v => {
+    const y = sy(v).toFixed(1);
+    return `<line x1="${M.l - 5}" y1="${y}" x2="${M.l}" y2="${y}" stroke="var(--border2)" stroke-width="1"/>
+    <text x="${M.l - 9}" y="${(parseFloat(y) + 4).toFixed(1)}" text-anchor="end" class="sc-ax">${v}%</text>`;
+  }).join('');
+
+  // Small dots drawn first, large on top
+  const pts = [...entries].sort((a, b) => a.total - b.total);
+  let circles = '', labels = '';
+
+  pts.forEach(e => {
+    const cx = sx(e.med);
+    const rawY = e.complianceRate !== null ? e.complianceRate : 100;
+    const cy = sy(rawY);
+    const r = rad(e.total);
+    const color = e.cls === 'compliant' ? GREEN : e.cls === 'noncompliant' ? AMBER : GRAY;
+    const fop = e.cls === 'exempt' ? '0.3'  : '0.68';
+    const sop = e.cls === 'exempt' ? '0.2'  : '0.85';
+    const ne = e.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    const rStr = e.complianceRate !== null ? Math.round(e.complianceRate) + '%' : '—';
+
+    circles += `<circle class="sc-dot" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}"
+      fill="${color}" fill-opacity="${fop}" stroke="${color}" stroke-width="1.5" stroke-opacity="${sop}"
+      data-n="${ne}" data-m="${Math.round(e.med)}" data-t="${e.total}"
+      data-r="${rStr}" data-c="${e.cls}" data-nc="${e.nonCompliantCount}"/>`;
+
+    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= 10;
+    const isMajor = e.total >= 22;
+    if (isProblem || isMajor) {
+      labels += `<text x="${(cx + r + 4).toFixed(1)}" y="${(cy + 3.5).toFixed(1)}" class="sc-lbl">${ne}</text>`;
+    }
+  });
+
+  el.innerHTML = `<svg viewBox="0 0 ${VW} ${VH}" width="100%" style="display:block;overflow:visible">
+    <defs><style>
+      .sc-ax{font-family:var(--font-mono);font-size:9.5px;fill:var(--text3)}
+      .sc-ttl{font-family:var(--font-sans);font-size:10.5px;fill:var(--text2);font-weight:500}
+      .sc-ql{font-family:var(--font-sans);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+      .sc-lbl{font-family:var(--font-sans);font-size:9px;fill:var(--text2);pointer-events:none}
+      .sc-dot{cursor:pointer;transition:stroke-width .1s}
+      .sc-dot:hover{stroke-width:2.5 !important}
+    </style></defs>
+
+    <rect x="${M.l}" y="${M.t}" width="${(txPx - M.l).toFixed(1)}" height="${PH}" fill="rgba(29,108,73,0.04)"/>
+    <rect x="${txPx.toFixed(1)}" y="${sy(50).toFixed(1)}" width="${(PW - (txPx - M.l)).toFixed(1)}" height="${(M.t + PH - sy(50)).toFixed(1)}" fill="rgba(154,106,20,0.05)"/>
+
+    ${gridLines}
+    <rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}" fill="none" stroke="var(--border)" stroke-width="1"/>
+
+    <line x1="${txPx.toFixed(1)}" y1="${M.t}" x2="${txPx.toFixed(1)}" y2="${M.t + PH}" stroke="${AMBER}" stroke-width="1.5" stroke-dasharray="5 4" stroke-opacity=".55"/>
+    <text x="${(txPx + 4).toFixed(1)}" y="${M.t + 11}" class="sc-ax" fill="${AMBER}" style="font-size:8.5px">~$50k limit</text>
+
+    <text x="${M.l + 8}" y="${M.t + 16}" class="sc-ql" fill="${GREEN}" opacity=".5">Narrow &amp; compliant</text>
+    <text x="${(txPx + 6).toFixed(1)}" y="${M.t + PH - 9}" class="sc-ql" fill="${AMBER}" opacity=".5">Wide &amp; non-compliant</text>
+
+    ${circles}
+    ${labels}
+
+    <line x1="${M.l}" y1="${M.t + PH}" x2="${M.l + PW}" y2="${M.t + PH}" stroke="var(--border2)" stroke-width="1"/>
+    ${xAxis}
+    <text x="${(M.l + PW / 2).toFixed(1)}" y="${VH - 6}" text-anchor="middle" class="sc-ttl">Median salary range width % — narrower is more precise</text>
+
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t + PH}" stroke="var(--border2)" stroke-width="1"/>
+    ${yAxis}
+    <text transform="rotate(-90)" x="${-(M.t + PH / 2).toFixed(1)}" y="15" text-anchor="middle" class="sc-ttl">Compliance rate % among regulated postings</text>
+  </svg>`;
+
+  el.querySelectorAll('.sc-dot').forEach(dot => {
+    dot.addEventListener('pointerenter', () => {
+      const cls = dot.dataset.c;
+      const cc = cls === 'compliant' ? getCSSVar('--green') : cls === 'noncompliant' ? getCSSVar('--amber') : getCSSVar('--text3');
+      const cl = cls === 'compliant' ? 'Mostly compliant' : cls === 'noncompliant' ? 'Non-compliant jobs present' : 'Majority exempt (>$200k)';
+      const nc = parseInt(dot.dataset.nc) || 0;
+      tt.innerHTML = `<div class="ctt-name">${dot.dataset.n}</div>
+        <div class="ctt-cls" style="color:${cc}">${cl}</div>
+        <div class="ctt-grid">
+          <span class="ctt-lbl">Postings</span><span class="ctt-val">${dot.dataset.t}</span>
+          <span class="ctt-lbl">Median width</span><span class="ctt-val">${dot.dataset.m}%</span>
+          <span class="ctt-lbl">Compliance rate</span><span class="ctt-val">${dot.dataset.r}</span>
+          ${nc > 0 ? `<span class="ctt-lbl">Non-compliant</span><span class="ctt-val" style="color:${getCSSVar('--amber')}">${nc} jobs</span>` : ''}
+        </div>`;
+      tt.style.display = 'block';
+    });
+    dot.addEventListener('pointermove', ev => {
+      const w = tt.offsetWidth, h = tt.offsetHeight;
+      let lx = ev.clientX + 16, ly = ev.clientY - 10;
+      if (lx + w > window.innerWidth - 8) lx = ev.clientX - w - 16;
+      if (ly + h > window.innerHeight - 8) ly = ev.clientY - h - 10;
+      tt.style.left = lx + 'px';
+      tt.style.top = ly + 'px';
+    });
+    dot.addEventListener('pointerleave', () => { tt.style.display = 'none'; });
+  });
+}
 
 main();
 
