@@ -563,7 +563,7 @@ footer {
 
 <div id="loadingOverlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Loading 2,500+ job records…</div>
+  <div class="loading-text" id="loadingText">Loading job records…</div>
 </div>
 
 <!-- NAV -->
@@ -591,7 +591,7 @@ footer {
   <div class="masthead-inner">
     <div class="masthead-kicker">Pay Intelligence · O. Reg. 476/24</div>
     <h1>What Ontario employers are actually <em>disclosing.</em></h1>
-    <div class="masthead-sub">Analysis of 2,500+ salary disclosures from Ontario job postings under the Pay Transparency Act, effective January 1, 2026.</div>
+    <div class="masthead-sub">Analysis of <span id="mastheadCount">3,000+</span> salary disclosures from Ontario job postings under the Pay Transparency Act, effective January 1, 2026.</div>
     <div class="masthead-meta">
       <span>Dataset: <strong id="metaTotal">—</strong> job postings</span>
       <span><strong id="metaCompanies">—</strong> employers</span>
@@ -808,11 +808,14 @@ async function main() {
   const compliant = valid.filter(j => j._compliant);
   const nonCompliant = valid.filter(j => j._nonCompliant);
 
-  // Update masthead
+  // Update masthead & dynamic count strings
+  const nRounded = N >= 1000 ? (Math.floor(N / 100) * 100).toLocaleString() + '+' : N.toLocaleString();
   $('metaTotal').textContent = N.toLocaleString();
   $('metaCompanies').textContent = companies.toLocaleString();
   $('footerTotal').textContent = N.toLocaleString();
   $('footerCompanies').textContent = companies.toLocaleString();
+  if ($('mastheadCount'))  $('mastheadCount').textContent  = nRounded;
+  if ($('loadingText'))    $('loadingText').textContent    = `Loading ${nRounded} job records…`;
 
   // ─── SECTION 1: COMPLIANCE ───
   $('pctExempt').textContent = Math.round(exempt.length / N * 100) + '%';
@@ -944,8 +947,8 @@ async function main() {
     }).join('');
   };
 
-  renderWordList($('wordListHigh'), highWords.slice(0,10), m => `var(--green)`);
-  renderWordList($('wordListLow'), lowWords.slice(0,10), m => `var(--amber)`);
+  if ($('wordListHigh')) renderWordList($('wordListHigh'), highWords.slice(0,10), m => `var(--green)`);
+  if ($('wordListLow'))  renderWordList($('wordListLow'),  lowWords.slice(0,10),  m => `var(--amber)`);
 
   // Hide loading overlay
   const ov = $('loadingOverlay');
