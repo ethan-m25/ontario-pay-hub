@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Pay Intelligence — Ontario Pay Hub</title>
+<title>Ontario Pay Hub — Pay Intelligence & Salary Insights 2026</title>
 <meta name="description" content="What 2,500+ Ontario salary disclosures reveal: compliance patterns, salary range widths, employer benchmarks, and market signals under O. Reg. 476/24.">
 <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-2026.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -127,6 +127,9 @@ nav {
 .logo-name { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: 800; color: var(--text); letter-spacing: -.02em; line-height: 1; }
 .logo-badge { font-family: var(--font-mono); font-size: var(--fs-xs); background: var(--accent); color: var(--bg); padding: 2px 6px; font-weight: 600; letter-spacing: .05em; }
 @media(max-width:540px){ .logo-badge { display:none; } .logo-name { font-size: var(--fs-base); } }
+@media(max-width:600px){
+  nav { padding: 0 12px; gap: 8px; }
+}
 .nav-pill {
   font-size: var(--fs-sm); font-weight: 600; color: var(--text2);
   background: var(--surface2); border: 1px solid var(--border);
@@ -381,6 +384,21 @@ nav {
 .bar-value.noncompliant { color: var(--amber); }
 .bar-value.exempt { color: var(--text3); }
 
+/* ===== SCATTER TOOLTIP ===== */
+#ctt {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-lg);
+  min-width: 200px; max-width: 260px;
+}
+.ctt-name { font-weight: 700; font-size: var(--fs-sm); margin-bottom: 4px; color: var(--text); }
+.ctt-cls  { font-size: var(--fs-xs); font-weight: 600; margin-bottom: 10px; }
+.ctt-grid { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; }
+.ctt-lbl  { font-size: var(--fs-xs); color: var(--text3); }
+.ctt-val  { font-size: var(--fs-xs); font-weight: 600; font-family: var(--font-mono); text-align: right; color: var(--text); }
+
 /* ===== PLATFORM CHART ===== */
 .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media(max-width:500px){ .platform-grid { grid-template-columns: 1fr; } }
@@ -545,7 +563,7 @@ footer {
 
 <div id="loadingOverlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Loading 2,500+ job records…</div>
+  <div class="loading-text" id="loadingText">Loading job records…</div>
 </div>
 
 <!-- NAV -->
@@ -563,10 +581,8 @@ footer {
     <span class="logo-badge">2026</span>
   </a>
   <div class="nav-spacer"></div>
-  <a class="nav-pill" href="/">Pay Intelligence</a>
   <a class="nav-pill" href="/jobs.html">Browse Jobs</a>
   <a class="nav-pill active" href="/insights.html">Insights</a>
-  <a class="nav-pill" href="/skills.html">Skill Signal</a>
   <button class="btn-icon-nav" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">◐</button>
 </nav>
 
@@ -575,7 +591,7 @@ footer {
   <div class="masthead-inner">
     <div class="masthead-kicker">Pay Intelligence · O. Reg. 476/24</div>
     <h1>What Ontario employers are actually <em>disclosing.</em></h1>
-    <div class="masthead-sub">Analysis of 2,500+ salary disclosures from Ontario job postings under the Pay Transparency Act, effective January 1, 2026.</div>
+    <div class="masthead-sub">Analysis of <span id="mastheadCount">3,000+</span> salary disclosures from Ontario job postings under the Pay Transparency Act, effective January 1, 2026.</div>
     <div class="masthead-meta">
       <span>Dataset: <strong id="metaTotal">—</strong> job postings</span>
       <span><strong id="metaCompanies">—</strong> employers</span>
@@ -588,10 +604,10 @@ footer {
 <!-- SECTION NAV -->
 <nav class="section-nav" aria-label="Page sections">
   <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
-  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
   <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
   <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
-  <a class="snav-pill" href="#s-language" data-section="s-language">Language</a>
+  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
+  <a class="snav-pill snav-pill--ext" href="/skills.html">Skill Signal ↗</a>
 </nav>
 
 <!-- PAGE CONTENT -->
@@ -631,7 +647,58 @@ footer {
     </div>
   </section>
 
-  <!-- SECTION 2: WIDTH DISTRIBUTION -->
+  <!-- SECTION 2: EMPLOYER SCATTER -->
+  <section class="insight-section" id="s-companies">
+    <div class="section-header">
+      <div class="section-kicker">Employer Profiles</div>
+      <div class="section-title">Employers by salary range width</div>
+      <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width. Vertical = compliance rate among regulated postings. Bubble size = number of postings. Hover for details.</div>
+    </div>
+
+    <div class="chart-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Mostly compliant</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Non-compliant jobs present</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:var(--text3)">Hover any bubble for details · Bubble size = posting count</div>
+      </div>
+      <div id="companyBars"></div>
+      <button class="scatter-expand-btn" onclick="openScatterFS()" aria-label="Open full screen chart">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 5V1H5M9 1H13V5M13 9V13H9M5 13H1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        View full chart (landscape)
+      </button>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:16px">
+      <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: NON-COMPLIANCE LEADERS -->
+  <section class="insight-section" id="s-signals">
+    <div class="section-header">
+      <div class="section-kicker">Market Signals</div>
+      <div class="section-title">Who's posting the widest ranges?</div>
+      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-title">Top non-compliant employers</div>
+      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
+      <table class="mini-table">
+        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
+        <tbody id="nonCompliantBody"></tbody>
+      </table>
+      <div class="callout" style="margin-top:16px">
+        <div class="callout-label">Largest non-compliant employers</div>
+        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: WIDTH DISTRIBUTION -->
   <section class="insight-section" id="s-distribution">
     <div class="section-header">
       <div class="section-kicker">Range Width Analysis</div>
@@ -679,86 +746,13 @@ footer {
     </div>
   </section>
 
-  <!-- SECTION 3: COMPANY RANKING -->
-  <section class="insight-section" id="s-companies">
-    <div class="section-header">
-      <div class="section-kicker">Employer Profiles</div>
-      <div class="section-title">Employers by salary range width</div>
-      <div class="section-desc">Median salary range width percentage, by employer (≥5 postings). Sorted narrowest to widest. Colour indicates compliance status of the majority of their regulated postings.</div>
-    </div>
-
-    <div class="chart-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.75"></div>Mostly compliant</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Non-compliant jobs present</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
-        </div>
-        <div style="font-size:var(--fs-xs);color:var(--text3)">Employers with ≥5 postings · Median width%</div>
-      </div>
-      <div id="companyBars" class="bar-list"></div>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Narrow ranges at the top of this list</strong> (e.g., &lt;10% width) often indicate a single pay point rather than a true salary band — the employer is likely disclosing a specific rate, not a range. This is not inherently more informative than a well-defined standard band.</p>
-    </div>
-  </section>
-
-  <!-- SECTION 4: NON-COMPLIANCE LEADERS -->
-  <section class="insight-section" id="s-signals">
-    <div class="section-header">
-      <div class="section-kicker">Market Signals</div>
-      <div class="section-title">Who's posting the widest ranges?</div>
-      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-title">Top non-compliant employers</div>
-      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
-      <table class="mini-table">
-        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
-        <tbody id="nonCompliantBody"></tbody>
-      </table>
-      <div class="callout" style="margin-top:16px">
-        <div class="callout-label">Largest non-compliant employers</div>
-        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 5: WORD × SALARY -->
-  <section class="insight-section" id="s-language">
-    <div class="section-header">
-      <div class="section-kicker">Language & Compensation</div>
-      <div class="section-title">Job title keywords and median salary</div>
-      <div class="section-desc">Correlation between words in job titles and disclosed salary midpoints. This is a descriptive observation — salary differences reflect different role types, not necessarily the word itself causing higher pay.</div>
-    </div>
-
-    <div class="two-col">
-      <div class="chart-card">
-        <div class="chart-card-title">High-median title keywords</div>
-        <div class="chart-card-sub">Words associated with the highest median salaries in this dataset.</div>
-        <div id="wordListHigh" class="bar-list" style="margin-top:8px"></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-title">Lower-median title keywords</div>
-        <div class="chart-card-sub">Words associated with lower median salaries. Reflects role type, not word-caused differences.</div>
-        <div id="wordListLow" class="bar-list" style="margin-top:8px"></div>
-      </div>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Important:</strong> These correlations reflect job category differences, not linguistic bias in isolation. "Coordinator" roles pay less because they are different jobs than "Director" roles — not because of the word itself. Causal interpretation requires controlling for job function, industry, and seniority level.</p>
-    </div>
-  </section>
-
 </div><!-- /page -->
 
 <footer>
   <div class="footer-note">
     Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
     Analysis covers <span id="footerTotal">—</span> postings from <span id="footerCompanies">—</span> employers.
-    All salary figures in CAD. Updated daily. · <a href="/">Browse all jobs →</a>
+    All salary figures in CAD. Updated daily. · <a href="/jobs.html">Browse all jobs →</a>
   </div>
   <div style="font-size:var(--fs-xs);color:var(--text3);font-family:var(--font-mono)">ontariopayhub.fyi</div>
 </footer>
@@ -814,11 +808,14 @@ async function main() {
   const compliant = valid.filter(j => j._compliant);
   const nonCompliant = valid.filter(j => j._nonCompliant);
 
-  // Update masthead
+  // Update masthead & dynamic count strings
+  const nRounded = N >= 1000 ? (Math.floor(N / 100) * 100).toLocaleString() + '+' : N.toLocaleString();
   $('metaTotal').textContent = N.toLocaleString();
   $('metaCompanies').textContent = companies.toLocaleString();
   $('footerTotal').textContent = N.toLocaleString();
   $('footerCompanies').textContent = companies.toLocaleString();
+  if ($('mastheadCount'))  $('mastheadCount').textContent  = nRounded;
+  if ($('loadingText'))    $('loadingText').textContent    = `Loading ${nRounded} job records…`;
 
   // ─── SECTION 1: COMPLIANCE ───
   $('pctExempt').textContent = Math.round(exempt.length / N * 100) + '%';
@@ -887,19 +884,13 @@ async function main() {
       const med = percentile(sorted, 50);
       const exemptPct = v.exemptCount / v.total;
       const cls = exemptPct > 0.5 ? 'exempt' : (v.nonCompliantCount > 0 ? 'noncompliant' : 'compliant');
-      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount};
+      const regulatedCount = v.total - v.exemptCount;
+      const complianceRate = regulatedCount > 0 ? ((regulatedCount - v.nonCompliantCount) / regulatedCount * 100) : null;
+      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount, exemptCount:v.exemptCount, complianceRate};
     })
     .sort((a,b) => a.med - b.med);
-  const maxMed = Math.max(...coEntries.map(e=>e.med));
-  $('companyBars').innerHTML = coEntries.map(e => {
-    const pct = (e.med / maxMed * 100).toFixed(1);
-    const fillCls = e.cls === 'exempt' ? 'exempt' : (e.cls === 'noncompliant' ? 'noncompliant' : 'compliant');
-    return `<div class="bar-row">
-      <div class="bar-name">${e.name}<span class="bar-count">${e.total}</span></div>
-      <div class="bar-track"><div class="bar-fill ${fillCls}" style="width:${pct}%"></div></div>
-      <div class="bar-value ${fillCls}">${Math.round(e.med)}%</div>
-    </div>`;
-  }).join('');
+  window._coEntries = coEntries;
+  drawCompanyScatter(coEntries);
 
   // ─── SECTION 4: NON-COMPLIANCE LEADERS (platform chart moved to admin.html) ───
 
@@ -956,8 +947,8 @@ async function main() {
     }).join('');
   };
 
-  renderWordList($('wordListHigh'), highWords.slice(0,10), m => `var(--green)`);
-  renderWordList($('wordListLow'), lowWords.slice(0,10), m => `var(--amber)`);
+  if ($('wordListHigh')) renderWordList($('wordListHigh'), highWords.slice(0,10), m => `var(--green)`);
+  if ($('wordListLow'))  renderWordList($('wordListLow'),  lowWords.slice(0,10),  m => `var(--amber)`);
 
   // Hide loading overlay
   const ov = $('loadingOverlay');
@@ -1107,12 +1098,264 @@ function percentile(sortedArr, p) {
 
 function normCompany(name) {
   if(!name) return 'Unknown';
-  return name.trim()
-    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLC|LLP|ULC|Canada|Inc$)(\s|$)/gi, '')
+  let n = name.trim()
+    .replace(/^\S*\d\S*\s+/, '')                                                     // strip leading ID tokens: "0000050383 RBC..." → "RBC..."
+    .replace(/\s*\([^)]+\)\s*$/, '')                                                 // strip trailing parentheticals: "(BMO)", "(Canada)"
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC|Canada)(?=\s|$)/gi, '')       // legal suffixes (lookahead keeps trailing space)
     .replace(/\s+/g,' ').trim();
+
+  // Canonical aliases — merge known alternate names / abbreviations
+  return {
+    // TD Bank Group
+    'The Toronto-Dominion Bank': 'TD Bank',
+    'TD General':                'TD Bank',
+    // Bank of Montreal / BMO
+    'BMO Bank N.A.':             'Bank of Montreal',
+    'BMO Nesbitt Burns':         'Bank of Montreal',
+    // CIBC
+    'CIBC World Markets':        'CIBC',
+    // PwC
+    'PricewaterhouseCoopers':    'PwC',
+    'PwC Management Services LP': 'PwC',
+    // OMERS
+    'OMERS Administration Corporation': 'OMERS',
+    'OMERS Private Equity':             'OMERS',
+    // Ontario Teachers' Pension Plan
+    "Ontario Teachers' Pension Plan Board": "Ontario Teachers' Pension Plan",
+    // Enbridge
+    'Enbridge Gas Distribution':      'Enbridge',
+    'Enbridge Employee Services CAN': 'Enbridge',
+    // RBC and subsidiaries
+    'The Royal Trust Company':                                'RBC',
+    'RBC Direct Investing':                                   'RBC',
+    'RBC Dominion Securities':                                'RBC',
+    'RBC Insurance Services':                                 'RBC',
+    'RBC Investor Services Trust':                            'RBC',
+    'RBC Phillips, Hager & North Investment Counsel':         'RBC',
+    // Case / spelling fixes
+    'Benchsci':                  'BenchSci',
+    'Pointclickcare':            'PointClickCare',
+    'The City of Toronto':       'City of Toronto',
+    'StackAdapt - Confidential': 'StackAdapt',
+    'Arcteryx Com':              "Arc'teryx",
+    'John Hancock Manulife':     'Manulife',
+    'TEEMA':                     'Teema Group',
+    'NAV':                       'NAV Canada',       // "NAV CANADA" → "NAV" after Canada strip → "NAV Canada"
+    'Ontario Government':        'Ontario Public Service',
+  }[n] || n;
 }
 
 const STOPWORDS = new Set(['with','that','this','from','have','will','your','they','been','were','their','there','what','when','which','also','into','than','more','some','such','very','just','make','both','each','much','through','about','senior','junior','associate','manager','lead']);
+
+/* ===== COMPLIANCE SCATTER PLOT ===== */
+function drawCompanyScatter(entries, opts) {
+  const el = (opts && opts.targetEl) || $('companyBars');
+  if (!el) return;
+
+  let tt = document.getElementById('ctt');
+  if (!tt) {
+    tt = document.createElement('div');
+    tt.id = 'ctt';
+    tt.style.cssText = 'position:fixed;pointer-events:none;z-index:9999;display:none';
+    document.body.appendChild(tt);
+  }
+
+  // Responsive: opts can force landscape dimensions (fullscreen mode)
+  const cw = (opts && opts.forceVW) || el.clientWidth || 800;
+  const mob = !(opts && opts.forceVW) && cw < 540;
+
+  const VW = (opts && opts.forceVW) || (mob ? cw : 800);
+  const VH = (opts && opts.forceVH) || (mob ? Math.round(cw * 1.05) : 480);
+  const M  = mob ? { t: 28, r: 12, b: 44, l: 48 } : { t: 40, r: 32, b: 60, l: 64 };
+  const PW = VW - M.l - M.r, PH = VH - M.t - M.b;
+
+  const xMax = 120;
+  const sx = v => M.l + (Math.min(v, xMax) / xMax) * PW;
+  const sy = v => M.t + PH - (v / 100) * PH;
+  const rad = t => Math.max(mob ? 5 : 4, Math.min(mob ? 20 : 18, Math.sqrt(t) * (mob ? 2.1 : 1.85)));
+
+  const GREEN = getCSSVar('--green');
+  const RED   = getCSSVar('--accent');   // site red for non-compliant — stronger visual signal
+  const GRAY  = getCSSVar('--text3');
+  const AMBER = getCSSVar('--amber');    // keep amber for tooltip labels etc.
+
+  const TX = 40;
+  const txPx = sx(TX);
+
+  // ── Force simulation: keeps X fixed, moves Y to avoid overlap ──────────
+  // Start each node at its natural compliance-rate Y position
+  const nodes = [...entries].map(e => {
+    const rawY = e.complianceRate !== null ? e.complianceRate : 100;
+    const y0 = sy(rawY);
+    return { ...e, nx: sx(e.med), ny: y0, ty: y0, r: rad(e.total) };
+  });
+
+  // Run 180 iterations: repulsion between overlapping nodes + spring toward target Y
+  for (let iter = 0; iter < 180; iter++) {
+    const alpha = 1 - iter / 180;
+    nodes.forEach((n, i) => {
+      let fy = (n.ty - n.ny) * 0.10;   // spring back toward natural compliance Y
+      for (let j = 0; j < nodes.length; j++) {
+        if (i === j) continue;
+        const m = nodes[j];
+        const dx = n.nx - m.nx, dy = n.ny - m.ny;
+        const dist2 = dx * dx + dy * dy;
+        const minD = n.r + m.r + 3;
+        if (dist2 < minD * minD) {
+          const dist = Math.sqrt(dist2) || 0.1;
+          fy += (dy / dist) * (minD - dist) * 0.45 * alpha;
+        }
+      }
+      n.ny += fy;
+      // Clamp inside plot area
+      n.ny = Math.max(M.t + n.r + 2, Math.min(M.t + PH - n.r - 2, n.ny));
+    });
+  }
+  // ────────────────────────────────────────────────────────────────────────
+
+  const yTicks = mob ? [0, 50, 100]              : [0, 25, 50, 75, 100];
+  const xTicks = mob ? [0, 40, 80, 120]          : [0, 20, 40, 60, 80, 100, 120];
+
+  const gridLines = yTicks.map(v => {
+    const y = sy(v).toFixed(1);
+    return `<line x1="${M.l}" y1="${y}" x2="${M.l+PW}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+  }).join('');
+
+  const xAxis = xTicks.map(v => {
+    const x = sx(v).toFixed(1);
+    return `<line x1="${x}" y1="${M.t+PH}" x2="${x}" y2="${M.t+PH+5}" stroke="var(--border2)" stroke-width="1"/>
+    <text x="${x}" y="${M.t+PH+17}" text-anchor="middle" class="sc-ax">${v===120?'≥120%':v+'%'}</text>`;
+  }).join('');
+
+  const yAxis = yTicks.map(v => {
+    const y = sy(v).toFixed(1);
+    return `<line x1="${M.l-5}" y1="${y}" x2="${M.l}" y2="${y}" stroke="var(--border2)" stroke-width="1"/>
+    <text x="${M.l-9}" y="${(+y+4).toFixed(1)}" text-anchor="end" class="sc-ax">${v}%</text>`;
+  }).join('');
+
+  // Render: small dots first, large on top
+  const sorted = [...nodes].sort((a, b) => a.total - b.total);
+  let circles = '', labels = '';
+
+  sorted.forEach(e => {
+    const color = e.cls === 'compliant' ? GREEN : e.cls === 'noncompliant' ? RED : GRAY;
+    const fop   = e.cls === 'exempt' ? '0.28' : '0.78';
+    const sop   = e.cls === 'exempt' ? '0.18' : '1';
+    const ne    = e.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+    const rStr  = e.complianceRate !== null ? Math.round(e.complianceRate)+'%' : '—';
+    const cx    = e.nx.toFixed(1), cy = e.ny.toFixed(1);
+
+    circles += `<circle class="sc-dot" cx="${cx}" cy="${cy}" r="${e.r}"
+      fill="${color}" fill-opacity="${fop}" stroke="${color}" stroke-width="1.5" stroke-opacity="${sop}"
+      data-n="${ne}" data-m="${Math.round(e.med)}" data-t="${e.total}"
+      data-r="${rStr}" data-c="${e.cls}" data-nc="${e.nonCompliantCount}"/>`;
+
+    // Labels: fewer on mobile
+    const rawY      = e.complianceRate !== null ? e.complianceRate : 100;
+    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= (mob ? 25 : 12);
+    const isMajor   = e.total >= (mob ? 70 : 40) && !(rawY >= 95 && e.med < TX);
+    if (isProblem || isMajor) {
+      const maxLen = mob ? 14 : 22;
+      const short  = e.name.length > maxLen ? e.name.substring(0, maxLen - 2)+'…' : e.name;
+      const sne    = short.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      const nearRight = e.nx + e.r + (mob ? 90 : 130) > M.l + PW;
+      const lx     = nearRight ? (e.nx - e.r - 4).toFixed(1) : (e.nx + e.r + 4).toFixed(1);
+      const anchor = nearRight ? 'end' : 'start';
+      labels += `<text x="${lx}" y="${(e.ny + 3.5).toFixed(1)}" text-anchor="${anchor}" class="sc-lbl">${sne}</text>`;
+    }
+  });
+
+  // Size legend — desktop only (too cluttered on mobile)
+  let sizeLegend = '';
+  if (!mob) {
+    const legX = M.l + PW - 4, legY = M.t + 14;
+    sizeLegend = `<text x="${legX}" y="${legY}" text-anchor="end" class="sc-ql" opacity=".4">bubble = postings</text>`;
+    let lxOff = legX - 20;
+    [[5,'5'], [20,'20'], [50,'50+']].reverse().forEach(([t, lbl]) => {
+      const lr = rad(t);
+      lxOff -= lr + 2;
+      sizeLegend += `<circle cx="${lxOff.toFixed(1)}" cy="${(legY+16+lr).toFixed(1)}" r="${lr}" fill="none" stroke="var(--text3)" stroke-width="1" opacity=".35"/>
+      <text x="${lxOff.toFixed(1)}" y="${(legY+16+lr*2+10).toFixed(1)}" text-anchor="middle" class="sc-ax" opacity=".5">${lbl}</text>`;
+      lxOff -= lr + 6;
+    });
+  }
+
+  el.innerHTML = `<svg viewBox="0 0 ${VW} ${VH}" width="100%" style="display:block;overflow:visible">
+    <defs>
+      <clipPath id="sc-clip"><rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}"/></clipPath>
+      <style>
+        .sc-ax {font-family:var(--font-mono);font-size:${mob?'11px':'9.5px'};fill:var(--text3)}
+        .sc-ttl{font-family:var(--font-sans);font-size:${mob?'11px':'10.5px'};fill:var(--text2);font-weight:500}
+        .sc-ql {font-family:var(--font-sans);font-size:${mob?'9px':'8.5px'};font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+        .sc-lbl{font-family:var(--font-sans);font-size:${mob?'10.5px':'9px'};fill:var(--text2);pointer-events:none}
+        .sc-dot{cursor:pointer;transition:opacity .12s}
+        .sc-dot:hover{opacity:.95 !important;stroke-width:2px !important}
+      </style>
+    </defs>
+
+    <!-- Zone backgrounds -->
+    <g clip-path="url(#sc-clip)">
+      <rect x="${M.l}" y="${M.t}" width="${(txPx-M.l).toFixed(1)}" height="${PH}" fill="rgba(29,108,73,0.05)"/>
+      <rect x="${txPx.toFixed(1)}" y="${sy(50).toFixed(1)}" width="${(PW-(txPx-M.l)).toFixed(1)}" height="${(M.t+PH-sy(50)).toFixed(1)}" fill="rgba(200,16,46,0.04)"/>
+    </g>
+
+    ${gridLines}
+    <rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}" fill="none" stroke="var(--border)" stroke-width="1"/>
+
+    <!-- $50k threshold -->
+    <line x1="${txPx.toFixed(1)}" y1="${M.t}" x2="${txPx.toFixed(1)}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1" stroke-dasharray="4 3"/>
+    <text x="${(txPx+4).toFixed(1)}" y="${M.t+12}" class="sc-ax" style="font-size:${mob?'9px':'8px'}">$50k limit</text>
+
+    <!-- Quadrant labels -->
+    <text x="${M.l+8}" y="${M.t+18}" class="sc-ql" fill="${GREEN}" opacity=".55">${mob?'▲ Compliant':'▲ Narrow &amp; compliant'}</text>
+    <text x="${(txPx+6).toFixed(1)}" y="${M.t+PH-10}" class="sc-ql" fill="${RED}" opacity=".55">${mob?'▼ Non-compliant':'▼ Wide &amp; non-compliant'}</text>
+
+    <!-- Size legend -->
+    ${sizeLegend}
+
+    <!-- Dots -->
+    <g clip-path="url(#sc-clip)">${circles}</g>
+
+    <!-- Labels (outside clip so they're fully visible) -->
+    ${labels}
+
+    <!-- Axes -->
+    <line x1="${M.l}" y1="${M.t+PH}" x2="${M.l+PW}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1"/>
+    ${xAxis}
+    <text x="${(M.l+PW/2).toFixed(1)}" y="${VH-8}" text-anchor="middle" class="sc-ttl">${mob?'Salary range width %':'Median salary range width %  ·  narrower = more precise disclosure'}</text>
+
+    <line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${M.t+PH}" stroke="var(--border2)" stroke-width="1"/>
+    ${yAxis}
+    <text transform="rotate(-90)" x="${-(M.t+PH/2).toFixed(1)}" y="${mob?'13':'14'}" text-anchor="middle" class="sc-ttl">${mob?'Compliance %':'Compliance rate % (regulated postings)'}</text>
+  </svg>`;
+
+  el.querySelectorAll('.sc-dot').forEach(dot => {
+    dot.addEventListener('pointerenter', () => {
+      const cls = dot.dataset.c;
+      const cc = cls === 'compliant' ? getCSSVar('--green') : cls === 'noncompliant' ? getCSSVar('--amber') : getCSSVar('--text3');
+      const cl = cls === 'compliant' ? 'Mostly compliant' : cls === 'noncompliant' ? 'Non-compliant jobs present' : 'Majority exempt (>$200k)';
+      const nc = parseInt(dot.dataset.nc) || 0;
+      tt.innerHTML = `<div class="ctt-name">${dot.dataset.n}</div>
+        <div class="ctt-cls" style="color:${cc}">${cl}</div>
+        <div class="ctt-grid">
+          <span class="ctt-lbl">Postings</span><span class="ctt-val">${dot.dataset.t}</span>
+          <span class="ctt-lbl">Median width</span><span class="ctt-val">${dot.dataset.m}%</span>
+          <span class="ctt-lbl">Compliance rate</span><span class="ctt-val">${dot.dataset.r}</span>
+          ${nc > 0 ? `<span class="ctt-lbl">Non-compliant</span><span class="ctt-val" style="color:${getCSSVar('--amber')}">${nc} jobs</span>` : ''}
+        </div>`;
+      tt.style.display = 'block';
+    });
+    dot.addEventListener('pointermove', ev => {
+      const w = tt.offsetWidth, h = tt.offsetHeight;
+      let lx = ev.clientX + 16, ly = ev.clientY - 10;
+      if (lx + w > window.innerWidth - 8) lx = ev.clientX - w - 16;
+      if (ly + h > window.innerHeight - 8) ly = ev.clientY - h - 10;
+      tt.style.left = lx + 'px';
+      tt.style.top = ly + 'px';
+    });
+    dot.addEventListener('pointerleave', () => { tt.style.display = 'none'; });
+  });
+}
 
 main();
 
@@ -1156,6 +1399,149 @@ main();
     });
   });
 })();
+</script>
+<style>
+/* ===== SCATTER FULLSCREEN (mobile landscape overlay) ===== */
+.scatter-expand-btn {
+  display: none;
+}
+@media (max-width: 600px) {
+  .scatter-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+  }
+  .scatter-expand-btn:hover { background: var(--bg2); color: var(--text); }
+}
+
+#scatter-fs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--bg);
+  display: none;
+  overflow: hidden;
+}
+#scatter-fs-overlay.open { display: block; }
+
+#scatter-fs-rotator {
+  /* Rotate portrait screen to landscape: width=100vh, height=100vw, then center+rotate */
+  position: fixed;
+  width: 100vh;
+  height: 100vw;
+  top: calc((100vh - 100vw) / 2);
+  left: calc((100vw - 100vh) / 2);
+  transform: rotate(90deg);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#scatter-fs-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#scatter-fs-head-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+#scatter-fs-head-meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  color: var(--text3);
+}
+#scatter-fs-close {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 5px 12px;
+  font-size: var(--fs-xs);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+#scatter-fs-close:hover { background: var(--bg2); color: var(--text); }
+
+#scatter-fs-chart {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+
+/* Skill Signal sub-nav style for external link */
+.snav-pill--ext {
+  opacity: .7;
+  font-style: normal;
+}
+.snav-pill--ext::after { content: ''; }
+</style>
+
+<!-- SCATTER FULLSCREEN OVERLAY (mobile landscape) -->
+<div id="scatter-fs-overlay" role="dialog" aria-modal="true" aria-label="Employer compliance chart - full screen">
+  <div id="scatter-fs-rotator">
+    <div id="scatter-fs-head">
+      <div>
+        <div id="scatter-fs-head-title">Employer compliance scatter</div>
+        <div id="scatter-fs-head-meta">Salary range width % · Compliance rate % · Bubble = postings</div>
+      </div>
+      <button id="scatter-fs-close" onclick="closeScatterFS()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Close
+      </button>
+    </div>
+    <div id="scatter-fs-chart"></div>
+  </div>
+</div>
+
+<script>
+/* ===== SCATTER FULLSCREEN ===== */
+function openScatterFS() {
+  const overlay = document.getElementById('scatter-fs-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const fsEl = document.getElementById('scatter-fs-chart');
+  fsEl.innerHTML = '';
+  if (window._coEntries && window._coEntries.length) {
+    // Landscape dims: visual width = innerHeight, visual height = innerWidth - header
+    const headerH = 48;
+    const pad = 20;
+    const LW = window.innerHeight - pad;
+    const LH = window.innerWidth - headerH - pad;
+    drawCompanyScatter(window._coEntries, { targetEl: fsEl, forceVW: LW, forceVH: Math.max(LH, 260) });
+  }
+}
+function closeScatterFS() {
+  document.getElementById('scatter-fs-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close on Escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeScatterFS(); });
 </script>
 </body>
 </html>
