@@ -1135,16 +1135,17 @@ function drawCompanyScatter(entries) {
     document.body.appendChild(tt);
   }
 
-  const VW = 780, VH = 440;
-  const M = { t: 34, r: 24, b: 58, l: 68 };
+  const VW = 780, VH = 500;
+  const M = { t: 34, r: 28, b: 58, l: 68 };
   const PW = VW - M.l - M.r, PH = VH - M.t - M.b;
 
-  const maxX = Math.max(...entries.map(e => e.med), 70);
-  const xMax = Math.ceil((maxX + 10) / 20) * 20;
+  // Cap X at 120% — extreme outliers still shown but clipped visually
+  const xMax = 120;
 
-  const sx = v => M.l + (v / xMax) * PW;
+  const sx = v => M.l + (Math.min(v, xMax) / xMax) * PW;
   const sy = v => M.t + PH - (v / 100) * PH;
-  const rad = t => Math.max(4, Math.min(22, Math.sqrt(t) * 2.4));
+  // Smaller bubbles: max 14px, scale factor 1.6
+  const rad = t => Math.max(3, Math.min(14, Math.sqrt(t) * 1.6));
 
   const GREEN = getCSSVar('--green');
   const AMBER = getCSSVar('--amber');
@@ -1153,9 +1154,15 @@ function drawCompanyScatter(entries) {
   const TX = 40;
   const txPx = sx(TX);
 
+  // Deterministic hash jitter — spreads companies piled at 100% compliance
+  const nameHash = name => {
+    let h = 0;
+    for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0x7fffffff;
+    return h;
+  };
+
   const yTicks = [0, 25, 50, 75, 100];
-  const xTicks = [];
-  for (let v = 0; v <= xMax; v += 20) xTicks.push(v);
+  const xTicks = [0, 20, 40, 60, 80, 100, 120];
 
   const gridLines = yTicks.map(v => {
     const y = sy(v).toFixed(1);
@@ -1164,8 +1171,9 @@ function drawCompanyScatter(entries) {
 
   const xAxis = xTicks.map(v => {
     const x = sx(v).toFixed(1);
+    const lbl = v === 120 ? '≥120%' : v + '%';
     return `<line x1="${x}" y1="${M.t + PH}" x2="${x}" y2="${M.t + PH + 5}" stroke="var(--border2)" stroke-width="1"/>
-    <text x="${x}" y="${M.t + PH + 17}" text-anchor="middle" class="sc-ax">${v}%</text>`;
+    <text x="${x}" y="${M.t + PH + 17}" text-anchor="middle" class="sc-ax">${lbl}</text>`;
   }).join('');
 
   const yAxis = yTicks.map(v => {
@@ -1181,7 +1189,9 @@ function drawCompanyScatter(entries) {
   pts.forEach(e => {
     const cx = sx(e.med);
     const rawY = e.complianceRate !== null ? e.complianceRate : 100;
-    const cy = sy(rawY);
+    // Hash-based Y jitter (screen pixels) for companies bunched at 100%
+    const jitter = rawY >= 98 ? ((nameHash(e.name) % 33) - 16) : 0;
+    const cy = Math.min(sy(rawY) + jitter, sy(0) - 2);  // don't go below 0% line
     const r = rad(e.total);
     const color = e.cls === 'compliant' ? GREEN : e.cls === 'noncompliant' ? AMBER : GRAY;
     const fop = e.cls === 'exempt' ? '0.3'  : '0.68';
@@ -1194,25 +1204,40 @@ function drawCompanyScatter(entries) {
       data-n="${ne}" data-m="${Math.round(e.med)}" data-t="${e.total}"
       data-r="${rStr}" data-c="${e.cls}" data-nc="${e.nonCompliantCount}"/>`;
 
-    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= 10;
-    const isMajor = e.total >= 22;
-    if (isProblem || isMajor) {
-      labels += `<text x="${(cx + r + 4).toFixed(1)}" y="${(cy + 3.5).toFixed(1)}" class="sc-lbl">${ne}</text>`;
+    // Only label significant companies, skip the crowded compliant-narrow zone
+    const isProblem = e.cls === 'noncompliant' && e.med > TX && e.total >= 15;
+    const isMajor   = e.total >= 35;
+    const inCrowd   = rawY >= 95 && e.med < TX;
+    if ((isProblem || isMajor) && !inCrowd) {
+      // Truncate long names
+      const short = e.name.length > 20 ? e.name.substring(0, 18) + '…' : e.name;
+      const sne = short.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      // Smart anchor: flip label to left if near right edge
+      const nearRight = cx + r + 120 > M.l + PW;
+      const lx = nearRight ? (cx - r - 4).toFixed(1) : (cx + r + 4).toFixed(1);
+      const anchor = nearRight ? 'end' : 'start';
+      labels += `<text x="${lx}" y="${(cy + 3.5).toFixed(1)}" text-anchor="${anchor}" class="sc-lbl">${sne}</text>`;
     }
   });
 
   el.innerHTML = `<svg viewBox="0 0 ${VW} ${VH}" width="100%" style="display:block;overflow:visible">
-    <defs><style>
-      .sc-ax{font-family:var(--font-mono);font-size:9.5px;fill:var(--text3)}
-      .sc-ttl{font-family:var(--font-sans);font-size:10.5px;fill:var(--text2);font-weight:500}
-      .sc-ql{font-family:var(--font-sans);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-      .sc-lbl{font-family:var(--font-sans);font-size:9px;fill:var(--text2);pointer-events:none}
-      .sc-dot{cursor:pointer;transition:stroke-width .1s}
-      .sc-dot:hover{stroke-width:2.5 !important}
-    </style></defs>
+    <defs>
+      <clipPath id="sc-clip"><rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}"/></clipPath>
+      <style>
+        .sc-ax{font-family:var(--font-mono);font-size:9.5px;fill:var(--text3)}
+        .sc-ttl{font-family:var(--font-sans);font-size:10.5px;fill:var(--text2);font-weight:500}
+        .sc-ql{font-family:var(--font-sans);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+        .sc-lbl{font-family:var(--font-sans);font-size:9px;fill:var(--text2);pointer-events:none}
+        .sc-dot{cursor:pointer;transition:stroke-width .1s}
+        .sc-dot:hover{stroke-width:2.5 !important}
+      </style>
+    </defs>
 
-    <rect x="${M.l}" y="${M.t}" width="${(txPx - M.l).toFixed(1)}" height="${PH}" fill="rgba(29,108,73,0.04)"/>
-    <rect x="${txPx.toFixed(1)}" y="${sy(50).toFixed(1)}" width="${(PW - (txPx - M.l)).toFixed(1)}" height="${(M.t + PH - sy(50)).toFixed(1)}" fill="rgba(154,106,20,0.05)"/>
+    <!-- Quadrant backgrounds (clipped to plot area) -->
+    <g clip-path="url(#sc-clip)">
+      <rect x="${M.l}" y="${M.t}" width="${(txPx - M.l).toFixed(1)}" height="${PH}" fill="rgba(29,108,73,0.04)"/>
+      <rect x="${txPx.toFixed(1)}" y="${sy(50).toFixed(1)}" width="${(PW - (txPx - M.l)).toFixed(1)}" height="${(M.t + PH - sy(50)).toFixed(1)}" fill="rgba(154,106,20,0.05)"/>
+    </g>
 
     ${gridLines}
     <rect x="${M.l}" y="${M.t}" width="${PW}" height="${PH}" fill="none" stroke="var(--border)" stroke-width="1"/>
@@ -1223,7 +1248,8 @@ function drawCompanyScatter(entries) {
     <text x="${M.l + 8}" y="${M.t + 16}" class="sc-ql" fill="${GREEN}" opacity=".5">Narrow &amp; compliant</text>
     <text x="${(txPx + 6).toFixed(1)}" y="${M.t + PH - 9}" class="sc-ql" fill="${AMBER}" opacity=".5">Wide &amp; non-compliant</text>
 
-    ${circles}
+    <!-- Dots clipped to plot area -->
+    <g clip-path="url(#sc-clip)">${circles}</g>
     ${labels}
 
     <line x1="${M.l}" y1="${M.t + PH}" x2="${M.l + PW}" y2="${M.t + PH}" stroke="var(--border2)" stroke-width="1"/>
