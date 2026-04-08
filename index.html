@@ -1115,10 +1115,51 @@ function percentile(sortedArr, p) {
 
 function normCompany(name) {
   if(!name) return 'Unknown';
-  return name.trim()
-    .replace(/\s*\([^)]+\)\s*$/, '')           // strip trailing parenthetical: "Bank of Montreal (BMO)" → "Bank of Montreal"
-    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLC|LLP|ULC|Canada|Inc$)(\s|$)/gi, '')
+  let n = name.trim()
+    .replace(/^\S*\d\S*\s+/, '')                                                     // strip leading ID tokens: "0000050383 RBC..." → "RBC..."
+    .replace(/\s*\([^)]+\)\s*$/, '')                                                 // strip trailing parentheticals: "(BMO)", "(Canada)"
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC|Canada)(?=\s|$)/gi, '')       // legal suffixes (lookahead keeps trailing space)
     .replace(/\s+/g,' ').trim();
+
+  // Canonical aliases — merge known alternate names / abbreviations
+  return {
+    // TD Bank Group
+    'The Toronto-Dominion Bank': 'TD Bank',
+    'TD General':                'TD Bank',
+    // Bank of Montreal / BMO
+    'BMO Bank N.A.':             'Bank of Montreal',
+    'BMO Nesbitt Burns':         'Bank of Montreal',
+    // CIBC
+    'CIBC World Markets':        'CIBC',
+    // PwC
+    'PricewaterhouseCoopers':    'PwC',
+    'PwC Management Services LP': 'PwC',
+    // OMERS
+    'OMERS Administration Corporation': 'OMERS',
+    'OMERS Private Equity':             'OMERS',
+    // Ontario Teachers' Pension Plan
+    "Ontario Teachers' Pension Plan Board": "Ontario Teachers' Pension Plan",
+    // Enbridge
+    'Enbridge Gas Distribution':      'Enbridge',
+    'Enbridge Employee Services CAN': 'Enbridge',
+    // RBC and subsidiaries
+    'The Royal Trust Company':                                'RBC',
+    'RBC Direct Investing':                                   'RBC',
+    'RBC Dominion Securities':                                'RBC',
+    'RBC Insurance Services':                                 'RBC',
+    'RBC Investor Services Trust':                            'RBC',
+    'RBC Phillips, Hager & North Investment Counsel':         'RBC',
+    // Case / spelling fixes
+    'Benchsci':                  'BenchSci',
+    'Pointclickcare':            'PointClickCare',
+    'The City of Toronto':       'City of Toronto',
+    'StackAdapt - Confidential': 'StackAdapt',
+    'Arcteryx Com':              "Arc'teryx",
+    'John Hancock Manulife':     'Manulife',
+    'TEEMA':                     'Teema Group',
+    'NAV':                       'NAV Canada',       // "NAV CANADA" → "NAV" after Canada strip → "NAV Canada"
+    'Ontario Government':        'Ontario Public Service',
+  }[n] || n;
 }
 
 const STOPWORDS = new Set(['with','that','this','from','have','will','your','they','been','were','their','there','what','when','which','also','into','than','more','some','such','very','just','make','both','each','much','through','about','senior','junior','associate','manager','lead']);
