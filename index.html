@@ -582,8 +582,7 @@ footer {
   </a>
   <div class="nav-spacer"></div>
   <a class="nav-pill" href="/jobs.html">Browse Jobs</a>
-  <a class="nav-pill" href="/insights.html">Insights</a>
-  <a class="nav-pill" href="/skills.html">Skill Signal</a>
+  <a class="nav-pill active" href="/insights.html">Insights</a>
   <button class="btn-icon-nav" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">◐</button>
 </nav>
 
@@ -605,10 +604,10 @@ footer {
 <!-- SECTION NAV -->
 <nav class="section-nav" aria-label="Page sections">
   <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
-  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
   <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
   <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
-  <a class="snav-pill" href="#s-language" data-section="s-language">Language</a>
+  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
+  <a class="snav-pill snav-pill--ext" href="/skills.html">Skill Signal ↗</a>
 </nav>
 
 <!-- PAGE CONTENT -->
@@ -648,7 +647,58 @@ footer {
     </div>
   </section>
 
-  <!-- SECTION 2: WIDTH DISTRIBUTION -->
+  <!-- SECTION 2: EMPLOYER SCATTER -->
+  <section class="insight-section" id="s-companies">
+    <div class="section-header">
+      <div class="section-kicker">Employer Profiles</div>
+      <div class="section-title">Employers by salary range width</div>
+      <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width. Vertical = compliance rate among regulated postings. Bubble size = number of postings. Hover for details.</div>
+    </div>
+
+    <div class="chart-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Mostly compliant</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Non-compliant jobs present</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
+        </div>
+        <div style="font-size:var(--fs-xs);color:var(--text3)">Hover any bubble for details · Bubble size = posting count</div>
+      </div>
+      <div id="companyBars"></div>
+      <button class="scatter-expand-btn" onclick="openScatterFS()" aria-label="Open full screen chart">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 5V1H5M9 1H13V5M13 9V13H9M5 13H1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        View full chart (landscape)
+      </button>
+    </div>
+
+    <div class="callout-neutral" style="margin-top:16px">
+      <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3: NON-COMPLIANCE LEADERS -->
+  <section class="insight-section" id="s-signals">
+    <div class="section-header">
+      <div class="section-kicker">Market Signals</div>
+      <div class="section-title">Who's posting the widest ranges?</div>
+      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-title">Top non-compliant employers</div>
+      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
+      <table class="mini-table">
+        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
+        <tbody id="nonCompliantBody"></tbody>
+      </table>
+      <div class="callout" style="margin-top:16px">
+        <div class="callout-label">Largest non-compliant employers</div>
+        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: WIDTH DISTRIBUTION -->
   <section class="insight-section" id="s-distribution">
     <div class="section-header">
       <div class="section-kicker">Range Width Analysis</div>
@@ -693,79 +743,6 @@ footer {
           <p>A range width of <strong>±15–25% of midpoint</strong> (30–50% total) is considered a standard salary band in most compensation frameworks. Ranges below 30% more likely represent a single pay point rather than a true band.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: COMPANY RANKING -->
-  <section class="insight-section" id="s-companies">
-    <div class="section-header">
-      <div class="section-kicker">Employer Profiles</div>
-      <div class="section-title">Employers by salary range width</div>
-      <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width. Vertical = compliance rate among regulated postings. Bubble size = number of postings. Hover for details.</div>
-    </div>
-
-    <div class="chart-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Mostly compliant</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Non-compliant jobs present</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
-        </div>
-        <div style="font-size:var(--fs-xs);color:var(--text3)">Hover any bubble for details · Bubble size = posting count</div>
-      </div>
-      <div id="companyBars"></div>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
-    </div>
-  </section>
-
-  <!-- SECTION 4: NON-COMPLIANCE LEADERS -->
-  <section class="insight-section" id="s-signals">
-    <div class="section-header">
-      <div class="section-kicker">Market Signals</div>
-      <div class="section-title">Who's posting the widest ranges?</div>
-      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
-    </div>
-
-    <div class="chart-card">
-      <div class="chart-card-title">Top non-compliant employers</div>
-      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
-      <table class="mini-table">
-        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
-        <tbody id="nonCompliantBody"></tbody>
-      </table>
-      <div class="callout" style="margin-top:16px">
-        <div class="callout-label">Largest non-compliant employers</div>
-        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 5: WORD × SALARY -->
-  <section class="insight-section" id="s-language">
-    <div class="section-header">
-      <div class="section-kicker">Language & Compensation</div>
-      <div class="section-title">Job title keywords and median salary</div>
-      <div class="section-desc">Correlation between words in job titles and disclosed salary midpoints. This is a descriptive observation — salary differences reflect different role types, not necessarily the word itself causing higher pay.</div>
-    </div>
-
-    <div class="two-col">
-      <div class="chart-card">
-        <div class="chart-card-title">High-median title keywords</div>
-        <div class="chart-card-sub">Words associated with the highest median salaries in this dataset.</div>
-        <div id="wordListHigh" class="bar-list" style="margin-top:8px"></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-title">Lower-median title keywords</div>
-        <div class="chart-card-sub">Words associated with lower median salaries. Reflects role type, not word-caused differences.</div>
-        <div id="wordListLow" class="bar-list" style="margin-top:8px"></div>
-      </div>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Important:</strong> These correlations reflect job category differences, not linguistic bias in isolation. "Coordinator" roles pay less because they are different jobs than "Director" roles — not because of the word itself. Causal interpretation requires controlling for job function, industry, and seniority level.</p>
     </div>
   </section>
 
@@ -909,6 +886,7 @@ async function main() {
       return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount, exemptCount:v.exemptCount, complianceRate};
     })
     .sort((a,b) => a.med - b.med);
+  window._coEntries = coEntries;
   drawCompanyScatter(coEntries);
 
   // ─── SECTION 4: NON-COMPLIANCE LEADERS (platform chart moved to admin.html) ───
@@ -1167,8 +1145,8 @@ function normCompany(name) {
 const STOPWORDS = new Set(['with','that','this','from','have','will','your','they','been','were','their','there','what','when','which','also','into','than','more','some','such','very','just','make','both','each','much','through','about','senior','junior','associate','manager','lead']);
 
 /* ===== COMPLIANCE SCATTER PLOT ===== */
-function drawCompanyScatter(entries) {
-  const el = $('companyBars');
+function drawCompanyScatter(entries, opts) {
+  const el = (opts && opts.targetEl) || $('companyBars');
   if (!el) return;
 
   let tt = document.getElementById('ctt');
@@ -1179,12 +1157,12 @@ function drawCompanyScatter(entries) {
     document.body.appendChild(tt);
   }
 
-  // Responsive: read actual container width
-  const cw = el.clientWidth || 800;
-  const mob = cw < 540;
+  // Responsive: opts can force landscape dimensions (fullscreen mode)
+  const cw = (opts && opts.forceVW) || el.clientWidth || 800;
+  const mob = !(opts && opts.forceVW) && cw < 540;
 
-  const VW = mob ? cw : 800;
-  const VH = mob ? Math.round(cw * 1.05) : 480;   // portrait-ish on mobile
+  const VW = (opts && opts.forceVW) || (mob ? cw : 800);
+  const VH = (opts && opts.forceVH) || (mob ? Math.round(cw * 1.05) : 480);
   const M  = mob ? { t: 28, r: 12, b: 44, l: 48 } : { t: 40, r: 32, b: 60, l: 64 };
   const PW = VW - M.l - M.r, PH = VH - M.t - M.b;
 
@@ -1418,6 +1396,149 @@ main();
     });
   });
 })();
+</script>
+<style>
+/* ===== SCATTER FULLSCREEN (mobile landscape overlay) ===== */
+.scatter-expand-btn {
+  display: none;
+}
+@media (max-width: 600px) {
+  .scatter-expand-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+  }
+  .scatter-expand-btn:hover { background: var(--bg2); color: var(--text); }
+}
+
+#scatter-fs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--bg);
+  display: none;
+  overflow: hidden;
+}
+#scatter-fs-overlay.open { display: block; }
+
+#scatter-fs-rotator {
+  /* Rotate portrait screen to landscape: width=100vh, height=100vw, then center+rotate */
+  position: fixed;
+  width: 100vh;
+  height: 100vw;
+  top: calc((100vh - 100vw) / 2);
+  left: calc((100vw - 100vh) / 2);
+  transform: rotate(90deg);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#scatter-fs-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+#scatter-fs-head-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+#scatter-fs-head-meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  color: var(--text3);
+}
+#scatter-fs-close {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 5px 12px;
+  font-size: var(--fs-xs);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+#scatter-fs-close:hover { background: var(--bg2); color: var(--text); }
+
+#scatter-fs-chart {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+
+/* Skill Signal sub-nav style for external link */
+.snav-pill--ext {
+  opacity: .7;
+  font-style: normal;
+}
+.snav-pill--ext::after { content: ''; }
+</style>
+
+<!-- SCATTER FULLSCREEN OVERLAY (mobile landscape) -->
+<div id="scatter-fs-overlay" role="dialog" aria-modal="true" aria-label="Employer compliance chart - full screen">
+  <div id="scatter-fs-rotator">
+    <div id="scatter-fs-head">
+      <div>
+        <div id="scatter-fs-head-title">Employer compliance scatter</div>
+        <div id="scatter-fs-head-meta">Salary range width % · Compliance rate % · Bubble = postings</div>
+      </div>
+      <button id="scatter-fs-close" onclick="closeScatterFS()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Close
+      </button>
+    </div>
+    <div id="scatter-fs-chart"></div>
+  </div>
+</div>
+
+<script>
+/* ===== SCATTER FULLSCREEN ===== */
+function openScatterFS() {
+  const overlay = document.getElementById('scatter-fs-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const fsEl = document.getElementById('scatter-fs-chart');
+  fsEl.innerHTML = '';
+  if (window._coEntries && window._coEntries.length) {
+    // Landscape dims: visual width = innerHeight, visual height = innerWidth - header
+    const headerH = 48;
+    const pad = 20;
+    const LW = window.innerHeight - pad;
+    const LH = window.innerWidth - headerH - pad;
+    drawCompanyScatter(window._coEntries, { targetEl: fsEl, forceVW: LW, forceVH: Math.max(LH, 260) });
+  }
+}
+function closeScatterFS() {
+  document.getElementById('scatter-fs-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// Close on Escape key
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeScatterFS(); });
 </script>
 </body>
 </html>

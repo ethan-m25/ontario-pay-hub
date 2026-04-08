@@ -61,6 +61,12 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 .nav-pill { font-size:var(--fs-sm); font-weight:600; color:var(--text2); background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:4px 12px; text-decoration:none; transition:all var(--transition); white-space:nowrap; }
 .nav-pill:hover { color:var(--text); border-color:var(--border2); }
 .nav-pill.active { background:var(--accent); color:#fff; border-color:transparent; }
+.section-nav { display:flex; align-items:center; gap:6px; padding:0 24px; height:44px; background:var(--nav-bg); border-bottom:1px solid var(--border); position:sticky; top:56px; z-index:99; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.section-nav::-webkit-scrollbar { display:none; }
+@media(max-width:600px){ .section-nav { padding:0 16px; top:56px; } }
+.snav-pill { font-size:var(--fs-sm); font-weight:600; color:var(--text3); padding:4px 12px; border-radius:20px; text-decoration:none; transition:all var(--transition); white-space:nowrap; border:1px solid transparent; }
+.snav-pill:hover { color:var(--text); background:var(--surface2); }
+.snav-pill.active { background:var(--accent); color:#fff; }
 .nav-spacer { flex:1; }
 .btn-icon-nav { width:34px; height:34px; border:none; background:transparent; border-radius:8px; cursor:pointer; color:var(--text2); display:flex; align-items:center; justify-content:center; font-size:16px; transition:background var(--transition),color var(--transition); }
 .btn-icon-nav:hover { background:var(--surface2); color:var(--text); }
@@ -166,12 +172,18 @@ footer { border-top:1px solid var(--rule); padding:32px 28px; max-width:1200px; 
     <span class="logo-name">Ontario<strong>Pay</strong></span>
     <span class="logo-badge">HUB</span>
   </a>
-  <a class="nav-pill" href="/">Pay Intelligence</a>
   <a class="nav-pill" href="/jobs.html">Browse Jobs</a>
-  <a class="nav-pill" href="/insights.html">Insights</a>
-  <a class="nav-pill active" href="/skills.html">Skill Signal</a>
-  <span class="nav-spacer"></span>
+  <a class="nav-pill active" href="/insights.html">Insights</a>
   <button class="btn-icon-nav" id="themeBtn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">◐</button>
+</nav>
+
+<!-- SECTION NAV (Insights sub-pages) -->
+<nav class="section-nav" aria-label="Insights sections" style="border-top:1px solid var(--border)">
+  <a class="snav-pill" href="/insights.html#s-compliance">Compliance</a>
+  <a class="snav-pill" href="/insights.html#s-companies">Employers</a>
+  <a class="snav-pill" href="/insights.html#s-signals">Market Signals</a>
+  <a class="snav-pill" href="/insights.html#s-distribution">Range Width</a>
+  <a class="snav-pill active" href="/skills.html">Skill Signal</a>
 </nav>
 
 <div class="masthead">
