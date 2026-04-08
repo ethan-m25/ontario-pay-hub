@@ -151,6 +151,36 @@ nav { position:sticky; top:0; z-index:200; background:var(--nav-bg); border-bott
 .method-callout { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-top:24px; font-size:var(--fs-sm); color:var(--text2); line-height:1.7; }
 .method-callout strong { color:var(--text); }
 
+/* KEY FINDINGS */
+.findings-section { margin-top:48px; padding-top:40px; border-top:2px solid var(--border); }
+.findings-header { margin-bottom:28px; }
+.findings-kicker { font-size:var(--fs-xs); font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--text3); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.findings-kicker::before { content:''; width:18px; height:2px; background:var(--accent); }
+.findings-title { font-size:var(--fs-3xl); font-weight:800; letter-spacing:-.025em; color:var(--text); line-height:1.15; }
+.findings-sub { font-size:var(--fs-base); color:var(--text2); margin-top:8px; max-width:640px; line-height:1.65; }
+.insight-callout { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:24px; box-shadow:var(--shadow); }
+.ic-tag { font-size:var(--fs-xs); font-weight:700; text-transform:uppercase; letter-spacing:.1em; padding:3px 8px; border-radius:4px; display:inline-block; margin-bottom:12px; }
+.ic-tag.pattern { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-mid); }
+.ic-tag.finding { background:var(--accent-dim); color:var(--accent); border:1px solid var(--accent-border); }
+.ic-tag.premium-tag { background:var(--green-dim); color:var(--green); border:1px solid var(--green-mid); }
+.ic-headline { font-size:var(--fs-xl); font-weight:700; color:var(--text); margin-bottom:8px; line-height:1.3; }
+.ic-body { font-size:var(--fs-sm); color:var(--text2); line-height:1.7; }
+.ic-body strong { color:var(--text); }
+.cross-cat-chart { margin-top:16px; display:flex; flex-direction:column; gap:4px; }
+.cc-row { display:grid; grid-template-columns:160px 1fr 64px; align-items:center; gap:10px; padding:4px 0; }
+@media(max-width:560px){ .cc-row { grid-template-columns:120px 1fr 56px; gap:6px; } }
+.cc-skill { font-size:var(--fs-sm); font-weight:600; color:var(--text); }
+.cc-cat-tag { font-size:var(--fs-xs); color:var(--text3); margin-top:1px; }
+.cc-bar-wrap { position:relative; height:24px; display:flex; align-items:center; }
+.cc-bar-zero { position:absolute; top:0; bottom:0; width:1.5px; background:var(--border2); left:50%; }
+.cc-bar { position:absolute; top:4px; bottom:4px; border-radius:3px; }
+.cc-dev { font-family:var(--font-mono); font-size:var(--fs-sm); font-weight:700; text-align:right; }
+.findings-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:700px){ .findings-grid { grid-template-columns:1fr; } }
+.caveats { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; margin-top:24px; font-size:var(--fs-sm); color:var(--text2); line-height:1.7; }
+.caveats strong { color:var(--text); }
+.caveats ul { margin:8px 0 0 16px; display:flex; flex-direction:column; gap:4px; }
+
 /* FOOTER */
 footer { border-top:1px solid var(--rule); padding:32px 28px; max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:8px; }
 .footer-note { font-size:var(--fs-sm); color:var(--text3); line-height:1.6; }
@@ -207,6 +237,68 @@ footer { border-top:1px solid var(--rule); padding:32px 28px; max-width:1200px; 
 
   <div class="skill-section" id="skillSection">
     <!-- populated by JS -->
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="findings-section" id="keyFindings">
+    <div class="findings-header">
+      <div class="findings-kicker">Cross-Category Patterns</div>
+      <div class="findings-title">The soft skills trap</div>
+      <div class="findings-sub">The same skills appear as premium or discount signals across <em>multiple</em> unrelated job categories — suggesting a structural pattern, not category-specific noise.</div>
+    </div>
+
+    <div class="findings-grid">
+
+      <!-- DISCOUNT PATTERN -->
+      <div class="insight-callout">
+        <div class="ic-tag finding">Consistent discount signal</div>
+        <div class="ic-headline">Generic skills mark entry-level roles — not skill value</div>
+        <div class="ic-body">
+          <strong>Customer Service, Communication, Problem Solving</strong> consistently appear 27–41% below the median salary in every category where they show up with enough data. This isn't because these skills are worthless — it's because they're listed by employers filling <strong>frontline and junior positions</strong>, regardless of industry.
+          <br><br>
+          A Finance job listing "Customer Service" is likely a bank teller role ($59k), not an analyst ($100k+). The skill is a proxy for the role tier, not the skill itself.
+        </div>
+        <div class="cross-cat-chart" id="discountCrossChart"></div>
+      </div>
+
+      <!-- PREMIUM PATTERN -->
+      <div class="insight-callout">
+        <div class="ic-tag premium-tag">Consistent premium signal</div>
+        <div class="ic-headline">Specific and cross-functional skills signal senior roles</div>
+        <div class="ic-body">
+          <strong>Technical Leadership, Cross-Functional Collaboration, Product/Project Management</strong> command 24–39% above median across every category they appear in. These skills require domain expertise and are harder to fake in a job description — employers can only list them when the role genuinely demands them.
+          <br><br>
+          "Technical Leadership" in IT pays 39% above IT median. In Engineering, 27% above. The signal is consistent because <strong>the specialization is real</strong>.
+        </div>
+        <div class="cross-cat-chart" id="premiumCrossChart"></div>
+      </div>
+
+    </div>
+
+    <!-- INTERPRETATION -->
+    <div class="insight-callout" style="margin-top:20px">
+      <div class="ic-tag pattern">How to read a job posting</div>
+      <div class="ic-headline">A job's skill list is a seniority signal in disguise</div>
+      <div class="ic-body">
+        The data suggests a simple heuristic: <strong>count the generic skills vs. specific skills</strong> in any job description.
+        <br><br>
+        If the "required skills" section is dominated by <em>Communication, Customer Service, Problem Solving, Teamwork</em> — the employer is likely filling a commodity role that competes on volume, not expertise. Salary will reflect that.
+        <br><br>
+        If the required skills include <em>Technical Leadership, Cross-Functional Collaboration, specific tools or methodologies</em> — the employer is describing something harder to find, and the salary follows.
+        <br><br>
+        This pattern holds across Finance, Engineering, IT, Operations, Sales, and Product — it isn't a category quirk.
+      </div>
+    </div>
+
+    <div class="caveats">
+      <strong>Important caveats:</strong>
+      <ul>
+        <li><strong>Correlation, not causation.</strong> These skills co-occur with seniority — we can't isolate the skill's independent effect without controlling for job level and firm size.</li>
+        <li><strong>Extraction quality varies.</strong> Skills were extracted by LLM (Qwen 14B) from raw job descriptions. Generic phrases like "problem solving" may be extracted inconsistently across postings.</li>
+        <li><strong>Minimum 15 jobs per skill.</strong> Low-sample findings are excluded, but sample sizes still vary widely — higher-n findings carry more weight.</li>
+        <li><strong>Ontario only.</strong> O. Reg. 476/24 salary disclosures. Results may not generalize to other labour markets.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -369,8 +461,82 @@ async function main() {
   // Store data globally
   window._skillData = data;
 
+  // Render cross-category charts
+  renderCrossCatChart(data);
+
   $('loadingOverlay').style.opacity = '0';
   setTimeout(() => $('loadingOverlay').style.display = 'none', 300);
+}
+
+/* ===== CROSS-CATEGORY CHART ===== */
+function renderCrossCatChart(data) {
+  // Hard-coded findings from approved insights (cross-category consistent signals)
+  // Each entry: skill name, array of {cat, dev, n}
+  const discountFindings = [
+    { skill: 'Customer Service',  entries: [
+        { cat: 'Finance',     dev: -41.2, n: 47 },
+        { cat: 'Operations',  dev: -35.0, n: 65 },
+    ]},
+    { skill: 'Communication', entries: [
+        { cat: 'Sales & Mktg', dev: -34.0, n: 34 },
+        { cat: 'Operations',   dev: -31.0, n: 50 },
+    ]},
+    { skill: 'Problem Solving', entries: [
+        { cat: 'Finance',    dev: -35.0, n: 42 },
+        { cat: 'Operations', dev: -30.0, n: 50 },
+    ]},
+    { skill: 'Team Collaboration', entries: [
+        { cat: 'Finance',    dev: -27.0, n: 55 },
+    ]},
+  ];
+
+  const premiumFindings = [
+    { skill: 'Technical Leadership', entries: [
+        { cat: 'IT & Infra',   dev: 39.0, n: 34 },
+        { cat: 'Engineering',  dev: 27.0, n: 54 },
+    ]},
+    { skill: 'Cross-Functional Collab.', entries: [
+        { cat: 'Engineering',      dev: 31.0, n: 30 },
+        { cat: 'Product & Project', dev: 24.0, n: 62 },
+    ]},
+    { skill: 'Product Management', entries: [
+        { cat: 'Product & Project', dev: 29.0, n: 86 },
+    ]},
+    { skill: 'Project Management', entries: [
+        { cat: 'Operations', dev: 25.0, n: 74 },
+    ]},
+  ];
+
+  function buildRows(findings, type) {
+    const maxAbs = 45;
+    return findings.map(f => {
+      const rows = f.entries.map(e => {
+        const isPremium = e.dev >= 0;
+        const pct = Math.abs(e.dev) / maxAbs * 46;
+        const zeroLeft = 50;
+        const barLeft = isPremium ? zeroLeft : (zeroLeft - pct);
+        const color = isPremium ? 'var(--green)' : 'var(--accent)';
+        const devStr = (e.dev >= 0 ? '+' : '') + e.dev.toFixed(0) + '%';
+        return `<div class="cc-row">
+          <div>
+            <div class="cc-skill">${f.skill}</div>
+            <div class="cc-cat-tag">${e.cat} · n=${e.n}</div>
+          </div>
+          <div class="cc-bar-wrap">
+            <div class="cc-bar-zero"></div>
+            <div class="cc-bar" style="left:${barLeft.toFixed(1)}%;width:${pct.toFixed(1)}%;background:${color};opacity:.85"></div>
+          </div>
+          <div class="cc-dev" style="color:${color}">${devStr}</div>
+        </div>`;
+      }).join('');
+      return rows;
+    }).join('');
+  }
+
+  const dc = $('discountCrossChart');
+  const pc = $('premiumCrossChart');
+  if (dc) dc.innerHTML = buildRows(discountFindings, 'discount');
+  if (pc) pc.innerHTML = buildRows(premiumFindings, 'premium');
 }
 
 function selectCat(btn, catName) {
