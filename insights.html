@@ -719,7 +719,7 @@ footer {
     <div class="section-header">
       <div class="section-kicker">Market Signals</div>
       <div class="section-title">Who's posting the widest ranges?</div>
-      <div class="section-desc">Regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
+      <div class="section-desc">Provincially regulated employers posting salary ranges wider than $50,000 — the upper bound set by O. Reg. 476/24 for roles under $200k. Federally regulated employers (banks, telecoms) are excluded — they operate under the Canada Labour Code, not Ontario ESA. Wide ranges may signal vague compensation planning or ATS default behaviour.</div>
     </div>
 
     <div class="chart-card">
@@ -731,7 +731,7 @@ footer {
       </table>
       <div class="callout" style="margin-top:16px">
         <div class="callout-label">Largest non-compliant employers</div>
-        <p><strong>Deloitte Canada (133)</strong> and <strong>Bank of Montreal (102+)</strong> have the most job postings exceeding the $50k width limit among regulated employers. Together they account for ~57% of all non-compliant postings.</p>
+        <p><strong>Deloitte Canada</strong> leads among provincially regulated employers in postings exceeding the $50k width limit. Banks and telecoms (RBC, BMO, TD, Telus, etc.) are federally regulated under the Canada Labour Code — their salary disclosures are voluntary and are excluded from this compliance analysis.</p>
       </div>
     </div>
   </section>
@@ -844,14 +844,22 @@ async function main() {
   const N = valid.length;
   const companies = new Set(valid.map(j => j.company)).size;
 
+  // Federally regulated employers — subject to Canada Labour Code, not Ontario ESA / O. Reg. 476/24.
+  // Any wide ranges they post are voluntary disclosures, not violations.
+  const FEDERAL_EMPLOYERS = new Set([
+    'Bank of Montreal', 'RBC', 'TD Bank', 'CIBC', 'Scotiabank', 'Bank of Nova Scotia',
+    'National Bank', 'Telus', 'Rogers', 'Rogers Communications', 'Bell', 'Bell Canada'
+  ]);
+
   // Annotate each job
   valid.forEach(j => {
     j._width = j.max - j.min;
     j._mid = (j.max + j.min) / 2;
     j._widthPct = j._mid > 0 ? (j._width / j._mid) * 100 : 0;
     j._exempt = j.max > 200000;
+    j._federal = FEDERAL_EMPLOYERS.has(normCompany(j.company));
     j._compliant = !j._exempt && j._width <= 50000;
-    j._nonCompliant = !j._exempt && j._width > 50000;
+    j._nonCompliant = !j._exempt && !j._federal && j._width > 50000;
   });
 
   const regulated = valid.filter(j => !j._exempt);
