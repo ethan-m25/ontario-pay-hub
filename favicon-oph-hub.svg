@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Ontario Pay Hub favicon</title>
+  <rect width="64" height="64" rx="16" fill="#C8102E"/>
+  <rect x="7" y="7" width="21" height="21" fill="white" opacity=".9"/>
+  <rect x="36" y="7" width="21" height="21" fill="white" opacity=".55"/>
+  <rect x="7" y="36" width="21" height="21" fill="white" opacity=".55"/>
+  <rect x="36" y="36" width="21" height="21" fill="white" opacity=".9"/>
+</svg>
