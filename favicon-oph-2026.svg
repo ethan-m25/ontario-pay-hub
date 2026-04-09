@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
   <title>Ontario Pay Hub favicon</title>
   <rect width="64" height="64" rx="16" fill="#C8102E"/>
-  <path d="M11 27V11H27V17H17V27Z" fill="#FFFFFF" opacity="0.92"/>
-  <path d="M37 11H53V27H47V17H37Z" fill="#FFFFFF" opacity="0.92"/>
-  <path d="M11 37V53H27V47H17V37Z" fill="#FFFFFF" opacity="0.92"/>
-  <path d="M37 47H47V37H53V53H37Z" fill="#FFFFFF" opacity="0.92"/>
+  <rect x="7" y="7" width="21" height="21" fill="white" opacity=".9"/>
+  <rect x="36" y="7" width="21" height="21" fill="white" opacity=".55"/>
+  <rect x="7" y="36" width="21" height="21" fill="white" opacity=".55"/>
+  <rect x="36" y="36" width="21" height="21" fill="white" opacity=".9"/>
 </svg>
