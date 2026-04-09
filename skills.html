@@ -445,7 +445,7 @@ async function main() {
   const cats = Object.keys(data.categories);
   const totalJobs = cats.reduce((sum, c) => sum + data.categories[c].n_jobs, 0);
 
-  $('metaTotalJobs').textContent = totalJobs.toLocaleString() + ' postings';
+  $('metaTotalJobs').textContent = totalJobs.toLocaleString() + ' postings with skill data';
   $('metaCategories').textContent = cats.length + ' categories';
   $('metaGenerated').textContent = 'Updated ' + data.generated;
 
