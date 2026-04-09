@@ -511,6 +511,49 @@ nav {
 .snav-pill.active { background: var(--accent); color: #fff; }
 
 /* ===== FOOTER ===== */
+.skill-signal-cta {
+  margin: 80px 28px 0;
+  max-width: 1144px;
+  margin-left: auto; margin-right: auto;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 48px 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 40px;
+  position: relative; overflow: hidden;
+}
+.skill-signal-cta::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+  background: var(--accent);
+  border-radius: 16px 0 0 16px;
+}
+.skill-signal-cta-label {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  color: var(--accent); letter-spacing: .08em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.skill-signal-cta h3 {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  font-weight: 800; color: var(--text); letter-spacing: -.02em; margin: 0 0 10px;
+}
+.skill-signal-cta p {
+  font-size: var(--fs-sm); color: var(--text2); line-height: 1.6; margin: 0; max-width: 480px;
+}
+.skill-signal-cta-btn {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent); color: #fff;
+  font-size: var(--fs-sm); font-weight: 700;
+  padding: 12px 24px; border-radius: 10px;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.skill-signal-cta-btn:hover { opacity: .88; transform: translateY(-1px); }
+.skill-signal-cta-btn svg { flex-shrink: 0; }
+@media(max-width:640px) {
+  .skill-signal-cta { flex-direction: column; align-items: flex-start; padding: 32px 28px; gap: 24px; }
+}
 footer {
   margin-top: 80px;
   border-top: 1px solid var(--rule);
@@ -747,6 +790,19 @@ footer {
   </section>
 
 </div><!-- /page -->
+
+<!-- SKILL SIGNAL CTA -->
+<div class="skill-signal-cta">
+  <div>
+    <div class="skill-signal-cta-label">Skill × Salary Analysis</div>
+    <h3>Which skills actually pay more?</h3>
+    <p>See how 300+ individual skills shift salaries above or below the category median — ranked across 9 job categories from Ontario's legally-mandated disclosures.</p>
+  </div>
+  <a class="skill-signal-cta-btn" href="/skills.html">
+    Explore Skill Signal
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+</div>
 
 <footer>
   <div class="footer-note">
