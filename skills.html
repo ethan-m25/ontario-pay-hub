@@ -295,7 +295,7 @@ footer { border-top:1px solid var(--rule); padding:32px 28px; max-width:1200px; 
       <strong>Important caveats:</strong>
       <ul>
         <li><strong>Correlation, not causation.</strong> These skills co-occur with seniority — we can't isolate the skill's independent effect without controlling for job level and firm size.</li>
-        <li><strong>Extraction quality varies.</strong> Skills were extracted by LLM (Qwen 14B) from raw job descriptions. Generic phrases like "problem solving" may be extracted inconsistently across postings.</li>
+        <li><strong>Extraction quality varies.</strong> Skills were extracted from raw job descriptions. Generic phrases like "problem solving" may be extracted inconsistently across postings.</li>
         <li><strong>Minimum 15 jobs per skill.</strong> Low-sample findings are excluded, but sample sizes still vary widely — higher-n findings carry more weight.</li>
         <li><strong>Ontario only.</strong> O. Reg. 476/24 salary disclosures. Results may not generalize to other labour markets.</li>
       </ul>
@@ -306,7 +306,7 @@ footer { border-top:1px solid var(--rule); padding:32px 28px; max-width:1200px; 
 <footer>
   <div class="footer-note">
     Data sourced from Ontario job postings under O. Reg. 476/24 (Pay Transparency Act, effective Jan 1, 2026).
-    Skills extracted by LLM from job descriptions. Minimum 15 jobs per skill. Deviation from category median — not adjusted for seniority or firm size.
+    Skills extracted from job descriptions. Minimum 15 jobs per skill. Deviation from category median — not adjusted for seniority or firm size.
     · <a href="/">Browse all jobs →</a>
   </div>
   <div style="font-size:var(--fs-xs);color:var(--text3);font-family:var(--font-mono)">ontariopayhub.fyi</div>
@@ -424,7 +424,7 @@ function renderSkillSection(catName, catData) {
     <div class="method-callout">
       <strong>How to read this:</strong> Each skill's bar shows the % difference between the median salary of jobs listing that skill and the overall ${catName} median (${fmt(catMedian)}).
       This is a correlation, not a causal claim — premium skills often co-occur with seniority or specialization.
-      Minimum 15 jobs per skill. Skills extracted by LLM (Qwen 14B) from full job descriptions.
+      Minimum 15 jobs per skill. Skills extracted from full job descriptions.
     </div>
   `;
 
