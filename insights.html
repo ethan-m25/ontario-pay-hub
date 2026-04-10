@@ -736,49 +736,62 @@ footer {
     </div>
   </section>
 
-  <!-- SECTION 4: WIDTH DISTRIBUTION -->
+  <!-- SECTION 4: RANGE QUALITY -->
   <section class="insight-section" id="s-distribution">
     <div class="section-header">
-      <div class="section-kicker">Range Width Analysis</div>
-      <div class="section-title">How wide are posted salary ranges?</div>
-      <div class="section-desc">Distribution of salary range width (max − min) across all postings. Width percentage uses midpoint as the reference — more comparable across salary levels than absolute dollars.</div>
+      <div class="section-kicker">Range Quality Analysis</div>
+      <div class="section-title">Range or just a number?</div>
+      <div class="section-desc">Not every "salary range" is a real band. A <strong>range spread ratio</strong> (width ÷ midpoint) below 15% is more likely a fixed pay rate disclosed as a range — semantically different from a structured compensation band. This matters when comparing employers.</div>
     </div>
+
+    <!-- Range type summary -->
+    <div class="stat-row" id="rangeTypeSummary" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px"></div>
 
     <div class="two-col">
       <div class="chart-card">
         <div class="chart-card-title">Absolute width distribution</div>
-        <div class="chart-card-sub">All postings by range width in $k. Regulated group only (upper ≤$200k).</div>
+        <div class="chart-card-sub">Regulated postings only (upper ≤$200k). Red line = $50k compliance limit.</div>
         <div class="legend" id="histLegend1">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.7"></div>Compliant (≤$50k width)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.7"></div>Within limit (≤$50k)</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Exceeds limit (&gt;$50k)</div>
         </div>
         <svg id="histSvg1" class="histogram-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
       <div class="chart-card">
-        <div class="chart-card-title">Width as % of midpoint salary</div>
-        <div class="chart-card-sub">Percentage comparison is more meaningful for cross-company benchmarks. Industry standard: ±15–25% (30–50% range) is a typical salary band.</div>
+        <div class="chart-card-title">Range spread ratio distribution</div>
+        <div class="chart-card-sub">Width as % of midpoint salary. Industry benchmark: 25–55% for a structured compensation band.</div>
         <div class="legend" id="histLegend2">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.7"></div>Standard band (&lt;40%)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Wide band (40–100%)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent);opacity:.7"></div>Very wide (&gt;100%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.6"></div>Pay point (&lt;15%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green);opacity:.8"></div>Structured band (15–65%)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Wide (&gt;65%)</div>
         </div>
         <svg id="histSvg2" class="histogram-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet"></svg>
       </div>
     </div>
 
+    <!-- Employer structured range score -->
+    <div class="chart-card" style="margin-top:16px">
+      <div class="chart-card-title">Employer range quality score</div>
+      <div class="chart-card-sub">For employers with 5+ regulated postings: % of postings with a structured salary band (spread ratio 15–65%). Higher = more informative disclosures. Excludes federally regulated employers.</div>
+      <div id="rangeQualityBars" style="margin-top:16px"></div>
+      <div class="callout-neutral" style="margin-top:16px">
+        <p><strong>Pay point vs. salary range:</strong> A spread ratio below 15% (e.g. $144k–$148k) typically reflects a fixed compensation rate, not a band — the employer knows exactly what they'll pay and the "range" is nominal. This is common at Google, Microsoft, and other firms with rigid job-level pricing. It is not inherently worse, just less informative for job seekers trying to negotiate.</p>
+      </div>
+    </div>
+
     <div class="two-col" style="margin-top:16px">
       <div class="chart-card">
-        <div class="chart-card-title">Median range width by sector</div>
-        <div class="chart-card-sub">Absolute median width across job categories. All groups (including exempt).</div>
+        <div class="chart-card-title">Median spread ratio by sector</div>
+        <div class="chart-card-sub">Median range spread ratio across job categories. Regulated postings only.</div>
         <div id="sectorBars" class="platform-grid" style="margin-top:12px"></div>
       </div>
       <div class="chart-card">
         <div class="chart-card-title">Summary statistics</div>
-        <div class="chart-card-sub">Key percentiles for regulated postings (upper ≤$200k).</div>
+        <div class="chart-card-sub">Key percentiles — range spread ratio, regulated postings (upper ≤$200k).</div>
         <div id="statsBody" class="stat-tiles" style="margin-top:12px"></div>
         <div class="callout" style="margin-top:16px">
-          <div class="callout-label">Professional context</div>
-          <p>A range width of <strong>±15–25% of midpoint</strong> (30–50% total) is considered a standard salary band in most compensation frameworks. Ranges below 30% more likely represent a single pay point rather than a true band.</p>
+          <div class="callout-label">What's a standard band?</div>
+          <p>Compensation research places a typical salary band at <strong>±15–25% of midpoint</strong> (30–50% spread ratio). Ontario's median regulated job posts a spread of ~36%, suggesting most employers are within the standard range — but 12% of all regulated postings are effectively single pay points.</p>
         </div>
       </div>
     </div>
@@ -856,10 +869,15 @@ async function main() {
     j._width = j.max - j.min;
     j._mid = (j.max + j.min) / 2;
     j._widthPct = j._mid > 0 ? (j._width / j._mid) * 100 : 0;
+    j._spread = j._widthPct; // alias — range spread ratio = width / midpoint * 100
     j._exempt = j.max > 200000;
     j._federal = FEDERAL_EMPLOYERS.has(normCompany(j.company));
     j._compliant = !j._exempt && j._width <= 50000;
     j._nonCompliant = !j._exempt && !j._federal && j._width > 50000;
+    // Range quality classification
+    j._rangeType = j._spread < 15 ? 'pay_point'
+                 : j._spread <= 65 ? 'structured'
+                 : 'wide';
   });
 
   const regulated = valid.filter(j => !j._exempt);
@@ -886,41 +904,97 @@ async function main() {
     { val: nonCompliant.length, color: getCSSVar('--amber'), label: 'Non-compliant' },
   ]);
 
-  // ─── SECTION 2: WIDTH DISTRIBUTION ───
+  // ─── SECTION 4: RANGE QUALITY ───
   // Histogram 1: absolute width (regulated only)
   const bins1 = buildBins(regulated, 0, 120000, 12000);
   drawHistogram('histSvg1', bins1, 120000, 50000, '$k', v => '$'+Math.round(v/1000)+'k');
 
-  // Histogram 2: width % (regulated only)
-  const bins2 = buildBinsPct(regulated.map(j=>({val:j._widthPct, compliant: j._widthPct < 40})), 0, 160, 16);
-  drawHistogramPct('histSvg2', bins2, 160, 40, '%', v => Math.round(v)+'%');
+  // Histogram 2: range spread ratio — new thresholds: 15% (pay point) and 65% (wide)
+  const bins2 = buildBinsPct(regulated.map(j=>({val:j._spread, compliant: j._spread >= 15 && j._spread <= 65})), 0, 100, 10);
+  drawHistogramSpread('histSvg2', bins2, 100, 15, 65, '%', v => Math.round(v)+'%');
 
-  // Sector bars — use actual `category` field from jobs data
-  const catMedians = groupMedian(valid, j => j.category || 'Other', j => j._width);
+  // Range type summary chips
+  const regNoFed = regulated.filter(j => !j._federal);
+  const payPoints = regNoFed.filter(j => j._rangeType === 'pay_point');
+  const structured = regNoFed.filter(j => j._rangeType === 'structured');
+  const wideRanges = regNoFed.filter(j => j._rangeType === 'wide');
+  const rtn = regNoFed.length || 1;
+  if ($('rangeTypeSummary')) {
+    $('rangeTypeSummary').innerHTML = [
+      ['Pay points', payPoints.length, Math.round(payPoints.length/rtn*100), 'var(--text3)', 'spread &lt;15% — likely a fixed rate'],
+      ['Structured bands', structured.length, Math.round(structured.length/rtn*100), 'var(--green)', 'spread 15–65% — real compensation band'],
+      ['Wide ranges', wideRanges.length + nonCompliant.length, Math.round((wideRanges.length+nonCompliant.length)/rtn*100), 'var(--amber)', 'spread &gt;65% or absolute &gt;$50k'],
+    ].map(([label, count, pct, color, hint]) => `
+      <div class="stat-card" style="flex:1;min-width:160px">
+        <div class="stat-card-label">${label}</div>
+        <div class="stat-card-num" style="color:${color}">${pct}%</div>
+        <div class="stat-card-detail">${count.toLocaleString()} postings · ${hint}</div>
+      </div>`).join('');
+  }
+
+  // Employer range quality score
+  const byCoRQ = {};
+  regNoFed.forEach(j => {
+    const co = normCompany(j.company);
+    if (!byCoRQ[co]) byCoRQ[co] = { total: 0, structured: 0, payPoints: 0, wide: 0 };
+    byCoRQ[co].total++;
+    if (j._rangeType === 'structured') byCoRQ[co].structured++;
+    else if (j._rangeType === 'pay_point') byCoRQ[co].payPoints++;
+    else byCoRQ[co].wide++;
+  });
+  const rqEntries = Object.entries(byCoRQ)
+    .filter(([,v]) => v.total >= 5)
+    .map(([name, v]) => ({ name, ...v, score: v.structured / v.total * 100 }))
+    .sort((a, b) => b.score - a.score);
+
+  if ($('rangeQualityBars')) {
+    const topRQ = [...rqEntries.slice(0, 10), ...rqEntries.slice(-5)];
+    // deduplicate
+    const seen = new Set();
+    const dedupRQ = topRQ.filter(e => { if (seen.has(e.name)) return false; seen.add(e.name); return true; });
+    $('rangeQualityBars').innerHTML = dedupRQ.map(e => {
+      const sPct = (e.structured / e.total * 100).toFixed(0);
+      const ppPct = (e.payPoints / e.total * 100).toFixed(0);
+      const wPct = (e.wide / e.total * 100).toFixed(0);
+      const color = e.score >= 80 ? 'var(--green)' : e.score >= 50 ? 'var(--amber)' : 'var(--accent)';
+      return `<div class="bar-row">
+        <div class="bar-name">${e.name}<span class="bar-count">${e.total}</span></div>
+        <div class="bar-track" style="position:relative;height:18px;border-radius:4px;overflow:hidden;background:var(--surface2)">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:${sPct}%;background:var(--green);opacity:.75"></div>
+          <div style="position:absolute;left:${sPct}%;top:0;bottom:0;width:${ppPct}%;background:var(--text3);opacity:.4"></div>
+          <div style="position:absolute;left:${+sPct + +ppPct}%;top:0;bottom:0;width:${wPct}%;background:var(--amber);opacity:.75"></div>
+        </div>
+        <div class="bar-value" style="color:${color};font-family:var(--font-mono)">${sPct}%</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Sector bars — spread ratio by category (replaces absolute width)
+  const catSpreadMedians = groupMedian(regNoFed, j => j.category || 'Other', j => j._spread);
   const catCounts = {};
-  valid.forEach(j => { const k = j.category || 'Other'; catCounts[k] = (catCounts[k] || 0) + 1; });
-  const catEntries = Object.entries(catMedians).filter(([k]) => k && k !== 'Other').sort((a,b) => b[1]-a[1]).slice(0,8);
+  regNoFed.forEach(j => { const k = j.category || 'Other'; catCounts[k] = (catCounts[k] || 0) + 1; });
+  const catEntries = Object.entries(catSpreadMedians).filter(([k]) => k && k !== 'Other').sort((a,b) => b[1]-a[1]).slice(0,8);
   const maxCat = catEntries.length ? Math.max(...catEntries.map(e=>e[1])) : 1;
   $('sectorBars').innerHTML = catEntries.map(([k,v]) => {
     const pct = (v / maxCat * 100).toFixed(1);
-    const color = v <= 50000 ? 'var(--green)' : 'var(--amber)';
+    const color = v >= 15 && v <= 65 ? 'var(--green)' : v < 15 ? 'var(--text3)' : 'var(--amber)';
     const count = catCounts[k] || 0;
     return `<div class="platform-tile">
       <div class="platform-name">${k}</div>
-      <div class="platform-num" style="color:${color}">${fmtK(v)}</div>
+      <div class="platform-num" style="color:${color}">${v.toFixed(0)}%</div>
       <div class="platform-bar-track"><div class="platform-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-      <div class="platform-meta">${count} postings · median width</div>
+      <div class="platform-meta">${count} postings · median spread ratio</div>
     </div>`;
   }).join('');
 
-  // Stats tiles
-  const sortedReg = regulated.map(j=>j._width).sort((a,b)=>a-b);
+  // Stats tiles — spread ratio
+  const sortedSpread = regNoFed.map(j=>j._spread).sort((a,b)=>a-b);
   const statsRows = [
-    ['Median width', fmtK(percentile(sortedReg, 50))],
-    ['Mean width', fmtK(regulated.reduce((a,j)=>a+j._width,0)/regulated.length)],
-    ['25th pctile', fmtK(percentile(sortedReg, 25))],
-    ['75th pctile', fmtK(percentile(sortedReg, 75))],
-    ['Median width%', fmtPct(percentile(regulated.map(j=>j._widthPct).sort((a,b)=>a-b), 50))],
+    ['Median spread', sortedSpread[Math.floor(sortedSpread.length/2)].toFixed(0) + '%'],
+    ['P25 spread', sortedSpread[Math.floor(sortedSpread.length/4)].toFixed(0) + '%'],
+    ['P75 spread', sortedSpread[Math.floor(sortedSpread.length*3/4)].toFixed(0) + '%'],
+    ['Pay points', Math.round(payPoints.length/rtn*100) + '% of jobs'],
+    ['Structured', Math.round(structured.length/rtn*100) + '% of jobs'],
   ];
   $('statsBody').innerHTML = statsRows.map(([l,v]) =>
     `<div class="stat-tile"><div class="stat-tile-label">${l}</div><div class="stat-tile-num">${v}</div></div>`
@@ -1126,6 +1200,51 @@ function drawHistogramPct(svgId, bins, maxX, threshold, unit, labelFn) {
   out += `<line x1="${threshX}" y1="${padT}" x2="${threshX}" y2="${H-padB+4}" stroke="var(--border2)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
   out += `<text x="${threshX+3}" y="${padT+9}" font-family="IBM Plex Mono" font-size="8" fill="var(--text2)" font-weight="500">Standard band</text>`;
   bins.filter((_,i)=>i%4===0).forEach(b => {
+    const x = padL + (bins.indexOf(b)+0.5)*bw;
+    out += `<text x="${x}" y="${H-padB+12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${b.label}</text>`;
+  });
+  out += `<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border2)" stroke-width="1"/>`;
+  out += `</g>`;
+  svg.innerHTML = out;
+}
+
+/* Range spread ratio histogram — two threshold lines (pay_point at 15%, wide at 65%) */
+function drawHistogramSpread(svgId, bins, maxX, threshLow, threshHigh, unit, labelFn) {
+  const svg = $(svgId);
+  const W=400, H=180, padL=36, padB=28, padT=10, padR=8;
+  const plotW = W-padL-padR, plotH = H-padB-padT;
+  const maxCount = Math.max(...bins.map(b=>b.count), 1);
+  const bw = plotW / bins.length;
+  const xLow  = padL + (threshLow  / maxX) * plotW;
+  const xHigh = padL + (threshHigh / maxX) * plotW;
+
+  let out = `<g>`;
+  // Grid lines
+  for(let i=0; i<=4; i++){
+    const y = padT + (plotH - (plotH*i/4));
+    out += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    if(i>0) out += `<text x="${padL-4}" y="${y+4}" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${Math.round(maxCount*i/4)}</text>`;
+  }
+  // Shade structured band region
+  out += `<rect x="${xLow}" y="${padT}" width="${xHigh-xLow}" height="${plotH}" fill="var(--green)" opacity="0.04"/>`;
+  // Bars
+  bins.forEach((b,i) => {
+    const bh = (b.count / maxCount) * plotH;
+    const x = padL + i*bw + 1;
+    const y = padT + plotH - bh;
+    let color;
+    if (b.low < threshLow)      color = 'var(--text3)';
+    else if (b.low <= threshHigh) color = 'var(--green)';
+    else                          color = 'var(--amber)';
+    out += `<rect x="${x}" y="${y}" width="${bw-2}" height="${bh}" fill="${color}" opacity="0.65" rx="1"/>`;
+  });
+  // Threshold lines
+  out += `<line x1="${xLow}" y1="${padT}" x2="${xLow}" y2="${H-padB+4}" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+  out += `<text x="${xLow+3}" y="${padT+9}" font-family="IBM Plex Mono" font-size="7.5" fill="var(--text2)">pay point</text>`;
+  out += `<line x1="${xHigh}" y1="${padT}" x2="${xHigh}" y2="${H-padB+4}" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+  out += `<text x="${xHigh+3}" y="${padT+9}" font-family="IBM Plex Mono" font-size="7.5" fill="var(--amber)">wide</text>`;
+  // X axis labels
+  bins.filter((_,i)=>i%2===0).forEach(b => {
     const x = padL + (bins.indexOf(b)+0.5)*bw;
     out += `<text x="${x}" y="${H-padB+12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${b.label}</text>`;
   });
