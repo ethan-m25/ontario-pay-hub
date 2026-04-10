@@ -210,6 +210,9 @@ SALARY_RE = [
     re.compile(r'(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]\s*[-–—]\s*(?:[A-Z])?\$([\d]+(?:\.\d+)?)[kK]', re.IGNORECASE),
     # "pay range: 80,000 to 120,000" or "Ontario Salary: 94,500 - $130,000" (optional $ before second)
     re.compile(r'(?:pay|salary|compensation|wage|combined range|targeted range|salary range is)[^$\n]{0,50}([\d,]{5,})\s*[-–—to]+\s*\$?([\d,]{5,})', re.IGNORECASE),
+    # "Salary Range: 65,000/65 000 - 105,000/105 000" — Sun Life EN/FR bilingual format
+    # The slash separates English (comma) and French (space) thousand-separated numbers
+    re.compile(r'salary\s+range\s*:\s*([\d,]+)(?:/[\d ]+)?\s*[-–—]\s*([\d,]+)', re.IGNORECASE),
 ]
 
 
@@ -405,7 +408,7 @@ def parse_location(locations_text, external_path):
 
 
 # ── Job HTML fetch + salary extraction ────────────────────────────────────────
-def fetch_job_html(host, tenant, external_path):
+def fetch_job_html(host, tenant, external_path, company_id=""):
     """Fetch a Workday job page and return raw HTML.
 
     Workday pages are JS SPAs (body = <div id="root"></div>), but the job
@@ -413,12 +416,13 @@ def fetch_job_html(host, tenant, external_path):
     in the <head>. Stripping tags would discard those attribute values, so we
     return the raw HTML and let extract_salary search it directly.
 
-    myworkdaysite.com uses a path-based tenant: externalPath already contains
-    the full /recruiting/{company}/{tenant}/details/{id} segment, so the tenant
-    must NOT be inserted separately.
+    myworkdaysite.com uses path-based routing:
+      https://{host}/en-US/recruiting/{company_id}/{tenant}{external_path}
+    myworkdayjobs.com uses subdomain-based routing:
+      https://{host}/en-US/{tenant}{external_path}
     """
     if "myworkdaysite.com" in host:
-        url = f"https://{host}/en-US{external_path}"
+        url = f"https://{host}/en-US/recruiting/{company_id}/{tenant}{external_path}"
     else:
         url = f"https://{host}/en-US/{tenant}{external_path}"
     req = urllib.request.Request(url)
@@ -750,7 +754,7 @@ def main():
                 continue
 
             log(f"  [{i}/{len(ontario_jobs)}] {title[:55]}")
-            text = fetch_job_html(host, tenant, ext_path)
+            text = fetch_job_html(host, tenant, ext_path, company_id=company_id)
             if not text:
                 log("    → fetch failed")
                 time.sleep(0.5)
