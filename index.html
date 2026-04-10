@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Ontario Pay Hub — Pay Intelligence & Salary Insights 2026</title>
 <meta name="description" content="What 2,500+ Ontario salary disclosures reveal: compliance patterns, salary range widths, employer benchmarks, and market signals under O. Reg. 476/24.">
-<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-hub.svg">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-hub.svg?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -60,6 +60,7 @@
   --masthead-text: #F5F7FA;
   --chart-grid: rgba(213,220,229,.9);
   --rule: #D5DCE5;
+  --scatter-ok: #2B6CB0;
 }
 
 [data-theme="dark"] {
@@ -89,6 +90,7 @@
   --masthead-text: #0D1117;
   --chart-grid: rgba(48,54,61,.9);
   --rule: #30363D;
+  --scatter-ok: #5B9BF8;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -696,7 +698,7 @@ footer {
     <div class="chart-card">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
         <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Mostly compliant</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--scatter-ok)"></div>Mostly compliant</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Non-compliant jobs present</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
         </div>
@@ -1223,12 +1225,12 @@ function drawCompanyScatter(entries, opts) {
   const xMax = 120;
   const sx = v => M.l + (Math.min(v, xMax) / xMax) * PW;
   const sy = v => M.t + PH - (v / 100) * PH;
-  const rad = t => Math.max(mob ? 5 : 4, Math.min(mob ? 20 : 18, Math.sqrt(t) * (mob ? 2.1 : 1.85)));
+  const rad = t => Math.max(mob ? 2.5 : 2, Math.min(mob ? 7 : 6, Math.sqrt(t) * (mob ? 0.72 : 0.62)));
 
-  const GREEN = getCSSVar('--green');
-  const RED   = getCSSVar('--accent');   // site red for non-compliant — stronger visual signal
+  const GREEN = getCSSVar('--scatter-ok');  // blue for compliant
+  const RED   = getCSSVar('--accent');      // site red for non-compliant
   const GRAY  = getCSSVar('--text3');
-  const AMBER = getCSSVar('--amber');    // keep amber for tooltip labels etc.
+  const AMBER = getCSSVar('--amber');
 
   const TX = 40;
   const txPx = sx(TX);
@@ -1290,14 +1292,14 @@ function drawCompanyScatter(entries, opts) {
 
   sorted.forEach(e => {
     const color = e.cls === 'compliant' ? GREEN : e.cls === 'noncompliant' ? RED : GRAY;
-    const fop   = e.cls === 'exempt' ? '0.28' : '0.78';
-    const sop   = e.cls === 'exempt' ? '0.18' : '1';
+    const fop   = e.cls === 'exempt' ? '0.22' : '0.60';
+    const sop   = e.cls === 'exempt' ? '0.15' : '0.85';
     const ne    = e.name.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
     const rStr  = e.complianceRate !== null ? Math.round(e.complianceRate)+'%' : '—';
     const cx    = e.nx.toFixed(1), cy = e.ny.toFixed(1);
 
     circles += `<circle class="sc-dot" cx="${cx}" cy="${cy}" r="${e.r}"
-      fill="${color}" fill-opacity="${fop}" stroke="${color}" stroke-width="1.5" stroke-opacity="${sop}"
+      fill="${color}" fill-opacity="${fop}" stroke="${color}" stroke-width="1" stroke-opacity="${sop}"
       data-n="${ne}" data-m="${Math.round(e.med)}" data-t="${e.total}"
       data-r="${rStr}" data-c="${e.cls}" data-nc="${e.nonCompliantCount}"/>`;
 
