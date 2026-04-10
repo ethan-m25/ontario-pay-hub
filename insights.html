@@ -771,13 +771,25 @@ footer {
       </div>
     </div>
 
-    <!-- Employer structured range score -->
+    <!-- Employer range quality dot plot -->
     <div class="chart-card" style="margin-top:16px">
-      <div class="chart-card-title">Employer range quality score</div>
-      <div class="chart-card-sub">For employers with 5+ regulated postings: % of postings with a structured salary band (spread ratio 15–65%). Higher = more informative disclosures. Excludes federally regulated employers.</div>
-      <div id="rangeQualityBars" style="margin-top:16px"></div>
-      <div class="callout-neutral" style="margin-top:16px">
-        <p><strong>Pay point vs. salary range:</strong> A spread ratio below 15% (e.g. $144k–$148k) typically reflects a fixed compensation rate, not a band — the employer knows exactly what they'll pay and the "range" is nominal. This is common at Google, Microsoft, and other firms with rigid job-level pricing. It is not inherently worse, just less informative for job seekers trying to negotiate.</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+        <div>
+          <div class="chart-card-title">Employer disclosure quality map</div>
+          <div class="chart-card-sub">70 employers with 5+ regulated postings. X = % structured salary bands. Y = posting volume (log scale). Federally regulated employers excluded.</div>
+        </div>
+        <div style="display:flex;gap:14px;font-size:var(--fs-xs);color:var(--text3);align-items:center;flex-shrink:0">
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);opacity:.85"></span>Mostly structured</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--text3);opacity:.6"></span>Pay-point heavy</span>
+          <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--amber);opacity:.85"></span>Wide-range heavy</span>
+        </div>
+      </div>
+      <div style="position:relative;overflow:visible">
+        <svg id="rqDotSvg" viewBox="0 0 680 270" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block;overflow:visible"></svg>
+      </div>
+      <div id="rqDotTooltip" style="position:fixed;pointer-events:none;z-index:9999;display:none;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:var(--fs-sm);box-shadow:var(--shadow-lg);min-width:180px"></div>
+      <div class="callout-neutral" style="margin-top:14px">
+        <p><strong>Pay point vs. salary range:</strong> A spread ratio below 15% (e.g. Google's $144k–$148k) reflects a fixed compensation rate — the employer knows exactly what they'll pay and the "range" is nominal. This is common at firms with rigid job-level pricing. It is not inherently worse, just less informative for job seekers trying to negotiate.</p>
       </div>
     </div>
 
@@ -934,7 +946,7 @@ async function main() {
       </div>`).join('');
   }
 
-  // Employer range quality score
+  // Employer range quality — dot plot (X = % structured, Y = posting count log scale)
   const byCoRQ = {};
   regNoFed.forEach(j => {
     const co = normCompany(j.company);
@@ -946,30 +958,8 @@ async function main() {
   });
   const rqEntries = Object.entries(byCoRQ)
     .filter(([,v]) => v.total >= 5)
-    .map(([name, v]) => ({ name, ...v, score: v.structured / v.total * 100 }))
-    .sort((a, b) => b.score - a.score);
-
-  if ($('rangeQualityBars')) {
-    const topRQ = [...rqEntries.slice(0, 10), ...rqEntries.slice(-5)];
-    // deduplicate
-    const seen = new Set();
-    const dedupRQ = topRQ.filter(e => { if (seen.has(e.name)) return false; seen.add(e.name); return true; });
-    $('rangeQualityBars').innerHTML = dedupRQ.map(e => {
-      const sPct = (e.structured / e.total * 100).toFixed(0);
-      const ppPct = (e.payPoints / e.total * 100).toFixed(0);
-      const wPct = (e.wide / e.total * 100).toFixed(0);
-      const color = e.score >= 80 ? 'var(--green)' : e.score >= 50 ? 'var(--amber)' : 'var(--accent)';
-      return `<div class="bar-row">
-        <div class="bar-name">${e.name}<span class="bar-count">${e.total}</span></div>
-        <div class="bar-track" style="position:relative;height:18px;border-radius:4px;overflow:hidden;background:var(--surface2)">
-          <div style="position:absolute;left:0;top:0;bottom:0;width:${sPct}%;background:var(--green);opacity:.75"></div>
-          <div style="position:absolute;left:${sPct}%;top:0;bottom:0;width:${ppPct}%;background:var(--text3);opacity:.4"></div>
-          <div style="position:absolute;left:${+sPct + +ppPct}%;top:0;bottom:0;width:${wPct}%;background:var(--amber);opacity:.75"></div>
-        </div>
-        <div class="bar-value" style="color:${color};font-family:var(--font-mono)">${sPct}%</div>
-      </div>`;
-    }).join('');
-  }
+    .map(([name, v]) => ({ name, ...v, score: v.structured / v.total * 100 }));
+  drawRQDotPlot(rqEntries);
 
   // Sector bars — spread ratio by category (replaces absolute width)
   const catSpreadMedians = groupMedian(regNoFed, j => j.category || 'Other', j => j._spread);
@@ -1253,6 +1243,121 @@ function drawHistogramSpread(svgId, bins, maxX, threshLow, threshHigh, unit, lab
   out += `<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border2)" stroke-width="1"/>`;
   out += `</g>`;
   svg.innerHTML = out;
+}
+
+/* ===== RANGE QUALITY DOT PLOT =====
+   X = % structured salary bands (0–100%)
+   Y = total postings (log scale)
+   Each dot = one employer, uniform 7px radius
+   Color: green (>70% structured) | grey (>50% pay-point) | amber (>20% wide) | default
+   Labels shown for notable employers (>20 postings OR score outliers)
+*/
+function drawRQDotPlot(entries) {
+  const svg = $('rqDotSvg');
+  if (!svg || !entries.length) return;
+
+  const W = 680, H = 270;
+  const padL = 44, padR = 20, padT = 16, padB = 38;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Y: log scale of total postings
+  const minN = 5, maxN = Math.max(...entries.map(e => e.total));
+  const logMin = Math.log(minN), logMax = Math.log(maxN + 10);
+  const xOf = score => padL + (score / 100) * plotW;
+  const yOf = n => padT + plotH - (Math.log(n) - logMin) / (logMax - logMin) * plotH;
+
+  // Zone shading
+  const xLow = xOf(30), xHigh = xOf(80);
+  let out = `<g>`;
+  // background zones
+  out += `<rect x="${padL}" y="${padT}" width="${xLow - padL}" height="${plotH}" fill="var(--accent)" opacity=".04" rx="2"/>`;
+  out += `<rect x="${xLow}" y="${padT}" width="${xHigh - xLow}" height="${plotH}" fill="var(--green)" opacity=".04" rx="2"/>`;
+  out += `<rect x="${xHigh}" y="${padT}" width="${W - padR - xHigh}" height="${plotH}" fill="var(--green)" opacity=".06" rx="2"/>`;
+  // zone labels
+  out += `<text x="${padL + 6}" y="${padT + 12}" font-family="IBM Plex Mono" font-size="8" fill="var(--accent)" opacity=".6">pay-point zone</text>`;
+  out += `<text x="${xHigh + 5}" y="${padT + 12}" font-family="IBM Plex Mono" font-size="8" fill="var(--green)" opacity=".7">disclosure-rich</text>`;
+
+  // Grid: Y axis (horizontal lines at posting counts)
+  const yTicks = [5, 10, 20, 50, 100, 200].filter(v => v <= maxN + 10);
+  yTicks.forEach(v => {
+    const y = yOf(v);
+    out += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    out += `<text x="${padL - 4}" y="${y + 3.5}" text-anchor="end" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${v}</text>`;
+  });
+  // Grid: X axis (vertical lines at 0, 25, 50, 75, 100)
+  [0, 25, 50, 75, 100].forEach(v => {
+    const x = xOf(v);
+    out += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    out += `<text x="${x}" y="${H - padB + 12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8.5" fill="var(--text3)">${v}%</text>`;
+  });
+
+  // Threshold lines
+  [xLow, xHigh].forEach((x, i) => {
+    out += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${H - padB}" stroke="var(--border2)" stroke-width="1.2" stroke-dasharray="4,3"/>`;
+  });
+
+  // Axis labels
+  out += `<text x="${padL + plotW/2}" y="${H - 4}" text-anchor="middle" font-family="Sora" font-size="9" fill="var(--text3)">% of postings with structured salary band</text>`;
+  out += `<text x="10" y="${padT + plotH/2}" text-anchor="middle" font-family="Sora" font-size="9" fill="var(--text3)" transform="rotate(-90 10 ${padT + plotH/2})">posting volume</text>`;
+
+  // Dots — jitter vertically within a small band to avoid overlap on same Y
+  const jittered = new Map();
+  entries.forEach(e => {
+    const key = Math.round(yOf(e.total));
+    jittered.set(e, key);
+  });
+
+  // Determine color per employer
+  const dotColor = e => {
+    if (e.payPoints / e.total > 0.5)  return 'var(--text3)';
+    if (e.wide / e.total > 0.2)       return 'var(--amber)';
+    if (e.score > 70)                  return 'var(--green)';
+    return 'var(--text2)';
+  };
+
+  // Draw dots
+  entries.forEach(e => {
+    const x = xOf(e.score);
+    const y = yOf(e.total);
+    const col = dotColor(e);
+    const opacity = e.total >= 20 ? '0.85' : '0.55';
+    out += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${col}" opacity="${opacity}" stroke="var(--surface)" stroke-width="1.5" class="rq-dot" data-name="${e.name.replace(/"/g,'&quot;')}" data-total="${e.total}" data-score="${e.score.toFixed(0)}" data-pp="${e.payPoints}" data-wide="${e.wide}"/>`;
+  });
+
+  // Labels: show for employers with >=20 postings, or score <=10, or score >=98
+  const toLabel = entries.filter(e => e.total >= 20 || e.score <= 10 || e.score >= 98);
+  toLabel.forEach(e => {
+    const x = xOf(e.score);
+    const y = yOf(e.total);
+    const anchor = e.score < 30 ? 'start' : e.score > 75 ? 'end' : 'middle';
+    const dx = e.score < 30 ? 9 : e.score > 75 ? -9 : 0;
+    const dy = e.total > 80 ? -9 : 12;
+    const shortName = e.name.length > 16 ? e.name.slice(0, 15) + '…' : e.name;
+    out += `<text x="${(x + dx).toFixed(1)}" y="${(y + dy).toFixed(1)}" text-anchor="${anchor}" font-family="Sora" font-size="8.5" font-weight="600" fill="var(--text2)" pointer-events="none">${shortName}</text>`;
+  });
+
+  out += `</g>`;
+  svg.innerHTML = out;
+
+  // Tooltip
+  const tt = $('rqDotTooltip');
+  svg.querySelectorAll('.rq-dot').forEach(dot => {
+    dot.addEventListener('mousemove', ev => {
+      const n = +dot.dataset.total, sc = +dot.dataset.score;
+      const pp = +dot.dataset.pp, wide = +dot.dataset.wide;
+      const structured = n - pp - wide;
+      tt.innerHTML = `<strong>${dot.dataset.name}</strong><br>
+        <span style="color:var(--text3)">${n} regulated postings</span><br>
+        <span style="color:var(--green)">${sc}% structured bands</span><br>
+        <span style="color:var(--text3)">${Math.round(pp/n*100)}% pay points · ${Math.round(wide/n*100)}% wide</span>`;
+      tt.style.display = 'block';
+      tt.style.left = (ev.clientX + 14) + 'px';
+      tt.style.top  = (ev.clientY - 10) + 'px';
+    });
+    dot.addEventListener('mouseleave', () => { tt.style.display = 'none'; });
+    dot.style.cursor = 'default';
+  });
 }
 
 function groupMedian(arr, keyFn, valFn) {
