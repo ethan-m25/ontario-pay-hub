@@ -1325,17 +1325,42 @@ function drawRQDotPlot(entries) {
     out += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${col}" opacity="${opacity}" stroke="var(--surface)" stroke-width="1.5" class="rq-dot" data-name="${e.name.replace(/"/g,'&quot;')}" data-total="${e.total}" data-score="${e.score.toFixed(0)}" data-pp="${e.payPoints}" data-wide="${e.wide}"/>`;
   });
 
-  // Labels: show for employers with >=20 postings, or score <=10, or score >=98
-  const toLabel = entries.filter(e => e.total >= 20 || e.score <= 10 || e.score >= 98);
+  // Labels: only the story-telling companies
+  // Rule: left outliers (score<30 AND total>=8), large-volume (total>=40), or unique mid-range (30<score<90 AND total>=25)
+  // The 100% cluster gets a count badge instead of individual labels
+  const at100 = entries.filter(e => e.score >= 98);
+  const toLabel = entries.filter(e => {
+    if (e.score >= 98) return false;           // skip 100% cluster — shown as badge
+    if (e.score < 15 && e.total >= 8)  return true;  // pay-point outliers
+    if (e.total >= 40)                 return true;  // high-volume always labelled
+    if (e.score >= 15 && e.score < 80 && e.total >= 25) return true; // notable mid
+    return false;
+  });
   toLabel.forEach(e => {
     const x = xOf(e.score);
     const y = yOf(e.total);
-    const anchor = e.score < 30 ? 'start' : e.score > 75 ? 'end' : 'middle';
-    const dx = e.score < 30 ? 9 : e.score > 75 ? -9 : 0;
-    const dy = e.total > 80 ? -9 : 12;
-    const shortName = e.name.length > 16 ? e.name.slice(0, 15) + '…' : e.name;
-    out += `<text x="${(x + dx).toFixed(1)}" y="${(y + dy).toFixed(1)}" text-anchor="${anchor}" font-family="Sora" font-size="8.5" font-weight="600" fill="var(--text2)" pointer-events="none">${shortName}</text>`;
+    const anchor = e.score < 25 ? 'start' : e.score > 80 ? 'end' : 'middle';
+    const dx = e.score < 25 ? 9 : e.score > 80 ? -9 : 0;
+    const dy = e.total > 100 ? -9 : 12;
+    const shortName = e.name.length > 14 ? e.name.slice(0, 13) + '…' : e.name;
+    out += `<text x="${(x + dx).toFixed(1)}" y="${(y + dy).toFixed(1)}" text-anchor="${anchor}" font-family="Sora" font-size="8" font-weight="600" fill="var(--text2)" pointer-events="none">${shortName}</text>`;
   });
+
+  // 100% cluster badge — positioned near the cluster's centroid Y
+  if (at100.length > 0) {
+    const clusterMaxN = Math.max(...at100.map(e => e.total));
+    const clusterY = yOf(clusterMaxN) + 28;
+    const bx = xOf(100);
+    out += `<rect x="${bx - 54}" y="${clusterY - 11}" width="52" height="16" rx="5" fill="var(--green)" opacity=".15"/>`;
+    out += `<text x="${bx - 28}" y="${clusterY + 1}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" font-weight="700" fill="var(--green)" pointer-events="none">${at100.length} employers</text>`;
+    // label only the largest in the 100% group
+    const biggest100 = at100.sort((a,b) => b.total - a.total)[0];
+    if (biggest100) {
+      const by = yOf(biggest100.total);
+      const shortN = biggest100.name.length > 14 ? biggest100.name.slice(0,13)+'…' : biggest100.name;
+      out += `<text x="${(bx - 9).toFixed(1)}" y="${(by - 9).toFixed(1)}" text-anchor="end" font-family="Sora" font-size="8" font-weight="600" fill="var(--text2)" pointer-events="none">${shortN}</text>`;
+    }
+  }
 
   out += `</g>`;
   svg.innerHTML = out;
