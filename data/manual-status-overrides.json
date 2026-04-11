@@ -5,6 +5,111 @@
       "status": "archived",
       "reason": "Verified manually: source link no longer resolves to a live posting.",
       "note": "BMO M365 Engineering Specialist"
+    },
+    {
+      "id": "1286", "status": "excluded_usd", "reason": "GitLab posts USD salary ranges for US+Canada remote roles. Scraper picked up USD figures as CAD. Not an Ontario CAD salary disclosure.", "note": "GitLab - Backend Engineer, Knowledge Graph (Rust)"
+    },
+    {
+      "id": "1287", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab - Director of Product Management, AI Agents"
+    },
+    {
+      "id": "1288", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1289", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab - Ecosystem Sales Manager"
+    },
+    {
+      "id": "1290", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab - Engineering Manager, Infrastructure Platforms"
+    },
+    {
+      "id": "1291", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1292", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1293", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1294", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1295", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1296", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1297", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1298", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1299", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1300", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1301", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1302", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1303", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1304", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1305", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1306", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1307", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1308", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1309", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab - Senior Revenue Technology Analyst (CONFIRMED: page shows 'United States Salary Range: $87,400-$187,200 USD')"
+    },
+    {
+      "id": "1310", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1311", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1312", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1313", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "1314", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "2295", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "3008", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "3009", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "3010", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "3011", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
+    },
+    {
+      "id": "3012", "status": "excluded_usd", "reason": "GitLab USD range", "note": "GitLab"
     }
   ]
 }

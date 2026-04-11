@@ -332,7 +332,15 @@ async function main() {
     return;
   }
 
-  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min);
+  // Load manual overrides (excluded_usd = scraper picked up USD range, not Ontario CAD)
+  const excludedIds=new Set();
+  try {
+    const or=await fetch('./data/manual-status-overrides.json');
+    const oj=await or.json();
+    (oj.jobs||[]).forEach(o=>{ if(o.status==='excluded_usd'||o.status==='archived') excludedIds.add(String(o.id)); });
+  } catch(e) {}
+
+  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min&&!excludedIds.has(String(j.id)));
   valid.forEach(j=>{
     j._width=j.max-j.min;
     j._mid=(j.max+j.min)/2;
