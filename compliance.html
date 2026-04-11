@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pay Transparency Compliance Report — Ontario Pay Hub</title>
 <meta name="description" content="Which Ontario employers are posting salary ranges wider than the $50,000 limit set by O. Reg. 476/24? Data from 2,000+ legally-mandated disclosures.">
-<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-2026.svg">
+<link rel="icon" type="image/svg+xml" sizes="any" href="/favicon-oph-hub.svg?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -387,57 +387,39 @@ async function main() {
 function drawLollipop(entries) {
   const svg=$('lollipopSvg');
   if(!svg||!entries.length) return;
-  const W=640,H=Math.max(280,entries.length*24+40);
+  const rowH=30;
+  const W=640,H=entries.length*rowH+40;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  const padL=130,padR=90,padT=12,padB=24;
-  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const padL=130,padR=110,padT=10,padB=24;
+  const plotW=W-padL-padR;
   const maxCount=entries[0][1].count;
-  const barH=14, rowH=plotH/entries.length;
+  const barH=12;
   const RED=getCSSVar('--accent'), AMBER=getCSSVar('--amber');
-
-  // median excess axis (right)
-  const maxExcess=Math.max(...entries.map(([,v])=>{
-    const s=v.widths.slice().sort((a,b)=>a-b);
-    return s[Math.floor(s.length/2)]-50000;
-  }));
-
   let out='';
+  [0,0.25,0.5,0.75,1].forEach(f=>{
+    const x=padL+f*plotW;
+    if(f>0) out+=`<line x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+  });
   entries.forEach(([name,v],i)=>{
-    const y=padT+i*rowH+rowH/2;
+    const cy=padT+i*rowH+rowH/2;
     const barW=(v.count/maxCount)*plotW;
     const s=v.widths.slice().sort((a,b)=>a-b);
     const medWidth=s[Math.floor(s.length/2)];
-    const excess=medWidth-50000;
-    const dotX=padL+(excess/maxExcess)*plotW;
+    const excessK=Math.round((medWidth-50000)/1000);
     const isTop=(i===0);
     const col=isTop?RED:AMBER;
-
-    // bar (count)
-    out+=`<rect x="${padL}" y="${y-barH/2}" width="${barW.toFixed(1)}" height="${barH}" rx="3" fill="${col}" opacity="${isTop?'.75':'.55'}"/>`;
-    // stem
-    out+=`<line x1="${dotX.toFixed(1)}" y1="${y-barH/2-2}" x2="${dotX.toFixed(1)}" y2="${y+barH/2+2}" stroke="${col}" stroke-width="1.5" opacity=".4"/>`;
-    // dot (median excess)
-    out+=`<circle cx="${dotX.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${col}" opacity=".9" stroke="var(--surface)" stroke-width="1.5"/>`;
-    // count label
-    out+=`<text x="${padL+barW+6}" y="${y+4}" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="${col}">${v.count}</text>`;
-    // company name
     const shortName=name.length>17?name.slice(0,16)+'…':name;
-    out+=`<text x="${padL-8}" y="${y+4}" text-anchor="end" font-family="Sora" font-size="11" font-weight="${isTop?700:500}" fill="var(--text2)">${shortName}</text>`;
+    out+=`<text x="${padL-8}" y="${cy+4}" text-anchor="end" font-family="Sora" font-size="11" font-weight="${isTop?700:500}" fill="var(--text2)">${shortName}</text>`;
+    out+=`<rect x="${padL}" y="${cy-barH/2}" width="${barW.toFixed(1)}" height="${barH}" rx="3" fill="${col}" opacity="${isTop?'.75':'.5'}"/>`;
+    out+=`<text x="${padL+barW+6}" y="${cy+1}" font-family="IBM Plex Mono" font-size="12" font-weight="700" fill="${col}" dominant-baseline="middle">${v.count}</text>`;
+    out+=`<text x="${padL+barW+6}" y="${cy+14}" font-family="IBM Plex Mono" font-size="9" fill="var(--text3)">+$${excessK}k median</text>`;
   });
-
-  // X axis
   out+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border2)" stroke-width="1"/>`;
   [0,0.25,0.5,0.75,1].forEach(f=>{
     const x=padL+f*plotW;
     out+=`<text x="${x}" y="${H-padB+12}" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">${Math.round(f*maxCount)}</text>`;
-    if(f>0) out+=`<line x1="${x}" y1="${padT}" x2="${x}" y2="${H-padB}" stroke="var(--chart-grid)" stroke-width="1"/>`;
   });
-  out+=`<text x="${padL+plotW/2}" y="${H-4}" text-anchor="middle" font-family="Sora" font-size="9" fill="var(--text3)">number of non-compliant postings</text>`;
-
-  // Dot legend
-  out+=`<text x="${W-padR+8}" y="${padT+12}" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">● median</text>`;
-  out+=`<text x="${W-padR+8}" y="${padT+22}" font-family="IBM Plex Mono" font-size="8" fill="var(--text3)">excess</text>`;
-
+  out+=`<text x="${padL+plotW/2}" y="${H-4}" text-anchor="middle" font-family="Sora" font-size="9" fill="var(--text3)">non-compliant postings · muted = median range width over $50k limit</text>`;
   svg.innerHTML=out;
 }
 
