@@ -18,6 +18,8 @@
 #   6. archive_job_pages.py         — archive raw html + clean text locally
 #   7. archive_extract.py           — derive work_mode locally from archived pages
 #   8. sync_work_modes_from_archive — sync derived work_mode back into jobs.json
+#   8b. monitor_major_employers.py  — track 26 major employers, Discord alerts
+#   8c. salary_qa.py               — detect/correct wide salary ranges via LLM
 #   9. publish_jobs.sh              — single git push + Discord notify
 #
 # Logs: ~/ontario-pay-hub/scripts/pipeline.log
@@ -153,6 +155,11 @@ if [[ "$QUEUE_COUNT" -gt 0 ]]; then
   log "--- Step 7: archive_extract.py (work_mode) ---"
   python3 "$SCRIPTS_DIR/archive_extract.py" --field work_mode --job-ids-file "$QUEUE_FILE" --limit 9999 --force --model qwen3:4b >> "$LOG_FILE" 2>&1
   log "Step 7 done (exit $?)"
+
+  # 7b. Layer 1 extraction (skills, summary, seniority, red_flags) for newly archived jobs
+  log "--- Step 7b: dir2_layer1_batch.py ---"
+  python3 /Users/clawii/cc-workspace/scripts/dir2_layer1_batch.py --force-run >> "$LOG_FILE" 2>&1
+  log "Step 7b done (exit $?)"
 else
   log "Skipping archive/extract steps — empty queue"
 fi
@@ -162,10 +169,33 @@ log "--- Step 8: sync_work_modes_from_archive.py ---"
 python3 "$SCRIPTS_DIR/sync_work_modes_from_archive.py" >> "$LOG_FILE" 2>&1
 log "Step 8 done (exit $?)"
 
+# 8b. Monitor major employer compliance changes
+log "--- Step 8b: monitor_major_employers.py ---"
+python3 "$SCRIPTS_DIR/monitor_major_employers.py" >> "$LOG_FILE" 2>&1
+log "Step 8b done (exit $?)"
+
+# 8c. Salary QA — detect and correct suspiciously wide salary ranges via LLM
+log "--- Step 8c: salary_qa.py ---"
+python3 "$SCRIPTS_DIR/salary_qa.py" >> "$LOG_FILE" 2>&1
+log "Step 8c done (exit $?)"
+
 # 9. Publish once
 log "--- Step 9: publish_jobs.sh ---"
 bash "$SCRIPTS_DIR/publish_jobs.sh" >> "$LOG_FILE" 2>&1
 log "Step 9 done (exit $?)"
+
+# 9b. Rebuild job_enrichment.json (Layer 1 + cluster context for detail panel)
+log "--- Step 9b: build_job_enrichment.py ---"
+python3 /Users/clawii/cc-workspace/scripts/build_job_enrichment.py >> "$LOG_FILE" 2>&1
+if [[ $? -eq 0 ]]; then
+  cd "$HOME/ontario-pay-hub"
+  git add data/job_enrichment.json
+  git diff --cached --quiet || git commit -m "data: rebuild job_enrichment.json ($(date +%Y-%m-%d))"
+  git push origin main >> "$LOG_FILE" 2>&1
+  log "Step 9b done — job_enrichment.json rebuilt and pushed"
+else
+  log "Step 9b FAILED — job_enrichment.json not updated"
+fi
 
 rm -f "$QUEUE_FILE"
 
