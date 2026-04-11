@@ -1159,6 +1159,48 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
   margin-bottom: 10px;
 }
 .jd-footer-note strong { color: var(--text2); }
+
+/* JD Enrichment: skills, summary, compliance badge */
+.jd-summary {
+  font-size: var(--fs-sm); color: var(--text2); line-height: 1.5;
+  margin: 0 0 14px; padding: 10px 12px;
+  background: var(--surface2); border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+.jd-skills-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 4px; }
+.jd-skill {
+  font-size: var(--fs-xs); padding: 3px 9px;
+  border-radius: 999px; border: 1px solid var(--border2);
+  background: var(--surface2); color: var(--text2); cursor: default;
+}
+.jd-skill.core {
+  border-color: var(--accent); color: var(--accent); font-weight: 600;
+  background: var(--accent-dim);
+}
+.jd-red-flag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-xs); padding: 3px 9px; border-radius: 999px;
+  border: 1px solid rgba(245,158,11,.4); background: rgba(245,158,11,.08);
+  color: var(--amber); margin-top: 4px;
+}
+.jd-transfer-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: var(--fs-xs); padding: 3px 9px; border-radius: 999px;
+  border: 1px solid var(--border2); background: var(--surface2); color: var(--text3);
+}
+.jd-cluster-bar-bg { background: var(--border); height: 6px; position:relative; margin:8px 0 4px; border-radius:3px; overflow:visible; }
+.jd-cluster-bar-fill { height:100%; background: linear-gradient(90deg,var(--accent-dim),var(--accent)); border-radius:3px; }
+.jd-cluster-dot {
+  position:absolute; top:50%; width:12px; height:12px;
+  background:var(--green); border:2px solid var(--surface);
+  border-radius:50%; transform:translate(-50%,-50%);
+  box-shadow:0 0 5px rgba(26,107,60,.5);
+}
+.jd-median-line {
+  position:absolute; top:-4px; bottom:-4px; width:2px;
+  background:var(--text3); opacity:.5; border-radius:1px;
+}
+
 @media(max-width:760px) {
   .jd-signal-grid { grid-template-columns: 1fr; }
   .jd-similar-item {
@@ -3098,6 +3140,7 @@ const FALLBACK_JOBS = [
 let JOBS = FALLBACK_JOBS;
 let SITE_META = null;
 let JOB_OVERRIDES = {};
+let ENRICHMENT = {}; // job_id (string) -> enrichment data
 
 function normalizeJob(j, i) {
   // Preserve the full specific job posting URL
@@ -3171,6 +3214,11 @@ async function loadData() {
     console.log("Using embedded fallback data:", e.message);
   }
   JOBS = applyJobOverridesToList(JOBS);
+  // Load enrichment data non-blocking (best-effort)
+  fetch("./data/job_enrichment.json?_=" + Date.now())
+    .then(r=>r.ok?r.json():null)
+    .then(d=>{ if(d&&d.jobs) ENRICHMENT=d.jobs; })
+    .catch(()=>{});
   applyTheme();
   updateStats();
   populateFilters();
@@ -4421,8 +4469,91 @@ function openJobDetail(id){
   else if(pctile>=25) pctLabel="Below median for "+catLabel;
   else                pctLabel="Bottom 25% in "+catLabel;
 
-  // Similar jobs: same tag, different id, sorted by midpoint desc, top 5
-  const similar = [...peers].sort((a,b)=>mid(b)-mid(a)).slice(0,5);
+  // Enrichment data for this job
+  const enr = ENRICHMENT[String(j.id)] || {};
+  const hasCluster = !!(enr.cluster_id);
+  const hasL1 = !!(enr.key_skills && enr.key_skills.length);
+  const coreSkillSet = new Set(enr.core_skills || []);
+
+  // Related jobs: prefer cluster peers, fall back to category
+  let similar;
+  if(hasCluster && enr.related_job_ids && enr.related_job_ids.length){
+    similar = enr.related_job_ids
+      .map(rid=>JOBS.find(x=>x.id===parseInt(rid)))
+      .filter(Boolean)
+      .slice(0,5);
+  } else {
+    similar = [...peers].sort((a,b)=>mid(b)-mid(a)).slice(0,5);
+  }
+
+  // Cluster salary context
+  let clusterContextHTML = "";
+  if(hasCluster && enr.cluster_median){
+    const clPct = Math.round((enr.salary_percentile_in_cluster||0)*100);
+    const clMedPos = Math.min(Math.round(
+      (enr.cluster_median - Math.min(...(enr.related_job_ids||[]).map(rid=>{
+        const rj=JOBS.find(x=>x.id===parseInt(rid)); return rj?rj.min:myMid;
+      }).concat([j.min]))) /
+      (Math.max(...(enr.related_job_ids||[]).map(rid=>{
+        const rj=JOBS.find(x=>x.id===parseInt(rid)); return rj?rj.max:myMid;
+      }).concat([j.max])) - Math.min(...(enr.related_job_ids||[]).map(rid=>{
+        const rj=JOBS.find(x=>x.id===parseInt(rid)); return rj?rj.min:myMid;
+      }).concat([j.min])) || 1) * 100
+    ), 95);
+    let clPctLabel;
+    if(clPct>=75) clPctLabel="Top 25% in cluster";
+    else if(clPct>=50) clPctLabel="Above cluster median";
+    else if(clPct>=25) clPctLabel="Below cluster median";
+    else clPctLabel="Bottom 25% in cluster";
+    const medDiff = myMid - enr.cluster_median;
+    const medDiffPct = Math.round(Math.abs(medDiff)/enr.cluster_median*100);
+    const medDiffStr = medDiff>=0
+      ? `+${medDiffPct}% above cluster median (${fmt(enr.cluster_median)})`
+      : `${medDiffPct}% below cluster median (${fmt(enr.cluster_median)})`;
+    clusterContextHTML = `
+    <div class="jd-section">
+      <div class="jd-section-title">Cluster context · ${enr.cluster_size||0} similar roles</div>
+      <div class="jd-pos-wrap">
+        <div class="jd-cluster-bar-bg">
+          <div class="jd-cluster-bar-fill" style="width:${clPct}%"></div>
+          <div class="jd-cluster-dot" style="left:${clPct}%"></div>
+        </div>
+        <div class="jd-pos-labels"><span>Cluster floor</span><span>Cluster ceiling</span></div>
+        <div class="jd-pct-label">${clPctLabel} <span style="color:var(--text3);font-weight:400">· ${clPct}th percentile</span></div>
+        <div style="margin-top:6px;font-size:var(--fs-sm);color:var(--text2)">${medDiffStr}</div>
+        <div style="margin-top:4px;font-size:var(--fs-xs);color:var(--text3)">Category median: ${fmt(enr.category_median||0)}</div>
+      </div>
+    </div>`;
+  } else {
+    // Fallback: original category position bar
+    clusterContextHTML = allInCat.length>1?`
+    <div class="jd-section">
+      <div class="jd-section-title">Position among ${allInCat.length} ${catLabel} roles</div>
+      <div class="jd-pos-wrap">
+        <div class="jd-pos-bar-bg">
+          <div class="jd-pos-bar-fill" style="width:${posPos}%"></div>
+          <div class="jd-pos-dot" style="left:${posPos}%"></div>
+        </div>
+        <div class="jd-pos-labels"><span>${fmt(catFloor)}</span><span>${fmt(catCeil)}</span></div>
+        <div class="jd-pct-label">${pctLabel} <span style="color:var(--text3);font-weight:400">· ${pctile}th percentile (by midpoint)</span></div>
+      </div>
+    </div>`:"";
+  }
+
+  // JD highlights from Layer 1
+  const l1HTML = hasL1?`
+    <div class="jd-section">
+      <div class="jd-section-title">Role highlights</div>
+      ${enr.summary?`<div class="jd-summary">${enr.summary}</div>`:""}
+      <div class="jd-skills-wrap">
+        ${(enr.key_skills||[]).map(s=>`<span class="jd-skill${coreSkillSet.has(s)?" core":""}">${s}</span>`).join("")}
+      </div>
+      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+        ${enr.seniority_signal?`<span class="jd-transfer-badge">Level: ${enr.seniority_signal}</span>`:""}
+        ${enr.transferability?`<span class="jd-transfer-badge">Portability: ${enr.transferability}</span>`:""}
+        ${(enr.red_flags||[]).map(rf=>`<span class="jd-red-flag">⚠ ${rf}</span>`).join("")}
+      </div>
+    </div>`:"";
 
   // Header tag
   document.getElementById("jdCatTag").innerHTML=
@@ -4464,22 +4595,13 @@ function openJobDetail(id){
       </div>
     </div>
 
-    ${allInCat.length>1?`
-    <div class="jd-section">
-      <div class="jd-section-title">Position among ${allInCat.length} ${catLabel} roles</div>
-      <div class="jd-pos-wrap">
-        <div class="jd-pos-bar-bg">
-          <div class="jd-pos-bar-fill" style="width:${posPos}%"></div>
-          <div class="jd-pos-dot" style="left:${posPos}%"></div>
-        </div>
-        <div class="jd-pos-labels"><span>${fmt(catFloor)}</span><span>${fmt(catCeil)}</span></div>
-        <div class="jd-pct-label">${pctLabel} <span style="color:var(--text3);font-weight:400">· ${pctile}th percentile (by midpoint)</span></div>
-      </div>
-    </div>`:""}
+    ${l1HTML}
+
+    ${clusterContextHTML}
 
     ${similar.length?`
     <div class="jd-section">
-      <div class="jd-section-title">Other ${catLabel} roles</div>
+      <div class="jd-section-title">${hasCluster&&enr.related_job_ids&&enr.related_job_ids.length?"Similar roles (same cluster)":"Other "+catLabel+" roles"}</div>
       ${similar.map(s=>`
         <div class="jd-similar-item" onclick="openJobDetail(${s.id})">
           <div style="min-width:0">
