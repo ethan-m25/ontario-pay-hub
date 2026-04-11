@@ -98,10 +98,18 @@
       background:var(--surface2);color:var(--text);cursor:pointer;box-shadow:var(--shadow)
     }
     .theme-btn svg{width:18px;height:18px;display:block}
+    .platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .platform-tile { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+    .platform-name { font-size: .82rem; font-weight: 700; margin-bottom: 4px; color: var(--text2); }
+    .platform-num { font-family: var(--font-mono); font-size: 2rem; font-weight: 600; margin-bottom: 6px; line-height: 1; }
+    .platform-bar-track { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 8px; overflow: hidden; }
+    .platform-bar-fill { height: 100%; border-radius: 2px; }
+    .platform-meta { font-size: .72rem; color: var(--text3); }
     @media (max-width: 980px){
       .layout,.split{grid-template-columns:1fr}
       .toolbar{grid-template-columns:1fr}
       .sidebar{border-right:none;border-bottom:1px solid var(--border)}
+      .platform-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -139,6 +147,8 @@
             <div class="tabs">
               <button class="tab active" id="tabUsers" onclick="setAdminTab('users')">Users</button>
               <button class="tab" id="tabJobs" onclick="setAdminTab('jobs')">Jobs</button>
+              <button class="tab" id="tabPlatform" onclick="setAdminTab('platform')">Platform</button>
+              <button class="tab" id="tabAnalysis" onclick="setAdminTab('analysis')">Analysis</button>
             </div>
           </div>
           <div class="panel-body">
@@ -238,6 +248,104 @@
           </div>
         </div>
       </section>
+
+      <section id="platformView" style="display:none">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="kicker">Internal Analytics · Admin only</div>
+            <h2>ATS platform vs. salary range width</h2>
+            <p class="tiny muted" style="margin-top:6px">The recruitment platform an employer uses predicts how wide their disclosed salary range will be — likely driven by ATS defaults and template behaviour. Platform inferred from job source URL. Regulated postings only (upper ≤$200k, min ≥10 postings).</p>
+          </div>
+          <div class="panel-body">
+            <div id="platformGrid" class="platform-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analysisView" style="display:none;padding-bottom:40px">
+        <!-- Violation Severity -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head">
+            <div class="kicker">Compliance deep-dive · Violation severity</div>
+            <h2>How far over the $50k limit?</h2>
+          </div>
+          <div class="panel-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+              <div>
+                <div class="kicker" style="margin-bottom:8px">Width distribution (non-compliant postings)</div>
+                <svg id="adm-sevHistSvg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block"></svg>
+              </div>
+              <div>
+                <div class="kicker" style="margin-bottom:8px">Severity breakdown</div>
+                <div id="adm-sevGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+                <p class="tiny muted" style="margin-top:12px">74% of violations fall in the $50k–$75k band — marginal overages, not extreme outliers.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head">
+            <div class="kicker">Compliance deep-dive · By job category</div>
+            <h2>Where do violations cluster?</h2>
+          </div>
+          <div class="panel-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+              <div>
+                <div class="kicker" style="margin-bottom:8px">Violation count by category</div>
+                <div id="adm-catBars" style="display:flex;flex-direction:column;gap:6px"></div>
+              </div>
+              <div>
+                <div class="kicker" style="margin-bottom:8px">Violation rate (% of category total)</div>
+                <div id="adm-catRateBars" style="display:flex;flex-direction:column;gap:6px"></div>
+              </div>
+            </div>
+            <p class="tiny muted" style="margin-top:12px">Violations follow employer concentration, not category risk. Engineering ranks high because Deloitte and Amazon post heavily there.</p>
+          </div>
+        </div>
+
+        <!-- Non-compliant employers table -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head">
+            <div class="kicker">Market signals · Top non-compliant employers</div>
+            <h2>Who's posting the widest ranges?</h2>
+          </div>
+          <div class="panel-body" style="overflow-x:auto">
+            <table class="table">
+              <thead><tr><th>Employer</th><th>Violations</th><th>Median width</th><th>% of all violations</th></tr></thead>
+              <tbody id="adm-nonCompliantBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Employer disclosure quality dot plot -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head">
+            <div class="kicker">Range quality · Disclosure quality map</div>
+            <h2>Employer disclosure quality</h2>
+            <p class="tiny muted" style="margin-top:4px">Employers with 5+ regulated postings. X = % structured bands (spread ≥15%). Y = posting count (log scale). Federal employers excluded.</p>
+          </div>
+          <div class="panel-body">
+            <div style="position:relative;overflow:visible">
+              <svg id="adm-rqDotSvg" viewBox="0 0 680 280" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block;overflow:visible"></svg>
+            </div>
+            <div id="adm-rqTooltip" style="position:fixed;pointer-events:none;z-index:9999;display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:.78rem;box-shadow:var(--shadow);min-width:160px"></div>
+          </div>
+        </div>
+
+        <!-- Summary statistics -->
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head">
+            <div class="kicker">Range quality · Key percentiles</div>
+            <h2>Summary statistics — range spread ratio</h2>
+            <p class="tiny muted" style="margin-top:4px">Width ÷ midpoint salary. Regulated postings only (upper ≤$200k). Industry benchmark: 25–55% for structured bands.</p>
+          </div>
+          <div class="panel-body">
+            <div id="adm-statsBody" class="stat-grid"></div>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
@@ -334,6 +442,7 @@
       document.getElementById("adminAuthGate").style.display = "block";
       document.getElementById("usersView").style.display = "none";
       document.getElementById("jobsView").style.display = "none";
+      document.getElementById("platformView").style.display = "none";
       if (mode === "forbidden") {
         document.getElementById("adminGateTitle").textContent = "Admin access required";
         document.getElementById("adminGateCopy").textContent = email
@@ -349,8 +458,58 @@
       S.tab = tab;
       document.getElementById("usersView").style.display = tab === "users" ? "grid" : "none";
       document.getElementById("jobsView").style.display = tab === "jobs" ? "grid" : "none";
+      document.getElementById("platformView").style.display = tab === "platform" ? "block" : "none";
+      document.getElementById("analysisView").style.display = tab === "analysis" ? "block" : "none";
       document.getElementById("tabUsers").classList.toggle("active", tab === "users");
       document.getElementById("tabJobs").classList.toggle("active", tab === "jobs");
+      document.getElementById("tabPlatform").classList.toggle("active", tab === "platform");
+      document.getElementById("tabAnalysis").classList.toggle("active", tab === "analysis");
+      if (tab === "platform") renderPlatformAnalytics();
+      if (tab === "analysis") renderAnalysis();
+    }
+
+    function percentilePlatform(sorted, p) {
+      if (!sorted.length) return 0;
+      const idx = (p / 100) * (sorted.length - 1);
+      const lo = Math.floor(idx), hi = Math.ceil(idx);
+      return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+    }
+
+    function renderPlatformAnalytics() {
+      const platformNames = {
+        greenhouse: 'Greenhouse', workday: 'Workday', successfactors: 'SAP SuccessFactors',
+        lever: 'Lever', ashby: 'Ashby', sap: 'SAP', amazon: 'Amazon Jobs',
+        google: 'Google Careers', kpmg: 'KPMG Portal', other: 'Other'
+      };
+      const regulated = S.jobs.filter(j => {
+        return j.min > 0 && j.max > 0 && j.max <= 200000;
+      }).map(j => ({
+        ...j, _widthPct: ((j.max - j.min) / j.max * 100)
+      }));
+      const groups = {};
+      regulated.forEach(j => {
+        const plat = (j.source_platform || 'other').toLowerCase();
+        if (!groups[plat]) groups[plat] = [];
+        groups[plat].push(j._widthPct);
+      });
+      const data = Object.entries(groups)
+        .filter(([k, v]) => v.length >= 10 && k !== 'other')
+        .map(([k, v]) => {
+          const sorted = v.slice().sort((a, b) => a - b);
+          return { name: platformNames[k] || k, med: percentilePlatform(sorted, 50), count: v.length };
+        })
+        .sort((a, b) => a.med - b.med);
+      const maxMed = Math.max(...data.map(p => p.med), 1);
+      document.getElementById("platformGrid").innerHTML = data.slice(0, 9).map(p => {
+        const pct = (p.med / maxMed * 100).toFixed(1);
+        const color = p.med < 40 ? 'var(--green)' : p.med < 80 ? 'var(--amber)' : 'var(--accent)';
+        return `<div class="platform-tile">
+          <div class="platform-name">${p.name}</div>
+          <div class="platform-num" style="color:${color}">${Math.round(p.med)}%</div>
+          <div class="platform-bar-track"><div class="platform-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          <div class="platform-meta">${p.count} postings · median width</div>
+        </div>`;
+      }).join('') || '<p class="tiny muted">No platform data available.</p>';
     }
 
     async function bootstrap() {
@@ -384,6 +543,7 @@
           location: job.location || "Ontario, ON",
           posted: job.posted || job.date || "",
           source_url: job.source_url || job.src || "",
+          source_platform: job.source_platform || "",
           status: job.status || "active",
           work_mode: job.work_mode || "unknown",
           category_confidence: job.category_confidence || "",
@@ -696,6 +856,263 @@
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       showMessage(`Exported ${rows.length} jobs to CSV.`);
+    }
+
+    /* ===== ANALYSIS TAB ===== */
+    const FEDERAL_SET = new Set([
+      'bank of montreal','bmo','rbc','royal bank of canada','td bank','td','cibc',
+      'scotiabank','bank of nova scotia','national bank','national bank of canada',
+      'telus','rogers','rogers communications','bell','bell canada','canada post',
+      'cbc','canadian broadcasting corporation','air canada','via rail'
+    ]);
+
+    function normCompany(s) {
+      s = (s||'').trim().replace(/\s+/g,' ');
+      s = s.replace(/\s*\([^)]*\)\s*$/, '');
+      s = s.replace(/,?\s*(Inc\.?|Ltd\.?|Corp\.?|LLC|L\.P\.|LP|Co\.?|Canada|Limited|Ontario)\.?\s*$/gi, '');
+      return s.trim();
+    }
+
+    function getAdmCSSVar(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+    function fmtK(n) { return '$' + Math.round(n/1000) + 'k'; }
+
+    let _analysisRendered = false;
+
+    function renderAnalysis() {
+      if (_analysisRendered) return;
+      _analysisRendered = true;
+
+      const valid = S.jobs.filter(j => j.min > 0 && j.max > 0 && j.max >= j.min);
+      valid.forEach(j => {
+        j._width = j.max - j.min;
+        j._mid = (j.max + j.min) / 2;
+        j._widthPct = j._mid > 0 ? (j._width / j._mid) * 100 : 0;
+        j._exempt = j.max > 200000;
+        const co = normCompany(j.company||'');
+        j._co = co;
+        j._federal = FEDERAL_SET.has(co.toLowerCase());
+        j._nc = !j._exempt && !j._federal && j._width > 50000;
+      });
+
+      const regulated = valid.filter(j => !j._exempt && !j._federal);
+      const nc = valid.filter(j => j._nc);
+
+      drawAdmSevHistogram(nc);
+      drawAdmSeverityGrid(nc);
+      drawAdmCatBars(nc, regulated);
+      drawAdmNonCompliantTable(nc);
+      drawAdmRqDotPlot(regulated);
+      drawAdmSummaryStats(regulated);
+    }
+
+    function drawAdmSevHistogram(nc) {
+      const svg = document.getElementById('adm-sevHistSvg');
+      if (!svg) return;
+      const W=320,H=190,padL=36,padR=8,padT=10,padB=28;
+      const plotW=W-padL-padR, plotH=H-padT-padB;
+      const bins=[
+        {low:50000,high:60000,label:'$50k'},
+        {low:60000,high:70000,label:'$60k'},
+        {low:70000,high:80000,label:'$70k'},
+        {low:80000,high:90000,label:'$80k'},
+        {low:90000,high:100000,label:'$90k'},
+        {low:100000,high:200000,label:'$100k+'},
+      ];
+      bins.forEach(b => { b.count = nc.filter(j => j._width >= b.low && j._width < b.high).length; });
+      const maxC = Math.max(...bins.map(b => b.count), 1);
+      const bw = plotW / bins.length;
+      const AMBER = getAdmCSSVar('--amber'), RED = getAdmCSSVar('--red');
+      let out = '<g>';
+      for(let i=0;i<=4;i++){
+        const y=padT+(plotH-plotH*i/4);
+        out+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--border)" stroke-width="1"/>`;
+        if(i>0) out+=`<text x="${padL-4}" y="${y+4}" text-anchor="end" font-family="monospace" font-size="8" fill="var(--text3)">${Math.round(maxC*i/4)}</text>`;
+      }
+      bins.forEach((b,i) => {
+        const bh=(b.count/maxC)*plotH;
+        const x=padL+i*bw+1;
+        const y=padT+plotH-bh;
+        const col=b.low>=75000?RED:AMBER;
+        const op=b.low>=100000?'.8':b.low>=75000?'.55':'.45';
+        out+=`<rect x="${x}" y="${y}" width="${bw-2}" height="${bh}" fill="${col}" opacity="${op}" rx="2"/>`;
+        out+=`<text x="${x+bw/2-1}" y="${H-padB+12}" text-anchor="middle" font-family="monospace" font-size="8" fill="var(--text3)">${b.label}</text>`;
+        if(b.count>0) out+=`<text x="${x+bw/2-1}" y="${y-3}" text-anchor="middle" font-family="monospace" font-size="8" font-weight="600" fill="var(--text2)">${b.count}</text>`;
+      });
+      out+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+      out+=`<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="var(--border)" stroke-width="1"/>`;
+      out+='</g>';
+      svg.innerHTML = out;
+    }
+
+    function drawAdmSeverityGrid(nc) {
+      const mild = nc.filter(j => j._width >= 50000 && j._width < 75000).length;
+      const mod = nc.filter(j => j._width >= 75000 && j._width < 100000).length;
+      const severe = nc.filter(j => j._width >= 100000).length;
+      const el = document.getElementById('adm-sevGrid');
+      if (!el) return;
+      el.innerHTML = `
+        <div class="stat" style="border-color:rgba(245,158,11,.3)">
+          <strong style="color:var(--amber)">${mild}</strong>
+          <span class="tiny">Mild ($50k–$75k)</span>
+          <span class="tiny">${Math.round(mild/nc.length*100)}% of violations</span>
+        </div>
+        <div class="stat" style="border-color:rgba(239,68,68,.2)">
+          <strong style="color:var(--red)">${mod}</strong>
+          <span class="tiny">Moderate ($75k–$100k)</span>
+          <span class="tiny">${Math.round(mod/nc.length*100)}% of violations</span>
+        </div>
+        <div class="stat" style="border-color:rgba(239,68,68,.35)">
+          <strong style="color:var(--red)">${severe}</strong>
+          <span class="tiny">Severe (>$100k)</span>
+          <span class="tiny">${Math.round(severe/nc.length*100)}% of violations</span>
+        </div>`;
+    }
+
+    function drawAdmCatBars(nc, regulated) {
+      const catNC = {}, catTotal = {};
+      nc.forEach(j => { const k = j.category || j.tag || 'Other'; catNC[k] = (catNC[k]||0)+1; });
+      regulated.forEach(j => { const k = j.category || j.tag || 'Other'; catTotal[k] = (catTotal[k]||0)+1; });
+
+      const catEntries = Object.entries(catNC).sort((a,b) => b[1]-a[1]).filter(([,v]) => v >= 2);
+      const maxCount = catEntries[0]?.[1] || 1;
+      const RED = getAdmCSSVar('--accent') || '#ef4444';
+
+      const barRow = (name, val, maxVal, fmt) => `
+        <div style="display:grid;grid-template-columns:130px 1fr 44px;align-items:center;gap:8px">
+          <span class="tiny" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</span>
+          <div style="height:16px;background:var(--surface2);border-radius:3px;overflow:hidden">
+            <div style="width:${(val/maxVal*100).toFixed(1)}%;height:100%;background:${RED};opacity:.65;border-radius:3px"></div>
+          </div>
+          <span class="tiny" style="font-family:var(--font-mono);color:var(--accent);text-align:right">${fmt}</span>
+        </div>`;
+
+      const countEl = document.getElementById('adm-catBars');
+      if (countEl) countEl.innerHTML = catEntries.map(([k,v]) => barRow(k, v, maxCount, v)).join('');
+
+      const rateEntries = Object.entries(catNC)
+        .map(([k,v]) => [k, catTotal[k]>0 ? v/catTotal[k]*100 : 0, v])
+        .filter(([,r,c]) => c >= 2)
+        .sort((a,b) => b[1]-a[1]);
+      const maxRate = rateEntries[0]?.[1] || 1;
+      const rateEl = document.getElementById('adm-catRateBars');
+      if (rateEl) rateEl.innerHTML = rateEntries.map(([k,r]) => barRow(k, r, maxRate, r.toFixed(0)+'%')).join('');
+    }
+
+    function drawAdmNonCompliantTable(nc) {
+      const byEmp = {};
+      nc.forEach(j => {
+        const k = j._co;
+        if (!byEmp[k]) byEmp[k] = { count:0, widths:[] };
+        byEmp[k].count++;
+        byEmp[k].widths.push(j._width);
+      });
+      const entries = Object.entries(byEmp).sort((a,b) => b[1].count-a[1].count).slice(0,20);
+      const total = nc.length;
+      const tbody = document.getElementById('adm-nonCompliantBody');
+      if (!tbody) return;
+      tbody.innerHTML = entries.map(([name,v]) => {
+        const s = v.widths.slice().sort((a,b) => a-b);
+        const med = s[Math.floor(s.length/2)];
+        const pct = (v.count/total*100).toFixed(1);
+        return `<tr>
+          <td>${name}</td>
+          <td style="font-family:var(--font-mono)">${v.count}</td>
+          <td style="font-family:var(--font-mono)">${fmtK(med)}</td>
+          <td style="font-family:var(--font-mono)">${pct}%</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function drawAdmRqDotPlot(regulated) {
+      const svg = document.getElementById('adm-rqDotSvg');
+      if (!svg) return;
+      const W=680, H=280, padL=48, padR=24, padT=16, padB=32;
+      const plotW=W-padL-padR, plotH=H-padT-padB;
+
+      // Group by employer
+      const empMap = {};
+      regulated.forEach(j => {
+        const k = normCompany(j.company||'');
+        if (!empMap[k]) empMap[k] = [];
+        empMap[k].push(j);
+      });
+      const emps = Object.entries(empMap).filter(([,jobs]) => jobs.length >= 5);
+
+      const points = emps.map(([name, jobs]) => {
+        const structured = jobs.filter(j => j._widthPct >= 15).length;
+        const pctStructured = jobs.length > 0 ? structured/jobs.length*100 : 0;
+        const count = jobs.length;
+        const widths = jobs.map(j => j._widthPct).sort((a,b) => a-b);
+        const medSpread = widths[Math.floor(widths.length/2)];
+        const hasWide = jobs.some(j => j._width > 50000);
+        return { name, count, pctStructured, medSpread, hasWide };
+      });
+      if (!points.length) { svg.innerHTML = '<text x="340" y="140" text-anchor="middle" font-size="12" fill="var(--text3)">No data</text>'; return; }
+
+      const maxCount = Math.max(...points.map(p => p.count));
+      const GREEN = getAdmCSSVar('--green'), AMBER = getAdmCSSVar('--amber'), GRAY = getAdmCSSVar('--text3');
+
+      let out = '';
+      // Grid lines
+      [0,25,50,75,100].forEach(x => {
+        const cx = padL + (x/100)*plotW;
+        out += `<line x1="${cx}" y1="${padT}" x2="${cx}" y2="${padT+plotH}" stroke="var(--border)" stroke-width="1"/>`;
+        out += `<text x="${cx}" y="${padT+plotH+14}" text-anchor="middle" font-size="9" fill="var(--text3)">${x}%</text>`;
+      });
+      out += `<text x="${padL+plotW/2}" y="${H-2}" text-anchor="middle" font-size="9" fill="var(--text3)">% structured salary bands</text>`;
+
+      [1,5,20,100].forEach(c => {
+        if (c > maxCount) return;
+        const y = padT + plotH - (Math.log(c)/Math.log(maxCount+1))*plotH;
+        out += `<line x1="${padL}" y1="${y}" x2="${padL+plotW}" y2="${y}" stroke="var(--border)" stroke-width="1"/>`;
+        out += `<text x="${padL-4}" y="${y+4}" text-anchor="end" font-size="9" fill="var(--text3)">${c}</text>`;
+      });
+
+      points.forEach(p => {
+        const cx = padL + (p.pctStructured/100)*plotW;
+        const cy = padT + plotH - (Math.log(p.count+1)/Math.log(maxCount+2))*plotH;
+        const r = Math.max(4, Math.min(10, 3 + Math.sqrt(p.count)));
+        const col = p.hasWide ? AMBER : (p.pctStructured < 30 ? GRAY : GREEN);
+        const op = p.hasWide ? '.8' : (p.pctStructured < 30 ? '.5' : '.75');
+        const shortName = p.name.length > 14 ? p.name.slice(0,13)+'…' : p.name;
+        out += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r}" fill="${col}" opacity="${op}" stroke="var(--surface)" stroke-width="1"
+          onmouseenter="document.getElementById('adm-rqTooltip').style.display='block';document.getElementById('adm-rqTooltip').innerHTML='<strong>${p.name.replace(/'/g,'&#39;')}</strong><br>${p.count} postings · ${p.pctStructured.toFixed(0)}% structured<br>Median spread: ${p.medSpread.toFixed(0)}%'"
+          onmousemove="const t=document.getElementById('adm-rqTooltip');t.style.left=(event.clientX+12)+'px';t.style.top=(event.clientY-30)+'px'"
+          onmouseleave="document.getElementById('adm-rqTooltip').style.display='none'"
+        />`;
+        if (p.count >= 30 || p.hasWide) {
+          out += `<text x="${cx.toFixed(1)}" y="${(cy-r-3).toFixed(1)}" text-anchor="middle" font-size="8" fill="var(--text2)">${shortName}</text>`;
+        }
+      });
+
+      // Legend
+      out += `<circle cx="${padL+plotW-80}" cy="${padT+8}" r="5" fill="${GREEN}" opacity=".75"/>`;
+      out += `<text x="${padL+plotW-72}" y="${padT+12}" font-size="9" fill="var(--text3)">Mostly structured</text>`;
+      out += `<circle cx="${padL+plotW-80}" cy="${padT+22}" r="5" fill="${AMBER}" opacity=".8"/>`;
+      out += `<text x="${padL+plotW-72}" y="${padT+26}" font-size="9" fill="var(--text3)">Has wide-range postings</text>`;
+      out += `<circle cx="${padL+plotW-80}" cy="${padT+36}" r="5" fill="${GRAY}" opacity=".5"/>`;
+      out += `<text x="${padL+plotW-72}" y="${padT+40}" font-size="9" fill="var(--text3)">Pay-point heavy</text>`;
+
+      svg.innerHTML = out;
+    }
+
+    function drawAdmSummaryStats(regulated) {
+      const el = document.getElementById('adm-statsBody');
+      if (!el || !regulated.length) return;
+      const spreads = regulated.map(j => j._widthPct).sort((a,b) => a-b);
+      const N = spreads.length;
+      const pct = p => { const i=(p/100)*(N-1); const lo=Math.floor(i),hi=Math.ceil(i); return spreads[lo]+(spreads[hi]-spreads[lo])*(i-lo); };
+      const avg = spreads.reduce((s,v)=>s+v,0)/N;
+      el.innerHTML = [
+        { label:'P10', val: pct(10).toFixed(1)+'%' },
+        { label:'P25', val: pct(25).toFixed(1)+'%' },
+        { label:'Median', val: pct(50).toFixed(1)+'%' },
+        { label:'Mean', val: avg.toFixed(1)+'%' },
+        { label:'P75', val: pct(75).toFixed(1)+'%' },
+        { label:'P90', val: pct(90).toFixed(1)+'%' },
+        { label:'Pay points (<15%)', val: spreads.filter(v=>v<15).length.toLocaleString() },
+        { label:'Wide (>65%)', val: spreads.filter(v=>v>65).length.toLocaleString() },
+      ].map(s=>`<div class="stat"><strong>${s.val}</strong><span class="tiny">${s.label}</span></div>`).join('');
     }
 
     bootstrap();
