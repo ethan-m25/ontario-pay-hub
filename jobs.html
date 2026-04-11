@@ -4546,7 +4546,7 @@ function openJobDetail(id){
       <div class="jd-section-title">Role highlights</div>
       ${enr.summary?`<div class="jd-summary">${enr.summary}</div>`:""}
       <div class="jd-skills-wrap">
-        ${(enr.key_skills||[]).map(s=>`<span class="jd-skill${coreSkillSet.has(s)?" core":""}">${s}</span>`).join("")}
+        ${[...(enr.core_skills||[]),...(enr.key_skills||[]).filter(s=>!coreSkillSet.has(s))].map(s=>`<span class="jd-skill${coreSkillSet.has(s)?" core":""}">${s}</span>`).join("")}
       </div>
       <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
         ${enr.seniority_signal?`<span class="jd-transfer-badge">Level: ${enr.seniority_signal}</span>`:""}
