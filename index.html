@@ -135,6 +135,41 @@ nav{position:sticky;top:0;z-index:200;background:var(--nav-bg);border-bottom:1px
 .donut-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;align-items:center;justify-content:center;min-width:180px;}
 @media(max-width:900px){.donut-card{grid-column:1/-1;padding:20px;}}
 
+/* ===== LAW EXPLAINER ===== */
+.law-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start;margin-top:24px;}
+@media(max-width:860px){.law-grid{grid-template-columns:1fr;}}
+.law-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow);}
+.law-panel-title{font-size:var(--fs-lg);font-weight:800;letter-spacing:-.02em;margin-bottom:8px;}
+.law-panel-sub{font-size:var(--fs-sm);color:var(--text2);line-height:1.65;margin-bottom:16px;}
+.law-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px;}
+@media(max-width:760px){.law-flow{grid-template-columns:1fr 1fr;}}
+@media(max-width:520px){.law-flow{grid-template-columns:1fr;}}
+.law-flow-card{background:linear-gradient(180deg,var(--surface),var(--surface2));border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;min-height:116px;}
+.law-flow-card::after{content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:var(--font-mono);font-size:14px;color:var(--text3);}
+.law-flow-card:last-child::after{display:none;}
+@media(max-width:760px){.law-flow-card::after{display:none;}}
+.law-flow-eyebrow{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.law-flow-head{font-size:var(--fs-base);font-weight:800;line-height:1.3;margin-bottom:6px;}
+.law-flow-body{font-size:var(--fs-sm);color:var(--text2);line-height:1.55;}
+.law-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+@media(max-width:640px){.law-steps{grid-template-columns:1fr;}}
+.law-step{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.law-step-num{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.law-step-head{font-size:var(--fs-base);font-weight:700;line-height:1.35;margin-bottom:6px;}
+.law-step-body{font-size:var(--fs-sm);color:var(--text2);line-height:1.6;}
+.law-badge-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.law-badge{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:600;padding:6px 10px;border-radius:999px;border:1px solid var(--border);}
+.law-badge.mandatory{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);}
+.law-badge.voluntary{background:var(--surface2);color:var(--text2);}
+.law-rulelist{display:grid;gap:12px;}
+.law-rule{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.law-rule-icon{width:30px;height:30px;border-radius:9px;background:var(--accent-dim);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent);flex-shrink:0;}
+.law-rule strong{display:block;font-size:var(--fs-sm);margin-bottom:3px;}
+.law-rule span{display:block;font-size:var(--fs-sm);color:var(--text2);line-height:1.55;}
+.law-caption{font-size:var(--fs-xs);color:var(--text3);line-height:1.6;margin-top:14px;}
+.law-note{margin-top:14px;padding:14px 16px;border-radius:var(--radius);background:var(--surface2);border:1px dashed var(--border2);font-size:var(--fs-sm);color:var(--text2);line-height:1.65;}
+.law-note strong{color:var(--text);}
+
 /* ===== LAYOUT ===== */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
 @media(max-width:800px){.two-col{grid-template-columns:1fr;}}
@@ -376,6 +411,97 @@ footer{border-top:1px solid var(--rule);padding:32px 28px;max-width:1200px;margi
       <p style="font-size:var(--fs-xs);color:var(--text3);margin-top:16px;line-height:1.6;max-width:720px">
         <strong>Methodology note:</strong> "Exempt" and "compliant" describe the disclosed salary data relative to the regulation. They do not evaluate actual employer pay practices. Federally regulated employers (banks, telecoms) are excluded from the non-compliant count — they operate under the Canada Labour Code, not Ontario ESA, so any salary disclosure they make is voluntary.
       </p>
+
+      <div class="law-grid">
+        <div class="law-panel">
+          <div class="law-panel-title">What the rule actually says</div>
+          <div class="law-panel-sub">If this is your first time looking at Ontario pay transparency data, the basic idea is simple: some employers now have to put pay information directly into public job postings, but there are still important exceptions and limits.</div>
+          <div class="law-flow">
+            <div class="law-flow-card">
+              <div class="law-flow-eyebrow">Who</div>
+              <div class="law-flow-head">25+ Ontario employees</div>
+              <div class="law-flow-body">Smaller Ontario employers are outside the job-posting requirement.</div>
+            </div>
+            <div class="law-flow-card">
+              <div class="law-flow-eyebrow">Where</div>
+              <div class="law-flow-head">Public external job ad</div>
+              <div class="law-flow-body">The rule is about public postings ordinary applicants can actually see.</div>
+            </div>
+            <div class="law-flow-card">
+              <div class="law-flow-eyebrow">Pay rule</div>
+              <div class="law-flow-head">Range must fit inside $50k</div>
+              <div class="law-flow-body">That is the main compliance test for roles under $200,000.</div>
+            </div>
+            <div class="law-flow-card">
+              <div class="law-flow-eyebrow">Exception</div>
+              <div class="law-flow-head">Jobs over $200k are exempt</div>
+              <div class="law-flow-body">They still may disclose pay, but the $50k width cap does not apply.</div>
+            </div>
+          </div>
+          <div class="law-steps">
+            <div class="law-step">
+              <div class="law-step-num">Step 1</div>
+              <div class="law-step-head">The rule only applies to larger Ontario employers</div>
+              <div class="law-step-body">The job-posting requirements apply to employers with <strong>25 or more employees in Ontario</strong> on the day the posting goes live.</div>
+            </div>
+            <div class="law-step">
+              <div class="law-step-num">Step 2</div>
+              <div class="law-step-head">The posting has to be public</div>
+              <div class="law-step-body">The rule is aimed at <strong>publicly advertised job postings</strong> — in practice, the external job ads ordinary applicants can see.</div>
+            </div>
+            <div class="law-step">
+              <div class="law-step-num">Step 3</div>
+              <div class="law-step-head">Most salary ranges cannot be wider than $50,000</div>
+              <div class="law-step-body">If a role pays under <strong>$200,000</strong>, the disclosed range must be <strong>$50,000 wide or less</strong>. That is the core rule this page tracks.</div>
+            </div>
+            <div class="law-step">
+              <div class="law-step-num">Step 4</div>
+              <div class="law-step-head">Jobs over $200k are treated differently</div>
+              <div class="law-step-body">If the top end of the compensation is <strong>above $200,000</strong>, the posting is <strong>not subject to the $50,000 width cap</strong>.</div>
+            </div>
+          </div>
+          <div class="law-badge-row">
+            <span class="law-badge mandatory">Ontario ESA: mandatory disclosure</span>
+            <span class="law-badge voluntary">Federal employers: often voluntary disclosure</span>
+          </div>
+        </div>
+
+        <div class="law-panel">
+          <div class="law-panel-title">What else employers must disclose</div>
+          <div class="law-rulelist">
+            <div class="law-rule">
+              <div class="law-rule-icon">AI</div>
+              <div>
+                <strong>AI use in hiring</strong>
+                <span>If artificial intelligence is used to screen, assess, or select candidates, that must be disclosed in the posting.</span>
+              </div>
+            </div>
+            <div class="law-rule">
+              <div class="law-rule-icon">✓</div>
+              <div>
+                <strong>Whether the job is a real vacancy</strong>
+                <span>The employer must say whether the posting is for an existing vacancy.</span>
+              </div>
+            </div>
+            <div class="law-rule">
+              <div class="law-rule-icon">CA</div>
+              <div>
+                <strong>No Canadian-experience requirement</strong>
+                <span>Public postings and application forms cannot require "Canadian experience."</span>
+              </div>
+            </div>
+            <div class="law-rule">
+              <div class="law-rule-icon">45</div>
+              <div>
+                <strong>Decision notice after interview</strong>
+                <span>Interviewed candidates must be told the hiring decision within <strong>45 days</strong>.</span>
+              </div>
+            </div>
+          </div>
+          <div class="law-note"><strong>Important context:</strong> some well-known employers in our data, especially banks, telecoms, and other federally regulated firms, are <strong>not governed by this Ontario posting rule</strong>. They may still publish salary ranges voluntarily, but they are not counted against the Ontario <strong>$50,000</strong> cap in our compliance analysis.</div>
+          <div class="law-caption">This site focuses mainly on the salary-range part of the rule, because that is the piece that can be measured consistently across thousands of postings.</div>
+        </div>
+      </div>
     </section>
   </div>
 
