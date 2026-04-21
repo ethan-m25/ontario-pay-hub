@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO_DIR="$HOME/ontario-pay-hub"
 DATA_FILE="$REPO_DIR/data/jobs.json"
-DISCORD_CHANNEL="channel:1476773906038919168"
+DISCORD_WEBHOOK="https://discord.com/api/webhooks/1496112180704051259/bGcHy1oDkDWgQVKClowYdaZCxcI4L0GoPVd4Rtqcfmp4FV2l15cLQLWrVD8ga4QmOL1A"
 TODAY="${TODAY:-$(date +%Y-%m-%d)}"
 SKIP_NOTIFY="${SKIP_NOTIFY:-0}"
 
@@ -12,10 +12,18 @@ notify_discord() {
   if [[ "$SKIP_NOTIFY" == "1" ]]; then
     return 0
   fi
-  /Users/clawii/.npm-global/bin/openclaw message send \
-    --channel discord \
-    --target "$DISCORD_CHANNEL" \
-    --message "$msg" 2>/dev/null || true
+  # Direct webhook — does not depend on OpenClaw gateway being up
+  python3 -c "
+import http.client, ssl, json, sys
+ctx = ssl.create_default_context()
+conn = http.client.HTTPSConnection('discord.com', context=ctx, timeout=15)
+path = '$DISCORD_WEBHOOK'.replace('https://discord.com', '')
+payload = json.dumps({'content': sys.stdin.read()}).encode()
+conn.request('POST', path, body=payload, headers={'Content-Type': 'application/json'})
+resp = conn.getresponse()
+conn.close()
+sys.exit(0 if resp.status in (200, 204) else 1)
+" <<< "$msg" || echo "[publish_jobs] Discord notify failed"
 }
 
 read NEW_COUNT ACTIVE_COUNT NEW_TODAY NEWLY_ARCHIVED < <(python3 -c "
