@@ -487,17 +487,22 @@ nav {
   z-index: 100;
   background: var(--nav-bg);
   border-bottom: 1px solid var(--border);
-  padding: 0 28px;
   height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 .section-nav::-webkit-scrollbar { display: none; }
-@media(max-width:600px){ .section-nav { padding: 0 16px; } }
+.snav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+@media(max-width:600px){ .snav-inner { padding: 0 16px; } }
 .snav-pill {
   flex-shrink: 0;
   font-size: var(--fs-xs);
@@ -645,11 +650,13 @@ footer {
 
 <!-- SECTION NAV -->
 <nav class="section-nav" aria-label="Page sections">
-  <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
-  <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
-  <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
-  <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
-  <a class="snav-pill snav-pill--ext" href="/skills.html">Skill Signal ↗</a>
+  <div class="snav-inner">
+    <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
+    <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
+    <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
+    <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
+    <a class="snav-pill snav-pill--ext" href="/skills.html">Skill Signal ↗</a>
+  </div>
 </nav>
 
 <!-- PAGE CONTENT -->
