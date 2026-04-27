@@ -199,4 +199,81 @@ fi
 
 rm -f "$QUEUE_FILE"
 
+# 9c. Weekly skill salary data export (Sundays only)
+# Runs AFTER build_intelligence_db (via daily discovery_engine at 9am) has already
+# populated intelligence.db, so category_stats and extractions are fresh.
+DOW=$(date +%u)  # 1=Mon … 7=Sun
+if [[ "$DOW" == "7" ]]; then
+  log "--- Step 9c: export_skill_data.py (weekly Sunday) ---"
+  python3 -c "
+import sys, logging
+sys.path.insert(0, '/Users/clawii/cc-workspace/scripts')
+logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+from export_skill_data import export_and_push
+from pathlib import Path
+ok = export_and_push(
+    site_path=Path('/Users/clawii/ontario-pay-hub'),
+)
+sys.exit(0 if ok else 1)
+" >> "$LOG_FILE" 2>&1
+  log "Step 9c done (exit $?)"
+fi
+
+# ── Pipeline health check + Discord alert ────────────────────────────────────
+PIPELINE_DATE=$(date +%Y-%m-%d)
+read NEW_TODAY WORKDAY_FAILURES < <(python3 - "$PIPELINE_DATE" \
+    "$SCRIPTS_DIR/update.log" \
+    "$SCRIPTS_DIR/workday.log" << 'PYEOF'
+import re, sys
+date_str, update_log, workday_log = sys.argv[1], sys.argv[2], sys.argv[3]
+
+new_today = 0
+try:
+    for line in open(update_log):
+        if date_str in line:
+            m = re.search(r'\+(\d+) new', line)
+            if m:
+                new_today = int(m.group(1))
+except OSError:
+    pass
+
+wd_failures = 0
+try:
+    for line in open(workday_log):
+        if date_str in line:
+            m = re.search(r'api_failures=(\d+)', line)
+            if m:
+                wd_failures = int(m.group(1))
+except OSError:
+    pass
+
+print(new_today, wd_failures)
+PYEOF
+)
+
+ALERT_MSG=""
+if (( NEW_TODAY < 20 )) && (( NEW_TODAY >= 0 )); then
+  ALERT_MSG="⚠️ **Pipeline 异常 [$PIPELINE_DATE]**: 今天新增仅 ${NEW_TODAY} 个职位（阈值 <20）"
+fi
+if (( WORKDAY_FAILURES > 10 )); then
+  ALERT_MSG="${ALERT_MSG:+$ALERT_MSG\n}⚠️ **Workday API 异常 [$PIPELINE_DATE]**: ${WORKDAY_FAILURES} 个 tenant 失败"
+fi
+
+if [[ -n "$ALERT_MSG" ]]; then
+  DISCORD_WEBHOOK="https://discord.com/api/webhooks/1496112180704051259/bGcHy1oDkDWgQVKClowYdaZCxcI4L0GoPVd4Rtqcfmp4FV2l15cLQLWrVD8ga4QmOL1A"
+  python3 -c "
+import http.client, ssl, json, sys
+ctx = ssl.create_default_context()
+conn = http.client.HTTPSConnection('discord.com', context=ctx, timeout=15)
+path = '$DISCORD_WEBHOOK'.replace('https://discord.com', '')
+payload = json.dumps({'content': sys.stdin.read()}).encode()
+conn.request('POST', path, body=payload, headers={'Content-Type': 'application/json'})
+resp = conn.getresponse()
+conn.close()
+sys.exit(0 if resp.status in (200, 204) else 1)
+" <<< "$(printf '%b' "$ALERT_MSG")" >> "$LOG_FILE" 2>&1 \
+    && log "Health alert sent to Discord" \
+    || log "Health alert Discord send failed"
+fi
+
 log "=== Nightly pipeline complete ==="
