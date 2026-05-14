@@ -115,6 +115,23 @@ SEED_SLUGS = [
     ("7shifts", None),          # auto-discovered 2026-03-31 — 10 Ontario+salary
     ("toast", None),          # auto-discovered 2026-03-31 — 6 Ontario+salary
     ("opentable", None),          # auto-discovered 2026-03-31 — 3 Ontario+salary
+
+    ("hellofresh", None),          # auto-discovered 2026-04-21 — 39 Ontario+salary
+    ("afresh", None),          # auto-discovered 2026-04-21 — 6 Ontario+salary
+    ("lithic", None),          # auto-discovered 2026-04-21 — 5 Ontario+salary
+    ("cerebrassystems", None),          # auto-discovered 2026-04-21 — 3 Ontario+salary
+
+    ("constantcontact", None),          # auto-discovered 2026-04-22 — 9 Ontario+salary
+    ("range", None),          # auto-discovered 2026-04-22 — 7 Ontario+salary
+    ("hillel", None),          # auto-discovered 2026-04-22 — 6 Ontario+salary
+
+    ("cyclicmaterialsinc", None),          # auto-discovered 2026-04-23 — 15 Ontario+salary
+    ("fanduel", None),          # auto-discovered 2026-04-23 — 10 Ontario+salary
+    ("life360", None),          # auto-discovered 2026-04-23 — 7 Ontario+salary
+    ("aottechnologies", None),          # auto-discovered 2026-04-23 — 3 Ontario+salary
+
+    ("bergindustrialservice", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary
+    ("localcoin", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary
 ]
 
 # Exa queries to discover additional Greenhouse slugs posting Ontario jobs
@@ -132,6 +149,20 @@ ONTARIO_TERMS = [
     "hamilton", "brampton", "markham", "vaughan",
     "richmond hill", "oakville", "kitchener", "windsor", ", on",
     "canada",   # captures "Remote Canada" roles (consistent with search-lever.py)
+]
+
+# Explicit non-Ontario province indicators — hard-exclude before any content check.
+# Prevents BC/AB/QC-located jobs from passing is_ontario() when their content
+# mentions Ontario salary ranges (common in multi-province job postings).
+_NON_ONTARIO_LOC_TERMS = [
+    "british columbia", ", bc", "bc,", "vancouver", "victoria", "burnaby",
+    "surrey", "kelowna", "abbotsford", "coquitlam",
+    "alberta", ", ab", "ab,", "calgary", "edmonton",
+    "quebec", "québec", ", qc", "qc,", "montréal", "montreal",
+    "nova scotia", ", ns", "new brunswick", ", nb",
+    "manitoba", ", mb", "winnipeg",
+    "saskatchewan", ", sk", "regina", "saskatoon",
+    "newfoundland", "prince edward island",
 ]
 
 # Same salary patterns as search-workday.py
@@ -204,6 +235,11 @@ def fetch_company_jobs(slug):
 def is_ontario(location_str, content_text=""):
     """True if location field or content text indicates Ontario."""
     loc = (location_str or "").lower()
+    # Hard exclusion: explicit non-Ontario province overrides everything, including
+    # content-text checks. Prevents BC/QC jobs from passing when their description
+    # mentions Ontario salary ranges.
+    if any(t in loc for t in _NON_ONTARIO_LOC_TERMS):
+        return False
     if any(t in loc for t in ONTARIO_TERMS):
         return True
     # Some companies list salary as "Ontario Residents Only $X–$Y" with a generic

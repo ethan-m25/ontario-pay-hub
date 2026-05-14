@@ -97,6 +97,8 @@ SEED_SLUGS = [
 
     "metergysolutions",  # auto-discovered 2026-04-08 — 11 Ontario+salary
     "riocan",  # auto-discovered 2026-04-08 — 7 Ontario+salary
+
+    "11855760-canada-inc",  # auto-discovered 2026-04-21 — 4 Ontario+salary
 ]
 
 DISCOVERY_QUERIES = [
@@ -112,6 +114,17 @@ ONTARIO_TERMS = [
     "hamilton", "brampton", "markham", "vaughan",
     "richmond hill", "oakville", "kitchener", "windsor", ", on",
     "canada",  # Lever often just says "Canada" for remote roles
+]
+
+_NON_ONTARIO_LOC_TERMS = [
+    "british columbia", ", bc", "bc,", "vancouver", "victoria", "burnaby",
+    "surrey", "kelowna", "abbotsford", "coquitlam",
+    "alberta", ", ab", "ab,", "calgary", "edmonton",
+    "quebec", "québec", ", qc", "qc,", "montréal", "montreal",
+    "nova scotia", ", ns", "new brunswick", ", nb",
+    "manitoba", ", mb", "winnipeg",
+    "saskatchewan", ", sk", "regina", "saskatoon",
+    "newfoundland", "prince edward island",
 ]
 
 SALARY_RE = [
@@ -168,6 +181,8 @@ def fetch_company_jobs(slug):
 
 def is_ontario(location_str, desc_text=""):
     loc = (location_str or "").lower()
+    if any(t in loc for t in _NON_ONTARIO_LOC_TERMS):
+        return False
     if any(t in loc for t in ONTARIO_TERMS):
         return True
     if "ontario" in (desc_text or "").lower():
