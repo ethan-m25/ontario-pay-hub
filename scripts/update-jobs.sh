@@ -5,7 +5,8 @@
 #
 # DATA RETENTION RULES (enforced in code):
 #   - NEVER delete or overwrite existing records
-#   - ONLY append new entries; dedup by role+company+posted
+#   - ONLY append new entries; dedup by role+company+salary+url
+#   - source_platform field tracks origin (workday/greenhouse/lever/etc) for delta metrics
 #   - Archiving is ONLY via link validation (HTTP check), NOT by age
 #   - Archived = link dead, but data is preserved as historical record
 #   - Only a human admin may manually delete a record
@@ -106,7 +107,7 @@ existing = db.get("jobs", [])
 # Build dedup key set: role+company+salary_range (posted date excluded — LLM defaults to
 # today when actual date is invisible, causing the same job to be re-inserted daily)
 existing_keys = set(
-    f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}"
+    f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}|{j.get('source_url','')}"
     for j in existing
 )
 
@@ -149,10 +150,24 @@ with open(raw_file) as f:
             errors += 1
             continue
 
-        # Dedup check (role + company + salary range; date-independent)
-        key = f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}"
+        # Dedup check (role + company + salary range + URL; date-independent)
+        key = f"{j['role'].lower()}|{j['company'].lower()}|{j.get('min','')}|{j.get('max','')}|{j.get('source_url','')}"
         if key in existing_keys:
             continue
+
+        # Infer source_platform from URL when not explicitly provided
+        def _detect_platform(url):
+            if not url: return "unknown"
+            if "myworkdayjobs.com" in url: return "workday"
+            if "greenhouse.io" in url: return "greenhouse"
+            if "lever.co" in url: return "lever"
+            if "icims.com" in url: return "icims"
+            if "smartrecruiters.com" in url: return "smartrecruiters"
+            if "jobvite.com" in url: return "jobvite"
+            if "taleo.net" in url: return "taleo"
+            if "jobs.toronto.ca" in url: return "toronto_jobs"
+            if "bamboohr.com" in url: return "bamboohr"
+            return "other"
 
         max_id += 1
         new_entry = {
@@ -166,10 +181,11 @@ with open(raw_file) as f:
             "posted": j.get("posted", today),
             "scraped": today,
             "status": "active",
-            "last_seen": today
+            "last_seen": today,
+            "source_platform": j.get("source_platform") or _detect_platform(j.get("source_url", "")),
         }
         new_jobs.append(new_entry)
-        existing_keys.add(key)
+        existing_keys.add(key)  # prevent same URL from being re-added within this batch
 
 # Ensure status field exists on any old entries missing it
 for job in existing:
@@ -584,7 +600,8 @@ if manual_overrides:
 #   - Workday (*.myworkdayjobs.com): often returns a 200 SPA shell even for dead links.
 #     Try a GET and look for expired/not-found copy; otherwise leave as unverifiable.
 #   - Lever (jobs.lever.co): 404 = job closed → archive
-#   - Greenhouse (job-boards.greenhouse.io / boards.greenhouse.io): 404 = closed → archive
+#   - Greenhouse (job-boards.greenhouse.io / boards.greenhouse.io): returns 200 even when closed!
+#     Must GET + body-check for "no longer open" message.
 #   - jobs.toronto.ca: 200 but body contains "posting has ended" → archive
 #   - Any connection error / timeout: do NOT change status (assume transient)
 import urllib.request
@@ -624,8 +641,24 @@ def validate_url(url):
             if "posting has ended" in body or "job posting has ended" in body:
                 return "archived"
             return "active"
+        elif "greenhouse.io" in url or "careers.hootsuite.com" in url:
+            # Greenhouse returns HTTP 200 even for closed jobs —
+            # the page body contains a "no longer open" message instead of a 404.
+            with _fetch(url, method="GET", timeout=12) as r:
+                body = r.read().decode("utf-8", errors="ignore").lower()
+            gh_dead = (
+                "job you are looking for is no longer open",
+                "no longer accepting applications",
+                "this job is no longer available",
+                "position is no longer available",
+                "job has been filled",
+                "posting is closed",
+            )
+            if any(m in body for m in gh_dead):
+                return "archived"
+            return "active"
         else:
-            # Lever, Greenhouse, others: HEAD is sufficient
+            # Lever and others: 404 = closed → archive
             with _fetch(url, method="HEAD", timeout=8) as r:
                 return "active" if r.status < 400 else "archived"
     except urllib.error.HTTPError as e:
