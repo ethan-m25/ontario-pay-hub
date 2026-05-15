@@ -118,24 +118,32 @@ nav{position:sticky;top:0;z-index:200;background:var(--nav-bg);border-bottom:1px
 .section-title{font-size:var(--fs-4xl);font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:8px;}
 .section-desc{font-size:var(--fs-base);color:var(--text2);max-width:620px;line-height:1.65;}
 
-/* ===== COMPLIANCE CARDS ===== */
-.compliance-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:16px;align-items:stretch;}
-@media(max-width:900px){.compliance-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:540px){.compliance-grid{grid-template-columns:1fr;}}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;position:relative;overflow:hidden;}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;}
-.stat-card.exempt::before{background:var(--text3);}
-.stat-card.compliant::before{background:var(--green);}
-.stat-card.noncompliant::before{background:var(--amber);}
-.stat-card-label{font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
-.stat-card-num{font-family:var(--font-mono);font-size:var(--fs-7xl);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:8px;}
-.stat-card.exempt .stat-card-num{color:var(--text3);}
-.stat-card.compliant .stat-card-num{color:var(--green);}
-.stat-card.noncompliant .stat-card-num{color:var(--amber);}
-.stat-card-detail{font-size:var(--fs-sm);color:var(--text2);line-height:1.5;}
-.stat-card-detail strong{font-weight:600;color:var(--text);}
-.donut-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;display:flex;align-items:center;justify-content:center;min-width:180px;}
-@media(max-width:900px){.donut-card{grid-column:1/-1;padding:20px;}}
+/* ===== COMPLIANCE VIZ ===== */
+.compliance-viz{margin-bottom:8px;}
+.cbar-track{height:22px;border-radius:11px;overflow:hidden;display:flex;background:var(--bg2);margin-bottom:20px;gap:2px;}
+.cbar-seg{height:100%;transition:width .7s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
+.cbar-seg:first-child{border-radius:11px 0 0 11px;}
+.cbar-seg:last-child{border-radius:0 11px 11px 0;}
+.cbar-seg.cb-compliant{background:var(--green);}
+.cbar-seg.cb-nc{background:var(--amber);}
+.cbar-seg.cb-exempt{background:var(--text3);opacity:.45;}
+.cbar-seg.cb-federal{background:var(--text3);opacity:.22;}
+.cbar-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:760px){.cbar-legend{grid-template-columns:1fr 1fr;}}
+@media(max-width:440px){.cbar-legend{grid-template-columns:1fr;}}
+.cbl-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.cbl-item::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.cbl-item.cbl-compliant::before{background:var(--green);}
+.cbl-item.cbl-nc::before{background:var(--amber);}
+.cbl-item.cbl-exempt::before{background:var(--text3);opacity:.45;}
+.cbl-item.cbl-federal::before{background:var(--text3);opacity:.25;}
+.cbl-item.cbl-muted{opacity:.72;}
+.cbl-label{font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.cbl-num{font-family:var(--font-mono);font-size:var(--fs-5xl);font-weight:600;letter-spacing:-.02em;line-height:1;margin-bottom:8px;}
+.cbl-item.cbl-compliant .cbl-num{color:var(--green);}
+.cbl-item.cbl-nc .cbl-num{color:var(--amber);}
+.cbl-item.cbl-exempt .cbl-num,.cbl-item.cbl-federal .cbl-num{color:var(--text2);}
+.cbl-desc{font-size:var(--fs-xs);color:var(--text3);line-height:1.55;}
 
 /* ===== LAW EXPLAINER ===== */
 .law-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start;margin-top:24px;}
@@ -476,28 +484,38 @@ footer{border-top:1px solid var(--rule);padding:32px 28px;max-width:1200px;margi
         <div class="section-title">Who's following the $50k rule?</div>
         <div class="section-desc">O. Reg. 476/24 limits salary range width to $50,000 for jobs under $200k. High-compensation roles (annual max &gt;$200k) are fully exempt from disclosure requirements.</div>
       </div>
-      <div class="compliance-grid">
-        <div class="stat-card exempt">
-          <div class="stat-card-label">Exempt</div>
-          <div class="stat-card-num" id="pctExempt">—</div>
-          <div class="stat-card-detail">Roles where max salary &gt;$200k. <strong>Not subject to the $50k width rule</strong> — full salary disclosure is required but the range width is unrestricted.</div>
+      <div class="compliance-viz">
+        <div class="cbar-track" aria-hidden="true">
+          <div class="cbar-seg cb-compliant" id="barCompliant" style="width:0%"></div>
+          <div class="cbar-seg cb-exempt"    id="barExempt"    style="width:0%"></div>
+          <div class="cbar-seg cb-nc"        id="barNonCompliant" style="width:0%"></div>
+          <div class="cbar-seg cb-federal"   id="barFederal"   style="width:0%"></div>
         </div>
-        <div class="stat-card compliant">
-          <div class="stat-card-label">Compliant</div>
-          <div class="stat-card-num" id="pctCompliant">—</div>
-          <div class="stat-card-detail">Regulated postings (max ≤$200k) where the salary range width is <strong>within the $50,000 limit</strong> set by O. Reg. 476/24.</div>
-        </div>
-        <div class="stat-card noncompliant">
-          <div class="stat-card-label">Non-compliant</div>
-          <div class="stat-card-num" id="pctNonCompliant">—</div>
-          <div class="stat-card-detail">Regulated postings where range width <strong>exceeds $50,000</strong>. Federally regulated employers (banks, telecoms) are excluded — they operate under the Canada Labour Code.</div>
-        </div>
-        <div class="donut-card">
-          <svg id="donutSvg" viewBox="0 0 140 140" width="140" height="140" aria-label="Compliance donut chart"></svg>
+        <div class="cbar-legend">
+          <div class="cbl-item cbl-compliant">
+            <div class="cbl-label">Compliant</div>
+            <div class="cbl-num" id="pctCompliant">—</div>
+            <div class="cbl-desc">Range width ≤ $50k — within the legal limit set by O. Reg. 476/24.</div>
+          </div>
+          <div class="cbl-item cbl-nc">
+            <div class="cbl-label">Non-compliant</div>
+            <div class="cbl-num" id="pctNonCompliant">—</div>
+            <div class="cbl-desc">Ontario ESA employers where range width exceeds $50,000.</div>
+          </div>
+          <div class="cbl-item cbl-exempt cbl-muted">
+            <div class="cbl-label">Exempt</div>
+            <div class="cbl-num" id="pctExempt">—</div>
+            <div class="cbl-desc">Max salary &gt; $200k — the $50k width rule doesn't apply to these roles.</div>
+          </div>
+          <div class="cbl-item cbl-federal cbl-muted">
+            <div class="cbl-label">Federal employers</div>
+            <div class="cbl-num" id="pctFederal">—</div>
+            <div class="cbl-desc">Banks &amp; telecoms — governed by Canada Labour Code, not Ontario ESA. Wide ranges not counted as violations.</div>
+          </div>
         </div>
       </div>
       <p style="font-size:var(--fs-xs);color:var(--text3);margin-top:16px;line-height:1.6;max-width:720px">
-        <strong>Methodology note:</strong> "Exempt" and "compliant" describe the disclosed salary data relative to the regulation. They do not evaluate actual employer pay practices. Federally regulated employers (banks, telecoms) are excluded from the non-compliant count — they operate under the Canada Labour Code, not Ontario ESA, so any salary disclosure they make is voluntary.
+        <strong>Note:</strong> Percentages reflect share of all current postings. The four groups add to 100%. "Federal employers" are shown separately because they disclose salary voluntarily — their range widths are excluded from the non-compliant count.
       </p>
 
       <div class="law-grid">
@@ -924,14 +942,18 @@ function renderOverview(valid){
   const exempt=valid.filter(j=>j._exempt);
   const compliant=valid.filter(j=>j._compliant);
   const nonCompliant=valid.filter(j=>j._nonCompliant);
+  const federalWide=valid.filter(j=>j._federal&&!j._exempt&&j._width>50000);
   if($('pctExempt'))$('pctExempt').textContent=Math.round(exempt.length/N*100)+'%';
   if($('pctCompliant'))$('pctCompliant').textContent=Math.round(compliant.length/N*100)+'%';
   if($('pctNonCompliant'))$('pctNonCompliant').textContent=Math.round(nonCompliant.length/N*100)+'%';
-  drawDonut('donutSvg',[
-    {val:exempt.length,color:getCSSVar('--text3'),label:'Exempt'},
-    {val:compliant.length,color:getCSSVar('--green'),label:'Compliant'},
-    {val:nonCompliant.length,color:getCSSVar('--amber'),label:'Non-compliant'},
-  ]);
+  if($('pctFederal'))$('pctFederal').textContent=Math.round(federalWide.length/N*100)+'%';
+  // Animate stacked bar (use rAF so transition fires after paint)
+  requestAnimationFrame(()=>{
+    if($('barCompliant'))$('barCompliant').style.width=Math.round(compliant.length/N*100)+'%';
+    if($('barExempt'))$('barExempt').style.width=Math.round(exempt.length/N*100)+'%';
+    if($('barNonCompliant'))$('barNonCompliant').style.width=Math.round(nonCompliant.length/N*100)+'%';
+    if($('barFederal'))$('barFederal').style.width=Math.round(federalWide.length/N*100)+'%';
+  });
 }
 
 /* ===== RENDER: EMPLOYERS ===== */
