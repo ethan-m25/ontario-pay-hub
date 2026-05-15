@@ -95,9 +95,10 @@ nav{position:sticky;top:0;z-index:200;background:var(--nav-bg);border-bottom:1px
 @media(max-width:760px){.masthead-cta-label,.masthead-cta-sub{display:none;}.masthead-cta{flex:1;}}
 
 /* ===== TAB BAR ===== */
-.tab-bar{position:sticky;top:56px;z-index:100;background:var(--nav-bg);border-bottom:1px solid var(--border);padding:0 28px;height:44px;display:flex;align-items:center;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
-.tab-bar::-webkit-scrollbar{display:none;}
-@media(max-width:600px){.tab-bar{padding:0 12px;}}
+.tab-bar{position:sticky;top:56px;z-index:100;background:var(--nav-bg);border-bottom:1px solid var(--border);height:44px;}
+.tab-bar-inner{max-width:1200px;margin:0 auto;padding:0 28px;height:100%;display:flex;align-items:center;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.tab-bar-inner::-webkit-scrollbar{display:none;}
+@media(max-width:600px){.tab-bar-inner{padding:0 12px;}}
 .tab-btn{font-size:var(--fs-sm);font-weight:600;color:var(--text3);background:transparent;border:none;border-radius:20px;padding:5px 14px;cursor:pointer;white-space:nowrap;transition:all var(--transition);font-family:var(--font-sans);}
 .tab-btn:hover{color:var(--text);background:var(--surface2);}
 .tab-btn.active{background:var(--accent);color:#fff;}
@@ -456,10 +457,12 @@ footer{border-top:1px solid var(--rule);padding:32px 28px;max-width:1200px;margi
 
 <!-- ===== TAB BAR ===== -->
 <div class="tab-bar" role="tablist">
-  <button class="tab-btn active" data-tab="overview" onclick="showTab('overview')" role="tab">Overview</button>
-  <button class="tab-btn" data-tab="employers" onclick="showTab('employers')" role="tab">Employers</button>
-  <button class="tab-btn" data-tab="bands" onclick="showTab('bands')" role="tab">Salary Bands</button>
-  <button class="tab-btn" data-tab="skills" onclick="showTab('skills')" role="tab">Skill Signal</button>
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" data-tab="overview" onclick="showTab('overview')" role="tab">Overview</button>
+    <button class="tab-btn" data-tab="employers" onclick="showTab('employers')" role="tab">Employers</button>
+    <button class="tab-btn" data-tab="bands" onclick="showTab('bands')" role="tab">Salary Bands</button>
+    <button class="tab-btn" data-tab="skills" onclick="showTab('skills')" role="tab">Skill Signal</button>
+  </div>
 </div>
 
 <!-- ===== MAIN CONTENT ===== -->
