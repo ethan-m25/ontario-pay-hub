@@ -138,7 +138,12 @@ LEVER_SLUG_RE = re.compile(
     r'https?://jobs\.lever\.co/([a-zA-Z0-9._-]+)',
     re.IGNORECASE,
 )
-_SKIP_SLUGS = {'jobs', 'search', 'home'}
+_SKIP_SLUGS = {
+    'jobs', 'search', 'home',
+    # BC-based companies that show up in Ontario salary searches but are not Ontario employers
+    'kabam',     # Kabam Games — Vancouver, BC
+    'evr',       # Evr Craft Brewing — BC
+}
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
