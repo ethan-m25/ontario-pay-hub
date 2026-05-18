@@ -148,6 +148,7 @@ body {
   transition: background var(--transition), color var(--transition);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  padding-bottom: 36px; /* clearance for fixed footer bar */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1222,16 +1223,21 @@ tr.selected-row { background: var(--accent-dim) !important; border-left: 3px sol
 .role-link { cursor:pointer; transition:opacity var(--transition); }
 .role-link:hover { opacity:.72; }
 
-/* ===== FOOTER — newspaper dateline ===== */
+/* ===== FOOTER — fixed slim bar ===== */
 footer {
-  border-top: 3px solid var(--text);
-  padding: 28px;
-  max-width: 1320px; margin: 0 auto;
-  display: flex; justify-content: space-between;
-  align-items: flex-start; flex-wrap: wrap; gap: 14px;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 90;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 0 16px;
+  height: 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
 }
-footer p { font-family: var(--font-sans); font-size: var(--fs-sm); color: var(--text3); line-height: 1.6; }
-footer a { color: var(--accent); text-decoration: none; }
+footer p { display: none; }
+footer a { color: var(--text3); text-decoration: none; font-size: 11px; }
+footer a:hover { color: var(--accent); }
 .footer-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .law-tag {
   font-family: var(--font-mono);
@@ -2380,17 +2386,18 @@ tbody tr:hover {
   </main>
 </div>
 
-<!-- FOOTER -->
+<!-- FOOTER — fixed slim bar (accessible regardless of scroll depth) -->
 <footer>
-  <div>
-    <p>Compensation ranges aggregated from publicly advertised Ontario job postings under <strong><a href="https://www.ontario.ca/document/your-guide-employment-standards-act-0/requirements-related-publicly-advertised-job" target="_blank" rel="noopener" style="color:inherit">Ontario ESA job posting requirements</a></strong>. Data comes from public company career sites and job platforms; postings behind login walls are not included.</p>
+  <div style="display:flex;align-items:center;gap:12px;min-width:0;overflow:hidden">
+    <a href="https://www.ola.org/en/legislative-business/bills/parliament-43/session-1/bill-149" target="_blank" rel="noopener" style="white-space:nowrap;font-size:11px;font-family:var(--font-mono);color:var(--text3);text-decoration:none;letter-spacing:.04em" title="Ontario Employment Standards Act · Bill 149 (2024)">⚖️ Bill&nbsp;149</a>
+    <span style="color:var(--border);user-select:none">|</span>
+    <span style="font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ontario ESA · salary data from public postings</span>
   </div>
   <div class="footer-right">
-    <button onclick="exportCSV()" class="law-tag" style="cursor:pointer;border:none;background:var(--green-dim);border:1px solid rgba(16,185,129,.25);color:var(--green)" hidden>⬇ Export CSV</button>
-    <span class="update-tag" id="updateTag"><span class="dot"></span>Updated daily</span>
-    <a href="https://www.ola.org/en/legislative-business/bills/parliament-43/session-1/bill-149" target="_blank" rel="noopener" class="law-tag" style="text-decoration:none">⚖️ Bill 149 (2024) ↗</a>
+    <button onclick="exportCSV()" style="display:none;cursor:pointer;border:1px solid rgba(16,185,129,.3);background:var(--green-dim);color:var(--green);padding:3px 8px;border-radius:4px;font-size:11px;font-family:var(--font-mono)" id="exportCsvBtn">⬇ CSV</button>
+    <span class="update-tag" id="updateTag" style="padding:3px 8px;font-size:10px"><span class="dot"></span>Updated daily</span>
+    <a href="https://payhub.fyi" style="font-size:11px;font-family:var(--font-mono);color:var(--text3);text-decoration:none;white-space:nowrap">PayHub ↗</a>
   </div>
-  <div class="network-back" style="width:100%;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">ontariopayhub.fyi &middot; Part of <a href="https://payhub.fyi">PayHub</a> &mdash; 5 jurisdictions</div>
 </footer>
 
 <!-- AUTH MODAL -->
@@ -3629,9 +3636,12 @@ function _pruneTopRows(tbody) {
   const rows = tbody.querySelectorAll('tr:not(#vsSpacer):not(#loadMoreRow)');
   if (rows.length <= _VS_MAX_ROWS) return;
   const toPrune = rows.length - _VS_KEEP_ROWS;
+  const firstKept = rows[toPrune];
+  // Snapshot scroll anchor before any DOM changes
+  const anchorBefore = firstKept ? firstKept.getBoundingClientRect().top : 0;
   let prunedH = 0;
   for (let i = 0; i < toPrune; i++) {
-    prunedH += rows[i].offsetHeight;
+    prunedH += rows[i].getBoundingClientRect().height;
     rows[i].remove();
   }
   _vsTopPad += prunedH;
@@ -3639,10 +3649,15 @@ function _pruneTopRows(tbody) {
   if (!spacer) {
     spacer = document.createElement('tr');
     spacer.id = 'vsSpacer';
-    spacer.innerHTML = '<td colspan="7" style="padding:0;border:none"></td>';
+    spacer.innerHTML = '<td colspan="7" style="padding:0;border:0;line-height:0"><div id="vsSpacerDiv"></div></td>';
     tbody.insertBefore(spacer, tbody.firstChild);
   }
-  spacer.firstChild.style.height = _vsTopPad + 'px';
+  document.getElementById('vsSpacerDiv').style.height = _vsTopPad + 'px';
+  // Re-anchor so the first kept row stays at the same visual position
+  if (firstKept) {
+    const anchorAfter = firstKept.getBoundingClientRect().top;
+    if (anchorAfter !== anchorBefore) window.scrollBy(0, anchorAfter - anchorBefore);
+  }
 }
 
 function _setupVsObserver() {
