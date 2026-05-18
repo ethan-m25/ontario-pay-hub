@@ -17,6 +17,8 @@ import signal
 import socket
 import sys
 import time
+import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import date, timedelta
 
@@ -24,7 +26,10 @@ from datetime import date, timedelta
 socket.setdefaulttimeout(20)
 
 # ── Shared constants ───────────────────────────────────────────────────────────
-EXA_API_KEY = os.environ.get("EXA_API_KEY", "d0d9614a-58d8-4166-9b27-4ae6b6e2761e")
+EXA_API_KEY   = os.environ.get("EXA_API_KEY", "d0d9614a-58d8-4166-9b27-4ae6b6e2761e")
+BRAVE_API_KEY = os.environ.get("BRAVE_API_KEY", "BSAodGE-EMqeQg5P6m4SW2pFXfrD06r")
+
+_exa_exhausted = False  # set True on 402, switches collect_candidates to Brave
 OLLAMA_API  = "http://127.0.0.1:11434/api/generate"
 MODEL       = "qwen2.5:14b"
 TODAY       = date.today().isoformat()
@@ -43,7 +48,37 @@ SKIP_PATTERNS = [
     "workopolis.com/search", "monster.ca/jobs/search",
     "eluta.ca", "simplyhired.ca/search",
     "myworkdayjobs.com",  # handled by search-workday.py
+    # News / press releases / reports that Exa returns for salary queries
+    "newswire.ca", "businesswire.com", "prnewswire.com",
+    "investmentexecutive.com", "benefitscanada.com",
+    "consulting.ca/news", "/press-release", "/newsroom/",
+    "/investor-relations", "/dam/scotiabank", "/quarterly-",
+    "/annual-report", "/media-advisory",
+    "sportstechjobs.com", "talent.com/salary", "levels.fyi",
+    "ca.finance.yahoo.com", "theglobeandmail.com", "financialpost.com",
+    "benefitspro.com", "hrreporter.com",
 ]
+
+# Minimum signals to accept a page as a real job posting before calling LLM
+_JOB_PAGE_MARKERS = [
+    "apply", "qualifications", "requirements", "responsibilities",
+    "salary range", "compensation range", "salary:", "we are looking",
+    "job description", "about the role", "what you will do",
+    "what we offer", "about you", "your responsibilities",
+    "minimum qualifications", "preferred qualifications",
+]
+
+
+def is_job_page(text: str) -> bool:
+    """Quick pre-LLM check: does this page text look like an actual job posting?
+
+    Requires at least 2 job-page markers to be present. Saves ~45s ollama compute
+    per page for news articles, PDFs, and other non-job pages that pass URL filters.
+    """
+    if not text or len(text) < 300:
+        return False
+    t = text.lower()
+    return sum(1 for m in _JOB_PAGE_MARKERS if m in t) >= 2
 
 ONTARIO_TERMS = [
     "ontario", "toronto", "ottawa", "waterloo", "mississauga",
@@ -106,14 +141,10 @@ def acquire_lock(lock_file, log):
 
 # ── Exa search ─────────────────────────────────────────────────────────────────
 def exa_search(query, num_results=10, start_date=None, log=None):
-    """Query Exa neural search API. Returns parsed JSON or None on error.
+    global _exa_exhausted
+    if _exa_exhausted:
+        return None
 
-    Args:
-        query:       Search string.
-        num_results: Number of results to request (default 10).
-        start_date:  ISO 8601 string for earliest publication date, or None for no filter.
-        log:         Optional log function for error reporting.
-    """
     payload = {
         "query": query,
         "numResults": num_results,
@@ -136,11 +167,44 @@ def exa_search(query, num_results=10, start_date=None, log=None):
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code == 402:
+            _exa_exhausted = True
+            if log:
+                log("  Exa credits exhausted (402) — switching to Brave Search")
+        else:
+            if log:
+                log(f"  Exa HTTP {e.code}: {e}")
+        return None
     except Exception as e:
         if log:
             log(f"  Exa error: {e}")
         return None
 
+
+def brave_search(query, num_results=10, log=None):
+    """Brave Search API fallback — free tier: 2000 queries/month."""
+    params = urllib.parse.urlencode({"q": query, "count": min(num_results, 20)})
+    req = urllib.request.Request(
+        f"https://api.search.brave.com/res/v1/web/search?{params}"
+    )
+    req.add_header("Accept", "application/json")
+    req.add_header("Accept-Encoding", "gzip")
+    req.add_header("X-Subscription-Token", BRAVE_API_KEY)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            raw = r.read()
+            try:
+                import gzip
+                data = json.loads(gzip.decompress(raw))
+            except Exception:
+                data = json.loads(raw)
+        results = data.get("web", {}).get("results", [])
+        return {"results": [{"url": r.get("url", ""), "text": r.get("description", "")} for r in results]}
+    except Exception as e:
+        if log:
+            log(f"  Brave error: {e}")
+        return None
 
 # ── HTML page fetch ────────────────────────────────────────────────────────────
 def fetch_html_text(url, timeout=15, user_agent=None, max_chars=4000,
@@ -330,8 +394,15 @@ def collect_candidates(queries, num_results, log, start_date=None, skip=None):
         skip = SKIP_PATTERNS
     candidates = {}
     for i, query in enumerate(queries, 1):
-        log(f"Exa [{i:2d}/{len(queries)}]: {query[:65]}...")
-        resp = exa_search(query, num_results=num_results, start_date=start_date, log=log)
+        if _exa_exhausted:
+            log(f"Brave [{i:2d}/{len(queries)}]: {query[:65]}...")
+            resp = brave_search(query, num_results=num_results, log=log)
+        else:
+            log(f"Exa [{i:2d}/{len(queries)}]: {query[:65]}...")
+            resp = exa_search(query, num_results=num_results, start_date=start_date, log=log)
+            if resp is None and _exa_exhausted:
+                log(f"Brave [{i:2d}/{len(queries)}] (retry): {query[:65]}...")
+                resp = brave_search(query, num_results=num_results, log=log)
         if not resp:
             continue
         results = resp.get("results", [])
