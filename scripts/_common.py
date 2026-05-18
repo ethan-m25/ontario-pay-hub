@@ -36,6 +36,8 @@ TODAY       = date.today().isoformat()
 SHARED_DIR  = os.path.expanduser("~/.openclaw/shared")
 OUTPUT_FILE = os.path.join(SHARED_DIR, f"ontario-jobs-raw-{TODAY}.txt")
 DATA_FILE   = os.path.expanduser("~/ontario-pay-hub/data/jobs.json")
+CURRENCY    = "CAD"  # ISO 4217
+REGION      = "ON"
 
 # Chrome-like UA — less likely to be blocked than a generic scraper string
 _UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
@@ -421,6 +423,8 @@ def collect_candidates(queries, num_results, log, start_date=None, skip=None):
 # ── Output ────────────────────────────────────────────────────────────────────
 def write_job(output_file, job):
     """Append a job dict as a JSON line (crash-safe — opens and closes on each write)."""
+    job.setdefault("currency", CURRENCY)
+    job.setdefault("region",   REGION)
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     with open(output_file, "a") as f:
         f.write(json.dumps(job, ensure_ascii=False) + "\n")
