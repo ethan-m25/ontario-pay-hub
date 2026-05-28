@@ -134,6 +134,30 @@ python3 search-browser.py >> "$LOG_FILE" 2>&1
 log "Step 3 done (exit $?)"
 
 # 4. update-jobs.sh (dedup + classify + link-validate, no publish)
+# === Phase 5 classify — hub: ontario (added 2026-05-28) ===
+log "--- Phase 5 classify_step ---"
+python3 "$HOME/shared-scripts/region_classifier/classify_step.py" \
+    --hub "ontario" --no-llm >> "$LOG_FILE" 2>&1 || true
+log "classify_step done (exit $?)"
+
+# === Phase 5.5 publish gate — hub: ontario (added 2026-05-28) ===
+# Filters today's raw to classifier-claimed Ontario rows only.
+# Safety belts inside apply_classifier_gate.py guarantee the raw file
+# is left untouched if anything looks wrong (missing pending_jobs,
+# zero matches, or drop% > 5). On refusal, gate exits non-zero —
+# update-jobs.sh continues with the original raw so the day's data is
+# never lost; healthcheck picks up the non-zero rc and alerts.
+GATE_RAW="$HOME/.openclaw/shared/ontario-jobs-raw-$(date +%Y-%m-%d).txt"
+if [[ -f "$GATE_RAW" ]]; then
+    log "--- Phase 5.5 publish gate ---"
+    python3 "$HOME/shared-scripts/region_classifier/apply_classifier_gate.py" \
+        --hub "ontario" \
+        --raw "$GATE_RAW" \
+        --max-drop-pct 5.0 >> "$LOG_FILE" 2>&1
+    GATE_RC=$?
+    log "publish gate done (exit $GATE_RC)"
+fi
+
 log "--- Step 4: update-jobs.sh ---"
 SKIP_GIT_PUBLISH=1 bash "$SCRIPTS_DIR/update-jobs.sh" >> "$LOG_FILE" 2>&1
 log "Step 4 done (exit $?)"
@@ -182,12 +206,14 @@ log "Step 8c done (exit $?)"
 # 9. Publish once
 log "--- Step 9: publish_jobs.sh ---"
 bash "$SCRIPTS_DIR/publish_jobs.sh" >> "$LOG_FILE" 2>&1
-log "Step 9 done (exit $?)"
+STEP_9_RC=$?  # Phase 2.1
+log "Step 9 done (exit $STEP_9_RC)"
 
 # 9b. Rebuild job_enrichment.json (Layer 1 + cluster context for detail panel)
 log "--- Step 9b: build_job_enrichment.py ---"
 python3 /Users/clawii/cc-workspace/scripts/build_job_enrichment.py >> "$LOG_FILE" 2>&1
-if [[ $? -eq 0 ]]; then
+STEP_9B_RC=$?  # Phase 2.1
+if [[ $STEP_9B_RC -eq 0 ]]; then
   cd "$HOME/ontario-pay-hub"
   git add data/job_enrichment.json
   git diff --cached --quiet || git commit -m "data: rebuild job_enrichment.json ($(date +%Y-%m-%d))"
@@ -277,3 +303,15 @@ sys.exit(0 if resp.status in (200, 204) else 1)
 fi
 
 log "=== Nightly pipeline complete ==="
+
+
+# === Phase 2 healthcheck (added 2026-05-27, polished by Phase 2.1) ===
+# PUBLISH_RC is set right after the publish step (see above). PIPELINE_RC
+# falls back to $? for crash/kill paths where PUBLISH_RC is unset.
+# Reports daily-new shortfall + active-stock benchmark alerts via Discord;
+# --pipeline-exit-code surfaces explicit non-zero exits to a 🚨🚨 PIPELINE FAILED alert.
+PUBLISH_RC=$(( STEP_9_RC > STEP_9B_RC ? STEP_9_RC : STEP_9B_RC ))  # Phase 2.1
+PIPELINE_RC=${PUBLISH_RC:-$?}
+python3 "$HOME/shared-scripts/hub_pipeline_healthcheck.py" \
+  --hub on --pipeline-exit-code "$PIPELINE_RC" || true
+exit "$PIPELINE_RC"
