@@ -5,7 +5,7 @@ REPO_DIR="$HOME/ontario-pay-hub"
 DATA_FILE="$REPO_DIR/data/jobs.json"
 DISCORD_WEBHOOK="https://discord.com/api/webhooks/1496112180704051259/bGcHy1oDkDWgQVKClowYdaZCxcI4L0GoPVd4Rtqcfmp4FV2l15cLQLWrVD8ga4QmOL1A"
 TODAY="${TODAY:-$(date +%Y-%m-%d)}"
-SKIP_NOTIFY="${SKIP_NOTIFY:-0}"
+SKIP_NOTIFY="${SKIP_NOTIFY:-1}"
 
 notify_discord() {
   local msg="$1"
@@ -30,10 +30,19 @@ read NEW_COUNT ACTIVE_COUNT NEW_TODAY NEWLY_ARCHIVED < <(python3 -c "
 import json
 m = json.load(open('$DATA_FILE')).get('meta', {})
 print(m.get('count',0), m.get('active',0), m.get('new_today',0), m.get('links_newly_archived',0))
-" 2>/dev/null || echo "0 0 0 0")
+" 2>/dev/null || echo "0 0 0 0" )
+
+HUB_CODE="$(basename "$REPO_DIR" | sed 's/-pay-hub$//; s/^ontario$/on/')"
+SYNC_FRONTEND="$HOME/shared-scripts/sync_frontend_counts.py"
+if [[ -f "$SYNC_FRONTEND" ]]; then
+  python3 "$SYNC_FRONTEND" --hub "$HUB_CODE" || echo "[publish] frontend count sync failed for $HUB_CODE"
+fi
 
 cd "$REPO_DIR"
 git add data/jobs.json
+for f in index.html insights.html skills.html compliance.html methodology.html disclaimer.html; do
+  [[ -f "$f" ]] && git add "$f"
+done
 if git diff --cached --quiet; then
   echo "No publishable changes in data/jobs.json"
   notify_discord "ℹ️ Ontario Pay Hub [$TODAY]: no publishable changes ($NEW_COUNT total)"
@@ -73,3 +82,11 @@ fi
 
 notify_discord "$DISCORD_MSG"
 echo "Published data/jobs.json to origin/main"
+
+
+PORTAL_DIR="$HOME/payhub-portal"
+if [[ -f "$PORTAL_DIR/scripts/update-regions.py" ]]; then
+  python3 "$PORTAL_DIR/scripts/update-regions.py" || echo "[publish] main portal region sync failed"
+  export PATH="/Users/clawii/.npm-global/bin:$PATH"
+  npx wrangler pages deploy "$PORTAL_DIR" --project-name payhub-portal --branch main 2>&1 | tail -3 || true
+fi

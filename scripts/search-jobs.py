@@ -7,9 +7,13 @@ Run by kisame at 2 AM ET daily via OpenClaw cron.
 
 Flow:
   1. Query Exa API with Ontario-salary-specific searches
-  2. For each unique URL: fetch HTML, send to local ollama for extraction
+  2. For each unique URL: fetch HTML, quick job-page check, then LLM extraction
   3. Write valid jobs as JSON lines to ~/.openclaw/shared/ontario-jobs-raw-DATE.txt
   4. update-jobs.sh picks up that file next
+
+NOTE: Lever/Greenhouse/Workday/KPMG/SuccessFactors/Amazon all have dedicated scrapers.
+      This script targets platforms NOT covered elsewhere: Jobvite, iCIMS, SmartRecruiters,
+      Breezy, JazzHR, Indeed viewjob pages, and long-tail Ontario employers.
 """
 
 import os
@@ -22,29 +26,51 @@ from _common import (
     make_logger, acquire_lock,
     fetch_html_text, extract_job,
     load_existing_keys, collect_candidates, write_job,
+    is_job_page,
 )
 
 LOG_FILE      = os.path.expanduser("~/ontario-pay-hub/scripts/search.log")
 LOCK_FILE     = os.path.expanduser("~/ontario-pay-hub/scripts/.search.lock")
-LOOKBACK_DATE = (date.today() - timedelta(days=30)).isoformat() + "T00:00:00.000Z"
+LOOKBACK_DATE = (date.today() - timedelta(days=14)).isoformat() + "T00:00:00.000Z"
 
 log = make_logger(LOG_FILE)
 
 EXA_QUERIES = [
-    # --- Lever / Greenhouse (core) ---
-    'Ontario Canada job posting 2026 salary range "$" CAD engineer OR analyst OR manager site:jobs.lever.co OR site:boards.greenhouse.io OR site:job-boards.greenhouse.io',
-    'Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" OR "compensation range" "$" CAD developer OR director OR senior',
-    'Ontario 2026 job "base salary" "$80,000" OR "$90,000" OR "$100,000" OR "$120,000" OR "$150,000" site:careers.*.com OR site:jobs.*',
-    'ontario.ca OR jobs.toronto.ca OR linkedin.com/jobs Ontario 2026 salary disclosed compensation CAD',
-    'Ontario employer pay transparency 2026 new opening "salary" "$" CAD VP OR director OR manager OR specialist',
-
     # --- Jobvite (server-rendered, confirmed Ontario salary data) ---
-    'site:jobs.jobvite.com Ontario Canada salary range "$" CAD 2026 engineer OR analyst OR manager OR nurse OR director',
-    'site:jobs.jobvite.com Toronto OR Ottawa OR Waterloo OR Mississauga salary "$" CAD',
+    'site:jobs.jobvite.com Ontario Canada salary range "$" CAD 2026 engineer OR analyst OR manager OR director',
+    'site:jobs.jobvite.com Toronto OR Ottawa OR Waterloo OR Mississauga salary "$" CAD 2026',
 
-    # --- Indeed Canada via Exa (Exa index bypasses 403; viewjob pages have employer-disclosed ranges) ---
+    # --- iCIMS (hospitals, municipalities, professional services) ---
+    'site:careers.icims.com Ontario Canada salary range "$" CAD 2026 analyst OR manager OR specialist OR coordinator',
+    'site:jobs.icims.com Ontario Canada salary "$" CAD 2026 engineer OR nurse OR manager OR director',
+
+    # --- SmartRecruiters (Toronto scale-ups and mid-size companies) ---
+    'site:jobs.smartrecruiters.com Ontario Canada salary range "$" CAD 2026 engineer OR manager OR analyst OR designer',
+
+    # --- JazzHR (small-to-mid Ontario employers) ---
+    'site:app.jazz.co Ontario Canada salary "$" CAD 2026 manager OR analyst OR coordinator OR specialist',
+
+    # --- Breezy.hr (growing in Toronto tech and professional services) ---
+    'site:app.breezy.hr Ontario Canada salary "$" CAD 2026 engineer OR analyst OR manager OR director',
+
+    # --- Rippling / Deel / Remote (newer HR platforms, Ontario tech companies) ---
+    'site:jobs.rippling.com Ontario Canada salary range "$" CAD 2026',
+
+    # --- Indeed Canada viewjob (employer-disclosed ranges in canonical job pages) ---
     'site:ca.indeed.com/viewjob Ontario 2026 salary "$" CAD engineer OR analyst OR manager OR director',
     'site:ca.indeed.com/viewjob Toronto OR Ottawa OR Waterloo salary range "$" CAD 2026',
+
+    # --- Long-tail Ontario employers (catch-all for companies not on major ATSes) ---
+    'Ontario Canada job posting 2026 "salary range" "$" CAD -site:glassdoor.com -site:indeed.com -site:linkedin.com -site:ziprecruiter.com engineer OR analyst OR manager site:*.com/careers OR site:*.ca/careers',
+    'Toronto OR Waterloo OR Ottawa hiring 2026 "salary range" "$" CAD developer OR director OR senior -site:glassdoor.com -site:payscale.com -site:salary.com',
+
+    # --- Public sector (municipalities, agencies, Crown corps not on Workday) ---
+    'Ontario municipality OR "City of" 2026 "salary range" "$" CAD job posting manager OR analyst OR director site:*.ca',
+    '"Ontario agency" OR "Crown corporation" OR "MFIPPA" 2026 salary range "$" CAD job posting annual Ontario',
+
+    # --- Healthcare / hospitals (often on Taleo or custom ATS) ---
+    'Ontario hospital OR "health network" 2026 "salary range" "$" CAD job posting nurse OR manager OR analyst OR coordinator',
+    'site:tbe.taleo.net OR site:career.taleo.net Ontario Canada salary "$" CAD 2026 manager OR analyst OR specialist',
 ]
 
 
@@ -67,6 +93,14 @@ def main():
         log(f"[{i:2d}/{len(candidates)}] {url[:75]}")
         t0 = time.time()
         page_text = fetch_html_text(url)
+
+        if not page_text:
+            log(f"  → no content")
+            continue
+
+        if not is_job_page(page_text):
+            log(f"  → skip (not a job page)")
+            continue
 
         try:
             job = extract_job(url, snippet, page_text, log)

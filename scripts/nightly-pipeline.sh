@@ -312,6 +312,6 @@ log "=== Nightly pipeline complete ==="
 # --pipeline-exit-code surfaces explicit non-zero exits to a 🚨🚨 PIPELINE FAILED alert.
 PUBLISH_RC=$(( STEP_9_RC > STEP_9B_RC ? STEP_9_RC : STEP_9B_RC ))  # Phase 2.1
 PIPELINE_RC=${PUBLISH_RC:-$?}
-python3 "$HOME/shared-scripts/hub_pipeline_healthcheck.py" \
+python3 "$HOME/shared-scripts/hub_pipeline_healthcheck.py" --failure-only \
   --hub on --pipeline-exit-code "$PIPELINE_RC" || true
 exit "$PIPELINE_RC"

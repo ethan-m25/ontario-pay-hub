@@ -31,6 +31,7 @@ from _common import (
     make_logger, acquire_lock,
     fetch_html_text, extract_job,
     load_existing_keys, collect_candidates, write_job,
+    is_job_page,
 )
 
 LOG_FILE      = os.path.expanduser("~/ontario-pay-hub/scripts/browser.log")
@@ -40,63 +41,65 @@ LOOKBACK_DATE = (date.today() - timedelta(days=30)).isoformat() + "T00:00:00.000
 log = make_logger(LOG_FILE)
 
 EXA_QUERIES = [
-    # --- SAP SuccessFactors (Scotiabank, Rogers, Magna, Telus, CIBC uses hybrid) ---
-    'site:scotiabank.com Ontario job salary range "$" CAD 2026 engineer OR analyst OR manager',
-    'site:jobs.rogers.com Ontario salary "$" CAD 2026',  # correct domain (careers.rogers.com does not resolve)
-    'site:magna.com careers Ontario salary range "$" CAD 2026',
-    'SuccessFactors Ontario Canada job posting 2026 salary "$" CAD engineer OR director OR manager',
+    # NOTE: SuccessFactors (Telus, Deloitte, EY, Scotiabank, OPG) → handled by search-successfactors.py
+    # NOTE: KPMG → handled by search-kpmg.py
+    # NOTE: Amazon → handled by search-amazon.py
+    # This scraper focuses on JS-rendered portals NOT covered by dedicated scrapers.
 
-    # --- Telus (SuccessFactors at careers.telus.com — confirmed salary disclosure) ---
-    'site:careers.telus.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager OR specialist',
-    'Telus Communications Ontario job 2026 "salary range" "$" CAD analyst OR engineer OR manager OR director',
-
-    # --- Phenom People (Bell Canada, RBC jobs.rbc.com, CIBC jobs.cibc.com) ---
-    # NOTE: RBC has two portals — rbc.wd3.myworkdayjobs.com (Workday, covered by search-workday.py)
-    # AND jobs.rbc.com (Phenom People, different job set). Both need to be scraped.
-    'site:jobs.bell.ca Ontario salary range "$" CAD 2026',
-    'Bell Canada Ontario job 2026 salary "$" CAD engineer OR analyst OR manager',
+    # --- Phenom People (RBC jobs.rbc.com, CIBC jobs.cibc.com, TD) ---
+    # RBC has two portals: rbc.wd3.myworkdayjobs.com (covered) AND jobs.rbc.com (Phenom, this)
     'site:jobs.rbc.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager OR director',
     'site:jobs.rbc.com Toronto 2026 salary "$" CAD specialist OR associate OR VP OR senior',
-    'site:jobs.cibc.com Ontario salary range "$" CAD 2026',
+    'site:jobs.cibc.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager',
     'site:careers.td.com Ontario salary range "$" CAD 2026 engineer OR analyst OR manager',
 
-    # --- Amazon.jobs ---
-    'site:amazon.jobs Ontario Canada salary range "$" CAD 2026',
-    'amazon.ca OR amazon.jobs Ontario 2026 salary range "$" CAD software engineer OR operations OR analyst',
+    # --- IBM Canada (AWS WAF protected, needs Playwright) ---
+    'site:careers.ibm.com Ontario Canada salary range "$" CAD 2026 engineer OR analyst OR consultant',
+    '"IBM Canada" Ontario job 2026 "salary range" "$" CAD software engineer OR consultant OR manager',
 
-    # --- Ontario Public Service / NeoGov ---
+    # --- Microsoft Canada ---
+    'site:careers.microsoft.com Ontario Canada salary range "$" CAD 2026 engineer OR program manager',
+    '"Microsoft Canada" Ontario job 2026 "salary" "$" CAD software engineer OR product manager',
+
+    # --- Ontario Public Service (gojobs.gov.on.ca / NeoGov) ---
     'site:gojobs.gov.on.ca salary range "$" CAD 2026 manager OR analyst OR specialist OR coordinator',
-    'Ontario Public Service 2026 salary range "$" CAD "Ministry of" job posting annual',
     '"Ontario Public Service" job 2026 "salary range" "$" CAD analyst OR specialist OR manager OR director',
 
-    # --- Shopify (Greenhouse, Cloudflare-protected) ---
-    'site:shopify.com/careers Ontario salary range "$" CAD 2026',
-
-    # --- Paradox (Loblaw) ---
+    # --- Loblaw / Paradox ---
     'site:careers.loblaw.ca Ontario salary range "$" CAD 2026',
     'Loblaw Companies 2026 Ontario job posting "salary range" "$" CAD manager OR analyst OR director',
 
-    # --- Canada Life / Great-West Life / Lifeco (Winnipeg HQ but large Ontario presence) ---
-    'site:canadalife.com careers Ontario salary range "$" CAD 2026',
-    '"Canada Life" OR "Great-West Life" Ontario job posting salary range "$" CAD 2026',
+    # --- Canada Life / Great-West Life ---
+    '"Canada Life" OR "Great-West Life" Ontario job posting salary range "$" CAD 2026 analyst OR manager',
 
     # --- CN Rail (Cornerstone) ---
-    'site:cn.ca/careers Ontario salary "$" CAD 2026',
+    'site:cn.ca/careers Ontario salary "$" CAD 2026 engineer OR analyst OR manager OR director',
 
-    # --- BambooHR (mid-size Ontario tech/retail/logistics) ---
-    'site:*.bamboohr.com/careers Ontario salary range "$" CAD 2026',
-
-    # --- Breezy.hr (growing in Toronto tech) ---
-    'site:app.breezy.hr Ontario salary "$" CAD 2026 engineer OR analyst OR manager',
-
-    # --- Taleo (large legacy users) ---
-    'site:oracle.taleo.net OR site:ats.ca Ontario 2026 salary range "$" CAD',
+    # --- Taleo (legacy large-enterprise users: hospitals, municipalities, Hydro) ---
     'site:tbe.taleo.net Ontario Canada salary "$" CAD 2026 manager OR engineer OR analyst',
+    'site:career.taleo.net Ontario Canada salary range "$" CAD 2026',
 
-    # --- Workday custom domains (careers sites with own domain, not myworkdayjobs.com) ---
-    # Some Ontario employers embed Workday but use branded URLs like careers.manulife.com
-    'site:careers.manulife.com Ontario salary range "$" CAD 2026',
-    '"Intact Financial" OR "Intact Insurance" Ontario job salary range "$" CAD 2026',
+    # --- SmartRecruiters (growing in Toronto scale-ups) ---
+    'site:jobs.smartrecruiters.com Ontario Canada salary "$" CAD 2026 engineer OR manager OR analyst',
+
+    # --- Apple Canada ---
+    'site:jobs.apple.com Ontario Canada salary range "$" CAD 2026 engineer OR software OR specialist',
+
+    # --- CGI Group ---
+    '"CGI Group" OR "CGI Inc" Ontario 2026 "salary range" "$" CAD consultant OR analyst OR developer',
+
+    # --- WSP Canada / Stantec / Jacobs (engineering firms, Workday/custom) ---
+    '"WSP Canada" OR "Stantec" Ontario 2026 "salary range" "$" CAD engineer OR specialist OR manager',
+
+    # --- Manulife / Sun Life (branded Workday domains) ---
+    'site:careers.manulife.com Ontario salary range "$" CAD 2026 analyst OR manager OR actuary',
+
+    # --- Intact Financial / Aviva Canada / Definity (insurers) ---
+    '"Intact Financial" OR "Aviva Canada" OR "Definity" Ontario job salary range "$" CAD 2026',
+
+    # --- Open search: catch new Ontario employers with salary disclosure not in our DB ---
+    'Ontario employer job posting 2026 "salary range" "$" CAD site:jobs.lever.co OR site:job-boards.greenhouse.io OR site:jobs.ashby.com',
+    'Ontario Canada 2026 "salary range" "$80,000" OR "$90,000" OR "$100,000" CAD job posting manager OR engineer OR analyst -site:glassdoor.com -site:indeed.com',
 ]
 
 
@@ -111,41 +114,62 @@ def _fetch_with_browser(url, timeout_ms=15000):
         log("  Playwright not installed — pip3 install playwright && python3 -m playwright install chromium")
         return None
 
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            ctx = browser.new_context(
-                user_agent=_UA,
-                locale="en-CA",
-                viewport={"width": 1280, "height": 800},
-            )
-            page = ctx.new_page()
-            # Block images/fonts to speed up load
-            page.route("**/*.{png,jpg,jpeg,gif,svg,woff,woff2,ttf}", lambda r: r.abort())
-            page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
-            try:
-                page.wait_for_load_state("networkidle", timeout=5000)
-            except PwTimeout:
-                pass  # page is loaded enough
-            text = page.inner_text("body")
-            browser.close()
-        return text[:5000] if text else None
-    except Exception as e:
-        log(f"  Browser error: {e}")
-        return None
+    attempts = [
+        {"args": ["--disable-http2"], "wait_until": "domcontentloaded", "label": "browser-h1"},
+        {"args": [], "wait_until": "commit", "label": "browser-commit"},
+    ]
+
+    last_err = None
+    for idx, attempt in enumerate(attempts, 1):
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True, args=attempt["args"])
+                ctx = browser.new_context(
+                    user_agent=_UA,
+                    locale="en-CA",
+                    viewport={"width": 1280, "height": 800},
+                    ignore_https_errors=True,
+                )
+                page = ctx.new_page()
+                page.route("**/*.{png,jpg,jpeg,gif,svg,woff,woff2,ttf}", lambda r: r.abort())
+                page.goto(url, wait_until=attempt["wait_until"], timeout=timeout_ms)
+                try:
+                    page.wait_for_load_state("networkidle", timeout=4000)
+                except PwTimeout:
+                    pass
+                text = page.inner_text("body")
+                browser.close()
+            if text:
+                return text[:5000], attempt["label"]
+        except Exception as e:
+            last_err = e
+            log(f"  Browser attempt {idx} failed ({attempt['label']}): {e}")
+            time.sleep(1)
+
+    if last_err:
+        log(f"  Browser error: {last_err}")
+    return None, None
 
 
 def _fetch_page(url):
     """Try plain HTTP first (via _common.fetch_html_text); fall back to Playwright if JS wall.
 
-    Returns (text, method) where method is "http" or "browser".
+    Returns (text, method) where method is "http" or a browser variant / fallback.
     """
-    # min_content_len=300: return None (not just empty string) when page is a JS shell
     text = fetch_html_text(url, max_chars=5000, skip_workday=False, min_content_len=300)
     if text:
         return text, "http"
-    text = _fetch_with_browser(url)
-    return text, "browser"
+
+    text, method = _fetch_with_browser(url)
+    if text:
+        return text, method
+
+    retry_text = fetch_html_text(url, timeout=20, max_chars=5000, skip_workday=False, min_content_len=120)
+    if retry_text:
+        log("  HTTP fallback recovered partial content after browser failure")
+        return retry_text, "http-retry"
+
+    return None, method or "browser-failed"
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -176,6 +200,10 @@ def main():
         if not page_text:
             log("  → no content")
             time.sleep(1)
+            continue
+
+        if not is_job_page(page_text):
+            log("  → skip (not a job page)")
             continue
 
         t1 = time.time()

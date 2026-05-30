@@ -99,6 +99,8 @@ SEED_SLUGS = [
     "riocan",  # auto-discovered 2026-04-08 — 7 Ontario+salary
 
     "11855760-canada-inc",  # auto-discovered 2026-04-21 — 4 Ontario+salary
+
+    "alliedreit",  # auto-discovered 2026-05-30 — 15 Ontario+salary
 ]
 
 DISCOVERY_QUERIES = [

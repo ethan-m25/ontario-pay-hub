@@ -3,3 +3,15 @@ data/job-archive/
 scripts/__pycache__/
 scripts/archive.log
 scripts/archive-extract.log
+
+# --- runtime backups / state (added 2026-05-30) ---
+*.bak
+*.bak-*
+*.bak.*
+*.premeta
+*.workdayfixbak.*
+*.kpmgbak.*
+*.kpmgadminbak.*
+*.regiongatebak.*
+*.region_dropped.jsonl
+*.foreign_dropped.jsonl

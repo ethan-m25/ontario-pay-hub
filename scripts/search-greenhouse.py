@@ -131,7 +131,9 @@ SEED_SLUGS = [
     ("aottechnologies", None),          # auto-discovered 2026-04-23 — 3 Ontario+salary
 
     ("bergindustrialservice", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary
-    ("localcoin", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary
+    ("localcoin", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary,
+    "divergent",  # scout 2026-05-19,
+    "remotecom",  # scout 2026-05-19
 ]
 
 # Exa queries to discover additional Greenhouse slugs posting Ontario jobs

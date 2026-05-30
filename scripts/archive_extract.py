@@ -53,9 +53,136 @@ Job text:
 """
 
 
+SENIORITY_LEVELS = [
+    ("principal",   ["principal engineer", "principal architect", "principal scientist", "principal designer"]),
+    ("staff",       ["staff engineer", "staff software", "staff data", "staff product", "staff ml"]),
+    ("director",    ["director,", "director of", "director -", "vp,", "vp of", "vice president"]),
+    ("senior",      ["senior ", "sr.", "sr ", "lead ", "lead,", "tech lead", "engineering lead"]),
+    ("manager",     ["manager,", "manager -", "manager of", " manager\n", "head of"]),
+    ("mid",         ["analyst,", "analyst -", " analyst", "associate ", "intermediate", "mid-level", "mid level"]),
+    ("entry",       ["junior", "jr.", "graduate", "intern", "co-op", "coop", "entry level", "entry-level", "new grad"]),
+]
+
+EDUCATION_MAP = [
+    ("phd",          re.compile(r'\b(ph\.?d|doctorate|doctoral)\b', re.IGNORECASE)),
+    ("masters",      re.compile(r"\b(master'?s?|mba|m\.sc|meng|m\.eng)\b", re.IGNORECASE)),
+    ("bachelors",    re.compile(r"\b(bachelor'?s?|b\.sc|b\.eng|beng|bcomm|b\.comm|undergraduate degree|university degree)\b", re.IGNORECASE)),
+    ("college",      re.compile(r"\b(college diploma|diploma|college degree|technical degree)\b", re.IGNORECASE)),
+    ("certification",re.compile(r"\b(certification|certified|pmp|cpa|cfa|cissp|aws certified|phr|shrm)\b", re.IGNORECASE)),
+]
+
+YEARS_RE = re.compile(
+    r'(\d+)\s*\+?\s*(?:to\s*\d+\s*)?\+?\s*years?\s+(?:of\s+)?(?:related\s+)?(?:relevant\s+)?(?:professional\s+)?(?:work\s+)?(?:industry\s+)?experience',
+    re.IGNORECASE,
+)
+YEARS_RE2 = re.compile(r'(\d+)\s*[-–]\s*(\d+)\s+years?\s+(?:of\s+)?experience', re.IGNORECASE)
+
+EMPLOYMENT_RE = re.compile(
+    r'\b(full[- ]?time|part[- ]?time|contract|temporary|temp\b|fixed[- ]?term|permanent|casual|seasonal)\b',
+    re.IGNORECASE,
+)
+
+
+def infer_seniority_fast(title, text):
+    title_lower = (title + " ").lower()
+    # Title takes priority — high confidence
+    for level, keywords in SENIORITY_LEVELS:
+        for kw in keywords:
+            if kw in title_lower:
+                return {"value": level, "confidence": "high", "evidence": [f"title: '{kw}'"]}
+    # Fallback: first 500 chars of text (job summary / header), medium confidence
+    header = text[:500].lower()
+    for level, keywords in SENIORITY_LEVELS:
+        for kw in keywords:
+            if kw in header:
+                return {"value": level, "confidence": "medium", "evidence": [f"header: '{kw}'"]}
+    return {"value": "unknown", "confidence": "low", "evidence": []}
+
+
+def infer_education_fast(text):
+    chunk = text[:6000].lower()
+    found = []
+    for label, pat in EDUCATION_MAP:
+        if pat.search(chunk):
+            found.append(label)
+    if not found:
+        return {"value": "unknown", "confidence": "low", "evidence": []}
+    return {"value": found[0], "confidence": "high", "evidence": found}
+
+
+def infer_years_required_fast(text):
+    chunk = text[:6000]
+    m2 = YEARS_RE2.search(chunk)
+    if m2:
+        return {"value": int(m2.group(1)), "value_max": int(m2.group(2)), "confidence": "high",
+                "evidence": [m2.group(0).strip()]}
+    m = YEARS_RE.search(chunk)
+    if m:
+        return {"value": int(m.group(1)), "value_max": None, "confidence": "high",
+                "evidence": [m.group(0).strip()]}
+    return {"value": None, "value_max": None, "confidence": "low", "evidence": []}
+
+
+def infer_employment_type_fast(text):
+    chunk = text[:4000]
+    matches = list(dict.fromkeys(
+        m.group(0).lower().replace(" ", "-") for m in EMPLOYMENT_RE.finditer(chunk)
+    ))
+    if not matches:
+        return {"value": "unknown", "confidence": "low", "evidence": []}
+    normalised = []
+    for m in matches:
+        if "full" in m:
+            normalised.append("full-time")
+        elif "part" in m:
+            normalised.append("part-time")
+        elif "contract" in m:
+            normalised.append("contract")
+        elif "temp" in m or "fixed" in m:
+            normalised.append("temporary")
+        elif "permanent" in m:
+            normalised.append("permanent")
+        elif m in ("casual", "seasonal"):
+            normalised.append(m)
+    normalised = list(dict.fromkeys(normalised))
+    return {"value": normalised[0] if normalised else "unknown",
+            "confidence": "high" if normalised else "low",
+            "evidence": matches[:3]}
+
+
+def extract_phase1_field(field, job_id, snapshot_id, source_json, text):
+    title = source_json.get("role", "")
+    if field == "seniority":
+        r = infer_seniority_fast(title, text)
+        return {"field": "seniority", **r, "source_snapshot_id": snapshot_id,
+                "extractor_version": "seniority.v1", "model": "rule-only",
+                "extracted_at": utc_now()}
+    if field == "education":
+        r = infer_education_fast(text)
+        return {"field": "education", **r, "source_snapshot_id": snapshot_id,
+                "extractor_version": "education.v1", "model": "rule-only",
+                "extracted_at": utc_now()}
+    if field == "years_required":
+        r = infer_years_required_fast(text)
+        return {"field": "years_required", **r, "source_snapshot_id": snapshot_id,
+                "extractor_version": "years_required.v1", "model": "rule-only",
+                "extracted_at": utc_now()}
+    if field == "employment_type":
+        r = infer_employment_type_fast(text)
+        return {"field": "employment_type", **r, "source_snapshot_id": snapshot_id,
+                "extractor_version": "employment_type.v1", "model": "rule-only",
+                "extracted_at": utc_now()}
+    raise ValueError(f"Unknown phase1 field: {field}")
+
+
+PHASE1_FIELDS = {"seniority", "education", "years_required", "employment_type"}
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Run derived-field extraction against archived job pages.")
-    parser.add_argument("--field", default="work_mode", choices=["work_mode"], help="Field to extract.")
+    parser.add_argument("--field", default="work_mode",
+                        choices=["work_mode", "seniority", "education", "years_required", "employment_type"],
+                        help="Field to extract.")
     parser.add_argument("--limit", type=int, default=25, help="Max archived jobs to process in this invocation.")
     parser.add_argument("--resume", action="store_true", help="Resume the previous extraction run.")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="Ollama model to use for low-confidence extraction.")
@@ -285,6 +412,15 @@ def main():
 
         if args.field == "work_mode":
             result = extract_work_mode(job_id, snapshot_id, text, args.model)
+        elif args.field in PHASE1_FIELDS:
+            source_json = {}
+            src_path = ARCHIVE_JOBS_DIR / str(job_id) / "source.json"
+            if src_path.exists():
+                try:
+                    source_json = json.loads(src_path.read_text())
+                except Exception:
+                    pass
+            result = extract_phase1_field(args.field, job_id, snapshot_id, source_json, text)
         else:
             raise ValueError(f"Unsupported field: {args.field}")
 
