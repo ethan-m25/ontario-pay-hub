@@ -233,6 +233,19 @@ fi
 
 rm -f "$QUEUE_FILE"
 
+# 9b2. Refresh main portal with ON's final-state numbers (E1, approved
+# 2026-06-10). Without this, payhub.fyi's last deploy of the day (06:55
+# master) predates ON's ~11:00 finish, so the flagship always showed
+# yesterday's ON data on the portal.
+log "--- Step 9b2: update-regions + portal deploy (E1) ---"
+PORTAL_DIR="$HOME/payhub-portal"
+if [[ -f "$PORTAL_DIR/scripts/update-regions.py" ]]; then
+  python3 "$PORTAL_DIR/scripts/update-regions.py" >> "$LOG_FILE" 2>&1 || log "E1: update-regions failed"
+  export PATH="/Users/clawii/.npm-global/bin:$PATH"
+  (cd "$PORTAL_DIR" && npx wrangler pages deploy . --project-name payhub-portal --branch main 2>&1 | tail -2) >> "$LOG_FILE" 2>&1 || log "E1: portal deploy failed"
+  log "Step 9b2 done"
+fi
+
 # 9c. Weekly skill salary data export (Sundays only)
 # Runs AFTER build_intelligence_db (via daily discovery_engine at 9am) has already
 # populated intelligence.db, so category_stats and extractions are fresh.
