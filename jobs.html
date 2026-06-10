@@ -4105,20 +4105,17 @@ function openJobDetail(id){
   const hasL1 = !!(enr.key_skills && enr.key_skills.length);
   const coreSkillSet = new Set(enr.core_skills || []);
 
-  // Related jobs: prefer cluster peers, fall back to category
-  let similar;
-  if(hasCluster && enr.related_job_ids && enr.related_job_ids.length){
-    similar = enr.related_job_ids
-      .map(rid=>JOBS.find(x=>x.id===parseInt(rid)))
-      .filter(Boolean)
-      .slice(0,5);
-  } else {
-    similar = [...peers].filter(x=>!isArchived(x)).sort((a,b)=>Math.abs(mid(a)-myMid)-Math.abs(mid(b)-myMid)).slice(0,5);
-  }
+  // Related jobs: same category, closest midpoint, active only.
+  // Cluster path removed 2026-06-10 (owner decision): clusters frozen since
+  // 2026-05-01, ~35% non-homogeneous, and related_job_ids could point at
+  // archived rows — produced nonsense pairings (e.g. Exec Comp manager ->
+  // Clinical Manager, Inpatient Oncology).
+  const similar = [...peers].filter(x=>!isArchived(x)).sort((a,b)=>Math.abs(mid(a)-myMid)-Math.abs(mid(b)-myMid)).slice(0,5);
 
-  // Cluster salary context
+  // Cluster salary context — disabled 2026-06-10, same rationale as the
+  // recommendation path: clusters frozen 2026-05-01, ~35% non-homogeneous.
   let clusterContextHTML = "";
-  if(hasCluster && enr.cluster_median){
+  if(false && hasCluster && enr.cluster_median){
     const clPct = Math.round((enr.salary_percentile_in_cluster||0)*100);
     const clMedPos = Math.min(Math.round(
       (enr.cluster_median - Math.min(...(enr.related_job_ids||[]).map(rid=>{
@@ -4231,7 +4228,7 @@ function openJobDetail(id){
 
     ${similar.length?`
     <div class="jd-section">
-      <div class="jd-section-title">${hasCluster&&enr.related_job_ids&&enr.related_job_ids.length?"Similar roles (same cluster)":"Closest-paying "+catLabel+" roles"}</div>
+      <div class="jd-section-title">${"Closest-paying "+catLabel+" roles"}</div>
       ${similar.map(s=>`
         <div class="jd-similar-item" onclick="openJobDetail(${s.id})">
           <div style="min-width:0">
