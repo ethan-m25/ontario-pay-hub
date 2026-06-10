@@ -119,6 +119,16 @@ nav{position:sticky;top:0;z-index:200;background:var(--nav-bg);border-bottom:1px
 .section-title{font-size:var(--fs-4xl);font-weight:800;letter-spacing:-.025em;line-height:1.15;margin-bottom:8px;}
 .section-desc{font-size:var(--fs-base);color:var(--text2);max-width:620px;line-height:1.65;}
 
+/* ===== EMPLOYERS-TAB AGGREGATES (neutral, no names — 2026-06-10) ===== */
+.agg-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+@media(max-width:760px){.agg-grid{grid-template-columns:1fr;}}
+.agg-row{display:grid;grid-template-columns:140px 1fr 56px;align-items:center;gap:10px;margin:7px 0;font-size:var(--fs-sm);}
+.agg-row .lbl{color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.agg-row .track{height:10px;border-radius:5px;background:var(--bg2);overflow:hidden;}
+.agg-row .fill{height:100%;border-radius:5px;background:var(--accent);opacity:.75;transition:width .6s cubic-bezier(.4,0,.2,1);}
+.agg-row .fill.neutral{background:var(--text3);opacity:.5;}
+.agg-row .num{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--text3);text-align:right;}
+
 /* ===== COMPLIANCE VIZ ===== */
 .compliance-viz{margin-bottom:8px;}
 .cbar-track{height:22px;border-radius:11px;overflow:hidden;display:flex;background:var(--bg2);margin-bottom:20px;gap:2px;}
@@ -488,7 +498,7 @@ thead th,.results-header{background:#0a0e16 !important}
       <p class="masthead-sub">Analysis of <span id="mastheadCount">7,920</span> salary disclosures from Ontario job postings under Ontario ESA job-posting pay transparency rules, effective January 1, 2026.</p>
       <div class="masthead-meta">
         <span class="meta-chip"><strong id="metaTotal">7,068</strong> job postings</span>
-        <span class="meta-chip"><strong id="metaCompanies">309</strong> employers</span>
+        <span class="meta-chip"><strong id="metaCompanies">297</strong> employers</span>
         <span class="meta-chip">Updated daily</span>
         <span class="meta-chip">Province of Ontario</span>
       </div>
@@ -667,7 +677,24 @@ thead th,.results-header{background:#0a0e16 !important}
       </div>
       <div class="callout">
         <div class="callout-label">Aggregate finding</div>
-        <p><strong><span id="capOverPct">9%</span> of in-scope active postings</strong> (<span id="capOverCount">373</span> of <span id="capScopeCount">4,071</span>) disclose a salary range wider than the $50,000 cap. Median range width among over-cap postings: <strong id="capOverMedian">$65,200</strong>. Width alone does not establish a violation in individual cases — exemptions and posting context apply; see <a href="/compliance.html">the compliance report</a> for methodology.</p>
+        <p><strong><span id="capOverPct">9%</span> of in-scope active postings</strong> (<span id="capOverCount">373</span> of <span id="capScopeCount">4,030</span>) disclose a salary range wider than the $50,000 cap. Median range width among over-cap postings: <strong id="capOverMedian">$65,200</strong>. Width alone does not establish a violation in individual cases — exemptions and posting context apply; see <a href="/compliance.html">the compliance report</a> for methodology.</p>
+      </div>
+      <div class="agg-grid">
+        <div class="chart-card">
+          <div class="chart-card-title">How far over the cap?</div>
+          <div class="chart-card-sub">Over-cap active postings by how much their range width exceeds $50,000.</div>
+          <div id="aggOvershoot"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Regulated vs federal vs exempt</div>
+          <div class="chart-card-sub">Where today's salary-valid active postings sit relative to the rule's scope.</div>
+          <div id="aggScope"></div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-top:16px">
+        <div class="chart-card-title">Over-cap share by job category</div>
+        <div class="chart-card-sub">Share of each category's in-scope active postings with range width over $50,000. Categories with fewer than 30 in-scope postings omitted.</div>
+        <div id="aggCats"></div>
       </div>
     </section>
   </div>
@@ -804,7 +831,7 @@ thead th,.results-header{background:#0a0e16 !important}
 <footer>
   <div class="footer-note">
     Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
-    Analysis covers <span id="footerTotal">7,068</span> postings from <span id="footerCompanies">309</span> employers. All salary figures in CAD. Updated daily.
+    Analysis covers <span id="footerTotal">7,068</span> postings from <span id="footerCompanies">297</span> employers. All salary figures in CAD. Updated daily.
     · <a href="/jobs">Browse all jobs →</a>
   </div>
   <div class="network-back">ontariopayhub.fyi &middot; Part of <a href="https://payhub.fyi">PayHub</a> &mdash; 20 jurisdictions</div>
@@ -989,6 +1016,51 @@ function renderEmployers(valid){
     $('capOverMedian').textContent='$'+med.toLocaleString();
   }
   if($('capDataDate'))$('capDataDate').textContent=(window._dataGenerated||'').slice(0,10)||'today';
+
+  // ── Neutral aggregate charts (no employer names) ──────────────────────
+  const bar=(lbl,count,maxN,neutral)=>{
+    const pct=maxN?Math.max(2,Math.round(count/maxN*100)):0;
+    return `<div class="agg-row"><span class="lbl">${lbl}</span>`+
+      `<span class="track"><span class="fill${neutral?' neutral':''}" style="width:${pct}%"></span></span>`+
+      `<span class="num">${count.toLocaleString()}</span></div>`;
+  };
+  if($('aggOvershoot')){
+    const buckets=[['≤ $25k over',0],['$25–50k over',0],['$50–100k over',0],['$100k+ over',0]];
+    over.forEach(j=>{
+      const o=j._width-50000;
+      if(o<=25000)buckets[0][1]++;
+      else if(o<=50000)buckets[1][1]++;
+      else if(o<=100000)buckets[2][1]++;
+      else buckets[3][1]++;
+    });
+    const mx=Math.max(...buckets.map(b=>b[1]),1);
+    $('aggOvershoot').innerHTML=buckets.map(([l,c])=>bar(l,c,mx)).join('');
+  }
+  if($('aggScope')){
+    const fedAll=valid.filter(j=>j._federal&&!j._exempt).length;
+    const exemptN=valid.filter(j=>j._exempt).length;
+    const rows=[['In scope (provincial)',scope.length,false],['Federal — voluntary',fedAll,true],['Exempt (> $200k)',exemptN,true]];
+    const mx=Math.max(...rows.map(r=>r[1]),1);
+    $('aggScope').innerHTML=rows.map(([l,c,n])=>bar(l,c,mx,n)).join('');
+  }
+  if($('aggCats')){
+    const byCat={};
+    scope.forEach(j=>{
+      const c=j.category||'Other';
+      if(!byCat[c])byCat[c]={n:0,over:0};
+      byCat[c].n++;
+      if(j._width>50000)byCat[c].over++;
+    });
+    const rows=Object.entries(byCat)
+      .filter(([,v])=>v.n>=30)
+      .map(([c,v])=>[c,Math.round(v.over/v.n*100),v.over])
+      .sort((a,b)=>b[1]-a[1]).slice(0,10);
+    $('aggCats').innerHTML=rows.map(([c,p,o])=>
+      `<div class="agg-row"><span class="lbl">${c}</span>`+
+      `<span class="track"><span class="fill" style="width:${Math.max(2,p)}%"></span></span>`+
+      `<span class="num">${p}% · ${o}</span></div>`).join('')
+      ||'<div class="agg-row"><span class="lbl">Not enough data</span></div>';
+  }
 }
 
 /* ===== RENDER: BANDS ===== */
