@@ -132,9 +132,16 @@ SEED_SLUGS = [
 
     ("bergindustrialservice", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary
     ("localcoin", None),          # auto-discovered 2026-04-27 — 3 Ontario+salary,
-    "divergent",  # scout 2026-05-19,
-    "remotecom",  # scout 2026-05-19
+    ("divergent", None),  # scout 2026-05-19,
+    ("remotecom", None),  # scout 2026-05-19
 ]
+# Merge auto-discovered seeds persisted by add_seed (2026-06-10)
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.expanduser('~/shared-scripts'))
+from hub_employer_seeds import load_greenhouse_seeds
+_known = {s for s, _ in SEED_SLUGS}
+SEED_SLUGS = SEED_SLUGS + [t for t in load_greenhouse_seeds('on') if t[0] not in _known]
+
 
 # Exa queries to discover additional Greenhouse slugs posting Ontario jobs
 DISCOVERY_QUERIES = [
@@ -412,32 +419,16 @@ def main():
         if slug not in seed_set and count >= 3
     }
     if newly_qualified:
-        log(f"\nAuto-injecting {len(newly_qualified)} high-yield discovered slug(s) into SEED_SLUGS:")
-        script_path = os.path.abspath(__file__)
+        log(f"\nAuto-injecting {len(newly_qualified)} high-yield discovered slug(s) into employer_seed.json:")
         try:
-            source = open(script_path).read()
-            new_lines = []
+            import sys as _sys, os as _os
+            _sys.path.insert(0, _os.path.expanduser('~/shared-scripts'))
+            from hub_employer_seeds import add_seed
             for slug, count in sorted(newly_qualified.items(), key=lambda x: -x[1]):
-                # Skip if slug already present anywhere in file (idempotency guard)
-                if f'("{slug}"' in source:
-                    log(f"  skip {slug} — already in file")
-                    continue
-                log(f"  + {slug} ({count} Ontario+salary jobs)")
-                new_lines.append(
-                    f'    ("{slug}", None),          # auto-discovered {TODAY} — {count} Ontario+salary'
-                )
-            if new_lines:
-                insert_block = "\n".join(new_lines)
-                marker = "]\n\n# Exa queries to discover"
-                if marker in source:
-                    source = source.replace(
-                        marker,
-                        f"\n{insert_block}\n{marker}"
-                    )
-                    open(script_path, "w").write(source)
-                    log(f"  Persisted {len(new_lines)} slug(s) to SEED_SLUGS in script file")
+                if add_seed("on", "greenhouse", slug, note=f"auto-discovered {TODAY} — {count} jobs w/ salary"):
+                    log(f"  + {slug} ({count} jobs w/ salary) → employer_seed.json")
                 else:
-                    log("  Could not find SEED_SLUGS end marker — skipping persist")
+                    log(f"  = {slug} already in employer_seed.json")
         except Exception as e:
             log(f"  Auto-inject error: {e}")
 
