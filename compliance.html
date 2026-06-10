@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Pay Transparency Compliance Report — Ontario Pay Hub</title>
 <link rel="canonical" href="https://ontariopayhub.fyi/compliance.html">
-<meta name="description" content="Which Ontario employers are posting salary ranges wider than the $50,000 limit set by O. Reg. 476/24? Data from 2,000+ legally-mandated disclosures.">
+<meta name="description" content="How Ontario job postings measure against the $50,000 salary-range cap under O. Reg. 476/24. Aggregate compliance statistics recomputed daily from public postings.">
 <link rel="icon" type="image/png" href="/favicon.png?v=2">
 <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
 <link rel="shortcut icon" href="/favicon.ico?v=2">
@@ -204,20 +204,20 @@ thead th,.results-header{background:#0a0e16 !important}
 <div class="masthead">
   <div class="masthead-inner">
     <div class="masthead-kicker">Pay Transparency · O. Reg. 476/24</div>
-    <h1>Who isn't following<br>Ontario's <em>$50k rule</em>?</h1>
-    <p class="masthead-sub">Ontario law caps salary range width at $50,000 for regulated roles under $200k. Here's which provincial employers are exceeding that limit — and by how much.</p>
+    <h1>How postings measure against<br>Ontario's <em>$50k rule</em></h1>
+    <p class="masthead-sub">Ontario law caps salary range width at $50,000 for regulated roles under $200k. This report tracks how much of the market exceeds that cap — recomputed from active postings on every data refresh. It does not rank employers by name.</p>
     <div class="masthead-stats">
       <div class="mstat">
-        <div class="mstat-num red" id="statViolations">—</div>
-        <div class="mstat-label">violation postings</div>
+        <div class="mstat-num red" id="statViolations">373</div>
+        <div class="mstat-label">over-cap postings</div>
       </div>
       <div class="mstat">
-        <div class="mstat-num amber" id="statRate">—</div>
+        <div class="mstat-num amber" id="statRate">9%</div>
         <div class="mstat-label">of regulated posts</div>
       </div>
       <div class="mstat">
-        <div class="mstat-num" id="statEmployers">—</div>
-        <div class="mstat-label">employers cited</div>
+        <div class="mstat-num" id="statEmployers">4,071</div>
+        <div class="mstat-label">in-scope postings</div>
       </div>
     </div>
   </div>
@@ -227,26 +227,13 @@ thead th,.results-header{background:#0a0e16 !important}
 
   <!-- SECTION 1: EMPLOYER RANKING -->
   <div class="section">
-    <div class="section-kicker">Employer ranking</div>
-    <div class="section-title">The top offenders</div>
-    <div class="section-desc">Provincially regulated employers ranked by number of postings exceeding the $50k salary range limit. Federally regulated employers (banks, telecoms) operate under the Canada Labour Code — their disclosures are voluntary and excluded from this analysis.</div>
-
-    <div class="chart-card">
-      <div class="chart-card-title">Non-compliant postings by employer</div>
-      <div class="chart-card-sub">Number of non-compliant postings per employer. Muted text = median range width over the $50k limit. Employers with only 1 violation omitted.</div>
-      <div class="lollipop-wrap">
-        <svg id="lollipopSvg" class="lollipop" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid meet"></svg>
-      </div>
-    </div>
+    <div class="section-kicker">Aggregate view</div>
+    <div class="section-title">How much of the market exceeds the cap?</div>
+    <div class="section-desc">Provincially regulated active postings measured against the $50,000 range-width cap. Federally regulated employers (banks, telecoms) operate under the Canada Labour Code — their disclosures are voluntary and excluded from this analysis. This auto-refreshed report publishes aggregates only; employer-level findings belong in dated, fact-checked analyses.</div>
 
     <div class="callout">
-      <div class="callout-label">Key finding</div>
-      <p><strong>Deloitte Canada accounts for 46% of all violations</strong> — 133 of the 292 non-compliant postings come from a single firm. This concentration is striking: two companies (Deloitte and Amazon) together account for <strong id="top2pct">—</strong>% of all violations recorded in this dataset.</p>
-    </div>
-
-    <div class="finding-box">
-      <div class="finding-box-label">Why Deloitte?</div>
-      <p>Deloitte's violations span <strong>every job category</strong> — from Finance to Engineering to Legal — suggesting a systemic compensation structure issue rather than isolated posting errors. The median violation width is $68,000, meaning the average offending post is 36% wider than the legal limit. Deloitte has not publicly commented on its disclosure methodology.</p>
+      <div class="callout-label">Aggregate finding</div>
+      <p><strong><span id="capOverPct">9%</span> of in-scope active postings</strong> (<span id="capOverCount">373</span> of <span id="capScopeCount">4,071</span>) disclose a salary range wider than the $50,000 cap. Median range width among over-cap postings: <strong id="capOverMedian">$65,200</strong>. Data snapshot: <span id="capDataDate">2026-06-10</span>.</p>
     </div>
   </div>
 
@@ -259,7 +246,7 @@ thead th,.results-header{background:#0a0e16 !important}
     <div class="two-col">
       <div class="chart-card">
         <div class="chart-card-title">Violation width distribution</div>
-        <div class="chart-card-sub">All 292 non-compliant regulated postings by absolute salary range width.</div>
+        <div class="chart-card-sub">Non-compliant regulated postings by absolute salary range width.</div>
         <svg id="sevHistSvg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid meet" style="width:100%;display:block;margin-top:8px"></svg>
       </div>
       <div class="chart-card">
@@ -277,7 +264,7 @@ thead th,.results-header{background:#0a0e16 !important}
   <div class="section">
     <div class="section-kicker">By job category</div>
     <div class="section-title">Where do violations cluster?</div>
-    <div class="section-desc">Non-compliant postings by job category. Engineering and IT roles have the most violations — likely because these roles are most commonly found at the tech firms (Amazon, Okta, GitLab) that dominate the violation list.</div>
+    <div class="section-desc">Non-compliant postings by job category, with the rate normalized by each category’s posting volume. Category mix reflects which kinds of roles are posted most, not category-specific rules.</div>
 
     <div class="two-col">
       <div class="chart-card">
@@ -294,7 +281,7 @@ thead th,.results-header{background:#0a0e16 !important}
 
     <div class="finding-box">
       <div class="finding-box-label">Pattern</div>
-      <p>Violations follow <strong>employer concentration, not category risk</strong>. Engineering and IT are at the top because Deloitte and Amazon post heavily in those categories — not because tech roles are structurally harder to range. Finance ranks third despite being Deloitte's core business, suggesting some category-specific compliance within an otherwise non-compliant employer.</p>
+      <p>Over-cap postings follow <strong>employer concentration, not category risk</strong> — a small number of high-volume posters account for most of the wide ranges, so category rankings largely mirror where those employers post. Per-category rates are the more stable signal.</p>
     </div>
   </div>
 
@@ -352,11 +339,28 @@ const FEDERAL_SET = new Set([
   'cbc','canadian broadcasting corporation','air canada','via rail'
 ]);
 
-function normCompany(s) {
-  s = (s||'').trim().replace(/\s+/g,' ');
-  s = s.replace(/\s*\([^)]*\)\s*$/, '');
-  s = s.replace(/,?\s*(Inc\.?|Ltd\.?|Corp\.?|LLC|L\.P\.|LP|Co\.?|Canada|Limited|Ontario)\.?\s*$/gi, '');
-  return s.trim();
+function normCompany(name){
+  if(!name)return'Unknown';
+  let n=name.trim()
+    .replace(/^\S*\d\S*\s+/,'')
+    .replace(/\s*\([^)]+\)\s*$/,'')
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC)(?=\s|$)/gi,'')
+    .replace(/\s+Canada$/i,'')
+    .replace(/\s+/g,' ').trim();
+  const aliases={
+    'The Toronto-Dominion Bank':'TD Bank','TD General':'TD Bank',
+    'BMO Bank N.A.':'Bank of Montreal','BMO Nesbitt Burns':'Bank of Montreal',
+    'CIBC World Markets':'CIBC','PricewaterhouseCoopers':'PwC',
+    'PwC Management Services LP':'PwC',
+    'OMERS Administration Corporation':'OMERS','OMERS Private Equity':'OMERS',
+    "Ontario Teachers' Pension Plan Board":"Ontario Teachers'",
+    'Enbridge Gas Distribution':'Enbridge','Enbridge Employee Services CAN':'Enbridge',
+    'The Royal Trust Company':'RBC','RBC Direct Investing':'RBC',
+    'RBC Dominion Securities':'RBC','RBC Insurance Services':'RBC',
+    'Benchsci':'BenchSci','Pointclickcare':'PointClickCare',
+    'The City of Toronto':'City of Toronto'
+  };
+  return aliases[n]||n;
 }
 
 async function main() {
@@ -378,7 +382,7 @@ async function main() {
     (oj.jobs||[]).forEach(o=>{ if(o.status==='excluded_usd'||o.status==='archived') excludedIds.add(String(o.id)); });
   } catch(e) {}
 
-  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min&&!excludedIds.has(String(j.id)));
+  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min&&!excludedIds.has(String(j.id))&&(j.status||'active')!=='archived'&&(j.status||'active')!=='inactive');
   valid.forEach(j=>{
     j._width=j.max-j.min;
     j._mid=(j.max+j.min)/2;
@@ -397,30 +401,17 @@ async function main() {
   // Masthead stats
   $('statViolations').textContent=nc.length.toLocaleString();
   $('statRate').textContent=ncRate+'%';
-  $('statEmployers').textContent=nEmployers;
+  $('statEmployers').textContent=regulated.length.toLocaleString();
 
-  // By employer
-  const byEmp={};
-  nc.forEach(j=>{
-    if(!byEmp[j._co]) byEmp[j._co]={count:0,widths:[],cats:new Set()};
-    byEmp[j._co].count++;
-    byEmp[j._co].widths.push(j._width);
-    byEmp[j._co].cats.add(j.category||'Other');
-  });
-  const empEntries=Object.entries(byEmp)
-    .filter(([,v])=>v.count>=2)
-    .sort((a,b)=>b[1].count-a[1].count);
-  const top2=empEntries.slice(0,2).reduce((s,[,v])=>s+v.count,0);
-  if($('top2pct')) $('top2pct').textContent=Math.round(top2/nc.length*100);
+  // Aggregate fills (named ranking removed 2026-06-10)
+  const overWidths=nc.map(j=>j._width).sort((a,b)=>a-b);
+  const overMed=overWidths.length?overWidths[Math.floor(overWidths.length/2)]:0;
+  if($('capScopeCount')) $('capScopeCount').textContent=regulated.length.toLocaleString();
+  if($('capOverCount'))  $('capOverCount').textContent=nc.length.toLocaleString();
+  if($('capOverPct'))    $('capOverPct').textContent=ncRate+'%';
+  if($('capOverMedian')) $('capOverMedian').textContent='$'+overMed.toLocaleString();
+  if($('capDataDate'))   $('capDataDate').textContent=(valid.map(j=>(j.last_seen||j.posted||'')).filter(Boolean).sort().reverse()[0]||'').slice(0,10);
 
-  // Methodology counts
-  const regEmps=new Set(regulated.map(j=>j._co)).size;
-  const lastDate=valid.map(j=>j.last_seen||j.posted||'').filter(Boolean).sort().reverse()[0]||'—';
-  if($('methodTotal')) $('methodTotal').textContent=regulated.length.toLocaleString();
-  if($('methodEmploers')) $('methodEmploers').textContent=regEmps.toLocaleString();
-  if($('methodDate')) $('methodDate').textContent=lastDate.slice(0,7);
-
-  drawLollipop(empEntries.slice(0,12));
   drawSevHistogram(nc);
   drawSeverityGrid(nc);
   drawCatBars(nc, regulated);

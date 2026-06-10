@@ -681,7 +681,7 @@ thead th,.results-header{background:#0a0e16 !important}
     <h1>See what Ontario employers <em>disclose.</em></h1>
     <div class="masthead-sub">Analysis of <span id="mastheadCount">7,920</span> salary disclosures from Ontario job postings under Ontario ESA job-posting pay transparency rules, effective January 1, 2026.</div>
     <div class="masthead-meta">
-      <span>Dataset: <strong id="metaTotal">7,103</strong> job postings</span>
+      <span>Dataset: <strong id="metaTotal">7,068</strong> job postings</span>
       <span><strong id="metaCompanies">309</strong> employers</span>
       <span>Updated daily</span>
       <span>Province of Ontario, Canada</span>
@@ -693,7 +693,6 @@ thead th,.results-header{background:#0a0e16 !important}
 <nav class="section-nav" aria-label="Page sections">
   <div class="snav-inner">
     <a class="snav-pill active" href="#s-compliance" data-section="s-compliance">Compliance</a>
-    <a class="snav-pill" href="#s-companies" data-section="s-companies">Employers</a>
     <a class="snav-pill" href="#s-signals" data-section="s-signals">Market Signals</a>
     <a class="snav-pill" href="#s-distribution" data-section="s-distribution">Range Width</a>
     <a class="snav-pill snav-pill--ext" href="/skills.html">Skill Signal ↗</a>
@@ -714,17 +713,17 @@ thead th,.results-header{background:#0a0e16 !important}
     <div class="compliance-grid animate-in">
       <div class="stat-card exempt">
         <div class="stat-card-label">Exempt from disclosure</div>
-        <div class="stat-card-num" id="pctExempt">—</div>
+        <div class="stat-card-num" id="pctExempt">12%</div>
         <div class="stat-card-detail">Roles with an upper limit <strong>&gt;$200k/yr</strong>. These employers chose to disclose voluntarily — the $50k width rule does not apply.</div>
       </div>
       <div class="stat-card compliant">
         <div class="stat-card-label">Compliant disclosures</div>
-        <div class="stat-card-num" id="pctCompliant">55%</div>
+        <div class="stat-card-num" id="pctCompliant">73%</div>
         <div class="stat-card-detail">Roles under $200k with a salary range width <strong>≤$50k</strong>, meeting the regulation.</div>
       </div>
       <div class="stat-card noncompliant">
         <div class="stat-card-label">Exceeds $50k width limit</div>
-        <div class="stat-card-num" id="pctNonCompliant">14%</div>
+        <div class="stat-card-num" id="pctNonCompliant">5%</div>
         <div class="stat-card-detail">Regulated roles disclosing a range <strong>wider than $50k</strong>. Appears non-compliant with O. Reg. 476/24.</div>
       </div>
       <div class="donut-card">
@@ -738,33 +737,7 @@ thead th,.results-header{background:#0a0e16 !important}
   </section>
 
   <!-- SECTION 2: EMPLOYER SCATTER -->
-  <section class="insight-section" id="s-companies">
-    <div class="section-header">
-      <div class="section-kicker">Employer Profiles</div>
-      <div class="section-title">Employers by salary range width</div>
-      <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width. Vertical = compliance rate among regulated postings. Bubble size = number of postings. Federally regulated employers (banks, telecoms) appear in the chart but are not classified as non-compliant — their disclosures are voluntary under the Canada Labour Code.</div>
-    </div>
-
-    <div class="chart-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
-        <div class="legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--scatter-ok)"></div>Mostly compliant</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Non-compliant jobs present</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--text3);opacity:.5"></div>Majority exempt (&gt;$200k)</div>
-        </div>
-        <div style="font-size:var(--fs-xs);color:var(--text3)">Hover any bubble for details · Bubble size = posting count</div>
-      </div>
-      <div id="companyBars"></div>
-      <button class="scatter-expand-btn" onclick="openScatterFS()" aria-label="Open full screen chart">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1 5V1H5M9 1H13V5M13 9V13H9M5 13H1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        View full chart (landscape)
-      </button>
-    </div>
-
-    <div class="callout-neutral" style="margin-top:16px">
-      <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
-    </div>
-  </section>
+  
 
   <!-- SECTION 3: NON-COMPLIANCE LEADERS -->
   <section class="insight-section" id="s-signals">
@@ -775,15 +748,11 @@ thead th,.results-header{background:#0a0e16 !important}
     </div>
 
     <div class="chart-card">
-      <div class="chart-card-title">Top non-compliant employers</div>
-      <div class="chart-card-sub">Regulated postings (upper ≤$200k) with range width &gt;$50k. Count of non-compliant job postings.</div>
-      <table class="mini-table">
-        <thead><tr><th>Employer</th><th>Non-compliant posts</th><th>Median width</th></tr></thead>
-        <tbody id="nonCompliantBody"></tbody>
-      </table>
+      <div class="chart-card-title">Postings over the $50k width cap — aggregate view</div>
+      <div class="chart-card-sub">Regulated active postings (upper ≤$200k) with range width &gt;$50k. Recomputed nightly; this page does not rank employers by name.</div>
       <div class="callout" style="margin-top:16px">
-        <div class="callout-label">Largest non-compliant employers</div>
-        <p><strong>Deloitte Canada</strong> leads among provincially regulated employers in postings exceeding the $50k width limit. Banks and telecoms (RBC, BMO, TD, Telus, etc.) are federally regulated under the Canada Labour Code — their salary disclosures are voluntary and are excluded from this compliance analysis.</p>
+        <div class="callout-label">Aggregate finding</div>
+        <p><strong><span id="capOverPct">9%</span> of in-scope active postings</strong> (<span id="capOverCount">373</span> of <span id="capScopeCount">4,071</span>) disclose a range wider than the $50,000 cap. Banks and telecoms (federally regulated under the Canada Labour Code) are excluded — their disclosures are voluntary. See the <a href="/compliance.html">compliance report</a> for methodology and severity distribution.</p>
       </div>
     </div>
   </section>
@@ -879,7 +848,7 @@ thead th,.results-header{background:#0a0e16 !important}
 <footer>
   <div class="footer-note">
     Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
-    Analysis covers <span id="footerTotal">7,103</span> postings from <span id="footerCompanies">309</span> employers.
+    Analysis covers <span id="footerTotal">7,068</span> postings from <span id="footerCompanies">309</span> employers.
     All salary figures in CAD. Updated daily. · <a href="/jobs.html">Browse all jobs →</a>
   </div>
   <div class="network-back">ontariopayhub.fyi &middot; Part of <a href="https://payhub.fyi">PayHub</a> &mdash; 20 jurisdictions</div>
@@ -916,7 +885,7 @@ async function main() {
   }
 
   // Filter to valid salary entries
-  const valid = jobs.filter(j => j.min > 0 && j.max > 0 && j.max >= j.min);
+  const valid = jobs.filter(j => j.min > 0 && j.max > 0 && j.max >= j.min && (j.status||'active')!=='archived' && (j.status||'active')!=='inactive');
   const N = valid.length;
   const companies = new Set(valid.map(j => j.company)).size;
 
@@ -1041,50 +1010,17 @@ async function main() {
     `<div class="stat-tile"><div class="stat-tile-label">${l}</div><div class="stat-tile-num">${v}</div></div>`
   ).join('');
 
-  // ─── SECTION 3: COMPANY RANKING ───
-  const byCompany = {};
-  valid.forEach(j => {
-    const co = normCompany(j.company);
-    if(!byCompany[co]) byCompany[co] = {widths:[], nonCompliantCount:0, exemptCount:0, total:0};
-    byCompany[co].widths.push(j._widthPct);
-    byCompany[co].total++;
-    if(j._nonCompliant) byCompany[co].nonCompliantCount++;
-    if(j._exempt) byCompany[co].exemptCount++;
-  });
-  const coEntries = Object.entries(byCompany)
-    .filter(([k,v]) => v.total >= 5)
-    .map(([k,v]) => {
-      const sorted = v.widths.slice().sort((a,b)=>a-b);
-      const med = percentile(sorted, 50);
-      const exemptPct = v.exemptCount / v.total;
-      const cls = exemptPct > 0.5 ? 'exempt' : (v.nonCompliantCount > 0 ? 'noncompliant' : 'compliant');
-      const regulatedCount = v.total - v.exemptCount;
-      const complianceRate = regulatedCount > 0 ? ((regulatedCount - v.nonCompliantCount) / regulatedCount * 100) : null;
-      return {name:k, med, total:v.total, cls, nonCompliantCount:v.nonCompliantCount, exemptCount:v.exemptCount, complianceRate};
-    })
-    .sort((a,b) => a.med - b.med);
-  window._coEntries = coEntries;
-  drawCompanyScatter(coEntries);
+  // (Employer scatter removed 2026-06-10 — always-on page carries aggregate compliance only)
 
   // ─── SECTION 4: NON-COMPLIANCE LEADERS (platform chart moved to admin.html) ───
 
   // Non-compliant leaders
-  const ncByCompany = {};
-  nonCompliant.forEach(j => {
-    const co = normCompany(j.company);
-    if(!ncByCompany[co]) ncByCompany[co] = {count:0, widths:[]};
-    ncByCompany[co].count++;
-    ncByCompany[co].widths.push(j._width);
-  });
-  const ncEntries = Object.entries(ncByCompany).sort((a,b)=>b[1].count-a[1].count).slice(0,8);
-  $('nonCompliantBody').innerHTML = ncEntries.map(([co,v]) => {
-    const med = fmtK(percentile(v.widths.slice().sort((a,b)=>a-b), 50));
-    return `<tr>
-      <td>${co}</td>
-      <td><span class="badge badge-amber">${v.count}</span></td>
-      <td class="td-mono">${med}</td>
-    </tr>`;
-  }).join('');
+  const scopeJobs = valid.filter(j => !j._exempt && !j._federal);
+  const overJobs = scopeJobs.filter(j => j._width > 50000);
+  const capPct = scopeJobs.length ? Math.round(overJobs.length / scopeJobs.length * 100) : 0;
+  if($('capScopeCount')) $('capScopeCount').textContent = scopeJobs.length.toLocaleString();
+  if($('capOverCount'))  $('capOverCount').textContent  = overJobs.length.toLocaleString();
+  if($('capOverPct'))    $('capOverPct').textContent    = capPct + '%';
 
   // ─── SECTION 5: WORD × SALARY ───
   const titleWords = {};
@@ -1460,7 +1396,8 @@ function normCompany(name) {
   let n = name.trim()
     .replace(/^\S*\d\S*\s+/, '')                                                     // strip leading ID tokens: "0000050383 RBC..." → "RBC..."
     .replace(/\s*\([^)]+\)\s*$/, '')                                                 // strip trailing parentheticals: "(BMO)", "(Canada)"
-    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC|Canada)(?=\s|$)/gi, '')       // legal suffixes (lookahead keeps trailing space)
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC)(?=\s|$)/gi, '')
+    .replace(/\s+Canada$/i, '')       // legal suffixes (lookahead keeps trailing space)
     .replace(/\s+/g,' ').trim();
 
   // Canonical aliases — merge known alternate names / abbreviations

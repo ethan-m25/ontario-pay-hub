@@ -1,6 +1,6 @@
 /data/*
   X-Robots-Tag: noindex, noarchive, nosnippet
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
 /favicon*
   Cache-Control: public, max-age=0, must-revalidate

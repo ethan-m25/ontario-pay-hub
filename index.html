@@ -487,7 +487,7 @@ thead th,.results-header{background:#0a0e16 !important}
       <h1>See what Ontario employers <em>disclose.</em></h1>
       <p class="masthead-sub">Analysis of <span id="mastheadCount">7,920</span> salary disclosures from Ontario job postings under Ontario ESA job-posting pay transparency rules, effective January 1, 2026.</p>
       <div class="masthead-meta">
-        <span class="meta-chip"><strong id="metaTotal">7,103</strong> job postings</span>
+        <span class="meta-chip"><strong id="metaTotal">7,068</strong> job postings</span>
         <span class="meta-chip"><strong id="metaCompanies">309</strong> employers</span>
         <span class="meta-chip">Updated daily</span>
         <span class="meta-chip">Province of Ontario</span>
@@ -536,22 +536,22 @@ thead th,.results-header{background:#0a0e16 !important}
         <div class="cbar-legend">
           <div class="cbl-item cbl-compliant">
             <div class="cbl-label">Compliant</div>
-            <div class="cbl-num" id="pctCompliant">55%</div>
+            <div class="cbl-num" id="pctCompliant">73%</div>
             <div class="cbl-desc">Range width ≤ $50k — within the legal limit set by O. Reg. 476/24.</div>
           </div>
           <div class="cbl-item cbl-nc">
             <div class="cbl-label">Non-compliant</div>
-            <div class="cbl-num" id="pctNonCompliant">14%</div>
+            <div class="cbl-num" id="pctNonCompliant">5%</div>
             <div class="cbl-desc">Ontario ESA employers where range width exceeds $50,000.</div>
           </div>
           <div class="cbl-item cbl-exempt cbl-muted">
             <div class="cbl-label">Exempt</div>
-            <div class="cbl-num" id="pctExempt">—</div>
+            <div class="cbl-num" id="pctExempt">12%</div>
             <div class="cbl-desc">Max salary &gt; $200k — the $50k width rule doesn't apply to these roles.</div>
           </div>
           <div class="cbl-item cbl-federal cbl-muted">
             <div class="cbl-label">Federal employers</div>
-            <div class="cbl-num" id="pctFederal">31%</div>
+            <div class="cbl-num" id="pctFederal">10%</div>
             <div class="cbl-desc">Banks &amp; telecoms — governed by Canada Labour Code, not Ontario ESA. Wide ranges not counted as violations.</div>
           </div>
         </div>
@@ -657,43 +657,17 @@ thead th,.results-header{background:#0a0e16 !important}
   <div id="tab-employers" class="tab-section" role="tabpanel">
     <section class="insight-section">
       <div class="section-header">
-        <div class="section-kicker">Employer Ranking</div>
-        <div class="section-title">Who's ignoring the rule?</div>
-        <div class="section-desc">Provincially regulated employers ranked by number of postings exceeding the $50,000 salary range limit. Federally regulated employers (banks, telecoms) are excluded — their disclosures are voluntary under the Canada Labour Code.</div>
+        <div class="section-kicker">Range-Cap Compliance</div>
+        <div class="section-title">Active postings vs the $50,000 cap</div>
+        <div class="section-desc">Provincially regulated postings measured against the O.&nbsp;Reg.&nbsp;476/24 range-width cap. Counts use <strong>today's active postings only</strong>; federally regulated employers (banks, telecoms — Canada Labour Code) and exempt postings (upper end above $200k) are excluded. These aggregates recalculate nightly. This auto-refreshed page does not rank employers by name — named analyses belong in dated, fact-checked reports.</div>
       </div>
       <div class="chart-card">
-        <div class="chart-card-title">Non-compliant postings by employer</div>
-        <div class="chart-card-sub">Number of non-compliant postings per employer. Muted text = median range width over the $50k limit. Employers with only 1 violation omitted.</div>
-        <div class="lollipop-wrap">
-          <svg id="lollipopSvg" class="lollipop" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
+        <div class="chart-card-title">Width-cap snapshot</div>
+        <div class="chart-card-sub">Data snapshot: <span id="capDataDate">2026-06-10</span> · recomputed from data/jobs.json on every refresh</div>
       </div>
       <div class="callout">
-        <div class="callout-label">Key finding</div>
-        <p><strong>Deloitte Canada accounts for 46% of all violations</strong> — 133 of the 292 non-compliant postings come from a single firm. Two companies (Deloitte and Amazon) together account for <strong id="top2pct">—</strong>% of all violations recorded in this dataset.</p>
-      </div>
-      <div class="finding-box">
-        <div class="finding-box-label">Why Deloitte?</div>
-        <p>Deloitte's violations span <strong>every job category</strong> — from Finance to Engineering to Legal — suggesting a systemic compensation structure issue rather than isolated posting errors. The median violation width is $68,000, meaning the average offending post is 36% wider than the legal limit.</p>
-      </div>
-    </section>
-
-    <section class="insight-section">
-      <div class="section-header">
-        <div class="section-kicker">Employer Profiles</div>
-        <div class="section-title">Employers by salary range width</div>
-        <div class="section-desc">Each bubble is one employer (≥5 postings). Horizontal position = median salary range width as a % of midpoint salary. Vertical position = compliance rate among regulated postings. Bubble size = number of postings. Federally regulated employers appear in the chart but are not classified as non-compliant.</div>
-      </div>
-      <div class="chart-card" style="padding:20px 20px 16px">
-        <div id="companyBars"></div>
-      </div>
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:var(--fs-xs);color:var(--text3)">
-        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--scatter-ok);opacity:.8"></span>Mostly compliant</span>
-        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--amber);opacity:.8"></span>Non-compliant jobs present</span>
-        <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--text3);opacity:.6"></span>Mostly exempt (&gt;$200k)</span>
-      </div>
-      <div class="callout-neutral">
-        <p><strong>Bubbles in the top-left</strong> (narrow &amp; fully compliant) represent employers posting precise, regulation-meeting ranges. <strong>Bubbles in the bottom-right</strong> are wide and non-compliant — larger bubbles there represent the most significant compliance gaps by posting volume. Very narrow ranges (&lt;10%) may indicate a fixed rate rather than a true band.</p>
+        <div class="callout-label">Aggregate finding</div>
+        <p><strong><span id="capOverPct">9%</span> of in-scope active postings</strong> (<span id="capOverCount">373</span> of <span id="capScopeCount">4,071</span>) disclose a salary range wider than the $50,000 cap. Median range width among over-cap postings: <strong id="capOverMedian">$65,200</strong>. Width alone does not establish a violation in individual cases — exemptions and posting context apply; see <a href="/compliance.html">the compliance report</a> for methodology.</p>
       </div>
     </section>
   </div>
@@ -830,7 +804,7 @@ thead th,.results-header{background:#0a0e16 !important}
 <footer>
   <div class="footer-note">
     Data sourced from publicly advertised Ontario job postings under the <em>Employment Standards Act</em>, O. Reg. 476/24 (effective Jan 1, 2026).
-    Analysis covers <span id="footerTotal">7,103</span> postings from <span id="footerCompanies">309</span> employers. All salary figures in CAD. Updated daily.
+    Analysis covers <span id="footerTotal">7,068</span> postings from <span id="footerCompanies">309</span> employers. All salary figures in CAD. Updated daily.
     · <a href="/jobs">Browse all jobs →</a>
   </div>
   <div class="network-back">ontariopayhub.fyi &middot; Part of <a href="https://payhub.fyi">PayHub</a> &mdash; 20 jurisdictions</div>
@@ -888,7 +862,8 @@ function normCompany(name){
   let n=name.trim()
     .replace(/^\S*\d\S*\s+/,'')
     .replace(/\s*\([^)]+\)\s*$/,'')
-    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC|Canada)(?=\s|$)/gi,'')
+    .replace(/\s+(Inc\.?|Ltd\.?|Corp\.?|Co\.?|LLP|ULC)(?=\s|$)/gi,'')
+    .replace(/\s+Canada$/i,'')
     .replace(/\s+/g,' ').trim();
   const aliases={
     'The Toronto-Dominion Bank':'TD Bank','TD General':'TD Bank',
@@ -941,7 +916,7 @@ async function main(){
     (oj.jobs||[]).forEach(o=>{ if(o.status==='excluded_usd'||o.status==='archived') excludedIds.add(String(o.id)); });
   }catch(e){}
 
-  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min&&!excludedIds.has(String(j.id)));
+  const valid=jobs.filter(j=>j.min>0&&j.max>0&&j.max>=j.min&&!excludedIds.has(String(j.id))&&(j.status||'active')!=='archived'&&(j.status||'active')!=='inactive');
   const N=valid.length;
   const companies=new Set(valid.map(j=>j.company)).size;
 
@@ -1000,43 +975,20 @@ function renderOverview(valid){
 
 /* ===== RENDER: EMPLOYERS ===== */
 function renderEmployers(valid){
-  const nc=valid.filter(j=>j._nonCompliant);
-
-  // Lollipop: by employer
-  const byEmp={};
-  nc.forEach(j=>{
-    if(!byEmp[j._co])byEmp[j._co]={count:0,widths:[]};
-    byEmp[j._co].count++;
-    byEmp[j._co].widths.push(j._width);
-  });
-  const empEntries=Object.entries(byEmp).filter(([,v])=>v.count>=2).sort((a,b)=>b[1].count-a[1].count);
-  const top2=empEntries.slice(0,2).reduce((s,[,v])=>s+v.count,0);
-  if($('top2pct'))$('top2pct').textContent=Math.round(top2/nc.length*100);
-  drawLollipop(empEntries.slice(0,12));
-
-  // Scatter: by company
-  const byCompany={};
-  valid.forEach(j=>{
-    if(!byCompany[j._co])byCompany[j._co]={widths:[],nonCompliantCount:0,exemptCount:0,total:0};
-    byCompany[j._co].widths.push(j._widthPct);
-    byCompany[j._co].total++;
-    if(j._nonCompliant)byCompany[j._co].nonCompliantCount++;
-    if(j._exempt)byCompany[j._co].exemptCount++;
-  });
-  const coEntries=Object.entries(byCompany)
-    .filter(([,v])=>v.total>=5)
-    .map(([k,v])=>{
-      const sorted=v.widths.slice().sort((a,b)=>a-b);
-      const med=percentile(sorted,50);
-      const exemptPct=v.exemptCount/v.total;
-      const cls=exemptPct>0.5?'exempt':(v.nonCompliantCount>0?'noncompliant':'compliant');
-      const regulatedCount=v.total-v.exemptCount;
-      const complianceRate=regulatedCount>0?((regulatedCount-v.nonCompliantCount)/regulatedCount*100):null;
-      return{name:k,med,total:v.total,cls,nonCompliantCount:v.nonCompliantCount,exemptCount:v.exemptCount,complianceRate};
-    })
-    .sort((a,b)=>a.med-b.med);
-  window._coEntries=coEntries;
-  drawCompanyScatter(coEntries);
+  // Neutral aggregate only (2026-06-10): the always-on page no longer ranks
+  // employers by name. Named analyses belong in dated, fact-checked reports.
+  const scope=valid.filter(j=>!j._exempt&&!j._federal);
+  const over=scope.filter(j=>j._width>50000);
+  const pct=scope.length?Math.round(over.length/scope.length*100):0;
+  if($('capScopeCount'))$('capScopeCount').textContent=scope.length.toLocaleString();
+  if($('capOverCount'))$('capOverCount').textContent=over.length.toLocaleString();
+  if($('capOverPct'))$('capOverPct').textContent=pct+'%';
+  if($('capOverMedian')){
+    const w=over.map(j=>j._width).sort((a,b)=>a-b);
+    const med=w.length?w[Math.floor(w.length/2)]:0;
+    $('capOverMedian').textContent='$'+med.toLocaleString();
+  }
+  if($('capDataDate'))$('capDataDate').textContent=(window._dataGenerated||'').slice(0,10)||'today';
 }
 
 /* ===== RENDER: BANDS ===== */
@@ -1104,6 +1056,7 @@ async function renderSkills(){
   if($('metaTotalJobs'))$('metaTotalJobs').textContent=totalJobs.toLocaleString()+' postings with skill data';
   if($('metaCategories'))$('metaCategories').textContent=cats.length+' categories';
   if($('metaGenerated'))$('metaGenerated').textContent='Updated '+data.generated;
+  window._dataGenerated=data.generated||'';
 
   const sortedCats=cats.sort((a,b)=>data.categories[b].n_jobs-data.categories[a].n_jobs);
   if($('catTabs')){

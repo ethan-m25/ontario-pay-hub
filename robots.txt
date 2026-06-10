@@ -1,16 +1,19 @@
 User-agent: *
 Allow: /
 Disallow: /data/
-Sitemap: https://ontario-pay-hub.pages.dev/sitemap.xml
+Sitemap: https://ontariopayhub.fyi/sitemap.xml
 
 User-agent: GPTBot
-Disallow: /
+Allow: /
 
 User-agent: ClaudeBot
-Disallow: /
+Allow: /
 
 User-agent: PerplexityBot
-Disallow: /
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
 
 User-agent: Bytespider
 Disallow: /

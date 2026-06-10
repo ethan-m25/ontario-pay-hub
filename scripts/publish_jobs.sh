@@ -40,7 +40,7 @@ fi
 
 cd "$REPO_DIR"
 git add data/jobs.json
-for f in index.html insights.html skills.html compliance.html methodology.html disclaimer.html; do
+for f in index.html insights.html skills.html compliance.html methodology.html disclaimer.html jobs.html robots.txt sitemap.xml _headers; do
   [[ -f "$f" ]] && git add "$f"
 done
 if git diff --cached --quiet; then
