@@ -29,6 +29,8 @@ set -uo pipefail
 
 # Ensure Homebrew Python (with scrapling, exa_py, etc.) is used by cron
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+# Source user env so launchd agents get EXA_API_KEY etc.
+[[ -f "$HOME/.zshenv" ]] && source "$HOME/.zshenv"
 
 SCRIPTS_DIR="$HOME/ontario-pay-hub/scripts"
 LOG_FILE="$SCRIPTS_DIR/pipeline.log"
@@ -177,7 +179,7 @@ if [[ "$QUEUE_COUNT" -gt 0 ]]; then
 
   # 7. Derive work_mode from archived pages
   log "--- Step 7: archive_extract.py (work_mode) ---"
-  python3 "$SCRIPTS_DIR/archive_extract.py" --field work_mode --job-ids-file "$QUEUE_FILE" --limit 9999 --force --model qwen3:4b >> "$LOG_FILE" 2>&1
+  python3 "$SCRIPTS_DIR/archive_extract.py" --field work_mode --job-ids-file "$QUEUE_FILE" --limit 9999 --force --model gemma4:12b >> "$LOG_FILE" 2>&1
   log "Step 7 done (exit $?)"
 
   # 7b. Layer 1 extraction (skills, summary, seniority, red_flags) for newly archived jobs
@@ -204,6 +206,12 @@ python3 "$SCRIPTS_DIR/salary_qa.py" >> "$LOG_FILE" 2>&1
 log "Step 8c done (exit $?)"
 
 # 9. Publish once
+# Step 8d: normalize employer names (added 2026-06-10 — ON was never hooked;
+# the "ONTARIO" code-derivation bug also disabled ON regional rules until today)
+log "--- Step 8d: hub_normalize_companies ---"
+python3 "$HOME/shared-scripts/hub_normalize_companies.py" --hub ontario-pay-hub >> "$LOG_FILE" 2>&1
+log "Step 8d done (exit $?)"
+
 log "--- Step 9: publish_jobs.sh ---"
 bash "$SCRIPTS_DIR/publish_jobs.sh" >> "$LOG_FILE" 2>&1
 STEP_9_RC=$?  # Phase 2.1
