@@ -3025,7 +3025,7 @@ function renderDiscovery(){
   const heroMedian = document.getElementById("heroMedian");
   if(heroUpdated) heroUpdated.textContent = `Updated ${updatedText}`;
   if(heroCount) heroCount.textContent = String(JOBS.length);
-  if(heroNewToday) heroNewToday.textContent = SITE_META && SITE_META.new_today ? `${SITE_META.new_today} newly added today` : "Fresh roles available";
+  if(heroNewToday) heroNewToday.textContent = SITE_META && SITE_META.new_today ? `${SITE_META.new_today} newly added today` : "Refreshed daily";
   if(heroTopEmployer) heroTopEmployer.textContent = topCo();
   const mids = JOBS.map(mid).sort((a,b)=>a-b);
   const median = mids[Math.floor(mids.length/2)];
