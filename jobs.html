@@ -2251,7 +2251,7 @@ thead th,.results-header{background:#0a0e16 !important}
       <div class="sidebar-stats">
         <div class="sstat">
           <span class="sstat-num" id="statTotal">—</span>
-          <span class="sstat-label">Total Postings</span>
+          <span class="sstat-label">Active Postings</span>
         </div>
         <div class="sstat featured">
           <span class="sstat-num" id="statMedian">—</span>
@@ -2688,19 +2688,8 @@ function buildCategoryChips() {
     group.appendChild(btn);
   });
 }
-const FALLBACK_JOBS = [
-  {id:1,role:"Product Owner / Product Manager",tag:"pm",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Product-Own",date:"2026-02-27"},
-  {id:2,role:"Machine Learning Engineer II",tag:"eng",company:"TD Bank",min:154000,max:199500,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Machine-Lea",date:"2026-02-22"},
-  {id:3,role:"Digital Marketing Manager",tag:"sales",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Digital-Mar",date:"2026-02-26"},
-  {id:4,role:"Senior Business Intelligence Analyst",tag:"data",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Senior-Busi",date:"2026-02-25"},
-  {id:5,role:"Account Manager II, Business Banking",tag:"fin",company:"TD Bank",min:81600,max:115200,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Account-Man",date:"2026-02-24"},
-  {id:6,role:"Manager, Behavioural Insights",tag:"data",company:"TD Bank",min:96900,max:136800,location:"Toronto, ON",src:"https://td.wd3.myworkdayjobs.com/TD_Bank_Careers/job/Toronto-Ontario/Manager--Be",date:"2026-02-27"},
-  {id:12,role:"Senior Solution Architect",tag:"it",company:"BMO Financial Group",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Solution-Ar",date:"2026-02-23"},
-  {id:13,role:"Senior Manager, Project & Change Risk",tag:"legal",company:"BMO Financial Group",min:94600,max:176000,location:"Toronto, ON",src:"https://bmo.wd3.myworkdayjobs.com/External/job/Toronto-ON-CAN/Senior-Manager--Pr",date:"2026-02-21"},
-  {id:14,role:"Manager, AI & Agentic Workflows",tag:"pm",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/52232318-ec94-417f-a985-6fe6ccac97df",date:"2026-02-15"},
-  {id:15,role:"Manager, Workflow Optimization",tag:"ops",company:"Wealthsimple",min:116000,max:145000,location:"Toronto, ON",src:"https://jobs.lever.co/wealthsimple/1200efa1-87c4-42ec-bf0b-072a49079fa4",date:"2026-02-12"},
-];
-let JOBS = FALLBACK_JOBS;
+// FALLBACK_JOBS removed 2026-06-10 — fake demo rows must never appear as real data.
+let JOBS = [];
 let SITE_META = null;
 let JOB_OVERRIDES = {};
 let ENRICHMENT = {}; // job_id (string) -> enrichment data
@@ -2757,8 +2746,7 @@ async function loadJobOverrides() {
 }
 
 async function loadData() {
-  // Normalize fallback data first (ensures .domain field exists)
-  JOBS = FALLBACK_JOBS.map(normalizeJob);
+  JOBS = [];
   await loadJobOverrides();
   try {
     const r = await fetch("./data/jobs.json?_=" + Date.now());
@@ -2776,7 +2764,14 @@ async function loadData() {
       }
     }
   } catch(e) {
-    console.log("Using embedded fallback data:", e.message);
+    window._dataOutage = true;
+    const es = document.getElementById("emptyState");
+    if (es) {
+      es.style.display = "block";
+      es.textContent = "Live data is temporarily unavailable — the rows shown are from the last successful refresh. Reload in a minute for filtering and full data.";
+    }
+    console.warn("jobs.json unavailable:", e.message);
+    return; // keep SSR-baked rows; do not render over them
   }
   JOBS = applyJobOverridesToList(JOBS);
   // Load enrichment data non-blocking (best-effort)
@@ -3854,11 +3849,15 @@ function _animateCount(el, target, formatFn) {
   })(start);
 }
 function updateStats(){
-  const mids=JOBS.map(mid).sort((a,b)=>a-b);
+  // Sidebar "Live Data" reflects ACTIVE postings (archived rows stay
+  // browsable in the table via the toggle, but don't inflate live stats).
+  const live=JOBS.filter(j=>!isArchived(j));
+  const base=live.length?live:JOBS;
+  const mids=base.map(mid).sort((a,b)=>a-b);
   const median=mids[Math.floor(mids.length/2)];
-  const maxSal=Math.max(...JOBS.map(j=>j.max));
-  const spread=Math.round(JOBS.reduce((a,j)=>a+(j.max-j.min),0)/JOBS.length);
-  _animateCount(document.getElementById("statTotal"), JOBS.length);
+  const maxSal=Math.max(...base.map(j=>j.max));
+  const spread=Math.round(base.reduce((a,j)=>a+(j.max-j.min),0)/base.length);
+  _animateCount(document.getElementById("statTotal"), base.length);
   document.getElementById("statMedian").textContent=fmt(median);
   document.getElementById("statTop").textContent=topCo();
   _animateCount(document.getElementById("statSpread"), spread, fmt);
