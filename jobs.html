@@ -2871,8 +2871,10 @@ function wmBadge(wm){
 }
 function topCo(){
   const cnt={};
-  JOBS.forEach(j=>{cnt[j.company]=(cnt[j.company]||0)+1;});
-  return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0][0];
+  const base=JOBS.filter(j=>!isArchived(j));
+  (base.length?base:JOBS).forEach(j=>{cnt[j.company]=(cnt[j.company]||0)+1;});
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  return top?top[0]:"—";
 }
 const MAJOR_EMPLOYERS = [
   { name: "RBC",                match: /\brbc\b|royal bank/i,                federal: false },
