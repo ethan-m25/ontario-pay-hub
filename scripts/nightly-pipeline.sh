@@ -222,6 +222,10 @@ log "--- Step 9b: build_job_enrichment.py ---"
 python3 /Users/clawii/cc-workspace/scripts/build_job_enrichment.py >> "$LOG_FILE" 2>&1
 STEP_9B_RC=$?  # Phase 2.1
 if [[ $STEP_9B_RC -eq 0 ]]; then
+  # Y9: embeddings + same-hub KNN neighbors baked into enrichment
+  # (must run AFTER build_job_enrichment — that script rebuilds the file)
+  python3 "$HOME/shared-scripts/hub_embed_jobs.py" --hub on >> "$LOG_FILE" 2>&1 || log "Y9 embed failed"
+  python3 "$HOME/shared-scripts/hub_knn_neighbors.py" --hub on >> "$LOG_FILE" 2>&1 || log "Y9 knn failed"
   cd "$HOME/ontario-pay-hub"
   git add data/job_enrichment.json
   git diff --cached --quiet || git commit -m "data: rebuild job_enrichment.json ($(date +%Y-%m-%d))"
