@@ -31,7 +31,7 @@ BRAVE_API_KEY = os.environ.get("BRAVE_API_KEY", "BSAodGE-EMqeQg5P6m4SW2pFXfrD06r
 
 _exa_exhausted = False  # set True on 402, switches collect_candidates to Brave
 OLLAMA_API  = "http://127.0.0.1:11434/api/generate"
-MODEL       = "qwen2.5:14b"
+MODEL       = "gemma4:12b"
 TODAY       = date.today().isoformat()
 SHARED_DIR  = os.path.expanduser("~/.openclaw/shared")
 OUTPUT_FILE = os.path.join(SHARED_DIR, f"ontario-jobs-raw-{TODAY}.txt")
@@ -275,6 +275,7 @@ Rules:
 
 def _call_ollama(prompt):
     """Call the local ollama HTTP API. Returns response text or raises on error."""
+    import fcntl
     payload = json.dumps({
         "model": MODEL,
         "prompt": prompt,
@@ -283,8 +284,10 @@ def _call_ollama(prompt):
     }).encode()
     req = urllib.request.Request(OLLAMA_API, data=payload, method="POST")
     req.add_header("Content-Type", "application/json")
-    with urllib.request.urlopen(req, timeout=90) as r:
-        return json.loads(r.read()).get("response", "").strip()
+    with open("/tmp/ollama-model.lock", "w") as _lf:
+        fcntl.flock(_lf, fcntl.LOCK_EX)
+        with urllib.request.urlopen(req, timeout=90) as r:
+            return json.loads(r.read()).get("response", "").strip()
 
 
 def extract_job(url, snippet, page_text, log=None):
