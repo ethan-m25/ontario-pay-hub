@@ -179,12 +179,14 @@ if [[ "$QUEUE_COUNT" -gt 0 ]]; then
 
   # 7. Derive work_mode from archived pages
   log "--- Step 7: archive_extract.py (work_mode) ---"
-  python3 "$SCRIPTS_DIR/archive_extract.py" --field work_mode --job-ids-file "$QUEUE_FILE" --limit 9999 --force --model gemma4:12b >> "$LOG_FILE" 2>&1
+  python3 "$HOME/shared-scripts/run_locked.py" /tmp/ollama-model.lock \
+    python3 "$SCRIPTS_DIR/archive_extract.py" --field work_mode --job-ids-file "$QUEUE_FILE" --limit 9999 --force --model gemma4:12b >> "$LOG_FILE" 2>&1
   log "Step 7 done (exit $?)"
 
   # 7b. Layer 1 extraction (skills, summary, seniority, red_flags) for newly archived jobs
   log "--- Step 7b: dir2_layer1_batch.py ---"
-  python3 /Users/clawii/cc-workspace/scripts/dir2_layer1_batch.py --force-run >> "$LOG_FILE" 2>&1
+  python3 "$HOME/shared-scripts/run_locked.py" /tmp/ollama-model.lock \
+    python3 /Users/clawii/cc-workspace/scripts/dir2_layer1_batch.py --force-run >> "$LOG_FILE" 2>&1
   log "Step 7b done (exit $?)"
 else
   log "Skipping archive/extract steps — empty queue"
@@ -202,7 +204,8 @@ log "Step 8b done (exit $?)"
 
 # 8c. Salary QA — detect and correct suspiciously wide salary ranges via LLM
 log "--- Step 8c: salary_qa.py ---"
-python3 "$SCRIPTS_DIR/salary_qa.py" >> "$LOG_FILE" 2>&1
+python3 "$HOME/shared-scripts/run_locked.py" /tmp/ollama-model.lock \
+    python3 "$SCRIPTS_DIR/salary_qa.py" >> "$LOG_FILE" 2>&1
 log "Step 8c done (exit $?)"
 
 # 9. Publish once
