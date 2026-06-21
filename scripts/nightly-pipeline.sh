@@ -39,6 +39,41 @@ LOCK_TTL=14400
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"; }
 
+# Wait until the system memory gate is OPEN or WARN before starting a heavy step.
+# If gate stays BLOCK after 20 min, skip the step rather than hang forever.
+# Returns 0 if safe to proceed, 1 if timed out (caller should skip).
+check_gate() {
+  local step="${1:-unknown}"
+  local i
+  for i in $(seq 1 20); do
+    local STATUS FREE
+    STATUS=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('/tmp/payhub_mem_gate.json'))
+    print(d.get('status','OPEN'))
+except Exception:
+    print('OPEN')
+" 2>/dev/null)
+    FREE=$(python3 -c "
+import json, sys
+try:
+    d = json.load(open('/tmp/payhub_mem_gate.json'))
+    print(int(d.get('free_mb',9999)))
+except Exception:
+    print(9999)
+" 2>/dev/null)
+    if [[ "$STATUS" == "OPEN" || "$STATUS" == "WARN" ]]; then
+      log "[$step] gate $STATUS (free_swap=${FREE}M), proceeding"
+      return 0
+    fi
+    log "[$step] gate BLOCK (free_swap=${FREE}M), waiting 60s ($i/20)…"
+    sleep 60
+  done
+  log "[$step] gate still BLOCK after 20min — SKIPPING step to protect system"
+  return 1
+}
+
 cleanup_lock() {
   rm -f "$LOCK_FILE"
 }
@@ -82,8 +117,12 @@ log "=== Nightly pipeline started ==="
 # 1. search-jobs.py (Exa + ollama)
 log "--- Step 1: search-jobs.py ---"
 cd "$SCRIPTS_DIR"
-python3 search-jobs.py >> "$LOG_FILE" 2>&1
-log "Step 1 done (exit $?)"
+if check_gate "step1-search-jobs"; then
+  python3 search-jobs.py >> "$LOG_FILE" 2>&1
+  log "Step 1 done (exit $?)"
+else
+  log "Step 1 SKIPPED (gate timeout)"
+fi
 
 # 2. search-workday.py (Workday CXS, pure API)
 log "--- Step 2: search-workday.py ---"
@@ -130,10 +169,14 @@ log "--- Step 2i: search-successfactors.py ---"
 python3 search-successfactors.py >> "$LOG_FILE" 2>&1
 log "Step 2i done (exit $?)"
 
-# 3. search-browser.py (Playwright, requires Chromium)
+# 3. search-browser.py (Playwright + Ollama, heavy memory)
 log "--- Step 3: search-browser.py ---"
-python3 search-browser.py >> "$LOG_FILE" 2>&1
-log "Step 3 done (exit $?)"
+if check_gate "step3-search-browser"; then
+  python3 search-browser.py >> "$LOG_FILE" 2>&1
+  log "Step 3 done (exit $?)"
+else
+  log "Step 3 SKIPPED (gate timeout)"
+fi
 
 # 4. update-jobs.sh (dedup + classify + link-validate, no publish)
 # === Phase 5 classify — hub: ontario (added 2026-05-28) ===
@@ -225,15 +268,46 @@ log "--- Step 9b: build_job_enrichment.py ---"
 python3 /Users/clawii/cc-workspace/scripts/build_job_enrichment.py >> "$LOG_FILE" 2>&1
 STEP_9B_RC=$?  # Phase 2.1
 if [[ $STEP_9B_RC -eq 0 ]]; then
-  # Y9: embeddings + same-hub KNN neighbors baked into enrichment
-  # (must run AFTER build_job_enrichment — that script rebuilds the file)
-  python3 "$HOME/shared-scripts/hub_embed_jobs.py" --hub on >> "$LOG_FILE" 2>&1 || log "Y9 embed failed"
+  # Y9: embeddings + same-hub KNN neighbors baked into enrichment.
+  # build_job_enrichment.py REBUILDS the file fresh — it WIPES neighbors — so
+  # KNN must re-bake them before this enrichment is committed/deployed.
+  # embed is best-effort and time-boxed (30min): a stuck Ollama (memory
+  # pressure) must not block KNN, which is pure numpy and reuses the last-good
+  # vectors when embed is stale/failed.
+  # portable 30-min timeout (macOS has no `timeout`/`gtimeout` binary): run
+  # embed in the background and kill it if it overruns, so a stuck Ollama can
+  # never block the KNN step below.
+  python3 "$HOME/shared-scripts/hub_embed_jobs.py" --hub on >> "$LOG_FILE" 2>&1 &
+  EMBED_PID=$!
+  EMBED_WAITED=0
+  while kill -0 "$EMBED_PID" 2>/dev/null; do
+    sleep 30
+    EMBED_WAITED=$((EMBED_WAITED + 30))
+    if [[ $EMBED_WAITED -ge 1800 ]]; then
+      kill "$EMBED_PID" 2>/dev/null
+      log "Y9 embed killed after 30min timeout (KNN will use last-good vectors)"
+      break
+    fi
+  done
+  wait "$EMBED_PID" 2>/dev/null || log "Y9 embed failed (KNN will use last-good vectors)"
   python3 "$HOME/shared-scripts/hub_knn_neighbors.py" --hub on >> "$LOG_FILE" 2>&1 || log "Y9 knn failed"
   cd "$HOME/ontario-pay-hub"
-  git add data/job_enrichment.json
-  git diff --cached --quiet || git commit -m "data: rebuild job_enrichment.json ($(date +%Y-%m-%d))"
-  git push origin main >> "$LOG_FILE" 2>&1
-  log "Step 9b done — job_enrichment.json rebuilt and pushed"
+  # GUARD (2026-06-20): never deploy a neighbor-less enrichment over a good one.
+  # If KNN was skipped/failed — e.g. a crash between build and KNN (07:53 on
+  # 2026-06-20), or any KNN error — the rebuilt file has 0 neighbors. Committing
+  # it would silently regress similar-role recommendations to category-distance
+  # fallback site-wide. In that case, revert the working file to the last
+  # deployed (neighbor-bearing) version and skip the push.
+  NBR_COUNT=$(python3 -c "import json;d=json.load(open('data/job_enrichment.json'));print(sum(1 for v in d.get('jobs',{}).values() if v.get('neighbors')))" 2>/dev/null || echo 0)
+  if [[ "$NBR_COUNT" -gt 0 ]]; then
+    git add data/job_enrichment.json
+    git diff --cached --quiet || git commit -m "data: rebuild job_enrichment.json ($(date +%Y-%m-%d), ${NBR_COUNT} neighbors)"
+    git push origin main >> "$LOG_FILE" 2>&1
+    log "Step 9b done — job_enrichment.json rebuilt with ${NBR_COUNT} neighbors and pushed"
+  else
+    git checkout -- data/job_enrichment.json 2>/dev/null || true
+    log "Step 9b ABORTED COMMIT — rebuilt enrichment had 0 neighbors (KNN missed); reverted to last deployed version, live recommendations preserved"
+  fi
 else
   log "Step 9b FAILED — job_enrichment.json not updated"
 fi

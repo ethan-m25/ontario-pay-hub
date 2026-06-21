@@ -21,10 +21,12 @@ No token cost — uses local LLM only.
 Run: python3 ~/ontario-pay-hub/scripts/search-browser.py
 """
 
+import json
 import os
 import sys
 import time
 from datetime import date, timedelta
+from pathlib import Path
 
 from _common import (
     OUTPUT_FILE, TODAY, _UA,
@@ -33,6 +35,26 @@ from _common import (
     load_existing_keys, collect_candidates, write_job,
     is_job_page,
 )
+
+_GATE_FILE = Path("/tmp/payhub_mem_gate.json")
+
+def _wait_for_gate(log_fn, max_wait_s: int = 600) -> None:
+    """Block before each URL if swap is low. Fail-open if gate file missing."""
+    deadline = time.time() + max_wait_s
+    attempt = 0
+    while time.time() < deadline:
+        try:
+            d = json.loads(_GATE_FILE.read_text())
+            status = d.get("status", "OPEN")
+            free_mb = d.get("free_mb", 9999)
+        except Exception:
+            return
+        if status != "BLOCK":
+            return
+        attempt += 1
+        log_fn(f"  [gate] BLOCK (free_swap={free_mb:.0f}M), waiting 60s (#{attempt})…")
+        time.sleep(60)
+    log_fn("  [gate] wait timeout, proceeding")
 
 LOG_FILE      = os.path.expanduser("~/ontario-pay-hub/scripts/browser.log")
 LOCK_FILE     = os.path.expanduser("~/ontario-pay-hub/scripts/.browser.lock")
@@ -190,6 +212,7 @@ def main():
     seen_keys = set(existing_keys)
 
     for i, (url, snippet) in enumerate(candidates.items(), 1):
+        _wait_for_gate(log)
         log(f"[{i:3d}/{len(candidates)}] {url[:70]}")
         t0 = time.time()
 
