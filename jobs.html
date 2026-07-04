@@ -2837,6 +2837,18 @@ function mid(j){ return Math.round((j.min+j.max)/2); }
 function normalizeSearchText(text){
   return String(text || "").toLowerCase().normalize("NFKD").replace(/[^\w\s]+/g, " ").replace(/\s+/g, " ").trim();
 }
+// Query expansion — loaded async from query_expansion.json
+let QUERY_EXPANSION = {};
+let _expansionReady = false;
+(function loadQueryExpansion(){
+  fetch("./query_expansion.json?_=" + (window._buildTs||"1"))
+    .then(r=>r.ok?r.json():null)
+    .then(d=>{ if(d){ QUERY_EXPANSION=d; _expansionReady=true; } })
+    .catch(()=>{});
+})();
+function _normExp(s){
+  return String(s||"").toLowerCase().normalize("NFKD").replace(/[^a-z0-9& ]/g," ").replace(/\s+/g," ").trim();
+}
 function searchScore(job, query){
   if(!query) return 0;
   const q = normalizeSearchText(query);
@@ -2853,20 +2865,40 @@ function searchScore(job, query){
     return new RegExp('(^|\\s)' + token.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).test(field);
   };
 
-  // Tier 1: full query as substring (with word awareness)
+  // Tier 1: full query as substring
   if(tokenHit(company, q)) return 110;
   if(tokenHit(role, q))    return 100;
   if(tokenHit(loc, q) || tokenHit(cat, q)) return 80;
 
   // Tier 2: multi-token — every token must word-hit somewhere meaningful
   const tokens = q.split(' ').filter(t => t.length >= 2);
-  if(tokens.length < 2) return 0; // single short token that didn't hit tier 1 → no match
+  if(tokens.length >= 2){
+    if(tokens.every(t => tokenHit(company, t))) return 75;
+    if(tokens.every(t => tokenHit(role, t)))    return 70;
+    if(tokens.every(t => tokenHit(company, t) || tokenHit(role, t) || tokenHit(loc, t) || tokenHit(cat, t))) return 55;
+  }
 
-  if(tokens.every(t => tokenHit(company, t))) return 75;
-  if(tokens.every(t => tokenHit(role, t)))    return 70;
-  if(tokens.every(t => tokenHit(company, t) || tokenHit(role, t) || tokenHit(loc, t) || tokenHit(cat, t))) return 55;
-
-  return 0;
+  // Tier 3: semantic expansion (best-effort, scores stay below tier 2 floor)
+  if(!_expansionReady) return 0;
+  const expansions = QUERY_EXPANSION[_normExp(query)] || [];
+  let best = 0;
+  for(const {term, weight} of expansions){
+    const et = normalizeSearchText(term);
+    if(!et) continue;
+    let base = 0;
+    if(tokenHit(role, et))    base = 100;
+    else if(tokenHit(company, et)) base = 110;
+    else if(tokenHit(loc, et) || tokenHit(cat, et)) base = 80;
+    else {
+      const et2 = et.split(' ').filter(t=>t.length>=2);
+      if(et2.length >= 2){
+        if(et2.every(t=>tokenHit(role,t))) base = 70;
+        else if(et2.every(t=>tokenHit(company,t)||tokenHit(role,t)||tokenHit(loc,t)||tokenHit(cat,t))) base = 55;
+      }
+    }
+    if(base > 0){ const s=Math.round(base*weight*0.65); if(s>best) best=s; }
+  }
+  return best;
 }
 function relDate(s){
   const d=new Date(s), now=new Date();
@@ -4130,40 +4162,27 @@ function openJobDetail(id){
   const hasL1 = !!(enr.key_skills && enr.key_skills.length);
   const coreSkillSet = new Set(enr.core_skills || []);
 
-  // Related jobs: same category, closest midpoint, active only.
-  // Cluster path removed 2026-06-10 (owner decision): clusters frozen since
-  // 2026-05-01, ~35% non-homogeneous, and related_job_ids could point at
-  // archived rows — produced nonsense pairings (e.g. Exec Comp manager ->
-  // Clinical Manager, Inpatient Oncology).
-  // Related jobs: from baked KNN neighbors (same-hub, sim>=0.55), active-only; fall back to category distance
-  let similar = (enr.neighbors||[])
-    .map(n=>JOBS.find(x=>String(x.id)===String(n.id)))
-    .filter(x=>x && !isArchived(x))
-    .slice(0,5);
-  if(!similar.length){
-    similar = [...peers].filter(x=>!isArchived(x)).sort((a,b)=>Math.abs(mid(a)-myMid)-Math.abs(mid(b)-myMid)).slice(0,5);
-  }
+  // Similar roles: KNN neighbors only (no category fallback)
+  // Ontario uses numeric id (String(x.id)===String(n.id))
+  const simEntries = (enr.neighbors||[])
+    .map(n=>{const j=JOBS.find(x=>String(x.id)===String(n.id)); return (j&&!isArchived(j))?{job:j,sim:n.sim}:null;})
+    .filter(Boolean).slice(0,5);
 
-  // Similar-role pay position — baked KNN neighbors, active-only + disclosed pay (replaces frozen cluster panel)
-  let clusterContextHTML = "";
+  // Pay position bar (inline, above similar list)
+  let payPositionHTML = "";
   {
-    const dataDate = (SITE_META && SITE_META.updated) ? String(SITE_META.updated).slice(0,10) : "";
-    const nbrJobs = (enr.neighbors||[])
-      .map(n=>({job:JOBS.find(x=>String(x.id)===String(n.id)), sim:n.sim}))
-      .filter(o=>o.job && !isArchived(o.job) && mid(o.job)>0);
-    if(nbrJobs.length >= 3){
-      const below = nbrJobs.filter(o=>mid(o.job) < myMid).length;
-      const pct = Math.round(below / nbrJobs.length * 100);
-      const higher = nbrJobs.filter(o=>mid(o.job) > myMid).sort((a,b)=>mid(b.job)-mid(a.job)).slice(0,3);
+    const paidNbr = simEntries.filter(o=>mid(o.job)>0);
+    if(paidNbr.length >= 3){
+      const below = paidNbr.filter(o=>mid(o.job) < myMid).length;
+      const pct = Math.round(below / paidNbr.length * 100);
+      const higher = paidNbr.filter(o=>mid(o.job) > myMid).sort((a,b)=>mid(b.job)-mid(a.job)).slice(0,3);
       let posLabel;
       if(pct>=75) posLabel="Pays more than most similar roles";
       else if(pct>=50) posLabel="Above the typical similar role";
       else if(pct>=25) posLabel="Below the typical similar role";
       else posLabel="Pays less than most similar roles";
       const whoHigher = higher.map(o=>`<li>${o.job.role} · ${o.job.company} — ${fmt(mid(o.job))} <span style="color:var(--text3)">(${Math.round(o.sim*100)}% similar)</span></li>`).join("");
-      clusterContextHTML = `
-    <div class="jd-section">
-      <div class="jd-section-title">Among ${nbrJobs.length} most-similar active roles${dataDate?` · as of ${dataDate}`:""}</div>
+      payPositionHTML = `
       <div class="jd-pos-wrap">
         <div class="jd-cluster-bar-bg">
           <div class="jd-cluster-bar-fill" style="width:${pct}%"></div>
@@ -4172,14 +4191,7 @@ function openJobDetail(id){
         <div class="jd-pos-labels"><span>Lowest-paid peer</span><span>Highest-paid peer</span></div>
         <div class="jd-pct-label">${posLabel} <span style="color:var(--text3);font-weight:400">· pays more than ${pct}% of similar roles</span></div>
         ${whoHigher?`<div style="margin-top:8px;font-size:var(--fs-xs);color:var(--text3)">Similar roles paying more:</div><ul style="margin:4px 0 0;padding-left:16px;font-size:var(--fs-xs);color:var(--text2)">${whoHigher}</ul>`:`<div style="margin-top:6px;font-size:var(--fs-xs);color:var(--text3)">Top of the similar-role pay range.</div>`}
-      </div>
-    </div>`;
-    } else {
-      clusterContextHTML = `
-    <div class="jd-section">
-      <div class="jd-section-title">Similar-role pay context</div>
-      <div style="font-size:var(--fs-sm);color:var(--text3)">Not enough comparable active roles with disclosed pay to place this one${dataDate?` (as of ${dataDate})`:""}.</div>
-    </div>`;
+      </div>`;
     }
   }
 
@@ -4240,21 +4252,20 @@ function openJobDetail(id){
 
     ${l1HTML}
 
-    ${clusterContextHTML}
-
-    ${similar.length?`
     <div class="jd-section">
-      <div class="jd-section-title">${"Closest-paying "+catLabel+" roles"}</div>
-      ${similar.map(s=>`
-        <div class="jd-similar-item" onclick="openJobDetail(${s.id})">
+      <div class="jd-section-title">Similar roles</div>
+      ${payPositionHTML}
+      ${simEntries.length>=3 ? simEntries.map(o=>`
+        <div class="jd-similar-item" onclick="openJobDetail(${o.job.id})">
           <div style="min-width:0">
-            <div class="jd-similar-role">${s.role}</div>
-            <div class="jd-similar-co">${s.company} · ${s.location||"Ontario"}</div>
-            <div class="jd-similar-meta">${relDate(s.date)} · ${fmt(mid(s))} midpoint</div>
+            <div class="jd-similar-role">${o.job.role}</div>
+            <div class="jd-similar-co">${o.job.company}${o.job.location?` · ${o.job.location}`:""}</div>
+            <div class="jd-similar-meta">${relDate(o.job.date)}${mid(o.job)>0?` · ${fmt(mid(o.job))} midpoint`:""} · <span style="color:var(--text3);font-size:var(--fs-xs)">${Math.round(o.sim*100)}% similar</span></div>
           </div>
-          <div class="jd-similar-range">${fmt(s.min)}–${fmt(s.max)}</div>
-        </div>`).join("")}
-    </div>`:""}
+          ${mid(o.job)>0?`<div class="jd-similar-range">${fmt(o.job.min)}–${fmt(o.job.max)}</div>`:`<div></div>`}
+        </div>`).join("")
+      : `<div style="font-size:var(--fs-sm);color:var(--text3);padding:6px 0">Not enough similar active roles for a reliable comparison right now.</div>`}
+    </div>
   `;
 
   // Footer
