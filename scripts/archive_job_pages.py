@@ -4,6 +4,9 @@ import json
 import os
 import sys
 
+sys.path.insert(0, os.path.expanduser("~/shared-scripts"))
+from hub_admin import record_kpmg_admins
+
 from archive_lib import (
     ARCHIVE_INDEX_FILE,
     ARCHIVE_JOBS_DIR,
@@ -194,6 +197,7 @@ def main():
 
         raw_path.write_text(raw_html)
         text_path.write_text(clean_text)
+        record_kpmg_admins(job.get("source_url", ""), raw_html)
         for name, payload in aux_payloads.items():
             write_json(snap_dir / name, payload)
         fetch_meta.update({
