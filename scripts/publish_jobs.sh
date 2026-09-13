@@ -26,6 +26,25 @@ sys.exit(0 if resp.status in (200, 204) else 1)
 " <<< "$msg" || echo "[publish_jobs] Discord notify failed"
 }
 
+# Guard: never commit/push/deploy a corrupt or suspiciously-shrunk jobs.json
+# (2026-09-13: a mem-fuse SIGKILL mid non-atomic-write truncated jobs.json to
+# ~3k of 14.5k jobs, and this script committed+pushed+deployed it anyway,
+# showing "0 tracked" live for >24h. Writers are now atomic, but this gate
+# is the last line of defense against any future bad write.)
+python3 -c "
+import json, sys
+try:
+    with open('$DATA_FILE') as f:
+        data = json.load(f)
+except Exception as e:
+    print(f'[publish_jobs] ABORT: jobs.json is not valid JSON: {e}', file=sys.stderr)
+    sys.exit(1)
+jobs = data.get('jobs')
+if not isinstance(jobs, list) or len(jobs) < 1000:
+    print(f'[publish_jobs] ABORT: jobs.json has {len(jobs) if isinstance(jobs, list) else \"no\"} jobs — refusing to publish', file=sys.stderr)
+    sys.exit(1)
+" || { notify_discord "🚨 Ontario Pay Hub [$TODAY]: publish ABORTED — jobs.json failed validation (corrupt or suspiciously small). Left previous published data untouched. Check pipeline.log."; exit 1; }
+
 read NEW_COUNT ACTIVE_COUNT NEW_TODAY NEWLY_ARCHIVED < <(python3 -c "
 import json
 m = json.load(open('$DATA_FILE')).get('meta', {})

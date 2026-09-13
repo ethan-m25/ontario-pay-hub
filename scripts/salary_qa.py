@@ -6,7 +6,7 @@ archived job text via Ollama, and correct obvious typos in jobs.json.
 
 Flags:
   --ratio-threshold FLOAT   flag jobs where max/min >= this (default: 4.0)
-  --model MODEL             Ollama model to use (default: qwen3:4b)
+  --model MODEL             Ollama model (default: qwen3.5:9b)
   --dry-run                 print proposed changes without writing
   --force                   re-review jobs already marked salary_qa_reviewed
 """
@@ -32,8 +32,13 @@ if VENV_PYTHON.exists() and Path(sys.executable).resolve() != VENV_PYTHON.resolv
     os.execv(str(VENV_PYTHON), [str(VENV_PYTHON)] + sys.argv)
 
 OLLAMA_API = "http://127.0.0.1:11434/api/generate"
-DEFAULT_MODEL = "qwen3:4b"
+DEFAULT_MODEL = "qwen3.5:9b"
 DEFAULT_RATIO = 4.0
+# A flagged job with no accepted correction (no archive, LLM low-confidence,
+# or proposed fix fails is_reasonable_correction) still gets suppressed if
+# the original ratio is this extreme — publishing e.g. $173k-$2.33M is worse
+# than showing "salary not disclosed".
+SUPPRESS_RATIO = 8.0
 
 SALARY_PROMPT = """Extract the salary range from this job posting. Fix obvious typos (e.g. "$95,0000" → 95000, "$1,500,00" → 150000). If the range is genuinely wide on purpose, say so.
 
@@ -199,6 +204,13 @@ def main():
         text = get_latest_clean_text(job_id)
         if text is None:
             print(f"         no archive — skipping (flagged in log only)")
+            if ratio >= SUPPRESS_RATIO and not args.dry_run:
+                j["salary_qa_suppressed_original"] = {"min": lo, "max": hi}
+                j["min"] = 0
+                j["max"] = 0
+                j["salary_qa_reviewed"] = utc_now()
+                j["salary_qa_note"] = f"no archived text to verify; ratio {ratio:.1f}x too extreme to publish as-is"
+                print(f"         suppressed (ratio {ratio:.1f}x, no way to verify)")
             continue
 
         # Build prompt
@@ -246,6 +258,16 @@ def main():
                 j["salary_qa_original"] = {"min": lo, "max": hi}
                 j["salary_qa_note"] = note
                 j["salary_qa_reviewed"] = utc_now()
+        elif ratio >= SUPPRESS_RATIO:
+            # LLM couldn't produce a confident correction and the original
+            # ratio is extreme — suppress rather than publish a likely-wrong number.
+            print(f"         suppressed (ratio {ratio:.1f}x, no confident correction)")
+            if not args.dry_run:
+                j["salary_qa_suppressed_original"] = {"min": lo, "max": hi}
+                j["min"] = 0
+                j["max"] = 0
+                j["salary_qa_reviewed"] = utc_now()
+                j["salary_qa_note"] = note or f"ratio {ratio:.1f}x, no confident correction found"
         else:
             # Confirmed as-is (could be genuine wide band)
             if not args.dry_run:
@@ -261,9 +283,11 @@ def main():
         return
 
     if reviewed > 0:
-        with JOBS_FILE.open("w") as f:
+        tmp_path = JOBS_FILE.with_suffix(".json.tmp")
+        with tmp_path.open("w") as f:
             json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
             f.write("\n")
+        tmp_path.replace(JOBS_FILE)
         print(f"[salary_qa] jobs.json updated")
 
 

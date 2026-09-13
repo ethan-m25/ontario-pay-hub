@@ -135,9 +135,11 @@ def main():
         "unknown": active_counts.get("unknown", 0),
     }
 
-    with DATA_FILE.open("w") as fh:
+    tmp_path = DATA_FILE.with_suffix(".json.tmp")
+    with tmp_path.open("w") as fh:
         json.dump(db, fh, indent=2, ensure_ascii=False)
         fh.write("\n")
+    tmp_path.replace(DATA_FILE)
 
     REVIEW_DIR.mkdir(parents=True, exist_ok=True)
     csv_path = REVIEW_DIR / "work-mode-unknown-after-local-backfill.csv"
